@@ -21,7 +21,11 @@ const Reveal = ({ as: Tag = "div", delay = 0, children, className = "", ...rest 
   return <Tag ref={ref} className={`reveal ${className}`} style={{"--reveal-delay": `${delay}ms`}} {...rest}>{children}</Tag>;
 };
 
-const SIGNUP_URL = "https://alba-studio.co/auth";
+/* Origine de l'application. Définie dans config.js, seul endroit à modifier le
+   jour de la bascule vers app.alba-studio.co (voir MIGRATION-APEX.md).
+   La valeur de repli garde la page fonctionnelle si config.js ne se charge pas. */
+const APP_ORIGIN = (typeof window !== "undefined" && window.ALBA_APP_ORIGIN) || "https://alba-studio.co";
+const SIGNUP_URL = `${APP_ORIGIN}/auth`;
 
 /* HERO */
 const Hero = () => (
@@ -574,8 +578,8 @@ const Footer = () => (
                 divergents. Les mentions légales, elles, n'existent nulle part
                 ailleurs — c'est la vitrine qui les héberge. */}
             <li><a href="mentions-legales.html">{L("Mentions légales", "Legal notice")}</a></li>
-            <li><a href="https://alba-studio.co/terms">{L("CGU & CGV", "Terms & conditions")}</a></li>
-            <li><a href="https://alba-studio.co/privacy-policy">{L("Politique RGPD", "GDPR policy")}</a></li>
+            <li><a href={`${APP_ORIGIN}/terms`}>{L("CGU & CGV", "Terms & conditions")}</a></li>
+            <li><a href={`${APP_ORIGIN}/privacy-policy`}>{L("Politique RGPD", "GDPR policy")}</a></li>
             <li><a href="#securite">{L("Sécurité", "Security")}</a></li>
           </ul>
         </div>

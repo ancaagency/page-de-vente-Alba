@@ -24,18 +24,30 @@
 # (contenu dupliqué pour Google). On la renvoie vers la racine.
 /Alba%20Studio%20-%20Landing.html   /   301
 
-## --- Pages légales -------------------------------------------------------
-# La politique de confidentialité et les CGU/CGV sont servies par l'APPLICATION
-# (alba-studio.co), pas par la vitrine. Ces adresses-là sont déposées dans les
-# fiches App Store et Google Play : elles ne doivent JAMAIS être dupliquées ici,
-# sous peine d'avoir deux textes juridiques divergents.
-# Les liens du footer pointent directement vers l'apex ; ces redirections ne
-# servent que de filet si quelqu'un tape l'adresse sur le domaine de la vitrine.
-/privacy-policy   https://alba-studio.co/privacy-policy   301
-/confidentialite  https://alba-studio.co/privacy-policy   301
-/terms            https://alba-studio.co/terms            301
-/cgv              https://alba-studio.co/terms            301
-/cgu              https://alba-studio.co/terms            301
+## ===========================================================================
+## ADRESSES DÉPOSÉES CHEZ APPLE ET GOOGLE — bloc à modifier lors de la bascule
+## ===========================================================================
+#
+# Ces cinq adresses sont ÉCRITES dans les fiches App Store et Google Play (voir
+# src/lib/__tests__/legalRoutes.test.ts, dépôt de l'application). Une boutique
+# qui reçoit une erreur en les ouvrant refuse la soumission — pour un motif sans
+# aucun rapport avec l'application.
+#
+# ⚠️ LE JOUR DE LA BASCULE VERS app.alba-studio.co : remplacer alba-studio.co
+#    par app.alba-studio.co dans TOUT ce bloc. Sans cela, la vitrine occupant
+#    l'apex redirigerait ces adresses vers elle-même — boucle infinie, et les
+#    cinq adresses tombent. Voir MIGRATION-APEX.md.
+#
+/privacy-policy       https://alba-studio.co/privacy-policy       301
+/terms                https://alba-studio.co/terms                301
+/suppression-compte   https://alba-studio.co/suppression-compte   301
+/delete-account       https://alba-studio.co/delete-account       301
+/faq                  https://alba-studio.co/faq                  301
+
+# Variantes de confort, non déposées.
+/confidentialite      https://alba-studio.co/privacy-policy       301
+/cgv                  https://alba-studio.co/terms                301
+/cgu                  https://alba-studio.co/terms                301
 
 # Les mentions légales, elles, n'existent nulle part ailleurs : c'est la vitrine
 # qui les héberge.

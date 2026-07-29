@@ -20,6 +20,8 @@
   <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
   <script src="i18n.js"></script>
+  <!-- Origine de l'application (SIGNUP_URL et CTA). Point unique de vérité. -->
+  <script src="config.js"></script>
 
   <!-- Mise en page propre à cette page. Elle n'emprunte aux styles existants que
        les jetons de design (couleurs, typographies), pour rester d'accord avec la
@@ -94,7 +96,7 @@
       <a href="Tarifs.html">Tarif</a>
     </div>
     <div style="display:flex; align-items:center; gap:14px;">
-      <a href="https://alba-studio.co/auth" class="btn btn-primary" style="padding:9px 16px; font-size:13px;">Essayer gratuitement</a>
+      <a href="https://alba-studio.co/auth" data-alba-auth class="btn btn-primary" style="padding:9px 16px; font-size:13px;">Essayer gratuitement</a>
     </div>
   </div>
 </nav>
@@ -140,7 +142,7 @@
   </div>
   <p>
     ANCA édite et exploite la plateforme <strong>ALBA Studio</strong>, accessible à
-    l'adresse <a href="https://alba-studio.co">alba-studio.co</a>, ainsi que le
+    l'adresse <a href="https://alba-studio.co" data-alba-host>alba-studio.co</a>, ainsi que le
     présent site de présentation.
   </p>
 
@@ -168,7 +170,7 @@
     L'application ALBA Studio et les données de ses utilisateurs sont hébergées
     séparément. Les hébergeurs concernés, les régions d'hébergement et les
     sous-traitants sont détaillés dans la
-    <a href="https://alba-studio.co/privacy-policy">politique de confidentialité</a>.
+    <a href="https://alba-studio.co/privacy-policy" data-alba-path="/privacy-policy">politique de confidentialité</a>.
   </p>
   <p>
     <span class="todo">À COMPLÉTER : hébergeur de l'application (raison sociale, adresse) et région d'hébergement des données</span>
@@ -190,13 +192,13 @@
     Les contenus déposés par les utilisateurs dans l'application (plans, photos,
     documents de projet) restent leur propriété pleine et entière. Les
     conditions applicables figurent dans les
-    <a href="https://alba-studio.co/terms">conditions générales</a>.
+    <a href="https://alba-studio.co/terms" data-alba-path="/terms">conditions générales</a>.
   </p>
 
   <h2>5 · Données <em>personnelles</em></h2>
   <p>
     Le traitement des données personnelles est décrit dans la
-    <a href="https://alba-studio.co/privacy-policy">politique de confidentialité</a>,
+    <a href="https://alba-studio.co/privacy-policy" data-alba-path="/privacy-policy">politique de confidentialité</a>,
     qui précise les données collectées, leurs finalités, leurs durées de
     conservation et les destinataires.
   </p>
@@ -217,7 +219,7 @@
     Ce site de présentation ne dépose aucun cookie publicitaire ni traceur
     tiers à des fins de ciblage. L'usage des cookies dans l'application est
     détaillé dans la
-    <a href="https://alba-studio.co/privacy-policy">politique de confidentialité</a>.
+    <a href="https://alba-studio.co/privacy-policy" data-alba-path="/privacy-policy">politique de confidentialité</a>.
   </p>
 
   <h2>7 · <em>Responsabilité</em></h2>

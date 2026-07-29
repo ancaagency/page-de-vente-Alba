@@ -48,6 +48,8 @@
   <!-- i18n MUST load after lenis: the minified lenis build leaks a global class `L`
        which would otherwise shadow our L(fr, en) helper -->
   <script src="i18n.js"></script>
+  <!-- Origine de l'application (SIGNUP_URL et CTA). Point unique de vérité. -->
+  <script src="config.js"></script>
 </head>
 <body data-density="standard" data-theme="dark" data-palette="studio" data-typo="serif">
 
@@ -94,7 +96,7 @@
         <button data-lang="fr" class="is-active">FR</button>
         <button data-lang="en">EN</button>
       </div>
-      <a href="https://alba-studio.co/auth" class="btn btn-primary" id="nav-cta" style="padding:9px 16px; font-size:13px;">Essayer gratuitement</a>
+      <a href="https://alba-studio.co/auth" data-alba-auth class="btn btn-primary" id="nav-cta" style="padding:9px 16px; font-size:13px;">Essayer gratuitement</a>
       <button class="nav-burger" id="nav-burger" aria-label="Menu" aria-expanded="false">
         <span></span><span></span>
       </button>
@@ -112,7 +114,7 @@
     <a href="Tarifs.html">Tarif tout inclus</a>
     <a href="#faq">Questions</a>
   </div>
-  <a href="https://alba-studio.co/auth" class="btn btn-primary mobile-menu-cta" id="mobile-menu-cta">Essayer gratuitement</a>
+  <a href="https://alba-studio.co/auth" data-alba-auth class="btn btn-primary mobile-menu-cta" id="mobile-menu-cta">Essayer gratuitement</a>
 </div>
 
 <!-- App roots -->
