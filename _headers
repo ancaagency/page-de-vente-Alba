@@ -1,0 +1,48 @@
+### Cloudflare Pages — en-têtes HTTP
+### Une règle par motif d'URL, en-têtes indentés de deux espaces.
+
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: DENY
+  Permissions-Policy: geolocation=(), microphone=(), camera=(), payment=(), usb=()
+  Strict-Transport-Security: max-age=31536000
+
+  # Politique de sécurité du contenu.
+  #
+  # 'unsafe-eval' et 'unsafe-inline' sont INDISPENSABLES ici : la page transpile
+  # ses .jsx dans le navigateur avec Babel standalone, ce qui est littéralement
+  # de l'évaluation de code à la volée. Les retirer donne une page blanche.
+  # Cette CSP ne protège donc pas contre l'injection de script ; elle restreint
+  # les ORIGINES joignables, ce qui reste utile (aucun domaine tiers ne peut
+  # être appelé si un script était altéré).
+  #
+  # connect-src 'self' est requis : Babel récupère chaque .jsx par fetch().
+  # media-src 'self' sert au son d'apparition de Léo (uploads/*.mp3).
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; media-src 'self'; connect-src 'self' https://unpkg.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'
+
+## --- Politique de cache ---------------------------------------------------
+# Le projet n'a pas d'empreinte dans les noms de fichiers (pas de build, donc
+# pas de styles.a1b2c3.css). Un cache long sur le code figerait la page chez les
+# visiteurs après chaque mise à jour : le HTML, le CSS et le JSX doivent donc
+# être revalidés à chaque visite. Cloudflare garde quand même la copie en
+# périphérie ; la revalidation coûte un aller-retour 304, pas un rechargement.
+
+/*.html
+  Cache-Control: public, max-age=0, must-revalidate
+
+/*.css
+  Cache-Control: public, max-age=0, must-revalidate
+
+/*.jsx
+  Cache-Control: public, max-age=0, must-revalidate
+
+/*.js
+  Cache-Control: public, max-age=0, must-revalidate
+
+# Les médias, eux, ne changent jamais sans changer de nom : cache d'une semaine.
+/images/*
+  Cache-Control: public, max-age=604800
+
+/uploads/*
+  Cache-Control: public, max-age=604800

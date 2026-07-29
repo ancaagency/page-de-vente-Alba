@@ -1,2 +1,43 @@
-/tarifs   /Tarifs.html   200
-/pricing  /Tarifs.html   200
+### Cloudflare Pages — règles de réécriture et de redirection
+### Format : <source> <destination> <code>
+###   200 = réécriture (l'URL affichée ne change pas)
+###   301 = redirection permanente
+
+## --- Documents internes : ne doivent pas être servis -----------------------
+# Cloudflare Pages publie TOUS les fichiers du dépôt, et ce dépôt est public.
+# Le cahier des charges détaille la stratégie App Store (règle 3.1.3(b)) : le
+# laisser lisible sur le domaine public serait au mieux gênant.
+# ⚠️ À VÉRIFIER APRÈS LE PREMIER DÉPLOIEMENT (voir DEPLOIEMENT.md, étape 6) :
+#     curl -I https://www.alba-studio.co/README.md
+#     doit répondre 301, pas 200.
+/README.md        /   301
+/DEPLOIEMENT.md   /   301
+/docs/*           /   301
+
+## --- Adresses publiques de la page tarifs (réécriture : l'URL reste jolie) ---
+/tarifs           /Tarifs.html      200
+/pricing          /Tarifs.html      200
+
+## --- Doublon historique du fichier d'entrée -------------------------------
+# « Alba Studio - Landing.html » est la copie de travail d'index.html. Sans cette
+# règle, Cloudflare la servirait comme une seconde URL au contenu identique
+# (contenu dupliqué pour Google). On la renvoie vers la racine.
+/Alba%20Studio%20-%20Landing.html   /   301
+
+## --- Pages légales -------------------------------------------------------
+# La politique de confidentialité et les CGU/CGV sont servies par l'APPLICATION
+# (alba-studio.co), pas par la vitrine. Ces adresses-là sont déposées dans les
+# fiches App Store et Google Play : elles ne doivent JAMAIS être dupliquées ici,
+# sous peine d'avoir deux textes juridiques divergents.
+# Les liens du footer pointent directement vers l'apex ; ces redirections ne
+# servent que de filet si quelqu'un tape l'adresse sur le domaine de la vitrine.
+/privacy-policy   https://alba-studio.co/privacy-policy   301
+/confidentialite  https://alba-studio.co/privacy-policy   301
+/terms            https://alba-studio.co/terms            301
+/cgv              https://alba-studio.co/terms            301
+/cgu              https://alba-studio.co/terms            301
+
+# Les mentions légales, elles, n'existent nulle part ailleurs : c'est la vitrine
+# qui les héberge.
+/mentions-legales /mentions-legales.html   200
+/legal-notice     /mentions-legales.html   200

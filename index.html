@@ -8,8 +8,14 @@
   <meta property="og:title" content="ALBA Studio — La plateforme des architectes">
   <meta property="og:description" content="Centralisez vos projets. Simplifiez vos échanges clients. La plateforme tout-en-un des architectes.">
   <meta property="og:type" content="website">
-  <!-- Remplacez le domaine par le vôtre après déploiement (URL absolue requise pour le partage social) -->
-  <meta property="og:image" content="https://alba-studio.co/images/app-cockpit-web.jpg">
+  <!-- URLs absolues : la vitrine est servie par www.alba-studio.co (Cloudflare Pages).
+       L'apex alba-studio.co sert l'application web et ne contient PAS /images/. -->
+  <meta property="og:image" content="https://www.alba-studio.co/images/app-cockpit-web.jpg">
+  <meta property="og:url" content="https://www.alba-studio.co/">
+  <meta property="og:site_name" content="ALBA Studio">
+  <meta property="og:locale" content="fr_FR">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://www.alba-studio.co/">
   <link rel="icon" type="image/png" href="images/logo-alba.png">
   <link rel="preload" as="image" href="images/app-cockpit-web.jpg">
 
@@ -112,12 +118,12 @@
 <!-- App roots -->
 <main id="app"></main>
 
-<!-- Tweaks panel mount -->
-<div id="tweaks-root"></div>
+<!-- Le panneau de réglage du design (tweaks-panel) a été retiré du déploiement :
+     c'était un outil d'auteur qui basculait data-palette / data-density / data-typo
+     en direct. Le <body> porte la combinaison validée (studio / standard / serif). -->
 
 <!-- Scripts -->
 <script src="image-slot.js"></script>
-<script type="text/babel" src="tweaks-panel.jsx"></script>
 <script type="text/babel" src="components.jsx"></script>
 <script type="text/babel" src="sections.jsx"></script>
 <script type="text/babel" src="pinned.jsx"></script>
