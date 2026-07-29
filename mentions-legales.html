@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mentions légales — ALBA Studio</title>
+  <meta name="description" content="Mentions légales du site alba-studio.co, édité par ANCA.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://www.alba-studio.co/mentions-legales">
+  <link rel="icon" type="image/png" href="images/logo-alba.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Geist+Mono:wght@400;500&family=Geist:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="sections.css">
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+  <script src="i18n.js"></script>
+
+  <!-- Mise en page propre à cette page. Elle n'emprunte aux styles existants que
+       les jetons de design (couleurs, typographies), pour rester d'accord avec la
+       vitrine sans en modifier une seule règle. -->
+  <style>
+    .legal-wrap { max-width: 760px; margin: 0 auto; padding: 132px 24px 96px; }
+    .legal-eyebrow {
+      font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--accent); margin-bottom: 18px;
+    }
+    .legal-wrap h1 {
+      font-family: var(--font-display); font-weight: 500;
+      font-size: clamp(34px, 5vw, 52px); line-height: 1.1; margin: 0 0 10px;
+      color: var(--on-bg);
+    }
+    .legal-updated {
+      font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em;
+      color: rgba(var(--on-bg-rgb), 0.45); margin-bottom: 52px;
+    }
+    .legal-wrap h2 {
+      font-family: var(--font-display); font-weight: 500; font-size: 25px;
+      margin: 48px 0 16px; color: var(--on-bg);
+    }
+    .legal-wrap h2 em { font-style: italic; color: var(--accent); }
+    .legal-wrap p, .legal-wrap li {
+      font-size: 15px; line-height: 1.75; color: rgba(var(--on-bg-rgb), 0.76);
+    }
+    .legal-wrap p { margin: 0 0 14px; }
+    .legal-wrap ul { margin: 0 0 14px; padding-left: 20px; }
+    .legal-wrap li { margin-bottom: 7px; }
+    .legal-wrap a { color: var(--accent); text-decoration: none; border-bottom: 1px solid var(--accent-line); }
+    .legal-wrap a:hover { border-bottom-color: var(--accent); }
+    .legal-id {
+      border: 1px solid var(--line); border-radius: var(--radius-lg);
+      padding: 24px 26px; margin: 0 0 14px; background: rgba(var(--on-bg-rgb), 0.02);
+    }
+    .legal-id dl { margin: 0; display: grid; grid-template-columns: minmax(140px, auto) 1fr; gap: 10px 24px; }
+    .legal-id dt {
+      font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.1em;
+      text-transform: uppercase; color: rgba(var(--on-bg-rgb), 0.42); padding-top: 3px;
+    }
+    .legal-id dd { margin: 0; font-size: 15px; line-height: 1.6; color: var(--on-bg); }
+    /* Marqueur visible pour ce qui reste à renseigner : impossible à publier par
+       inadvertance sans le voir. */
+    .todo {
+      background: rgba(201, 168, 106, 0.16); color: var(--accent-2);
+      border: 1px dashed var(--accent-line); border-radius: 4px;
+      padding: 1px 7px; font-family: var(--font-mono); font-size: 11.5px;
+      letter-spacing: 0.04em;
+    }
+    @media (max-width: 620px) {
+      .legal-wrap { padding-top: 108px; }
+      .legal-id dl { grid-template-columns: 1fr; gap: 3px 0; }
+      .legal-id dd { margin-bottom: 12px; }
+    }
+  </style>
+</head>
+<body data-density="standard" data-theme="dark" data-palette="studio" data-typo="serif">
+
+<div class="liseret-top"></div>
+
+<nav class="nav scrolled" id="nav">
+  <div class="container nav-inner">
+    <a href="index.html" class="brand">
+      <span class="brand-mark"><img src="images/logo-alba.png" alt="ALBA Studio"></span>
+      <span>ALBA <em style="font-style:italic; opacity:0.6;">Studio</em></span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html#fonctionnalites">Fonctionnalités</a>
+      <a href="index.html#pour-qui">Pour qui ?</a>
+      <a href="index.html#fondateur">Notre vision</a>
+      <a href="Tarifs.html">Tarif</a>
+    </div>
+    <div style="display:flex; align-items:center; gap:14px;">
+      <a href="https://alba-studio.co/auth" class="btn btn-primary" style="padding:9px 16px; font-size:13px;">Essayer gratuitement</a>
+    </div>
+  </div>
+</nav>
+
+<main class="legal-wrap">
+  <div class="legal-eyebrow">Informations légales</div>
+  <h1>Mentions légales</h1>
+  <div class="legal-updated">DERNIÈRE MISE À JOUR : <span class="todo">À COMPLÉTER : date de publication</span></div>
+
+  <h2>1 · Éditeur du <em>site</em></h2>
+  <div class="legal-id">
+    <dl>
+      <dt>Dénomination</dt>
+      <dd>ANCA</dd>
+
+      <dt>Forme juridique</dt>
+      <dd>EURL (entreprise unipersonnelle à responsabilité limitée)</dd>
+
+      <dt>Capital social</dt>
+      <dd>1 000 €</dd>
+
+      <dt>SIREN</dt>
+      <dd>952 847 945</dd>
+
+      <dt>SIRET (siège)</dt>
+      <dd><span class="todo">À COMPLÉTER : SIRET à 14 chiffres</span></dd>
+
+      <dt>RCS</dt>
+      <dd>RCS <span class="todo">À VÉRIFIER : ville d'immatriculation, Lyon a priori</span> 952 847 945</dd>
+
+      <dt>TVA intracom.</dt>
+      <dd>FR19 952 847 945 <span class="todo">À VÉRIFIER auprès de votre comptable</span></dd>
+
+      <dt>Siège social</dt>
+      <dd>311 rue Paul Bert, 69003 Lyon, France</dd>
+
+      <dt>Code APE / NAF</dt>
+      <dd><span class="todo">À COMPLÉTER</span></dd>
+
+      <dt>Contact</dt>
+      <dd><a href="mailto:contact@alba-studio.co">contact@alba-studio.co</a></dd>
+    </dl>
+  </div>
+  <p>
+    ANCA édite et exploite la plateforme <strong>ALBA Studio</strong>, accessible à
+    l'adresse <a href="https://alba-studio.co">alba-studio.co</a>, ainsi que le
+    présent site de présentation.
+  </p>
+
+  <h2>2 · Directeur de la <em>publication</em></h2>
+  <p>
+    Anthony Cardona, en qualité de gérant.
+    Contact : <a href="mailto:contact@alba-studio.co">contact@alba-studio.co</a>
+  </p>
+
+  <h2>3 · <em>Hébergement</em></h2>
+  <p>Le présent site de présentation est hébergé par :</p>
+  <div class="legal-id">
+    <dl>
+      <dt>Hébergeur</dt>
+      <dd>Cloudflare, Inc.</dd>
+
+      <dt>Adresse</dt>
+      <dd>101 Townsend Street, San Francisco, CA 94107, États-Unis</dd>
+
+      <dt>Site</dt>
+      <dd><a href="https://www.cloudflare.com" rel="noopener">www.cloudflare.com</a></dd>
+    </dl>
+  </div>
+  <p>
+    L'application ALBA Studio et les données de ses utilisateurs sont hébergées
+    séparément. Les hébergeurs concernés, les régions d'hébergement et les
+    sous-traitants sont détaillés dans la
+    <a href="https://alba-studio.co/privacy-policy">politique de confidentialité</a>.
+  </p>
+  <p>
+    <span class="todo">À COMPLÉTER : hébergeur de l'application (raison sociale, adresse) et région d'hébergement des données</span>
+  </p>
+
+  <h2>4 · Propriété <em>intellectuelle</em></h2>
+  <p>
+    L'ensemble des éléments composant ce site — structure, textes, visuels,
+    photographies, logos, marques et éléments d'interface — est protégé par le
+    droit de la propriété intellectuelle et demeure la propriété exclusive
+    d'ANCA, sauf mention contraire.
+  </p>
+  <p>
+    Toute reproduction, représentation, adaptation ou exploitation, totale ou
+    partielle, par quelque procédé que ce soit et sur quelque support que ce
+    soit, est interdite sans autorisation écrite préalable.
+  </p>
+  <p>
+    Les contenus déposés par les utilisateurs dans l'application (plans, photos,
+    documents de projet) restent leur propriété pleine et entière. Les
+    conditions applicables figurent dans les
+    <a href="https://alba-studio.co/terms">conditions générales</a>.
+  </p>
+
+  <h2>5 · Données <em>personnelles</em></h2>
+  <p>
+    Le traitement des données personnelles est décrit dans la
+    <a href="https://alba-studio.co/privacy-policy">politique de confidentialité</a>,
+    qui précise les données collectées, leurs finalités, leurs durées de
+    conservation et les destinataires.
+  </p>
+  <p>
+    Conformément au règlement (UE) 2016/679 (RGPD) et à la loi « Informatique et
+    libertés », vous disposez d'un droit d'accès, de rectification, d'effacement,
+    de limitation, d'opposition et de portabilité de vos données. Pour l'exercer :
+    <a href="mailto:support@alba-studio.co">support@alba-studio.co</a>.
+  </p>
+  <p>
+    En cas de désaccord persistant, vous pouvez saisir la Commission nationale de
+    l'informatique et des libertés (CNIL), 3 place de Fontenoy, 75007 Paris —
+    <a href="https://www.cnil.fr" rel="noopener">www.cnil.fr</a>.
+  </p>
+
+  <h2>6 · <em>Cookies</em></h2>
+  <p>
+    Ce site de présentation ne dépose aucun cookie publicitaire ni traceur
+    tiers à des fins de ciblage. L'usage des cookies dans l'application est
+    détaillé dans la
+    <a href="https://alba-studio.co/privacy-policy">politique de confidentialité</a>.
+  </p>
+
+  <h2>7 · <em>Responsabilité</em></h2>
+  <p>
+    ANCA s'efforce d'assurer l'exactitude des informations publiées sur ce site
+    et de le maintenir accessible. Sa responsabilité ne saurait être engagée en
+    cas d'indisponibilité temporaire, d'erreur matérielle, ou du fait de
+    l'utilisation faite des informations par un visiteur.
+  </p>
+  <p>
+    Les liens vers des sites tiers sont fournis à titre d'information ; ANCA
+    n'exerce aucun contrôle sur leur contenu et décline toute responsabilité à
+    leur égard.
+  </p>
+
+  <h2>8 · Droit <em>applicable</em></h2>
+  <p>
+    Les présentes mentions sont soumises au droit français. En cas de litige, et
+    à défaut de résolution amiable, les tribunaux français sont seuls compétents.
+  </p>
+</main>
+
+<div id="footer-root"></div>
+
+<script type="text/babel" src="components.jsx"></script>
+<script type="text/babel" src="sections.jsx"></script>
+<script type="text/babel">
+  // On ne monte que le pied de page : le reste de la page est du HTML statique,
+  // qui n'a besoin ni de React ni de Babel pour s'afficher.
+  ReactDOM.createRoot(document.getElementById("footer-root")).render(<Footer/>);
+</script>
+</body>
+</html>

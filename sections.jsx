@@ -567,9 +567,15 @@ const Footer = () => (
         <div className="foot-col">
           <h5>{L("Légal", "Legal")}</h5>
           <ul>
-            <li><a href="#">{L("Mentions légales", "Legal notice")}</a></li>
-            <li><a href="#">{L("CGU & CGV", "Terms & conditions")}</a></li>
-            <li><a href="#">{L("Politique RGPD", "GDPR policy")}</a></li>
+            {/* Les CGU et la politique de confidentialité sont servies par
+                l'APPLICATION, pas par la vitrine. Ces adresses-là sont déposées
+                dans les fiches App Store et Google Play (voir legalRoutes.test.ts
+                côté app) : les dupliquer ici créerait deux textes juridiques
+                divergents. Les mentions légales, elles, n'existent nulle part
+                ailleurs — c'est la vitrine qui les héberge. */}
+            <li><a href="mentions-legales.html">{L("Mentions légales", "Legal notice")}</a></li>
+            <li><a href="https://alba-studio.co/terms">{L("CGU & CGV", "Terms & conditions")}</a></li>
+            <li><a href="https://alba-studio.co/privacy-policy">{L("Politique RGPD", "GDPR policy")}</a></li>
             <li><a href="#securite">{L("Sécurité", "Security")}</a></li>
           </ul>
         </div>
