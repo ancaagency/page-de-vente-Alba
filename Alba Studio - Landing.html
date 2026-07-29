@@ -151,7 +151,15 @@ const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
 }/*EDITMODE-END*/;
 
 const App = () => {
-  const [tweaks, setTweak] = useTweaks(TWEAK_DEFAULTS);
+  // Combinaison de design VALIDÉE, figée.
+  //
+  // Cette ligne appelait `useTweaks(TWEAK_DEFAULTS)`, défini dans
+  // tweaks-panel.jsx — un panneau de réglage d'auteur qui ne figurait pas dans
+  // le paquet de passation. Sans lui, App levait « useTweaks is not defined » :
+  // React ne montait rien et la page restait bloquée sur le rideau d'intro,
+  // logo affiché. Le panneau n'ayant de toute façon rien à faire devant des
+  // visiteurs, les réglages sont désormais constants.
+  const tweaks = TWEAK_DEFAULTS;
   const [lang, setLang] = React.useState(window.__albaLang || "fr");
 
   // Make L() read the current language during this render
@@ -196,62 +204,11 @@ const App = () => {
       <Notifications lang={lang}/>
       <ImmersiveFX signal={`${tweaks.audienceVariant}-${tweaks.density}-${tweaks.theme}-${tweaks.typoHero}-${lang}`}/>
 
-      <TweaksPanel title="Tweaks · Alba Studio">
-        <TweakSection title="Palette">
-          <TweakRadio
-            value={tweaks.palette}
-            onChange={(v) => setTweak("palette", v)}
-            options={[
-              { value: "studio", label: "Bleu nuit" },
-              { value: "sapin", label: "Sapin" },
-              { value: "terracotta", label: "Terracotta" },
-              { value: "creme", label: "Crème" },
-            ]}
-          />
-        </TweakSection>
-        <TweakSection title="Densité">
-          <TweakRadio
-            value={tweaks.density}
-            onChange={(v) => setTweak("density", v)}
-            options={[
-              { value: "dense", label: "Dense" },
-              { value: "standard", label: "Standard" },
-              { value: "airy", label: "Aéré" },
-            ]}
-          />
-        </TweakSection>
-        <TweakSection title="Mode">
-          <TweakRadio
-            value={tweaks.theme}
-            onChange={(v) => setTweak("theme", v)}
-            options={[
-              { value: "dark", label: "Sombre" },
-              { value: "light", label: "Clair" },
-            ]}
-          />
-        </TweakSection>
-        <TweakSection title="Section 'Pour qui ?'">
-          <TweakRadio
-            value={tweaks.audienceVariant}
-            onChange={(v) => setTweak("audienceVariant", v)}
-            options={[
-              { value: "A", label: "A · Portraits" },
-              { value: "B", label: "B · Sommaire" },
-              { value: "C", label: "C · Stack sombre" },
-            ]}
-          />
-        </TweakSection>
-        <TweakSection title="Typographie hero">
-          <TweakRadio
-            value={tweaks.typoHero}
-            onChange={(v) => setTweak("typoHero", v)}
-            options={[
-              { value: "serif", label: "Serif éditorial" },
-              { value: "sans", label: "Sans display" },
-            ]}
-          />
-        </TweakSection>
-      </TweaksPanel>
+      {/* Le panneau de réglage du design (TweaksPanel / TweakSection /
+          TweakRadio) vivait dans tweaks-panel.jsx, absent du paquet de
+          passation. C'était un outil d'auteur : il n'a rien à faire devant
+          des visiteurs, et le laisser référencé empêchait toute la page de
+          se monter. Le <body> porte la combinaison validée. */}
     </>
   );
 };
