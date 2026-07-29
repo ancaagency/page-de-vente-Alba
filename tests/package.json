@@ -1,0 +1,19 @@
+{
+  "name": "alba-landing-tests",
+  "private": true,
+  "type": "module",
+  "description": "Vérifications de la page de vente. Aucun rapport avec le site lui-même, qui n'a pas d'étape de build.",
+  "scripts": {
+    "test": "node smoke.mjs && node bascule.mjs",
+    "smoke": "node smoke.mjs",
+    "bascule": "node bascule.mjs"
+  },
+  "devDependencies": {
+    "@babel/standalone": "7.29.0",
+    "gsap": "3.12.5",
+    "lenis": "1.1.18",
+    "playwright-core": "^1.49.0",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  }
+}

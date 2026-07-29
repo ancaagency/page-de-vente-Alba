@@ -13,6 +13,7 @@
 /README.md        /   301
 /DEPLOIEMENT.md   /   301
 /docs/*           /   301
+/tests/*          /   301
 
 ## --- Adresses publiques de la page tarifs (réécriture : l'URL reste jolie) ---
 /tarifs           /Tarifs.html      200
