@@ -1,0 +1,169 @@
+/* Carrousel Fonctionnalités */
+.feat-carousel { background: var(--surface-2); color: var(--ink); padding: var(--section-y) 0 48px; overflow: hidden; }
+.feat-carousel .s-head h2, .feat-carousel .s-head h2 .display, .fc-slide .display { color: var(--ink); }
+.fc-bar {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+  position: sticky;
+  top: 0;
+  z-index: 5;
+}
+.fc-tabs { display: flex; gap: 8px; flex-wrap: wrap; }
+.fc-tab {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 7px;
+  border: 1px solid rgba(11, 18, 36, 0.14);
+  border-radius: 999px;
+  background: transparent;
+  padding: 9px 16px;
+  font-size: 13px;
+  color: var(--ink);
+  cursor: pointer;
+  transition: all .25s;
+}
+.fc-tab em {
+  font-style: normal;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  color: rgba(11, 18, 36, 0.45);
+}
+.fc-tab:hover { border-color: var(--accent); }
+.fc-tab.is-active { background: var(--ink); border-color: var(--ink); color: var(--surface); }
+.fc-tab.is-active em { color: var(--accent); }
+.fc-arrows { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+.fc-count {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: rgba(11, 18, 36, 0.5);
+}
+.fc-arrow {
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  border: 1px solid rgba(11, 18, 36, 0.18);
+  background: transparent;
+  color: var(--ink);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: all .25s;
+}
+.fc-arrow:hover:not(:disabled) { border-color: var(--accent); background: rgba(201, 168, 106, 0.12); }
+.fc-arrow:disabled { opacity: 0.3; cursor: default; }
+.fc-viewport { overflow: hidden; }
+.fc-track {
+  display: flex;
+  align-items: flex-start;
+  transition: transform .65s cubic-bezier(.65, 0, .18, 1);
+}
+.fc-slide {
+  flex: 0 0 100%;
+  min-width: 0;
+  opacity: 0.25;
+  transition: opacity .5s ease .1s;
+}
+.fc-slide.is-active { opacity: 1; }
+.fc-slide .materials-section,
+.fc-slide .calendar-section,
+.fc-slide .chat-section { padding-top: 34px; padding-bottom: 10px; background: transparent; }
+.fc-novel { font-family: var(--font-mono); font-size: 7px; letter-spacing: 0.1em; background: var(--accent); color: #1A1407; border-radius: 999px; padding: 2px 6px; margin-left: 2px; }
+.fc-tab.is-active .fc-novel { background: var(--accent); color: #1A1407; }
+.fc-dots { display: flex; justify-content: center; gap: 8px; margin-top: 26px; }
+.fc-dots button {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  border: 0;
+  background: rgba(11, 18, 36, 0.18);
+  cursor: pointer;
+  transition: all .3s;
+  padding: 0;
+}
+.fc-dots button.is-active { background: var(--accent); width: 26px; border-radius: 999px; }
+@media (max-width: 780px) {
+  .fc-bar { position: static; }
+  .fc-arrows { margin-left: 0; }
+}
+
+
+/* ============ Animations d'entrée par slide ============ */
+@media (prefers-reduced-motion: no-preference) {
+
+/* 03 · Matériaux — les fiches fusent depuis l'extérieur et se calent dans la grille */
+.fc-materiaux .ml-grid.is-wide .ml-card { opacity: 0; }
+.fc-materiaux.is-active .ml-grid.is-wide .ml-card { animation: mat-fly-in .85s cubic-bezier(.16,.84,.32,1.06) both; }
+.fc-materiaux.is-active .ml-grid.is-wide .ml-card:nth-child(1) { animation-delay: .05s; --fx: -120%; --fy: -70%; --fr: -14deg; }
+.fc-materiaux.is-active .ml-grid.is-wide .ml-card:nth-child(2) { animation-delay: .13s; --fx: 0%;    --fy: -130%; --fr: 9deg; }
+.fc-materiaux.is-active .ml-grid.is-wide .ml-card:nth-child(3) { animation-delay: .21s; --fx: 120%;  --fy: -70%; --fr: 14deg; }
+.fc-materiaux.is-active .ml-grid.is-wide .ml-card:nth-child(4) { animation-delay: .29s; --fx: -125%; --fy: 80%;  --fr: 11deg; }
+.fc-materiaux.is-active .ml-grid.is-wide .ml-card:nth-child(5) { animation-delay: .37s; --fx: 0%;    --fy: 135%; --fr: -8deg; }
+.fc-materiaux.is-active .ml-grid.is-wide .ml-card:nth-child(6) { animation-delay: .45s; --fx: 125%;  --fy: 80%;  --fr: -13deg; }
+@keyframes mat-fly-in {
+  0%   { opacity: 0; transform: translate(var(--fx), var(--fy)) scale(1.5) rotate(var(--fr)); filter: blur(4px); }
+  70%  { opacity: 1; filter: blur(0); }
+  100% { opacity: 1; transform: none; filter: none; }
+}
+.fc-materiaux .ml-chips { opacity: 0; }
+.fc-materiaux.is-active .ml-chips { animation: fc-drop .6s ease-out .1s both; }
+
+/* 02 · Météo — le ciel se dévoile, les jours tombent, les conseils se lèvent */
+.fc-meteo .wx-detail, .fc-meteo .wx-day, .fc-meteo .wx-card, .fc-meteo .wx-site { opacity: 0; }
+.fc-meteo.is-active .wx-site { animation: fc-drop .5s ease-out both; }
+.fc-meteo.is-active .wx-site:nth-child(2) { animation-delay: .06s; }
+.fc-meteo.is-active .wx-site:nth-child(3) { animation-delay: .12s; }
+.fc-meteo.is-active .wx-day { animation: wx-day-fall .7s cubic-bezier(.2,.9,.3,1.1) both; }
+.fc-meteo.is-active .wx-day:nth-child(1){animation-delay:.16s}
+.fc-meteo.is-active .wx-day:nth-child(2){animation-delay:.23s}
+.fc-meteo.is-active .wx-day:nth-child(3){animation-delay:.30s}
+.fc-meteo.is-active .wx-day:nth-child(4){animation-delay:.37s}
+.fc-meteo.is-active .wx-day:nth-child(5){animation-delay:.44s}
+.fc-meteo.is-active .wx-day:nth-child(6){animation-delay:.51s}
+.fc-meteo.is-active .wx-day:nth-child(7){animation-delay:.58s}
+@keyframes wx-day-fall { 0% { opacity: 0; transform: translateY(-38px) scale(.9); } 100% { opacity: 1; transform: none; } }
+.fc-meteo.is-active .wx-detail { animation: wx-sweep .8s cubic-bezier(.2,.9,.3,1) .62s both; }
+@keyframes wx-sweep { 0% { opacity: 0; transform: translateX(-26px); clip-path: inset(0 100% 0 0); } 100% { opacity: 1; transform: none; clip-path: inset(0 0 0 0); } }
+.fc-meteo.is-active .wx-card { animation: fc-rise .65s cubic-bezier(.2,.9,.3,1) both; }
+.fc-meteo.is-active .wx-card:nth-child(1){animation-delay:.80s}
+.fc-meteo.is-active .wx-card:nth-child(2){animation-delay:.90s}
+.fc-meteo.is-active .wx-card:nth-child(3){animation-delay:1.0s}
+
+/* 04 · Calendrier — la grille se déplie semaine après semaine */
+.fc-calendrier .cal-week, .fc-calendrier .cal-card, .fc-calendrier .ml-stat { opacity: 0; }
+.fc-calendrier.is-active .ml-stat { animation: fc-drop .55s ease-out both; }
+.fc-calendrier.is-active .ml-stat:nth-child(2){animation-delay:.07s}
+.fc-calendrier.is-active .ml-stat:nth-child(3){animation-delay:.14s}
+.fc-calendrier.is-active .ml-stat:nth-child(4){animation-delay:.21s}
+.fc-calendrier.is-active .cal-week { animation: cal-unfold .6s cubic-bezier(.2,.9,.3,1) both; transform-origin: top center; }
+.fc-calendrier.is-active .cal-week:nth-child(2){animation-delay:.26s}
+.fc-calendrier.is-active .cal-week:nth-child(3){animation-delay:.34s}
+.fc-calendrier.is-active .cal-week:nth-child(4){animation-delay:.42s}
+.fc-calendrier.is-active .cal-week:nth-child(5){animation-delay:.50s}
+.fc-calendrier.is-active .cal-week:nth-child(6){animation-delay:.58s}
+@keyframes cal-unfold { 0% { opacity: 0; transform: perspective(700px) rotateX(-62deg); } 100% { opacity: 1; transform: none; } }
+.fc-calendrier.is-active .cal-card { animation: fc-rise .6s ease-out both; }
+.fc-calendrier.is-active .cal-rail .cal-card:nth-child(2){animation-delay:.42s}
+.fc-calendrier.is-active .cal-rail .cal-card:nth-child(3){animation-delay:.5s}
+.fc-calendrier.is-active .cal-panel .cal-card:nth-child(1){animation-delay:.55s}
+.fc-calendrier.is-active .cal-panel .cal-card:nth-child(2){animation-delay:.65s}
+
+/* 05 · Messagerie — le texte monte, le téléphone se pose */
+.fc-messagerie .chat-text, .fc-messagerie .chat-phone { opacity: 0; }
+.fc-messagerie.is-active .chat-text { animation: fc-rise .7s ease-out .05s both; }
+.fc-messagerie.is-active .chat-phone { animation: chat-slide-in .9s cubic-bezier(.2,.9,.3,1) .22s both; }
+@keyframes chat-slide-in { 0% { opacity: 0; transform: translateY(60px) rotate(4deg) scale(.94); } 100% { opacity: 1; transform: none; } }
+
+@keyframes fc-rise { 0% { opacity: 0; transform: translateY(26px); } 100% { opacity: 1; transform: none; } }
+@keyframes fc-drop { 0% { opacity: 0; transform: translateY(-16px); } 100% { opacity: 1; transform: none; } }
+}
+
+/* Le carrousel translate ses slides : le reveal au scroll ne peut pas s'y déclencher */
+.fc-slide .reveal, .fc-slide .reveal.is-in { opacity: 1 !important; transform: none !important; visibility: visible !important; }
+
+/* Hauteur du carrousel = hauteur de la slide active (plus de vide sous les slides courtes) */
+.fc-viewport { transition: height .5s cubic-bezier(.2,.9,.3,1); }
+.fc-track { align-items: flex-start; }
+.fc-slide { align-self: flex-start; }

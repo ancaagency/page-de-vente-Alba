@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tarif — ALBA Studio</title>
+  <meta name="description" content="Un prix simple, tout inclus. Choisissez votre stockage et votre équipe, souscrivez depuis le web. Premier projet gratuit à vie.">
+  <meta property="og:title" content="Tarif — ALBA Studio">
+  <meta property="og:description" content="Un prix simple, tout inclus. Premier projet gratuit à vie, sans carte bancaire.">
+  <meta property="og:type" content="website">
+  <link rel="icon" type="image/png" href="images/logo-alba.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Geist+Mono:wght@400;500&family=Geist:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="sections.css">
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+  <script src="i18n.js"></script>
+</head>
+<body data-density="standard" data-theme="dark" data-palette="studio" data-typo="serif">
+
+<div class="liseret-top"></div>
+
+<nav class="nav scrolled" id="nav">
+  <div class="container nav-inner">
+    <a href="index.html" class="brand">
+      <span class="brand-mark"><img src="images/logo-alba.png" alt="ALBA Studio"></span>
+      <span>ALBA <em style="font-style:italic; opacity:0.6;">Studio</em></span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html#fonctionnalites">Fonctionnalités</a>
+      <a href="index.html#pour-qui">Pour qui ?</a>
+      <a href="index.html#fondateur">Notre vision</a>
+      <a href="index.html#faq">Questions</a>
+    </div>
+    <div style="display:flex; align-items:center; gap:14px;">
+      <div class="lang-toggle" id="lang-toggle">
+        <button data-lang="fr" class="is-active">FR</button>
+        <button data-lang="en">EN</button>
+      </div>
+      <a href="https://alba-studio.co/auth" class="btn btn-primary" id="nav-cta" style="padding:9px 16px; font-size:13px;">Essayer gratuitement</a>
+    </div>
+  </div>
+</nav>
+
+<main id="app"></main>
+
+<script type="text/babel" src="components.jsx"></script>
+<script type="text/babel" src="sections.jsx"></script>
+
+<script type="text/babel">
+const PricingPage = () => {
+  const [lang, setLang] = React.useState(window.__albaLang || "fr");
+  window.__albaLang = lang;
+  window.__setLang = setLang;
+  React.useEffect(() => {
+    document.documentElement.lang = lang;
+    document.title = lang === "en" ? "Pricing — ALBA Studio" : "Tarif — ALBA Studio";
+    document.querySelectorAll("#lang-toggle button").forEach((b) => b.classList.toggle("is-active", b.dataset.lang === lang));
+    const cta = document.getElementById("nav-cta");
+    if (cta) cta.textContent = lang === "en" ? "Try for free" : "Essayer gratuitement";
+  }, [lang]);
+  return (
+    <div key={lang} style={{paddingTop: 72}}>
+      <Pricing/>
+      <TrustBand/>
+      <Faq/>
+      <Contact/>
+      <Footer/>
+    </div>
+  );
+};
+
+ReactDOM.createRoot(document.getElementById("app")).render(<PricingPage/>);
+
+document.querySelectorAll("#lang-toggle button").forEach((b) => {
+  b.addEventListener("click", () => { if (window.__setLang) window.__setLang(b.dataset.lang); });
+});
+</script>
+</body>
+</html>

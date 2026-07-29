@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ALBA Studio — La plateforme des architectes</title>
+  <meta name="description" content="ALBA Studio centralise projets, décisions, documents et messages pour les architectes indépendants et petites agences. Votre premier projet est gratuit.">
+  <meta property="og:title" content="ALBA Studio — La plateforme des architectes">
+  <meta property="og:description" content="Centralisez vos projets. Simplifiez vos échanges clients. La plateforme tout-en-un des architectes.">
+  <meta property="og:type" content="website">
+  <!-- Remplacez le domaine par le vôtre après déploiement (URL absolue requise pour le partage social) -->
+  <meta property="og:image" content="https://alba-studio.co/images/app-cockpit-web.jpg">
+  <link rel="icon" type="image/png" href="images/logo-alba.png">
+  <link rel="preload" as="image" href="images/app-cockpit-web.jpg">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Geist+Mono:wght@400;500&family=Geist:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="mockups.css">
+  <link rel="stylesheet" href="sections.css">
+  <link rel="stylesheet" href="pinned.css">
+  <link rel="stylesheet" href="audience.css">
+  <link rel="stylesheet" href="gallery.css">
+  <link rel="stylesheet" href="immersive.css">
+  <link rel="stylesheet" href="materials.css">
+  <link rel="stylesheet" href="calendar.css">
+  <link rel="stylesheet" href="features-carousel.css">
+  <link rel="stylesheet" href="features-extra.css">
+  <link rel="stylesheet" href="chat.css">
+  <link rel="stylesheet" href="notifications.css">
+  <link rel="stylesheet" href="founder.css">
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="https://unpkg.com/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+  <script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
+
+  <!-- i18n MUST load after lenis: the minified lenis build leaks a global class `L`
+       which would otherwise shadow our L(fr, en) helper -->
+  <script src="i18n.js"></script>
+</head>
+<body data-density="standard" data-theme="dark" data-palette="studio" data-typo="serif">
+
+<!-- Liseret tricolore -->
+<div class="liseret-top"></div>
+
+<!-- Intro curtain -->
+<div class="intro" id="intro">
+  <div class="intro-sunrise" id="intro-sunrise">
+    <div class="intro-sun"></div>
+    <div class="intro-horizon"></div>
+  </div>
+  <div class="intro-inner">
+    <div class="intro-mark"><img src="images/logo-alba.png" alt="ALBA Studio"></div>
+    <div class="intro-name">ALBA <em>Studio</em></div>
+    <div class="intro-line" id="intro-line"></div>
+  </div>
+</div>
+
+<!-- Custom cursor -->
+<div class="cursor-ring" id="cur-ring"></div>
+<div class="cursor-dot" id="cur-dot"></div>
+
+<!-- Film grain -->
+<div class="grain"></div>
+
+<!-- Nav -->
+<nav class="nav" id="nav">
+  <div class="container nav-inner">
+    <a href="#" class="brand" id="brand-home">
+      <span class="brand-mark"><img src="images/logo-alba.png" alt="ALBA Studio"></span>
+      <span>ALBA <em style="font-style:italic; opacity:0.6;">Studio</em></span>
+    </a>
+    <div class="nav-links" id="nav-links">
+      <a href="#fonctionnalites">Fonctionnalités</a>
+      <a href="#features">La plateforme</a>
+      <a href="#pour-qui">Pour qui ?</a>
+      <a href="#fondateur">Notre vision</a>
+      <a href="Tarifs.html">Tarif tout inclus</a>
+      <a href="#faq">Questions</a>
+    </div>
+    <div style="display:flex; align-items:center; gap:14px;">
+      <div class="lang-toggle" id="lang-toggle">
+        <button data-lang="fr" class="is-active">FR</button>
+        <button data-lang="en">EN</button>
+      </div>
+      <a href="https://alba-studio.co/auth" class="btn btn-primary" id="nav-cta" style="padding:9px 16px; font-size:13px;">Essayer gratuitement</a>
+      <button class="nav-burger" id="nav-burger" aria-label="Menu" aria-expanded="false">
+        <span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile menu overlay -->
+<div class="mobile-menu" id="mobile-menu">
+  <div class="mobile-menu-links" id="mobile-menu-links">
+    <a href="#fonctionnalites">Fonctionnalités</a>
+    <a href="#features">La plateforme</a>
+    <a href="#pour-qui">Pour qui ?</a>
+    <a href="#fondateur">Notre vision</a>
+    <a href="Tarifs.html">Tarif tout inclus</a>
+    <a href="#faq">Questions</a>
+  </div>
+  <a href="https://alba-studio.co/auth" class="btn btn-primary mobile-menu-cta" id="mobile-menu-cta">Essayer gratuitement</a>
+</div>
+
+<!-- App roots -->
+<main id="app"></main>
+
+<!-- Tweaks panel mount -->
+<div id="tweaks-root"></div>
+
+<!-- Scripts -->
+<script src="image-slot.js"></script>
+<script type="text/babel" src="tweaks-panel.jsx"></script>
+<script type="text/babel" src="components.jsx"></script>
+<script type="text/babel" src="sections.jsx"></script>
+<script type="text/babel" src="pinned.jsx"></script>
+<script type="text/babel" src="audience.jsx"></script>
+<script type="text/babel" src="gallery.jsx"></script>
+<script type="text/babel" src="immersive.jsx"></script>
+<script type="text/babel" src="materials.jsx"></script>
+<script type="text/babel" src="calendar.jsx"></script>
+<script type="text/babel" src="assistant.jsx"></script>
+<script type="text/babel" src="weather.jsx"></script>
+<script type="text/babel" src="features-carousel.jsx"></script>
+<script type="text/babel" src="chat.jsx"></script>
+<script type="text/babel" src="notifications.jsx"></script>
+<script type="text/babel" src="founder.jsx"></script>
+
+<script type="text/babel">
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "palette": "studio",
+  "density": "standard",
+  "theme": "dark",
+  "typoHero": "serif",
+  "audienceVariant": "A"
+}/*EDITMODE-END*/;
+
+const App = () => {
+  const [tweaks, setTweak] = useTweaks(TWEAK_DEFAULTS);
+  const [lang, setLang] = React.useState(window.__albaLang || "fr");
+
+  // Make L() read the current language during this render
+  window.__albaLang = lang;
+  window.__setLang = setLang;
+
+  React.useEffect(() => {
+    try { localStorage.setItem("alba_lang", lang); } catch (e) {}
+    document.documentElement.lang = lang;
+    if (window.__applyNavLang) window.__applyNavLang(lang);
+  }, [lang]);
+
+  // Apply tweaks to body
+  React.useEffect(() => {
+    document.body.dataset.palette = tweaks.palette;
+    document.body.dataset.density = tweaks.density;
+    document.body.dataset.theme = tweaks.theme;
+    document.body.dataset.typo = tweaks.typoHero;
+  }, [tweaks]);
+
+  return (
+    <>
+      <div key={lang}>
+        <Hero/>
+        <Logos/>
+        <Manifesto/>
+        <Audience variant={tweaks.audienceVariant}/>
+        <Pains/>
+        <Features/>
+        <FeatureCarousel/>
+        <PinnedDevices/>
+        <CTABand/>
+        <Pricing/>
+        <TrustBand/>
+        <Testimonials/>
+        <Founder/>
+        <Faq/>
+        <Contact/>
+        <Footer/>
+      </div>
+
+      <Notifications lang={lang}/>
+      <ImmersiveFX signal={`${tweaks.audienceVariant}-${tweaks.density}-${tweaks.theme}-${tweaks.typoHero}-${lang}`}/>
+
+      <TweaksPanel title="Tweaks · Alba Studio">
+        <TweakSection title="Palette">
+          <TweakRadio
+            value={tweaks.palette}
+            onChange={(v) => setTweak("palette", v)}
+            options={[
+              { value: "studio", label: "Bleu nuit" },
+              { value: "sapin", label: "Sapin" },
+              { value: "terracotta", label: "Terracotta" },
+              { value: "creme", label: "Crème" },
+            ]}
+          />
+        </TweakSection>
+        <TweakSection title="Densité">
+          <TweakRadio
+            value={tweaks.density}
+            onChange={(v) => setTweak("density", v)}
+            options={[
+              { value: "dense", label: "Dense" },
+              { value: "standard", label: "Standard" },
+              { value: "airy", label: "Aéré" },
+            ]}
+          />
+        </TweakSection>
+        <TweakSection title="Mode">
+          <TweakRadio
+            value={tweaks.theme}
+            onChange={(v) => setTweak("theme", v)}
+            options={[
+              { value: "dark", label: "Sombre" },
+              { value: "light", label: "Clair" },
+            ]}
+          />
+        </TweakSection>
+        <TweakSection title="Section 'Pour qui ?'">
+          <TweakRadio
+            value={tweaks.audienceVariant}
+            onChange={(v) => setTweak("audienceVariant", v)}
+            options={[
+              { value: "A", label: "A · Portraits" },
+              { value: "B", label: "B · Sommaire" },
+              { value: "C", label: "C · Stack sombre" },
+            ]}
+          />
+        </TweakSection>
+        <TweakSection title="Typographie hero">
+          <TweakRadio
+            value={tweaks.typoHero}
+            onChange={(v) => setTweak("typoHero", v)}
+            options={[
+              { value: "serif", label: "Serif éditorial" },
+              { value: "sans", label: "Sans display" },
+            ]}
+          />
+        </TweakSection>
+      </TweaksPanel>
+    </>
+  );
+};
+
+ReactDOM.createRoot(document.getElementById("app")).render(<App/>);
+
+/* ============================================
+   Custom cursor logic
+   ============================================ */
+(() => {
+  const dot = document.getElementById("cur-dot");
+  const ring = document.getElementById("cur-ring");
+  if (!dot || !ring) return;
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener("mousemove", (e) => {
+    mx = e.clientX; my = e.clientY;
+    dot.style.transform = `translate(${mx}px, ${my}px) translate(-50%,-50%)`;
+  });
+  const tick = () => {
+    rx += (mx - rx) * 0.18;
+    ry += (my - ry) * 0.18;
+    ring.style.transform = `translate(${rx}px, ${ry}px) translate(-50%,-50%)`;
+    requestAnimationFrame(tick);
+  };
+  tick();
+  document.addEventListener("mouseover", (e) => {
+    const t = e.target;
+    if (t.closest("a, button, .pain, .benefit, .testi, .f-tab, .q, .logo-cell, .gtile, .aud-A-card, .aud-B-row, .aud-C-card, .mq-item, .mat-card, .mat-chip")) {
+      ring.classList.add("hover");
+      dot.classList.add("hover");
+    }
+  });
+  document.addEventListener("mouseout", (e) => {
+    const t = e.relatedTarget;
+    if (!t || !t.closest || !t.closest("a, button, .pain, .benefit, .testi, .f-tab, .q, .logo-cell, .gtile, .aud-A-card, .aud-B-row, .aud-C-card, .mq-item, .mat-card, .mat-chip")) {
+      ring.classList.remove("hover");
+      dot.classList.remove("hover");
+    }
+  });
+})();
+
+/* Nav scroll state */
+(() => {
+  const nav = document.getElementById("nav");
+  if (!nav) return;
+  const onScroll = () => {
+    if (window.scrollY > 30) nav.classList.add("scrolled");
+    else nav.classList.remove("scrolled");
+  };
+  window.addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
+})();
+
+/* Brand logo, full page reset (replays the intro curtain) */
+(() => {
+  const brand = document.getElementById("brand-home");
+  if (!brand) return;
+  brand.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation(); // bypass the Lenis anchor handler
+    try { sessionStorage.removeItem("alba_intro_seen"); } catch (err) {}
+    window.scrollTo(0, 0);
+    location.reload();
+  }, true);
+})();
+
+/* Nav language toggle */
+(() => {
+  const NAV_TEXTS = {
+    fr: { links: ["Fonctionnalités", "La plateforme", "Pour qui ?", "Notre vision", "Tarif tout inclus", "Questions"], cta: "Essayer gratuitement" },
+    en: { links: ["Features", "The platform", "Who it is for", "Our vision", "All-in pricing", "Questions"], cta: "Try for free" },
+  };
+  window.__applyNavLang = (lang) => {
+    const t = NAV_TEXTS[lang] || NAV_TEXTS.fr;
+    document.querySelectorAll("#nav-links a").forEach((a, i) => { if (t.links[i]) a.textContent = t.links[i]; });
+    document.querySelectorAll("#mobile-menu-links a").forEach((a, i) => { if (t.links[i]) a.textContent = t.links[i]; });
+    const cta = document.getElementById("nav-cta");
+    if (cta) cta.textContent = t.cta;
+    const mcta = document.getElementById("mobile-menu-cta");
+    if (mcta) mcta.textContent = t.cta;
+    document.querySelectorAll("#lang-toggle button").forEach((b) => {
+      b.classList.toggle("is-active", b.dataset.lang === lang);
+    });
+    document.title = lang === "en" ? "ALBA Studio — The platform for architects" : "ALBA Studio — La plateforme des architectes";
+  };
+  document.querySelectorAll("#lang-toggle button").forEach((b) => {
+    b.addEventListener("click", () => {
+      if (window.__setLang) window.__setLang(b.dataset.lang);
+    });
+  });
+  window.__applyNavLang(window.__albaLang || "fr");
+})();
+
+/* Mobile burger menu */
+(() => {
+  const burger = document.getElementById("nav-burger");
+  const menu = document.getElementById("mobile-menu");
+  if (!burger || !menu) return;
+  const close = () => {
+    menu.classList.remove("open");
+    burger.classList.remove("open");
+    burger.setAttribute("aria-expanded", "false");
+    document.body.style.overflow = "";
+  };
+  burger.addEventListener("click", () => {
+    const open = !menu.classList.contains("open");
+    menu.classList.toggle("open", open);
+    burger.classList.toggle("open", open);
+    burger.setAttribute("aria-expanded", String(open));
+    document.body.style.overflow = open ? "hidden" : "";
+  });
+  menu.addEventListener("click", (e) => {
+    if (e.target.closest("a")) close();
+  });
+})();
+</script>
+</body>
+</html>
