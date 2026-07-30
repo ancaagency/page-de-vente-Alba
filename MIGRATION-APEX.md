@@ -8,17 +8,40 @@ www.alba-studio.co    → page de vente   (idem)
 app.alba-studio.co    → application web
 ```
 
-Aujourd'hui, l'apex sert l'application. Ce document décrit comment aller de l'un
-à l'autre **sans faire refuser vos applications mobiles**.
+---
+
+## ⚠️ État au 30 juillet 2026 — le côté application est FAIT
+
+Le dépôt de l'application a basculé (commit `2206958`, « Découpage des
+domaines », et `docs/decoupage-domaines.md`). `capacitor.config.ts` charge
+désormais `https://app.alba-studio.co`, et l'enregistrement DNS `app` existe.
+
+**Ce qui est déjà fait côté vitrine** — `_redirects` renvoie en 301 vers
+`app.alba-studio.co` les cinq adresses déposées chez Apple et Google **et** les
+chemins applicatifs (`/auth`, `/gallery/*`, `/online/*`, `/invite/*`, `/pv/*`,
+`/reset-password`, `/onboarding`, `/trash`, `/admin*`). Ces règles pointaient
+auparavant vers `alba-studio.co`, donc — après bascule — vers la vitrine
+elle-même : boucle de redirection, et les cinq adresses tombaient.
+
+**Ce qui reste, et pourquoi ça attend :**
+
+| À faire | Gardé en attente parce que |
+|---|---|
+| `config.js` : `ALBA_APP_ORIGIN` → `https://app.alba-studio.co` | La valeur actuelle (`alba-studio.co`) est **juste dans les deux états** : aujourd'hui l'apex sert l'application ; après bascule, la redirection `/auth` ci-dessus mène à l'application. La basculer maintenant casserait les liens si `app.alba-studio.co` ne sert pas encore. À faire pour supprimer le saut de redirection, sans urgence. |
+| `canonical`, `og:url`, `sitemap.xml`, `robots.txt` : `www` → apex | Tant que l'apex sert l'application, un `canonical` vers l'apex dirait à Google que la page de vente canonique **est l'application**. À faire quand l'apex est rattaché au projet Pages, pas avant. |
+
+`bascule.mjs` (dossier `tests/`) vérifie que tous les liens suivent quand
+`config.js` change : à lancer le jour de la bascule.
 
 ---
 
 ## Le facteur limitant n'est pas le DNS
 
-`capacitor.config.ts` grave l'adresse dans le binaire :
+C'est ce qui a dicté l'ordre choisi par le dépôt de l'application, et ça reste
+vrai pour la suite. `capacitor.config.ts` grave l'adresse dans le binaire :
 
 ```ts
-server: { url: 'https://alba-studio.co' }
+server: { url: 'https://app.alba-studio.co' }   // hier : alba-studio.co
 ```
 
 En « mode synchronisé », le WebView natif **télécharge cette URL à chaque

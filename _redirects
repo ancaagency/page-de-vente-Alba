@@ -27,29 +27,52 @@
 /Alba%20Studio%20-%20Landing.html   /   301
 
 ## ===========================================================================
-## ADRESSES DÉPOSÉES CHEZ APPLE ET GOOGLE — bloc à modifier lors de la bascule
+## VERS L'APPLICATION — app.alba-studio.co
 ## ===========================================================================
 #
-# Ces cinq adresses sont ÉCRITES dans les fiches App Store et Google Play (voir
+# L'application a quitté l'apex pour app.alba-studio.co (dépôt de
+# l'application, commit 2206958 « Découpage des domaines », et
+# docs/decoupage-domaines.md). La vitrine prend l'apex.
+#
+# Ces règles pointaient auparavant vers alba-studio.co, c'est-à-dire — après la
+# bascule — vers la vitrine elle-même : boucle de redirection, et les cinq
+# adresses déposées chez les boutiques tombaient.
+
+## --- Les cinq adresses déposées chez Apple et Google ------------------------
+# Elles sont ÉCRITES dans les fiches App Store et Google Play (voir
 # src/lib/__tests__/legalRoutes.test.ts, dépôt de l'application). Une boutique
 # qui reçoit une erreur en les ouvrant refuse la soumission — pour un motif sans
-# aucun rapport avec l'application.
-#
-# ⚠️ LE JOUR DE LA BASCULE VERS app.alba-studio.co : remplacer alba-studio.co
-#    par app.alba-studio.co dans TOUT ce bloc. Sans cela, la vitrine occupant
-#    l'apex redirigerait ces adresses vers elle-même — boucle infinie, et les
-#    cinq adresses tombent. Voir MIGRATION-APEX.md.
-#
-/privacy-policy       https://alba-studio.co/privacy-policy       301
-/terms                https://alba-studio.co/terms                301
-/suppression-compte   https://alba-studio.co/suppression-compte   301
-/delete-account       https://alba-studio.co/delete-account       301
-/faq                  https://alba-studio.co/faq                  301
+# aucun rapport avec l'application. Les deux boutiques suivent les redirections,
+# donc une 301 vers l'application suffit : il n'y a qu'une version du texte à
+# maintenir, au lieu d'une copie qui se désynchronise.
+/privacy-policy       https://app.alba-studio.co/privacy-policy       301
+/terms                https://app.alba-studio.co/terms                301
+/suppression-compte   https://app.alba-studio.co/suppression-compte   301
+/delete-account       https://app.alba-studio.co/delete-account       301
+/faq                  https://app.alba-studio.co/faq                  301
 
 # Variantes de confort, non déposées.
-/confidentialite      https://alba-studio.co/privacy-policy       301
-/cgv                  https://alba-studio.co/terms                301
-/cgu                  https://alba-studio.co/terms                301
+/confidentialite      https://app.alba-studio.co/privacy-policy       301
+/cgv                  https://app.alba-studio.co/terms                301
+/cgu                  https://app.alba-studio.co/terms                301
+
+## --- Chemins applicatifs : les liens déjà envoyés doivent survivre ---------
+# Des liens de galerie, d'invitation et de procès-verbal ont été transmis à des
+# maîtres d'ouvrage et à des entreprises avec l'apex. Le jour où la vitrine
+# occupe l'apex, sans ces règles ils atterrissent sur la page de vente — sans
+# erreur, sans test rouge, et sans que personne le signale.
+# Liste reprise de docs/decoupage-domaines.md (étape 5, point 2).
+/auth                 https://app.alba-studio.co/auth                 301
+/auth/*               https://app.alba-studio.co/auth/:splat          301
+/gallery/*            https://app.alba-studio.co/gallery/:splat       301
+/online/*             https://app.alba-studio.co/online/:splat        301
+/invite/*             https://app.alba-studio.co/invite/:splat        301
+/pv/*                 https://app.alba-studio.co/pv/:splat            301
+/reset-password       https://app.alba-studio.co/reset-password       301
+/onboarding           https://app.alba-studio.co/onboarding           301
+/trash                https://app.alba-studio.co/trash                301
+/admin                https://app.alba-studio.co/admin                301
+/admin/*              https://app.alba-studio.co/admin/:splat         301
 
 # Les mentions légales, elles, n'existent nulle part ailleurs : c'est la vitrine
 # qui les héberge.
