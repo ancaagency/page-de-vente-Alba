@@ -137,6 +137,20 @@ a:hover { color: var(--accent); }
 .foot-col a:hover { color: var(--accent); }
 button { font: inherit; color: inherit; cursor: pointer; }
 
+/* Lisible par les lecteurs d'écran et les moteurs, invisible à l'œil.
+   Sert au <h1> de la page tarifs : son titre principal est un <h2>, parce que le
+   composant est partagé avec l'accueil où ce niveau est le bon. Une page sans
+   <h1> perd un repère que les moteurs utilisent. */
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 /* Selection + scrollbar in brand colors */
 ::selection {
   background: var(--accent);

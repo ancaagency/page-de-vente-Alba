@@ -52,8 +52,11 @@ for (const page of PAGES) {
   ok(!/<script[^>]*src="[^"]*\.jsx"/.test(html), `${page} : aucun .jsx chargé`);
 
   // Un seul script en ligne suffirait à rendre 'unsafe-inline' nécessaire.
+  // JSON-LD (application/ld+json) est un bloc de DONNÉES, pas un script
+  // exécutable : la politique de sécurité du contenu ne s'y applique pas, et il
+  // ne réintroduit donc aucun besoin de 'unsafe-inline'. Il est exclu du compte.
   const enLigne = [...html.matchAll(/<script([^>]*)>([\s\S]*?)<\/script>/g)]
-    .filter((m) => !/\ssrc=/.test(m[1]) && m[2].trim() !== '');
+    .filter((m) => !/\ssrc=/.test(m[1]) && !/application\/ld\+json/.test(m[1]) && m[2].trim() !== '');
   ok(enLigne.length === 0,
      `${page} : aucun script en ligne${enLigne.length ? ` (${enLigne.length} trouvé(s))` : ''}`);
 
