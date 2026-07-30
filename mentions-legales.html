@@ -20,6 +20,10 @@
   <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" integrity="sha384-gTGxhz21lVGYNMcdJOyq01Edg0jhn/c22nsx0kyqP0TxaV5WVdsSH1fSDUf5YJj1" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
   <script src="i18n.js"></script>
+  <!-- Textes de la page, modifiables sans toucher au code. Chargé après i18n.js,
+       qui définit T(). Si ce fichier est absent ou mal formé, la page retombe sur
+       les textes inscrits dans le code : aucune panne possible de ce côté. -->
+  <script src="contenu.js"></script>
   <!-- Origine de l'application (SIGNUP_URL et CTA). Point unique de vérité. -->
   <script src="config.js"></script>
 

@@ -199,13 +199,52 @@ Pour poser une photo, ajouter un attribut `src` :
 production. Sa référence a été retirée d'`index.html`. Le `<body>` porte la
 combinaison validée (`studio` / `standard` / `serif`).
 
-### Builds React de développement
+## Modifier les textes et les images
 
-`index.html` charge `react.development.js` et `react-dom.development.js`. Les
-builds de production sont plus légers et plus rapides. Le remplacement n'a pas
-été fait ici parce que les balises portent des empreintes `integrity` : changer
-l'URL sans recalculer le hachage donne une page blanche. À faire d'un bloc, en
-récupérant les empreintes des fichiers `.production.min.js` correspondants.
+Les deux se font sans toucher au code, et sans risque de casser la page.
+
+### Les textes — `contenu.js`
+
+Les 232 textes de vente y sont regroupés par section, en français et en anglais,
+avec des commentaires qui indiquent où chacun s'affiche. On l'ouvre sur
+github.com, on modifie ce qui est entre guillemets, on enregistre : Cloudflare
+redéploie en une trentaine de secondes.
+
+**Ce fichier ne peut pas casser la page.** Les textes d'origine restent inscrits
+dans le code comme valeurs de repli, et `contenu.js` n'est qu'une couche de
+remplacement. Accolade manquante, virgule oubliée, clé mal écrite : le texte
+d'origine s'affiche à cet endroit, rien d'autre ne bouge. C'est délibéré — la
+page transpile son JSX **dans le navigateur**, donc aucune étape de build ne
+rattraperait une faute de frappe faite directement dans un `.jsx`, où elle
+donnerait une page blanche.
+
+Ce qui n'est pas dans `contenu.js`, volontairement : les libellés qui calculent
+un prix (« Vous économisez 108 € par an »), qui sont des calculs et non des
+textes, et le faux contenu des maquettes de l'application.
+
+### Les images — dossier `images/`
+
+Les quatre emplacements photo sont câblés sur leur nom de fichier définitif. Il
+suffit de déposer le fichier dans `images/` :
+
+| Fichier attendu | Où il s'affiche |
+|---|---|
+| `founder-portrait.jpg` | portrait du fondateur (cadrage vertical) |
+| `testi-camille.jpg` | avatar du premier témoignage (carré) |
+| `testi-marc.jpg` | avatar du deuxième témoignage |
+| `testi-sophie.jpg` | avatar du troisième témoignage |
+
+Tant qu'un fichier est absent, l'emplacement affiche son cartouche doré neutre.
+Aucune icône d'image cassée, aucune ligne de code à modifier.
+
+### Avant de publier une série de modifications
+
+```sh
+cd tests && npm test
+```
+
+Le contrôle vérifie que les clés se correspondent, que le remplacement prend
+effet, que le filet tient, et que la page se monte réellement dans un navigateur.
 
 ### Le doublon `Alba Studio - Landing.html`
 

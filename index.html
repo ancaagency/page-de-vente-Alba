@@ -48,6 +48,10 @@
   <!-- i18n MUST load after lenis: the minified lenis build leaks a global class `L`
        which would otherwise shadow our L(fr, en) helper -->
   <script src="i18n.js"></script>
+  <!-- Textes de la page, modifiables sans toucher au code. Chargé après i18n.js,
+       qui définit T(). Si ce fichier est absent ou mal formé, la page retombe sur
+       les textes inscrits dans le code : aucune panne possible de ce côté. -->
+  <script src="contenu.js"></script>
   <!-- Origine de l'application (SIGNUP_URL et CTA). Point unique de vérité. -->
   <script src="config.js"></script>
 </head>

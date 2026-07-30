@@ -10,81 +10,10 @@
  * Ici on sert les mêmes bibliothèques depuis npm, on applique la vraie CSP,
  * et on vérifie que les sections sont réellement montées dans le DOM.
  */
-import http from 'node:http';
-import fs from 'node:fs';
-import path from 'node:path';
 import { chromium } from 'playwright-core';
+import { demarrer } from './serveur.mjs';
 
-const ROOT = path.resolve(new URL('.', import.meta.url).pathname, '..');
-const NM = path.resolve(new URL('.', import.meta.url).pathname, 'node_modules');
-
-/** URL unpkg → fichier npm local. */
-const CDN = {
-  '/vendor/react.js': `${NM}/react/umd/react.production.min.js`,
-  '/vendor/react-dom.js': `${NM}/react-dom/umd/react-dom.production.min.js`,
-  '/vendor/babel.js': `${NM}/@babel/standalone/babel.min.js`,
-  '/vendor/gsap.js': `${NM}/gsap/dist/gsap.min.js`,
-  '/vendor/scrolltrigger.js': `${NM}/gsap/dist/ScrollTrigger.min.js`,
-  '/vendor/lenis.js': `${NM}/lenis/dist/lenis.min.js`,
-};
-
-const CSP = fs.readFileSync(path.join(ROOT, '_headers'), 'utf8')
-  .split('\n').find((l) => l.trim().startsWith('Content-Security-Policy:'))
-  .replace(/^\s*Content-Security-Policy:\s*/, '').trim()
-  // Les bibliothèques sont servies depuis 'self' pendant le test ; on retire
-  // unpkg pour ne rien assouplir par rapport à la production.
-  .replace(/https:\/\/unpkg\.com/g, '');
-
-const TYPES = {
-  '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript',
-  '.jsx': 'text/babel', '.png': 'image/png', '.jpg': 'image/jpeg',
-  '.mp3': 'audio/mpeg', '.xml': 'application/xml', '.txt': 'text/plain',
-};
-
-function reecrireHtml(html) {
-  return html
-    .replace(/https:\/\/unpkg\.com\/react@[^"]*/g, '/vendor/react.js')
-    .replace(/https:\/\/unpkg\.com\/react-dom@[^"]*/g, '/vendor/react-dom.js')
-    .replace(/https:\/\/unpkg\.com\/@babel\/standalone@[^"]*/g, '/vendor/babel.js')
-    .replace(/https:\/\/unpkg\.com\/gsap@[^"]*ScrollTrigger\.min\.js/g, '/vendor/scrolltrigger.js')
-    .replace(/https:\/\/unpkg\.com\/gsap@[^"]*gsap\.min\.js/g, '/vendor/gsap.js')
-    .replace(/https:\/\/unpkg\.com\/lenis@[^"]*/g, '/vendor/lenis.js')
-    // Les empreintes SRI sont CONSERVÉES : les fichiers servis proviennent du
-    // même paquet npm que ceux d'unpkg, donc les empreintes doivent
-    // correspondre. Une empreinte fausse fait refuser le script par Chromium,
-    // ce qui est précisément ce qu'on veut détecter ici. Seuls GSAP et Lenis,
-    // qui n'en portent pas, sont laissés tels quels.
-    // Les polices Google restent externes ; on les neutralise pour que le test
-    // ne dépende pas du réseau.
-    .replace(/<link href="https:\/\/fonts\.googleapis\.com[^>]*>/g, '');
-}
-
-const server = http.createServer((req, res) => {
-  const p = decodeURIComponent(req.url.split('?')[0]);
-
-  if (CDN[p]) {
-    res.writeHead(200, { 'Content-Type': 'text/javascript', 'Content-Security-Policy': CSP });
-    return res.end(fs.readFileSync(CDN[p]));
-  }
-
-  let rel = p === '/' ? '/index.html' : p === '/tarifs' ? '/Tarifs.html' : p;
-  const f = path.join(ROOT, rel);
-  if (!f.startsWith(ROOT) || !fs.existsSync(f) || fs.statSync(f).isDirectory()) {
-    res.writeHead(404); return res.end('not found');
-  }
-
-  const ext = path.extname(f);
-  let body = fs.readFileSync(f);
-  if (ext === '.html') body = Buffer.from(reecrireHtml(body.toString('utf8')));
-
-  res.writeHead(200, {
-    'Content-Type': TYPES[ext] || 'application/octet-stream',
-    'Content-Security-Policy': CSP,
-  });
-  res.end(body);
-});
-
-await new Promise((r) => server.listen(8790, r));
+const server = await demarrer(8790);
 
 const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH || '/opt/pw-browsers/chromium-1194/chrome-linux/chrome' });
 let echecs = 0;
@@ -201,6 +130,28 @@ for (const [route, attendus] of [
       console.log(`   ${bon ? '✅' : '❌'} emplacement ${id.padEnd(17)} → ${etat}`);
       if (!bon) echecs++;
     }
+
+    // Le message de confirmation du formulaire de contact. Dans le paquet
+    // d'origine, son appel L() n'était pas entre accolades : JSX l'affichait
+    // donc comme du texte, et le visiteur lisait « L(`Merci, $Anthony…`,
+    // `Thank you…`) » après avoir envoyé sa demande. Vérifié en envoyant
+    // réellement le formulaire — c'est le seul moyen de voir ce bloc.
+    await page.locator('#contact').scrollIntoViewIfNeeded().catch(() => {});
+    for (const c of await page.locator('#contact form input, #contact form textarea').all()) {
+      const type = await c.getAttribute('type');
+      const nom = (await c.getAttribute('name')) || '';
+      if (type === 'checkbox') { await c.check().catch(() => {}); continue; }
+      if (/mail/i.test(nom + type)) await c.fill('essai@example.com').catch(() => {});
+      else if (/tel|phone/i.test(nom + type)) await c.fill('0600000000').catch(() => {});
+      else await c.fill('Prénom Nom').catch(() => {});
+    }
+    await page.locator('#contact form button').first().click().catch(() => {});
+    await page.waitForTimeout(700);
+    const confirmation = await page.locator('.form-success').innerText().catch(() => '');
+    const propre = confirmation.includes('Merci') && !/L\(|\$\{|`/.test(confirmation);
+    console.log(`   ${propre ? '✅' : '❌'} confirmation du formulaire → ${
+      confirmation ? `« ${confirmation.replace(/\s+/g, ' ').trim().slice(0, 58)} »` : 'bloc absent'}`);
+    if (!propre) echecs++;
   }
 
   if (photosAbsentes.length) {

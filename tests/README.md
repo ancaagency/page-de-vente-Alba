@@ -54,7 +54,28 @@ Sur `/`, `/tarifs` et `/mentions-legales` :
   fichier est là, le cartouche neutre sinon, jamais l'icône d'image cassée. Les
   emplacements sont câblés sur leur nom de fichier définitif avant l'arrivée des
   photos : le test liste celles qui manquent encore (`⏳`) au lieu de compter
-  leur 404 comme une erreur, et échoue sur un 404 portant sur autre chose.
+  leur 404 comme une erreur, et échoue sur un 404 portant sur autre chose ;
+- **le formulaire de contact confirme proprement** — le test l'envoie pour de
+  bon. Dans le paquet d'origine, l'appel `L()` du message de succès n'était pas
+  entre accolades : le visiteur lisait ``L(`Merci, $Anthony…`, `Thank you…`)``
+  à l'écran après avoir envoyé sa demande.
+
+### `contenu.mjs` — la couche de contenu tient-elle ?
+
+Quatre contrôles :
+
+- **aucune bibliothèque ne revendique `Txt`.** GSAP et Lenis sont chargés en
+  scripts classiques : leurs noms minifiés d'une lettre deviennent des globaux
+  (`E L R T W _ f k u w x y z`…). Cet utilitaire s'appelait `T()` au premier
+  jet — or `T` est la classe `VirtualScroll` de Lenis. La page d'accueil ne
+  montait plus rien du tout. C'est ce test qui l'a attrapé ;
+- **le filet tient** : servi avec un `contenu.js` volontairement invalide, la
+  page s'affiche entière avec les textes du code ;
+- **le remplacement prend effet** : une clé témoin substituée apparaît bien à
+  l'écran. Un filet qui tient parce que rien ne passe jamais ne servirait à rien ;
+- **les clés se correspondent dans les deux sens** : pas d'appel sans entrée
+  (l'édition n'aurait aucun effet), pas d'entrée sans appel (on éditerait un
+  texte invisible).
 
 ### `bascule.mjs` — la migration vers l'apex tiendra-t-elle ?
 
