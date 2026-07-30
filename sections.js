@@ -13,6 +13,10 @@
    ═══════════════════════════════════════════════════════════════════════════ */
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 var _excluded = ["as", "delay", "children", "className"];
+function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
+function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); } r ? i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n : (o("next", 0), o("throw", 1), o("return", 2)); }, _regeneratorDefine2(e, r, n, t); }
+function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
 function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
 function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
@@ -773,6 +777,21 @@ var Contact = function Contact() {
     _React$useState14 = _slicedToArray(_React$useState13, 2),
     submitted = _React$useState14[0],
     setSubmitted = _React$useState14[1];
+  /* "repos" | "envoi" | "erreur" — le succès est porté par `submitted`, qui
+     existait déjà et gouverne le bloc de confirmation du design. */
+  var _React$useState15 = React.useState("repos"),
+    _React$useState16 = _slicedToArray(_React$useState15, 2),
+    envoi = _React$useState16[0],
+    setEnvoi = _React$useState16[1];
+  /* Champ-piège : invisible pour un visiteur, rempli par les robots qui
+     remplissent tout. Il vit dans l'état comme les autres champs. */
+  var _React$useState17 = React.useState(""),
+    _React$useState18 = _slicedToArray(_React$useState17, 2),
+    piege = _React$useState18[0],
+    setPiege = _React$useState18[1];
+  /* Instant d'affichage du formulaire. Le serveur refuse un envoi survenu moins
+     de deux secondes après : personne ne remplit six champs en deux secondes. */
+  var afficheA = React.useRef(Date.now());
   var set = function set(k, v) {
     return setData(function (d) {
       return _objectSpread(_objectSpread({}, d), {}, _defineProperty({}, k, v));
@@ -786,11 +805,84 @@ var Contact = function Contact() {
     setErrors(e);
     return Object.keys(e).length === 0;
   };
-  var submit = function submit(ev) {
-    ev.preventDefault();
-    if (!validate()) return;
-    setSubmitted(true);
-  };
+  /* Ce formulaire n'envoyait RIEN : il validait, affichait « Merci, nous vous
+     recontactons sous 24 h », et jetait la demande. Aucune requête réseau
+     n'existait dans toute la page. Chaque architecte qui l'a rempli est perdu.
+      Il poste désormais vers la fonction `contact-vitrine`, qui enregistre la
+     demande EN BASE puis notifie par e-mail — dans cet ordre, pour qu'une panne
+     d'e-mail ne fasse pas disparaître la demande.
+      Aucune clé ni SDK ici : le point d'entrée est public (`verify_jwt = false`),
+     un simple fetch suffit. La CSP autorise cette origine, et elle seule. */
+  var POINT_CONTACT = "https://fhrkkjvbzgkbmlnlnxce.supabase.co/functions/v1/contact-vitrine";
+  var submit = /*#__PURE__*/function () {
+    var _ref3 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee(ev) {
+      var reponse, _t;
+      return _regenerator().w(function (_context) {
+        while (1) switch (_context.p = _context.n) {
+          case 0:
+            ev.preventDefault();
+            if (validate()) {
+              _context.n = 1;
+              break;
+            }
+            return _context.a(2);
+          case 1:
+            if (!(envoi === "envoi")) {
+              _context.n = 2;
+              break;
+            }
+            return _context.a(2);
+          case 2:
+            // double-clic
+            setEnvoi("envoi");
+            _context.p = 3;
+            _context.n = 4;
+            return fetch(POINT_CONTACT, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify({
+                name: data.name,
+                agency: data.agency,
+                email: data.email,
+                phone: data.phone,
+                projects: data.projects,
+                message: data.msg,
+                locale: window.__albaLang === "en" ? "en" : "fr",
+                website: piege,
+                affiche_a: afficheA.current
+              })
+            });
+          case 4:
+            reponse = _context.v;
+            if (reponse.ok) {
+              _context.n = 5;
+              break;
+            }
+            throw new Error("HTTP " + reponse.status);
+          case 5:
+            setEnvoi("repos");
+            setSubmitted(true);
+            _context.n = 7;
+            break;
+          case 6:
+            _context.p = 6;
+            _t = _context.v;
+            /* Ne JAMAIS afficher la confirmation quand l'envoi a échoué : c'est
+               exactement le défaut qu'on corrige. Le visiteur doit pouvoir réessayer,
+               et l'adresse e-mail lui est donnée comme porte de sortie. */
+            console.error("[contact] envoi impossible", _t);
+            setEnvoi("erreur");
+          case 7:
+            return _context.a(2);
+        }
+      }, _callee, null, [[3, 6]]);
+    }));
+    return function submit(_x) {
+      return _ref3.apply(this, arguments);
+    };
+  }();
   return /*#__PURE__*/React.createElement("section", {
     className: "section section-cream",
     id: "contact"
@@ -831,7 +923,34 @@ var Contact = function Contact() {
   }, /*#__PURE__*/React.createElement(Icon, {
     name: "check",
     size: 14
-  }), " ", L("Merci, ".concat(data.name.split(" ")[0], ". Nous vous recontactons sous 24 h pour convenir d'un cr\xE9neau."), "Thank you, ".concat(data.name.split(" ")[0], ". We'll be in touch within 24 hours to book a slot."))), /*#__PURE__*/React.createElement("div", {
+  }), " ", L("Merci, ".concat(data.name.split(" ")[0], ". Nous vous recontactons sous 24 h pour convenir d'un cr\xE9neau."), "Thank you, ".concat(data.name.split(" ")[0], ". We'll be in touch within 24 hours to book a slot."))), envoi === "erreur" && /*#__PURE__*/React.createElement("div", {
+    className: "form-error",
+    role: "alert"
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "shield",
+    size: 14
+  }), " ", Txt("contact.envoi-impossible", "L'envoi n'a pas abouti. Réessayez, ou écrivez-nous directement à contact@alba-studio.co.", "Sending failed. Please try again, or email us directly at contact@alba-studio.co.")), /*#__PURE__*/React.createElement("div", {
+    "aria-hidden": "true",
+    style: {
+      position: "absolute",
+      left: "-9999px",
+      width: 1,
+      height: 1,
+      overflow: "hidden"
+    }
+  }, /*#__PURE__*/React.createElement("label", {
+    htmlFor: "alba-website"
+  }, "Ne pas remplir"), /*#__PURE__*/React.createElement("input", {
+    id: "alba-website",
+    name: "website",
+    type: "text",
+    tabIndex: -1,
+    autoComplete: "off",
+    value: piege,
+    onChange: function onChange(e) {
+      return setPiege(e.target.value);
+    }
+  })), /*#__PURE__*/React.createElement("div", {
     className: "form-row"
   }, /*#__PURE__*/React.createElement("div", {
     className: "field ".concat(errors.name ? "error" : "")
@@ -905,8 +1024,9 @@ var Contact = function Contact() {
     className: "form-note"
   }, Txt("contact.en-envoyant-vous-acceptez-d-etre", "En envoyant, vous acceptez d'être recontacté·e une fois pour planifier la démo. RGPD-compliant.", "By sending, you agree to be contacted once to schedule the demo. GDPR-compliant.")), /*#__PURE__*/React.createElement("button", {
     type: "submit",
-    className: "btn btn-primary"
-  }, Txt("contact.demander-une-demo-2", "Demander une démo", "Request a demo"), " ", /*#__PURE__*/React.createElement(Icon, {
+    className: "btn btn-primary",
+    disabled: envoi === "envoi"
+  }, envoi === "envoi" ? Txt("contact.envoi-en-cours", "Envoi…", "Sending…") : Txt("contact.demander-une-demo-2", "Demander une démo", "Request a demo"), " ", /*#__PURE__*/React.createElement(Icon, {
     name: "arrow-right",
     size: 14,
     className: "btn-arrow"

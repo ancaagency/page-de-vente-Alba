@@ -446,6 +446,15 @@ const Contact = () => {
   const [data, setData] = React.useState({ name: "", agency: "", email: "", phone: "", projects: "1-3", msg: "" });
   const [errors, setErrors] = React.useState({});
   const [submitted, setSubmitted] = React.useState(false);
+  /* "repos" | "envoi" | "erreur" — le succès est porté par `submitted`, qui
+     existait déjà et gouverne le bloc de confirmation du design. */
+  const [envoi, setEnvoi] = React.useState("repos");
+  /* Champ-piège : invisible pour un visiteur, rempli par les robots qui
+     remplissent tout. Il vit dans l'état comme les autres champs. */
+  const [piege, setPiege] = React.useState("");
+  /* Instant d'affichage du formulaire. Le serveur refuse un envoi survenu moins
+     de deux secondes après : personne ne remplit six champs en deux secondes. */
+  const afficheA = React.useRef(Date.now());
   const set = (k, v) => setData(d => ({ ...d, [k]: v }));
   const validate = () => {
     const e = {};
@@ -456,10 +465,50 @@ const Contact = () => {
     setErrors(e);
     return Object.keys(e).length === 0;
   };
-  const submit = (ev) => {
+  /* Ce formulaire n'envoyait RIEN : il validait, affichait « Merci, nous vous
+     recontactons sous 24 h », et jetait la demande. Aucune requête réseau
+     n'existait dans toute la page. Chaque architecte qui l'a rempli est perdu.
+
+     Il poste désormais vers la fonction `contact-vitrine`, qui enregistre la
+     demande EN BASE puis notifie par e-mail — dans cet ordre, pour qu'une panne
+     d'e-mail ne fasse pas disparaître la demande.
+
+     Aucune clé ni SDK ici : le point d'entrée est public (`verify_jwt = false`),
+     un simple fetch suffit. La CSP autorise cette origine, et elle seule. */
+  const POINT_CONTACT = "https://fhrkkjvbzgkbmlnlnxce.supabase.co/functions/v1/contact-vitrine";
+
+  const submit = async (ev) => {
     ev.preventDefault();
     if (!validate()) return;
-    setSubmitted(true);
+    if (envoi === "envoi") return;   // double-clic
+    setEnvoi("envoi");
+
+    try {
+      const reponse = await fetch(POINT_CONTACT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: data.name,
+          agency: data.agency,
+          email: data.email,
+          phone: data.phone,
+          projects: data.projects,
+          message: data.msg,
+          locale: window.__albaLang === "en" ? "en" : "fr",
+          website: piege,
+          affiche_a: afficheA.current,
+        }),
+      });
+      if (!reponse.ok) throw new Error("HTTP " + reponse.status);
+      setEnvoi("repos");
+      setSubmitted(true);
+    } catch (e) {
+      /* Ne JAMAIS afficher la confirmation quand l'envoi a échoué : c'est
+         exactement le défaut qu'on corrige. Le visiteur doit pouvoir réessayer,
+         et l'adresse e-mail lui est donnée comme porte de sortie. */
+      console.error("[contact] envoi impossible", e);
+      setEnvoi("erreur");
+    }
   };
   return (
     <section className="section section-cream" id="contact">
@@ -492,6 +541,19 @@ const Contact = () => {
                 <Icon name="check" size={14}/> {L(`Merci, ${data.name.split(" ")[0]}. Nous vous recontactons sous 24 h pour convenir d'un créneau.`, `Thank you, ${data.name.split(" ")[0]}. We'll be in touch within 24 hours to book a slot.`)}
               </div>
             )}
+            {envoi === "erreur" && (
+              <div className="form-error" role="alert">
+                <Icon name="shield" size={14}/> {Txt("contact.envoi-impossible", "L'envoi n'a pas abouti. Réessayez, ou écrivez-nous directement à contact@alba-studio.co.", "Sending failed. Please try again, or email us directly at contact@alba-studio.co.")}
+              </div>
+            )}
+            {/* Champ-piège. Retiré du flux, du clavier et des lecteurs d'écran :
+                un visiteur ne le voit ni ne l'atteint jamais. Il n'est PAS en
+                display:none, que certains robots savent détecter. */}
+            <div aria-hidden="true" style={{position:"absolute", left:"-9999px", width:1, height:1, overflow:"hidden"}}>
+              <label htmlFor="alba-website">Ne pas remplir</label>
+              <input id="alba-website" name="website" type="text" tabIndex={-1} autoComplete="off"
+                     value={piege} onChange={e => setPiege(e.target.value)} />
+            </div>
             <div className="form-row">
               <div className={`field ${errors.name ? "error" : ""}`}>
                 <label>{Txt("contact.nom-complet", "Nom complet", "Full name")}</label>
@@ -533,7 +595,7 @@ const Contact = () => {
             </div>
             <div className="form-foot">
               <p className="form-note">{Txt("contact.en-envoyant-vous-acceptez-d-etre", "En envoyant, vous acceptez d'être recontacté·e une fois pour planifier la démo. RGPD-compliant.", "By sending, you agree to be contacted once to schedule the demo. GDPR-compliant.")}</p>
-              <button type="submit" className="btn btn-primary">{Txt("contact.demander-une-demo-2", "Demander une démo", "Request a demo")} <Icon name="arrow-right" size={14} className="btn-arrow"/></button>
+              <button type="submit" className="btn btn-primary" disabled={envoi === "envoi"}>{envoi === "envoi" ? Txt("contact.envoi-en-cours", "Envoi…", "Sending…") : Txt("contact.demander-une-demo-2", "Demander une démo", "Request a demo")} <Icon name="arrow-right" size={14} className="btn-arrow"/></button>
             </div>
           </form>
         </Reveal>

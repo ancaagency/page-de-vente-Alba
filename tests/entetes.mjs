@@ -68,7 +68,6 @@ const EXIGES = [
   ["frame-ancestors", "'none'"],
   ["base-uri", "'self'"],
   ["form-action", "'self'"],
-  ["connect-src", "'none'"],
   ["img-src", "'self' data: blob:"],
   ["media-src", "'self'"],
 ];
@@ -78,10 +77,16 @@ for (const [nom, valeur] of EXIGES) {
 
 ok(directive('upgrade-insecure-requests') === '', 'upgrade-insecure-requests');
 
-// Plus rien ne fait de requête réseau depuis le code : le 'self' d'avant servait
-// à Babel, qui allait chercher chaque .jsx par fetch(). Plus de Babel, donc plus
-// aucune destination possible pour une exfiltration.
-ok(directive('connect-src') === "'none'", "connect-src 'none' — plus aucune destination réseau");
+// connect-src doit nommer UNE destination et une seule : celle du formulaire de
+// contact. Un 'self' ou un joker rouvriraient une voie d'exfiltration si un
+// script venait a etre altere. La directive etait a 'none' avant que le
+// formulaire ne soit branche.
+const connect = directive('connect-src') || '';
+console.log(`   connect-src ${connect}`);
+ok(/^https:\/\/[a-z0-9]+\.supabase\.co$/.test(connect),
+   'connect-src nomme exactement l’origine du point d’entree du formulaire');
+ok(!connect.includes('*') && !connect.includes("'self'"),
+   'sans joker ni \'self\'');
 
 // LE point de tout l'exercice de transpilation préalable. Ces deux mots-clés
 // rendaient la CSP inopérante contre l'injection de script. Les réintroduire
@@ -96,7 +101,12 @@ ok(!(directive('style-src') || '').includes('unsafe-eval'), "style-src sans 'uns
 
 // Les origines tierces autorisées, énumérées : toute nouvelle doit être un choix
 // explicite, pas un ajout qui passe inaperçu.
-const TIERS_ADMIS = new Set(['https://unpkg.com', 'https://fonts.googleapis.com', 'https://fonts.gstatic.com']);
+const TIERS_ADMIS = new Set([
+  'https://unpkg.com',                              // React, GSAP, Lenis (avec empreintes)
+  'https://fonts.googleapis.com',                   // feuille de style des polices
+  'https://fonts.gstatic.com',                      // fichiers de polices
+  'https://fhrkkjvbzgkbmlnlnxce.supabase.co',       // point d'entrée du formulaire de contact
+]);
 const tiers = [...new Set((csp || '').match(/https?:\/\/[^\s;]+/g) || [])];
 const inconnus = tiers.filter((t) => !TIERS_ADMIS.has(t));
 console.log(`   origines tierces autorisées : ${tiers.join(', ') || 'aucune'}`);

@@ -133,27 +133,10 @@ for (const [route, attendus] of [
       if (!bon) echecs++;
     }
 
-    // Le message de confirmation du formulaire de contact. Dans le paquet
-    // d'origine, son appel L() n'était pas entre accolades : JSX l'affichait
-    // donc comme du texte, et le visiteur lisait « L(`Merci, $Anthony…`,
-    // `Thank you…`) » après avoir envoyé sa demande. Vérifié en envoyant
-    // réellement le formulaire — c'est le seul moyen de voir ce bloc.
-    await page.locator('#contact').scrollIntoViewIfNeeded().catch(() => {});
-    for (const c of await page.locator('#contact form input, #contact form textarea').all()) {
-      const type = await c.getAttribute('type');
-      const nom = (await c.getAttribute('name')) || '';
-      if (type === 'checkbox') { await c.check().catch(() => {}); continue; }
-      if (/mail/i.test(nom + type)) await c.fill('essai@example.com').catch(() => {});
-      else if (/tel|phone/i.test(nom + type)) await c.fill('0600000000').catch(() => {});
-      else await c.fill('Prénom Nom').catch(() => {});
-    }
-    await page.locator('#contact form button').first().click().catch(() => {});
-    await page.waitForTimeout(700);
-    const confirmation = await page.locator('.form-success').innerText().catch(() => '');
-    const propre = confirmation.includes('Merci') && !/L\(|\$\{|`/.test(confirmation);
-    console.log(`   ${propre ? '✅' : '❌'} confirmation du formulaire → ${
-      confirmation ? `« ${confirmation.replace(/\s+/g, ' ').trim().slice(0, 58)} »` : 'bloc absent'}`);
-    if (!propre) echecs++;
+    // Le formulaire de contact est eprouve dans tests/formulaire.mjs, qui
+    // simule les reponses du serveur. C'est ce qui permet d'y verifier le cas
+    // qui compte le plus : quand l'envoi echoue, AUCUNE confirmation ne doit
+    // s'afficher. Un appel reel ne permettrait pas de provoquer cet echec.
   }
 
   if (photosAbsentes.length) {

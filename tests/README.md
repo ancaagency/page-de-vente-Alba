@@ -97,6 +97,27 @@ tiers porte une empreinte `integrity`.
 Éprouvé en ajoutant une ligne à `founder.jsx` sans régénérer : le test signale
 bien `founder.js` à régénérer.
 
+### `formulaire.mjs` — le formulaire de contact envoie-t-il vraiment ?
+
+Ce formulaire **n'envoyait rien**. Il validait les champs, affichait « Merci,
+nous vous recontactons sous 24 h », et jetait la demande : aucune requête réseau
+n'existait dans toute la page. La panne était invisible des deux côtés — le
+visiteur lisait une confirmation, l'éditeur ne voyait rien arriver sans savoir
+pourquoi.
+
+Le test le plus important de ce fichier n'est donc **pas** celui du succès :
+c'est celui de l'échec. Une confirmation affichée alors que rien n'est parti,
+c'est exactement le défaut d'origine. Trois cas :
+
+- le serveur accepte → la confirmation s'affiche, et la charge utile est
+  inspectée (nom, e-mail, langue, champ-piège vide, instant d'affichage) ;
+- **le serveur refuse** → aucune confirmation, un message d'erreur qui donne
+  l'adresse e-mail comme porte de sortie ;
+- le réseau tombe → même chose.
+
+Les réponses sont simulées : le test ne dépend d'aucun réseau, et peut provoquer
+l'échec à volonté — ce qu'un appel réel ne permettrait pas.
+
 ### `entetes.mjs` — la posture de sécurité est-elle intacte ?
 
 Sans navigateur ni réseau : il analyse `_headers` et vérifie chaque décision qui

@@ -29,10 +29,12 @@
   # compromis ne peut pas leur substituer autre chose, le navigateur refuserait.
   # (GSAP, ScrollTrigger et Lenis n'en avaient aucune jusqu'ici.)
   #
-  # connect-src 'none' : plus rien ne fait de requête réseau depuis le code. Ce
-  #   'self' servait à Babel, qui allait chercher chaque .jsx par fetch(). Il n'y
-  #   a plus de Babel, donc plus de fetch — et plus aucune destination possible
-  #   pour une exfiltration.
+  # connect-src : UNE seule destination, celle du formulaire de contact. Cette
+  #   directive était à 'none' depuis la transpilation ; le formulaire de démo
+  #   poste désormais vers la fonction contact-vitrine, et sans cette ligne le
+  #   navigateur bloquerait l'envoi. L'origine est nommée explicitement plutôt
+  #   que 'self' ou un joker : c'est la seule adresse que la page a le droit de
+  #   joindre.
   # object-src / frame-src / worker-src 'none' : plus strict que le repli sur
   #   default-src. Vérifié : ni <object>, ni <embed>, ni <iframe>, ni Worker,
   #   ni Service Worker dans le projet.
@@ -40,7 +42,7 @@
   #   et les pages ont des blocs <style>. Un style injecté ne s'exécute pas ;
   #   le risque n'a rien de comparable à celui d'un script.
   # media-src 'self' sert au son d'apparition de Léo (uploads/*.mp3).
-  Content-Security-Policy: default-src 'self'; script-src 'self' https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; media-src 'self'; connect-src 'none'; object-src 'none'; frame-src 'none'; worker-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests
+  Content-Security-Policy: default-src 'self'; script-src 'self' https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; media-src 'self'; connect-src https://fhrkkjvbzgkbmlnlnxce.supabase.co; object-src 'none'; frame-src 'none'; worker-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests
 
   # Deux en-têtes volontairement ABSENTS, pour ne pas confondre durcissement et
   # dégâts :

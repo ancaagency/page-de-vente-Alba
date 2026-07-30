@@ -4,12 +4,13 @@
   "type": "module",
   "description": "Vérifications de la page de vente, et outillage de la transpilation préalable des .jsx. Le site publié, lui, reste du HTML statique sans dépendance.",
   "scripts": {
-    "test": "node transpile.mjs && node entetes.mjs && node smoke.mjs && node contenu.mjs && node bascule.mjs",
+    "test": "node transpile.mjs && node entetes.mjs && node smoke.mjs && node contenu.mjs && node formulaire.mjs && node bascule.mjs",
     "smoke": "node smoke.mjs",
     "contenu": "node contenu.mjs",
     "bascule": "node bascule.mjs",
     "entetes": "node entetes.mjs",
-    "transpile": "node transpile.mjs"
+    "transpile": "node transpile.mjs",
+    "formulaire": "node formulaire.mjs"
   },
   "devDependencies": {
     "@babel/standalone": "7.29.0",

@@ -904,6 +904,14 @@ window.ALBA_CONTENU = {
     fr: "En envoyant, vous acceptez d'être recontacté·e une fois pour planifier la démo. RGPD-compliant.",
     en: "By sending, you agree to be contacted once to schedule the demo. GDPR-compliant.",
   },
+  "contact.envoi-en-cours": {
+    fr: "Envoi…",
+    en: "Sending…",
+  },
+  "contact.envoi-impossible": {
+    fr: "L'envoi n'a pas abouti. Réessayez, ou écrivez-nous directement à contact@alba-studio.co.",
+    en: "Sending failed. Please try again, or email us directly at contact@alba-studio.co.",
+  },
   "contact.demander-une-demo-2": {
     fr: "Demander une démo",
     en: "Request a demo",

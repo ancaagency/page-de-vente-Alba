@@ -191,6 +191,27 @@ Images et médias sont mis en cache une semaine.
 
 ---
 
+## Le formulaire de contact
+
+Il poste vers la fonction **`contact-vitrine`** (dépôt de l'application), qui
+enregistre la demande dans `demo_requests` **puis** notifie par e-mail — dans cet
+ordre, pour qu'une panne d'e-mail ne fasse pas disparaître la demande.
+
+Aucune clé ni SDK dans la vitrine : le point d'entrée est public
+(`verify_jwt = false`), un simple `fetch` suffit. La CSP nomme cette origine, et
+elle seule.
+
+**À faire avant que ça fonctionne réellement** — côté Supabase :
+
+1. appliquer la migration `20260730140000_demandes_de_demo_vitrine.sql` ;
+2. déployer la fonction `contact-vitrine` ;
+3. renseigner les secrets : `RESEND_API_KEY` (déjà présent si les autres e-mails
+   partent), et facultativement `CONTACT_NOTIFICATION_EMAIL` (défaut
+   `contact@alba-studio.co`) et `IP_HASH_SALT`.
+
+Tant que ce n'est pas fait, l'envoi échoue **visiblement** : le visiteur voit un
+message d'erreur avec l'adresse e-mail, et non une fausse confirmation.
+
 ## Points restants
 
 ### Photos
