@@ -150,8 +150,94 @@ sous-traitant qui l'atteste que de s'y fier de mémoire.
 
 ---
 
+## 6. « Jusqu'à 2 Go par fichier » ✅ corrigé en 100 Mo
+
+La réponse de la FAQ sur les formats promettait **2 Go par fichier**
+(`sections.jsx`, `faq.tous-pdf-dwg-ifc-images-videos`). Trois mesures dans le
+dépôt de l'application disent autre chose :
+
+| Source | Valeur |
+|---|---|
+| `plan_entitlements.max_upload_size_mb`, profil « Alba Studio » | **100** Mo |
+| `plan_entitlements.max_upload_size_mb`, profil gratuit | **25** Mo |
+| Bucket `originals` (`file_size_limit`) | **1 Go** |
+| Bucket `previews` (`file_size_limit`) | 50 Mo |
+| Repli dans le code si le réglage manque (`useSubscriptionFeatures.ts:43`) | 40 Mo |
+
+La page annonçait donc vingt fois la limite déclarée du profil payant, et le
+double du plafond technique de l'infrastructure.
+
+À noter : `getMaxUploadSizeMB()` est **exporté mais jamais appelé**. La limite par
+profil n'est appliquée nulle part ; le seul plafond réellement opposé à un
+téléversement est celui du bucket. C'est aussi un défaut à traiter côté
+application — un quota qui n'est pas appliqué n'est pas un quota.
+
+Corrigé en **100 Mo**, seule valeur vraie sous toutes les lectures. Pour promettre
+davantage, dans cet ordre : porter `max_upload_size_mb` à la valeur voulue, la
+faire réellement appliquer, et pour dépasser 1 Go relever aussi le
+`file_size_limit` du bucket.
+
+## 7. Affirmations invérifiables depuis le dépôt ⛔ décision attendue
+
+Ces éléments ne peuvent pas être contrôlés dans le code : ils ne dépendent que
+de faits que vous seul connaissez. Ils sont réunis ici parce qu'ils relèvent tous
+de la même règle — depuis la transposition de la directive 2005/29/CE, un faux
+avis ou un faux témoignage figure dans la liste des pratiques commerciales
+**réputées trompeuses en toute circonstance** (art. L121-4 du code de la
+consommation), sans qu'il soit besoin de démontrer un préjudice.
+
+### a. Trois témoignages nommés — `sections.jsx`, section `Testimonials`
+
+- **Camille Lavigne**, « ARCHITECTE DPLG · LYON »
+- **Marc Noiret**, « STUDIO MN · BORDEAUX » — cité une seconde fois dans la
+  galerie (`gallery.jsx`, « M. NOIRET · STUDIO MN »)
+- **Sophie Obellier**, « ATELIER VAUBAN · PARIS »
+
+Chacun porte une citation entre guillemets. Trois avatars photo leur sont
+réservés (`testi-camille.jpg`, `testi-marc.jpg`, `testi-sophie.jpg`).
+
+### b. Cinq agences présentées comme clientes — `sections.jsx`, section `Logos`
+
+Sous le titre « **Les agences pilotes construisent déjà avec ALBA** » :
+Revol architecte, ADN ARCHITECTURE, Easy Peasy intérieur, Sublimes intérieurs,
+FEEL INTÉRIEURS.
+
+Citer le nom d'une société pour suggérer qu'elle est cliente suppose son accord
+écrit, indépendamment de la question de la véracité.
+
+### c. Trois chiffres de bénéfices — `sections.jsx`, section `TestiBenefits`
+
+| Chiffre | Statut |
+|---|---|
+| **6h** économisées par projet et par mois | à étayer, ou à formuler comme un objectif |
+| **100 %** des arbitrages tracés | défendable : c'est une propriété du produit, pas une mesure |
+| **4,8/5** satisfaction maître d'ouvrage | c'est une **note d'avis**. La publier suppose des avis réellement collectés, et l'art. L111-7-2 impose d'indiquer s'ils sont vérifiés et à quelle date |
+
+### d. Deux engagements opérationnels
+
+- « la plupart des architectes sont opérationnels en moins d'une heure »
+- « importer vos projets en cours prend en moyenne une demi-journée. On vous
+  accompagne sur l'onboarding sans frais. » — celui-ci engage une prestation
+  gratuite.
+
+### Ce qu'il faut décider
+
+Pour chaque bloc : **c'est vrai et documenté**, auquel cas il reste tel quel ;
+**c'est vrai mais sans trace écrite**, auquel cas il faut l'accord des personnes
+citées ; ou **c'est un texte de remplissage de maquette**, auquel cas il doit
+partir avant la mise en ligne. Le troisième cas est le plus courant sur une page
+livrée par un studio de design, et c'est celui qui coûte le plus cher.
+
+Rien n'a été retiré de ma propre initiative : supprimer des témoignages réels
+serait aussi dommageable que publier des faux.
+
 ## Ce qu'il reste à faire
 
+- [ ] **Trancher le point 7** : témoignages, agences pilotes, chiffres de
+      bénéfices, engagements d'accompagnement. C'est le seul point restant qui
+      expose juridiquement, et il bloque la mise en ligne publique.
+- [ ] Faire appliquer `max_upload_size_mb` côté application (point 6) : le quota
+      est déclaré mais jamais lu.
 - [ ] Vérifier la juridiction du bucket Cloudflare R2 (point 3).
 - [ ] Étayer « chiffrement AES-256 au repos » par la documentation du
       sous-traitant (point 4).

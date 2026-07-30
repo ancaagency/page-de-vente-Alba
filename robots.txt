@@ -1,4 +1,17 @@
 User-agent: *
 Allow: /
 
+# Documents internes. Ils sont déjà renvoyés en 301 vers / par _redirects, donc
+# un robot qui suit l'adresse n'obtient pas le contenu ; ces lignes évitent
+# qu'il la demande, et remettent une seconde barrière si une règle de
+# redirection venait à disparaître. Le cahier des charges détaille la stratégie
+# App Store : il n'a rien à faire dans un index de recherche.
+Disallow: /README.md
+Disallow: /DEPLOIEMENT.md
+Disallow: /MIGRATION-APEX.md
+Disallow: /COHERENCE-PROMESSES.md
+Disallow: /docs/
+Disallow: /tests/
+Disallow: /outils/
+
 Sitemap: https://www.alba-studio.co/sitemap.xml

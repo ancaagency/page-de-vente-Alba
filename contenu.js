@@ -783,8 +783,8 @@ window.ALBA_CONTENU = {
     en: "What file formats can I share?",
   },
   "faq.tous-pdf-dwg-ifc-images-videos": {
-    fr: "Tous — PDF, DWG, IFC, images, vidéos, jusqu'à 2 Go par fichier. Les plans PDF et les images s'ouvrent directement dans le navigateur : vos clients n'ont besoin d'aucun logiciel.",
-    en: "All of them — PDF, DWG, IFC, images, videos, up to 2 GB per file. PDF plans and images open right in the browser: your clients don't need any software.",
+    fr: "Tous — PDF, DWG, IFC, images, vidéos, jusqu'à 100 Mo par fichier. Les plans PDF et les images s'ouvrent directement dans le navigateur : vos clients n'ont besoin d'aucun logiciel.",
+    en: "All of them — PDF, DWG, IFC, images, videos, up to 100 MB per file. PDF plans and images open right in the browser: your clients don't need any software.",
   },
   "faq.ou-sont-hebergees-mes-donnees": {
     fr: "Où sont hébergées mes données ?",

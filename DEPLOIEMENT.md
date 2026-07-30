@@ -149,7 +149,7 @@ faire sur le domaine public. Les règles sont dans `_redirects`.
 |---|---|
 | `_redirects` | `/tarifs` et `/pricing`, redirection du doublon, mise à l'abri des documents internes, filet pour les adresses légales |
 | `_headers` | en-têtes de sécurité, CSP, politique de cache |
-| `robots.txt` | indexation ouverte + déclaration du sitemap |
+| `robots.txt` | indexation ouverte, documents internes exclus, déclaration du sitemap |
 | `sitemap.xml` | trois adresses publiques de la vitrine |
 
 ### À propos de la CSP
@@ -172,25 +172,16 @@ Images et médias sont mis en cache une semaine.
 
 ## Points restants
 
-### Photos manquantes
+### Photos
 
 `image-slot.js` **ne figurait pas dans le paquet de passation** alors qu'il était
 référencé. Il a été réécrit au minimum pour que la page ne montre pas quatre
-trous. Quatre emplacements attendent encore de vraies images :
-
-| Emplacement | Fichier | Identifiant |
-|---|---|---|
-| Portrait du fondateur | `founder.jsx:9` | `founder-portrait` |
-| Avatar témoignage 1 | `sections.jsx:229` | `testi-camille` |
-| Avatar témoignage 2 | `sections.jsx:240` | `testi-marc` |
-| Avatar témoignage 3 | `sections.jsx:251` | `testi-sophie` |
-
-Pour poser une photo, ajouter un attribut `src` :
-
-```jsx
-<image-slot id="founder-portrait" shape="rect" src="images/portrait-anthony.jpg"
-            alt="Anthony Cardona"></image-slot>
-```
+trous. Les quatre emplacements sont désormais câblés sur leur nom de fichier
+définitif : il suffit de déposer le fichier dans `images/`, sans toucher au code.
+Voir « Modifier les textes et les images » plus haut. Le portrait du fondateur
+est en place ; les trois avatars de témoignages sont encore attendus — et leur
+sort dépend d'abord du point 7 de `COHERENCE-PROMESSES.md`, qui demande si ces
+témoignages sont réels.
 
 ### Panneau de réglage du design
 
@@ -243,14 +234,35 @@ Le cadre du portrait est en `aspect-ratio: 4/5` (voir `founder.css`) : une photo
 dans ce rapport se pose sans aucun recadrage. `founder-portrait.jpg` fait
 1122 × 1402 px, soit exactement 0,800.
 
-### Poids des photos
+### Poids des images — la règle appliquée
 
-Les photos sont enregistrées en **JPEG progressif, qualité 86**, et non en PNG.
-Le PNG n'a d'intérêt que pour les aplats et la transparence — sur une photo il
-pèse dix fois plus pour un résultat identique à l'œil. Le portrait est arrivé en
-PNG de 1,85 Mo ; converti, il fait 179 Ko, sans artefact visible sur la peau, les
-cheveux ni le dégradé du fond, qui sont les trois endroits où le JPEG trahit.
-Appliquez le même traitement aux trois avatars.
+Les photos sont enregistrées en **JPEG progressif, qualité 86**, redimensionnées
+au **double de leur taille d'affichage réelle** (mesurée dans le navigateur, pas
+estimée). Le PNG n'est gardé que là où la transparence est réellement utilisée.
+
+Le dossier est passé de **7,2 Mo à 1,9 Mo** sans différence visible :
+
+| Fichier | Avant | Après | Ce qui a été fait |
+|---|---|---|---|
+| `images/pause-lecture.jpg` | 4,1 Mo | 175 Ko | 4403 px de large pour un affichage de 481 px → ramené à 1100 px |
+| `images/villa-interieur.jpg` | 764 Ko | 382 Ko | ramené à 1600 px |
+| `images/escalier-spirale.jpg` | 438 Ko | 95 Ko | ramené à 800 px |
+| `images/chateau-a-renover.jpg` | 202 Ko | 122 Ko | réencodé (déjà sous la densité double) |
+| `images/logo-alba.png` | 228 Ko | 19 Ko | 1000 px pour un affichage de 52 px → ramené à 256 px |
+| `uploads/ordinateur-crop.png` | 256 Ko | 57 Ko | quantifié, qualité validée 98-100 par pngquant |
+| `uploads/mobile-crop.png` | 450 Ko | 357 Ko | recompression sans perte |
+| `uploads/tablette-crop.png` | 436 Ko | 338 Ko | recompression sans perte |
+
+Les deux derniers ne descendent pas plus bas volontairement : la quantification
+gagnait un facteur 4 mais introduisait un tramage visible sur les tons chair et
+les aplats clairs de la maquette. Un gain de poids ne vaut pas une dégradation
+visible sur ce qui *est* l'argument de vente.
+
+`images/app-cockpit-web.jpg` et `images/signature-anthony.png` sont laissés tels
+quels : ils sont déjà sous la taille nécessaire en densité double.
+
+Appliquez la même règle aux trois avatars de témoignages : JPEG qualité 86,
+carrés, environ 176 px de côté suffisent (affichage 44 px, densité double, marge).
 
 ### Avant de publier une série de modifications
 
