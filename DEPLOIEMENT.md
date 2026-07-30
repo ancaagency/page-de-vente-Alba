@@ -227,15 +227,30 @@ textes, et le faux contenu des maquettes de l'application.
 Les quatre emplacements photo sont câblés sur leur nom de fichier définitif. Il
 suffit de déposer le fichier dans `images/` :
 
-| Fichier attendu | Où il s'affiche |
-|---|---|
-| `founder-portrait.jpg` | portrait du fondateur (cadrage vertical) |
-| `testi-camille.jpg` | avatar du premier témoignage (carré) |
-| `testi-marc.jpg` | avatar du deuxième témoignage |
-| `testi-sophie.jpg` | avatar du troisième témoignage |
+| Fichier attendu | Où il s'affiche | État |
+|---|---|---|
+| `founder-portrait.jpg` | portrait du fondateur (cadrage vertical 4/5) | fourni |
+| `testi-camille.jpg` | avatar du premier témoignage (carré) | en attente |
+| `testi-marc.jpg` | avatar du deuxième témoignage | en attente |
+| `testi-sophie.jpg` | avatar du troisième témoignage | en attente |
 
 Tant qu'un fichier est absent, l'emplacement affiche son cartouche doré neutre.
-Aucune icône d'image cassée, aucune ligne de code à modifier.
+Aucune icône d'image cassée, aucune ligne de code à modifier. Le nom du fichier
+doit être **exactement** celui du tableau : déposé sous un autre nom, il ne
+s'affiche pas, et la console du navigateur indique alors le chemin attendu.
+
+Le cadre du portrait est en `aspect-ratio: 4/5` (voir `founder.css`) : une photo
+dans ce rapport se pose sans aucun recadrage. `founder-portrait.jpg` fait
+1122 × 1402 px, soit exactement 0,800.
+
+### Poids des photos
+
+Les photos sont enregistrées en **JPEG progressif, qualité 86**, et non en PNG.
+Le PNG n'a d'intérêt que pour les aplats et la transparence — sur une photo il
+pèse dix fois plus pour un résultat identique à l'œil. Le portrait est arrivé en
+PNG de 1,85 Mo ; converti, il fait 179 Ko, sans artefact visible sur la peau, les
+cheveux ni le dégradé du fond, qui sont les trois endroits où le JPEG trahit.
+Appliquez le même traitement aux trois avatars.
 
 ### Avant de publier une série de modifications
 

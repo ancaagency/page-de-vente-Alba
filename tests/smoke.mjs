@@ -23,7 +23,9 @@ let echecs = 0;
  * dans images/ : le test exigera alors qu'elle s'affiche réellement.
  */
 const PHOTOS_EN_ATTENTE = [
-  'founder-portrait.jpg',
+  // founder-portrait.jpg est fournie : elle est retirée de cette liste, donc son
+  // emplacement doit désormais afficher « photo » et non « cartouche ». Un 404
+  // sur ce fichier compterait maintenant comme une erreur.
   'testi-camille.jpg',
   'testi-marc.jpg',
   'testi-sophie.jpg',
