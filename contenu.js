@@ -451,12 +451,12 @@ window.ALBA_CONTENU = {
     en: "What the early adopters say",
   },
   "temoignages.ils-ont-essuye-les-platres": {
-    fr: "Ils ont essuyé les plâtres.",
-    en: "They tested the very first walls.",
+    fr: "Ils ont testé en avant-première",
+    en: "They tested it first",
   },
   "temoignages.ils-sont-restes": {
-    fr: "Ils sont restés.",
-    en: "They stayed.",
+    fr: "et ont adoré.",
+    en: "and loved it.",
   },
   "temoignages.alba-a-remplace-mon-wetransfer-mon": {
     fr: "ALBA a remplacé mon WeTransfer, mon Drive, ma boîte mail et mes tableurs. Mes clients voient enfin où on en est, et moi je récupère mes soirées.",
@@ -837,8 +837,8 @@ window.ALBA_CONTENU = {
     en: "Let's look at ALBA on your projects. Reply within 24 hours.",
   },
   "contact.que-vous-soyez-seul-e-ou": {
-    fr: "Que vous soyez seul·e ou à dix, on adapte la démo à votre méthode. Pas de discours commercial, juste l'outil en action.",
-    en: "Whether you're solo or a team of ten, we tailor the demo to your workflow. No sales pitch, just the tool in action.",
+    fr: "Que vous soyez seul·e ou à quatre, on adapte la démo à votre méthode. Pas de discours commercial, juste l'outil en action.",
+    en: "Whether you're solo or a team of four, we tailor the demo to your workflow. No sales pitch, just the tool in action.",
   },
   "contact.reponse-en-moins-de-24-h": {
     fr: "Réponse en moins de 24 h ouvrées",

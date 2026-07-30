@@ -24,8 +24,10 @@ const Reveal = ({ as: Tag = "div", delay = 0, children, className = "", ...rest 
 /* Origine de l'application. Définie dans config.js, seul endroit à modifier le
    jour de la bascule vers app.alba-studio.co (voir MIGRATION-APEX.md).
    La valeur de repli garde la page fonctionnelle si config.js ne se charge pas. */
-const APP_ORIGIN = (typeof window !== "undefined" && window.ALBA_APP_ORIGIN) || "https://alba-studio.co";
-const SIGNUP_URL = `${APP_ORIGIN}/auth`;
+const APP_ORIGIN = (typeof window !== "undefined" && window.ALBA_APP_ORIGIN) || "https://app.alba-studio.co";
+/* /inscription ouvre l'écran sur la création de compte ; /auth l'ouvre sur la
+   connexion (Auth.tsx, dépôt de l'application). */
+const SIGNUP_URL = `${APP_ORIGIN}/inscription`;
 
 /* HERO */
 const Hero = () => (
@@ -221,7 +223,7 @@ const Testimonials = () => (
     <div className="container">
       <Reveal className="s-head">
         <span className="eyebrow">{Txt("temoignages.ce-qu-en-disent-les-precurseurs", "Ce qu'en disent les précurseurs", "What the early adopters say")}</span>
-        <h2 className="display">{Txt("temoignages.ils-ont-essuye-les-platres", "Ils ont essuyé les plâtres.", "They tested the very first walls.")}<br/><em>{Txt("temoignages.ils-sont-restes", "Ils sont restés.", "They stayed.")}</em></h2>
+        <h2 className="display">{Txt("temoignages.ils-ont-essuye-les-platres", "Ils ont testé en avant-première", "They tested it first")}<br/><em>{Txt("temoignages.ils-sont-restes", "et ont adoré.", "and loved it.")}</em></h2>
       </Reveal>
       <div className="testimonials">
         <Reveal className="testi featured">
@@ -465,7 +467,7 @@ const Contact = () => {
         <Reveal className="contact-side">
           <span className="eyebrow">{Txt("contact.parlons-en", "Parlons-en", "Let's talk")}</span>
           <h2>{Txt("contact.voyons-alba-sur-vos-projets-reponse", "Voyons ALBA sur vos projets. Réponse sous 24 h.", "Let's look at ALBA on your projects. Reply within 24 hours.")}</h2>
-          <p>{Txt("contact.que-vous-soyez-seul-e-ou", "Que vous soyez seul·e ou à dix, on adapte la démo à votre méthode. Pas de discours commercial, juste l'outil en action.", "Whether you're solo or a team of ten, we tailor the demo to your workflow. No sales pitch, just the tool in action.")}</p>
+          <p>{Txt("contact.que-vous-soyez-seul-e-ou", "Que vous soyez seul·e ou à quatre, on adapte la démo à votre méthode. Pas de discours commercial, juste l'outil en action.", "Whether you're solo or a team of four, we tailor the demo to your workflow. No sales pitch, just the tool in action.")}</p>
           <ul className="contact-info">
             <li><Icon name="chat" size={14}/> contact@alba-studio.co</li>
             <li><Icon name="clock" size={14}/> {Txt("contact.reponse-en-moins-de-24-h", "Réponse en moins de 24 h ouvrées", "Reply within 24 business hours")}</li>

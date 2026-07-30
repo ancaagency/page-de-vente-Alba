@@ -23,11 +23,14 @@ chemins applicatifs (`/auth`, `/gallery/*`, `/online/*`, `/invite/*`, `/pv/*`,
 auparavant vers `alba-studio.co`, donc — après bascule — vers la vitrine
 elle-même : boucle de redirection, et les cinq adresses tombaient.
 
+**`config.js` est basculé** sur `https://app.alba-studio.co`, et les CTA visent
+`/inscription` — qui ouvre l'écran sur la création de compte, là où `/auth`
+l'ouvre sur la connexion (`Auth.tsx`, dépôt de l'application).
+
 **Ce qui reste, et pourquoi ça attend :**
 
 | À faire | Gardé en attente parce que |
 |---|---|
-| `config.js` : `ALBA_APP_ORIGIN` → `https://app.alba-studio.co` | La valeur actuelle (`alba-studio.co`) est **juste dans les deux états** : aujourd'hui l'apex sert l'application ; après bascule, la redirection `/auth` ci-dessus mène à l'application. La basculer maintenant casserait les liens si `app.alba-studio.co` ne sert pas encore. À faire pour supprimer le saut de redirection, sans urgence. |
 | `canonical`, `og:url`, `sitemap.xml`, `robots.txt` : `www` → apex | Tant que l'apex sert l'application, un `canonical` vers l'apex dirait à Google que la page de vente canonique **est l'application**. À faire quand l'apex est rattaché au projet Pages, pas avant. |
 
 `bascule.mjs` (dossier `tests/`) vérifie que tous les liens suivent quand

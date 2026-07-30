@@ -21,7 +21,7 @@
  * Le reste de la migration (DNS, redirections, build natif) est décrit dans
  * MIGRATION-APEX.md — et l'ordre des étapes y est ce qui compte le plus.
  */
-window.ALBA_APP_ORIGIN = "https://alba-studio.co";
+window.ALBA_APP_ORIGIN = "https://app.alba-studio.co";
 
 /* Applique l'origine aux liens du HTML statique.
  *
@@ -38,7 +38,10 @@ window.ALBA_APP_ORIGIN = "https://alba-studio.co";
     if (!origine) return;
 
     document.querySelectorAll("[data-alba-auth]").forEach(function (a) {
-      a.setAttribute("href", origine + "/auth");
+      // /inscription et non /auth : les deux mènent au même écran, mais
+      // /inscription l'ouvre sur la création de compte, /auth sur la
+      // connexion (Auth.tsx, dépôt de l'application).
+      a.setAttribute("href", origine + "/inscription");
     });
     document.querySelectorAll("[data-alba-path]").forEach(function (a) {
       a.setAttribute("href", origine + a.getAttribute("data-alba-path"));

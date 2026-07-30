@@ -63,6 +63,7 @@
 # erreur, sans test rouge, et sans que personne le signale.
 # Liste reprise de docs/decoupage-domaines.md (étape 5, point 2).
 /auth                 https://app.alba-studio.co/auth                 301
+/inscription          https://app.alba-studio.co/inscription          301
 /auth/*               https://app.alba-studio.co/auth/:splat          301
 /gallery/*            https://app.alba-studio.co/gallery/:splat       301
 /online/*             https://app.alba-studio.co/online/:splat        301

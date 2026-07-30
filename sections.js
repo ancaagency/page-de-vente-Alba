@@ -76,8 +76,10 @@ var Reveal = function Reveal(_ref) {
 /* Origine de l'application. Définie dans config.js, seul endroit à modifier le
    jour de la bascule vers app.alba-studio.co (voir MIGRATION-APEX.md).
    La valeur de repli garde la page fonctionnelle si config.js ne se charge pas. */
-var APP_ORIGIN = typeof window !== "undefined" && window.ALBA_APP_ORIGIN || "https://alba-studio.co";
-var SIGNUP_URL = "".concat(APP_ORIGIN, "/auth");
+var APP_ORIGIN = typeof window !== "undefined" && window.ALBA_APP_ORIGIN || "https://app.alba-studio.co";
+/* /inscription ouvre l'écran sur la création de compte ; /auth l'ouvre sur la
+   connexion (Auth.tsx, dépôt de l'application). */
+var SIGNUP_URL = "".concat(APP_ORIGIN, "/inscription");
 
 /* HERO */
 var Hero = function Hero() {
@@ -399,7 +401,7 @@ var Testimonials = function Testimonials() {
     className: "eyebrow"
   }, Txt("temoignages.ce-qu-en-disent-les-precurseurs", "Ce qu'en disent les précurseurs", "What the early adopters say")), /*#__PURE__*/React.createElement("h2", {
     className: "display"
-  }, Txt("temoignages.ils-ont-essuye-les-platres", "Ils ont essuyé les plâtres.", "They tested the very first walls."), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("em", null, Txt("temoignages.ils-sont-restes", "Ils sont restés.", "They stayed.")))), /*#__PURE__*/React.createElement("div", {
+  }, Txt("temoignages.ils-ont-essuye-les-platres", "Ils ont testé en avant-première", "They tested it first"), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("em", null, Txt("temoignages.ils-sont-restes", "et ont adoré.", "and loved it.")))), /*#__PURE__*/React.createElement("div", {
     className: "testimonials"
   }, /*#__PURE__*/React.createElement(Reveal, {
     className: "testi featured"
@@ -798,7 +800,7 @@ var Contact = function Contact() {
     className: "contact-side"
   }, /*#__PURE__*/React.createElement("span", {
     className: "eyebrow"
-  }, Txt("contact.parlons-en", "Parlons-en", "Let's talk")), /*#__PURE__*/React.createElement("h2", null, Txt("contact.voyons-alba-sur-vos-projets-reponse", "Voyons ALBA sur vos projets. Réponse sous 24 h.", "Let's look at ALBA on your projects. Reply within 24 hours.")), /*#__PURE__*/React.createElement("p", null, Txt("contact.que-vous-soyez-seul-e-ou", "Que vous soyez seul·e ou à dix, on adapte la démo à votre méthode. Pas de discours commercial, juste l'outil en action.", "Whether you're solo or a team of ten, we tailor the demo to your workflow. No sales pitch, just the tool in action.")), /*#__PURE__*/React.createElement("ul", {
+  }, Txt("contact.parlons-en", "Parlons-en", "Let's talk")), /*#__PURE__*/React.createElement("h2", null, Txt("contact.voyons-alba-sur-vos-projets-reponse", "Voyons ALBA sur vos projets. Réponse sous 24 h.", "Let's look at ALBA on your projects. Reply within 24 hours.")), /*#__PURE__*/React.createElement("p", null, Txt("contact.que-vous-soyez-seul-e-ou", "Que vous soyez seul·e ou à quatre, on adapte la démo à votre méthode. Pas de discours commercial, juste l'outil en action.", "Whether you're solo or a team of four, we tailor the demo to your workflow. No sales pitch, just the tool in action.")), /*#__PURE__*/React.createElement("ul", {
     className: "contact-info"
   }, /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement(Icon, {
     name: "chat",

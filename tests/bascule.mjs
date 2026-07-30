@@ -1,9 +1,18 @@
-/* Simule le jour de la bascule : config.js est servi avec app.alba-studio.co
-   et l'on vérifie que TOUS les liens vers l'application suivent. */
+/* config.js est-il vraiment le SEUL point à changer ?
+
+   Ce test servait à préparer la bascule vers app.alba-studio.co. Elle a eu lieu :
+   config.js porte désormais cette origine. Continuer à substituer cette
+   valeur-là ne mordrait plus sur rien, et le test passerait sans rien vérifier.
+
+   Il sert donc une origine FICTIVE et contrôle que tous les liens vers
+   l'application la suivent, sans toucher aux adresses e-mail. C'est la propriété
+   qui compte : un jour où il faudra changer de domaine, une seule ligne suffira.
+   Un premier passage avait justement révélé que les liens des mentions légales
+   ne suivaient pas. */
 import http from 'node:http'; import fs from 'node:fs'; import path from 'node:path';
 import { chromium } from 'playwright-core';
 const ROOT = path.resolve(new URL('.', import.meta.url).pathname, '..');
-const NOUVELLE = 'https://app.alba-studio.co';
+const NOUVELLE = 'https://essai-de-bascule.example';
 const T = {'.html':'text/html','.css':'text/css','.js':'text/javascript','.jsx':'text/babel',
            '.png':'image/png','.jpg':'image/jpeg','.mp3':'audio/mpeg'};
 const srv = http.createServer((req,res)=>{
@@ -13,7 +22,7 @@ const srv = http.createServer((req,res)=>{
   if(!fs.existsSync(f)||fs.statSync(f).isDirectory()){res.writeHead(404);return res.end();}
   let body = fs.readFileSync(f);
   // Le seul changement du jour J : la valeur dans config.js.
-  if (p==='/config.js') body = Buffer.from(String(body).replace('https://alba-studio.co', NOUVELLE));
+  if (p==='/config.js') body = Buffer.from(String(body).replace('https://app.alba-studio.co', NOUVELLE));
   res.writeHead(200,{'Content-Type':T[path.extname(f)]||'application/octet-stream'});
   res.end(body);
 });
