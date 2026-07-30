@@ -1,2 +1,56 @@
-/tarifs   /Tarifs.html   200
-/pricing  /Tarifs.html   200
+### Cloudflare Pages — règles de réécriture et de redirection
+### Format : <source> <destination> <code>
+###   200 = réécriture (l'URL affichée ne change pas)
+###   301 = redirection permanente
+
+## --- Documents internes : ne doivent pas être servis -----------------------
+# Cloudflare Pages publie TOUS les fichiers du dépôt, et ce dépôt est public.
+# Le cahier des charges détaille la stratégie App Store (règle 3.1.3(b)) : le
+# laisser lisible sur le domaine public serait au mieux gênant.
+# ⚠️ À VÉRIFIER APRÈS LE PREMIER DÉPLOIEMENT (voir DEPLOIEMENT.md, étape 6) :
+#     curl -I https://www.alba-studio.co/README.md
+#     doit répondre 301, pas 200.
+/README.md        /   301
+/DEPLOIEMENT.md   /   301
+/docs/*           /   301
+/tests/*          /   301
+
+## --- Adresses publiques de la page tarifs (réécriture : l'URL reste jolie) ---
+/tarifs           /Tarifs.html      200
+/pricing          /Tarifs.html      200
+
+## --- Doublon historique du fichier d'entrée -------------------------------
+# « Alba Studio - Landing.html » est la copie de travail d'index.html. Sans cette
+# règle, Cloudflare la servirait comme une seconde URL au contenu identique
+# (contenu dupliqué pour Google). On la renvoie vers la racine.
+/Alba%20Studio%20-%20Landing.html   /   301
+
+## ===========================================================================
+## ADRESSES DÉPOSÉES CHEZ APPLE ET GOOGLE — bloc à modifier lors de la bascule
+## ===========================================================================
+#
+# Ces cinq adresses sont ÉCRITES dans les fiches App Store et Google Play (voir
+# src/lib/__tests__/legalRoutes.test.ts, dépôt de l'application). Une boutique
+# qui reçoit une erreur en les ouvrant refuse la soumission — pour un motif sans
+# aucun rapport avec l'application.
+#
+# ⚠️ LE JOUR DE LA BASCULE VERS app.alba-studio.co : remplacer alba-studio.co
+#    par app.alba-studio.co dans TOUT ce bloc. Sans cela, la vitrine occupant
+#    l'apex redirigerait ces adresses vers elle-même — boucle infinie, et les
+#    cinq adresses tombent. Voir MIGRATION-APEX.md.
+#
+/privacy-policy       https://alba-studio.co/privacy-policy       301
+/terms                https://alba-studio.co/terms                301
+/suppression-compte   https://alba-studio.co/suppression-compte   301
+/delete-account       https://alba-studio.co/delete-account       301
+/faq                  https://alba-studio.co/faq                  301
+
+# Variantes de confort, non déposées.
+/confidentialite      https://alba-studio.co/privacy-policy       301
+/cgv                  https://alba-studio.co/terms                301
+/cgu                  https://alba-studio.co/terms                301
+
+# Les mentions légales, elles, n'existent nulle part ailleurs : c'est la vitrine
+# qui les héberge.
+/mentions-legales /mentions-legales.html   200
+/legal-notice     /mentions-legales.html   200

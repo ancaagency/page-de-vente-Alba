@@ -21,7 +21,11 @@ const Reveal = ({ as: Tag = "div", delay = 0, children, className = "", ...rest 
   return <Tag ref={ref} className={`reveal ${className}`} style={{"--reveal-delay": `${delay}ms`}} {...rest}>{children}</Tag>;
 };
 
-const SIGNUP_URL = "https://alba-studio.co/auth";
+/* Origine de l'application. Définie dans config.js, seul endroit à modifier le
+   jour de la bascule vers app.alba-studio.co (voir MIGRATION-APEX.md).
+   La valeur de repli garde la page fonctionnelle si config.js ne se charge pas. */
+const APP_ORIGIN = (typeof window !== "undefined" && window.ALBA_APP_ORIGIN) || "https://alba-studio.co";
+const SIGNUP_URL = `${APP_ORIGIN}/auth`;
 
 /* HERO */
 const Hero = () => (
@@ -196,7 +200,7 @@ const Features = () => {
 const TestiBenefits = () => {
   const items = [
     { icon: "clock", t: L("Du temps repris", "Time reclaimed"), p: L("Moins d'allers-retours, moins de relances. Le temps gagné, vous le rendez à vos esquisses.", "Fewer back-and-forths, fewer follow-ups. The time you save goes back to your drawings."), stat: L("6h", "6h"), unit: L("économisées par projet et par mois", "saved per project, per month") },
-    { icon: "shield", t: L("De la sérénité juridique", "Legal peace of mind"), p: L("Chaque décision archivée, signée, datée. Vos garanties biennale et décennale dorment tranquilles.", "Every decision archived, signed, dated. Your professional liability sleeps soundly."), stat: "100%", unit: L("des arbitrages tracés", "of decisions traced") },
+    { icon: "shield", t: L("De la sérénité juridique", "Legal peace of mind"), p: L("Chaque décision archivée, signée, datée. Six mois plus tard, vous retrouvez qui a décidé quoi, et quand.", "Every decision archived, signed, dated. Six months on, you can still see who decided what, and when."), stat: "100%", unit: L("des arbitrages tracés", "of decisions traced") },
     { icon: "star", t: L("Des clients ravis", "Delighted clients"), p: L("Vos maîtres d'ouvrage savent à tout moment où en est le projet, et ne vous rappellent plus à 21h.", "Your clients always know where the project stands, and stop calling you at 9pm."), stat: "4.8/5", unit: L("satisfaction maître d'ouvrage", "client satisfaction") },
   ];
   return (
@@ -226,7 +230,7 @@ const Testimonials = () => (
           <div className="testi-mark">"</div>
           <p className="testi-quote">{L("ALBA a remplacé mon WeTransfer, mon Drive, ma boîte mail et mes tableurs. Mes clients voient enfin où on en est, et moi je récupère mes soirées.", "ALBA replaced my WeTransfer, my Drive, my inbox and my spreadsheets. My clients finally see where we stand, and I get my evenings back.")}</p>
           <div className="testi-foot">
-            <div className="testi-avatar-slot"><image-slot id="testi-camille" shape="circle" placeholder="CL"></image-slot></div>
+            <div className="testi-avatar-slot"><image-slot id="testi-camille" shape="circle" src="images/testi-camille.jpg" alt="Camille Lavigne" placeholder="CL"></image-slot></div>
             <div>
               <div className="testi-name">Camille Lavigne</div>
               <div className="testi-role">{L("ARCHITECTE DPLG · LYON", "REGISTERED ARCHITECT · LYON")}</div>
@@ -237,7 +241,7 @@ const Testimonials = () => (
           <div className="testi-mark">"</div>
           <p className="testi-quote">{L("La traçabilité des décisions, c'est l'argument qui m'a convaincu. Plus jamais de SAV un an après.", "Decision traceability is what won me over. No more disputes a year later.")}</p>
           <div className="testi-foot">
-            <div className="testi-avatar-slot"><image-slot id="testi-marc" shape="circle" placeholder="MN"></image-slot></div>
+            <div className="testi-avatar-slot"><image-slot id="testi-marc" shape="circle" src="images/testi-marc.jpg" alt="Marc Noiret" placeholder="MN"></image-slot></div>
             <div>
               <div className="testi-name">Marc Noiret</div>
               <div className="testi-role">STUDIO MN · BORDEAUX</div>
@@ -248,7 +252,7 @@ const Testimonials = () => (
           <div className="testi-mark">"</div>
           <p className="testi-quote">{L("Mes maîtres d'ouvrage adorent. Ils ont l'impression d'avoir leur propre app, c'est notre marque blanche.", "My clients love it. They feel like they have their own app, it's our white label.")}</p>
           <div className="testi-foot">
-            <div className="testi-avatar-slot"><image-slot id="testi-sophie" shape="circle" placeholder="SO"></image-slot></div>
+            <div className="testi-avatar-slot"><image-slot id="testi-sophie" shape="circle" src="images/testi-sophie.jpg" alt="Sophie Obellier" placeholder="SO"></image-slot></div>
             <div>
               <div className="testi-name">Sophie Obellier</div>
               <div className="testi-role">ATELIER VAUBAN · PARIS</div>
@@ -372,7 +376,7 @@ const TrustBand = () => {
     { icon: "globe", t: L("Hébergé en France", "Hosted in France"), d: L("Vos données sont stockées en France, chez un hébergeur certifié ISO 27001. Conformité RGPD native.", "Your data is stored in France with an ISO 27001-certified host. GDPR-compliant by design.") },
     { icon: "lock", t: L("Chiffré, sauvegardé", "Encrypted, backed up"), d: L("Chiffrement AES-256 au repos, TLS en transit. Sauvegardes automatiques quotidiennes.", "AES-256 encryption at rest, TLS in transit. Automatic daily backups.") },
     { icon: "doc", t: L("Vos données vous appartiennent", "Your data stays yours"), d: L("Export intégral de vos projets (PDF, ZIP, CSV) à tout moment, en un clic.", "Export all your projects (PDF, ZIP, CSV) anytime, in one click.") },
-    { icon: "shield", t: L("Valeur juridique", "Legally sound"), d: L("Décisions horodatées et signées (eIDAS). Vos garanties biennale et décennale sont couvertes.", "Timestamped, signed decisions (eIDAS). Your professional liability is covered.") },
+    { icon: "shield", t: L("Valeur probante", "Evidence you can produce"), d: L("Décisions horodatées et signées électroniquement (eIDAS, signature simple). Chaque arbitrage est archivé avec ses preuves : auteur, date, horodatage serveur.", "Timestamped, electronically signed decisions (eIDAS simple signature). Every decision is archived with its evidence: author, date, server timestamp.") },
   ];
   return (
     <section className="trust-band" id="securite">
@@ -401,7 +405,7 @@ const Faq = () => {
     { q: L("Comment ALBA s'intègre à ma méthode actuelle ?", "How does ALBA fit my current workflow?"), a: L("ALBA s'adapte à votre process, pas l'inverse. Vous configurez les phases (esquisse, APS, APD, permis, DCE, chantier), nous gérons les rappels, les jalons et la mémoire du projet. Aucune formation longue : la plupart des architectes sont opérationnels en moins d'une heure.", "ALBA adapts to your process, not the other way round. You configure the phases (concept, design, permits, tender, construction); we handle reminders, milestones and the project's memory. No lengthy training: most architects are up and running in under an hour.") },
     { q: L("Mes clients doivent-ils télécharger une application ?", "Do my clients need to download an app?"), a: L("Non. ALBA fonctionne entièrement dans le navigateur, sur ordinateur comme sur téléphone. Un lien, un mot de passe, vos maîtres d'ouvrage accèdent à leur cockpit en 30 secondes.", "No. ALBA runs entirely in the browser, on desktop and phone. A link, a password, your clients reach their cockpit in 30 seconds.") },
     { q: L("Que se passe-t-il pour mes données si j'arrête ?", "What happens to my data if I leave?"), a: L("Elles sont à vous. À tout moment, vous exportez l'intégralité de vos projets (PDF, ZIP, CSV) en un clic. Vos archives papier-numérique restent lisibles 10 ans après.", "It's yours. At any time, export all your projects (PDF, ZIP, CSV) in one click. Your digital archives remain readable 10 years on.") },
-    { q: L("Les décisions sont-elles juridiquement valables ?", "Are decisions legally valid?"), a: L("Oui. Chaque décision est horodatée, archivée, et signée numériquement (eIDAS niveau simple). Pour les actes plus sensibles, vous pouvez activer la signature avancée Yousign.", "Yes. Every decision is timestamped, archived and digitally signed (eIDAS simple level). For more sensitive documents, you can enable advanced Yousign signatures.") },
+    { q: L("Les décisions sont-elles juridiquement valables ?", "Are decisions legally valid?"), a: L("Chaque décision est horodatée, archivée et signée électroniquement (eIDAS, niveau simple) : l'auteur, la date et l'horodatage serveur sont conservés à titre de preuve. Pour un acte qui exige une signature avancée ou qualifiée, passez par votre voie habituelle.", "Every decision is timestamped, archived and electronically signed (eIDAS, simple level): the author, date and server timestamp are kept as evidence. For a document requiring an advanced or qualified signature, use your usual channel.") },
     { q: L("Puis-je inviter mon BET et mes co-traitants ?", "Can I invite my engineers and consultants?"), a: L("Bien sûr. Les co-traitants accèdent gratuitement aux projets sur lesquels vous les invitez, avec le niveau de droits que vous définissez (lecture, commentaire, dépôt de pièces).", "Of course. Consultants get free access to the projects you invite them to, with the permission level you set (view, comment, upload).") },
     { q: L("Combien de collaborateurs de mon agence sont inclus ?", "How many team members are included?"), a: L("Le tarif Studio inclut 1 collaborateur. Vous pouvez en ajouter jusqu'à 3 autres (4 par espace au maximum), à 15 €/mois chacun, ajustable à tout moment. Vos clients et co-traitants, eux, sont illimités et gratuits.", "The Studio plan includes 1 team member. You can add up to 3 more (4 per workspace maximum), at €15/month each, adjustable anytime. Clients and consultants are unlimited and free.") },
     { q: L("Et pendant le chantier ?", "What about the construction phase?"), a: L("ALBA vous suit sur site : comptes-rendus de visite, réserves photographiées et assignées par lot, diffusion automatique aux entreprises et au maître d'ouvrage. Chaque CR est signé et archivé, comme une décision.", "ALBA follows you on site: visit reports, photographed punch-list items assigned by trade, automatic distribution to contractors and the client. Every report is signed and archived, like a decision.") },
@@ -567,9 +571,15 @@ const Footer = () => (
         <div className="foot-col">
           <h5>{L("Légal", "Legal")}</h5>
           <ul>
-            <li><a href="#">{L("Mentions légales", "Legal notice")}</a></li>
-            <li><a href="#">{L("CGU & CGV", "Terms & conditions")}</a></li>
-            <li><a href="#">{L("Politique RGPD", "GDPR policy")}</a></li>
+            {/* Les CGU et la politique de confidentialité sont servies par
+                l'APPLICATION, pas par la vitrine. Ces adresses-là sont déposées
+                dans les fiches App Store et Google Play (voir legalRoutes.test.ts
+                côté app) : les dupliquer ici créerait deux textes juridiques
+                divergents. Les mentions légales, elles, n'existent nulle part
+                ailleurs — c'est la vitrine qui les héberge. */}
+            <li><a href="mentions-legales.html">{L("Mentions légales", "Legal notice")}</a></li>
+            <li><a href={`${APP_ORIGIN}/terms`}>{L("CGU & CGV", "Terms & conditions")}</a></li>
+            <li><a href={`${APP_ORIGIN}/privacy-policy`}>{L("Politique RGPD", "GDPR policy")}</a></li>
             <li><a href="#securite">{L("Sécurité", "Security")}</a></li>
           </ul>
         </div>

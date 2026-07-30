@@ -8,8 +8,14 @@
   <meta property="og:title" content="ALBA Studio — La plateforme des architectes">
   <meta property="og:description" content="Centralisez vos projets. Simplifiez vos échanges clients. La plateforme tout-en-un des architectes.">
   <meta property="og:type" content="website">
-  <!-- Remplacez le domaine par le vôtre après déploiement (URL absolue requise pour le partage social) -->
-  <meta property="og:image" content="https://alba-studio.co/images/app-cockpit-web.jpg">
+  <!-- URLs absolues : la vitrine est servie par www.alba-studio.co (Cloudflare Pages).
+       L'apex alba-studio.co sert l'application web et ne contient PAS /images/. -->
+  <meta property="og:image" content="https://www.alba-studio.co/images/app-cockpit-web.jpg">
+  <meta property="og:url" content="https://www.alba-studio.co/">
+  <meta property="og:site_name" content="ALBA Studio">
+  <meta property="og:locale" content="fr_FR">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://www.alba-studio.co/">
   <link rel="icon" type="image/png" href="images/logo-alba.png">
   <link rel="preload" as="image" href="images/app-cockpit-web.jpg">
 
@@ -32,8 +38,8 @@
   <link rel="stylesheet" href="notifications.css">
   <link rel="stylesheet" href="founder.css">
 
-  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
-  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" integrity="sha384-DGyLxAyjq0f9SPpVevD6IgztCFlnMF6oW/XQGmfe+IsZ8TqEiDrcHkMLKI6fiB/Z" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" integrity="sha384-gTGxhz21lVGYNMcdJOyq01Edg0jhn/c22nsx0kyqP0TxaV5WVdsSH1fSDUf5YJj1" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/gsap@3.12.5/dist/gsap.min.js"></script>
   <script src="https://unpkg.com/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
@@ -42,6 +48,8 @@
   <!-- i18n MUST load after lenis: the minified lenis build leaks a global class `L`
        which would otherwise shadow our L(fr, en) helper -->
   <script src="i18n.js"></script>
+  <!-- Origine de l'application (SIGNUP_URL et CTA). Point unique de vérité. -->
+  <script src="config.js"></script>
 </head>
 <body data-density="standard" data-theme="dark" data-palette="studio" data-typo="serif">
 
@@ -88,7 +96,7 @@
         <button data-lang="fr" class="is-active">FR</button>
         <button data-lang="en">EN</button>
       </div>
-      <a href="https://alba-studio.co/auth" class="btn btn-primary" id="nav-cta" style="padding:9px 16px; font-size:13px;">Essayer gratuitement</a>
+      <a href="https://alba-studio.co/auth" data-alba-auth class="btn btn-primary" id="nav-cta" style="padding:9px 16px; font-size:13px;">Essayer gratuitement</a>
       <button class="nav-burger" id="nav-burger" aria-label="Menu" aria-expanded="false">
         <span></span><span></span>
       </button>
@@ -106,18 +114,18 @@
     <a href="Tarifs.html">Tarif tout inclus</a>
     <a href="#faq">Questions</a>
   </div>
-  <a href="https://alba-studio.co/auth" class="btn btn-primary mobile-menu-cta" id="mobile-menu-cta">Essayer gratuitement</a>
+  <a href="https://alba-studio.co/auth" data-alba-auth class="btn btn-primary mobile-menu-cta" id="mobile-menu-cta">Essayer gratuitement</a>
 </div>
 
 <!-- App roots -->
 <main id="app"></main>
 
-<!-- Tweaks panel mount -->
-<div id="tweaks-root"></div>
+<!-- Le panneau de réglage du design (tweaks-panel) a été retiré du déploiement :
+     c'était un outil d'auteur qui basculait data-palette / data-density / data-typo
+     en direct. Le <body> porte la combinaison validée (studio / standard / serif). -->
 
 <!-- Scripts -->
 <script src="image-slot.js"></script>
-<script type="text/babel" src="tweaks-panel.jsx"></script>
 <script type="text/babel" src="components.jsx"></script>
 <script type="text/babel" src="sections.jsx"></script>
 <script type="text/babel" src="pinned.jsx"></script>
@@ -143,7 +151,15 @@ const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
 }/*EDITMODE-END*/;
 
 const App = () => {
-  const [tweaks, setTweak] = useTweaks(TWEAK_DEFAULTS);
+  // Combinaison de design VALIDÉE, figée.
+  //
+  // Cette ligne appelait `useTweaks(TWEAK_DEFAULTS)`, défini dans
+  // tweaks-panel.jsx — un panneau de réglage d'auteur qui ne figurait pas dans
+  // le paquet de passation. Sans lui, App levait « useTweaks is not defined » :
+  // React ne montait rien et la page restait bloquée sur le rideau d'intro,
+  // logo affiché. Le panneau n'ayant de toute façon rien à faire devant des
+  // visiteurs, les réglages sont désormais constants.
+  const tweaks = TWEAK_DEFAULTS;
   const [lang, setLang] = React.useState(window.__albaLang || "fr");
 
   // Make L() read the current language during this render
@@ -188,62 +204,11 @@ const App = () => {
       <Notifications lang={lang}/>
       <ImmersiveFX signal={`${tweaks.audienceVariant}-${tweaks.density}-${tweaks.theme}-${tweaks.typoHero}-${lang}`}/>
 
-      <TweaksPanel title="Tweaks · Alba Studio">
-        <TweakSection title="Palette">
-          <TweakRadio
-            value={tweaks.palette}
-            onChange={(v) => setTweak("palette", v)}
-            options={[
-              { value: "studio", label: "Bleu nuit" },
-              { value: "sapin", label: "Sapin" },
-              { value: "terracotta", label: "Terracotta" },
-              { value: "creme", label: "Crème" },
-            ]}
-          />
-        </TweakSection>
-        <TweakSection title="Densité">
-          <TweakRadio
-            value={tweaks.density}
-            onChange={(v) => setTweak("density", v)}
-            options={[
-              { value: "dense", label: "Dense" },
-              { value: "standard", label: "Standard" },
-              { value: "airy", label: "Aéré" },
-            ]}
-          />
-        </TweakSection>
-        <TweakSection title="Mode">
-          <TweakRadio
-            value={tweaks.theme}
-            onChange={(v) => setTweak("theme", v)}
-            options={[
-              { value: "dark", label: "Sombre" },
-              { value: "light", label: "Clair" },
-            ]}
-          />
-        </TweakSection>
-        <TweakSection title="Section 'Pour qui ?'">
-          <TweakRadio
-            value={tweaks.audienceVariant}
-            onChange={(v) => setTweak("audienceVariant", v)}
-            options={[
-              { value: "A", label: "A · Portraits" },
-              { value: "B", label: "B · Sommaire" },
-              { value: "C", label: "C · Stack sombre" },
-            ]}
-          />
-        </TweakSection>
-        <TweakSection title="Typographie hero">
-          <TweakRadio
-            value={tweaks.typoHero}
-            onChange={(v) => setTweak("typoHero", v)}
-            options={[
-              { value: "serif", label: "Serif éditorial" },
-              { value: "sans", label: "Sans display" },
-            ]}
-          />
-        </TweakSection>
-      </TweaksPanel>
+      {/* Le panneau de réglage du design (TweaksPanel / TweakSection /
+          TweakRadio) vivait dans tweaks-panel.jsx, absent du paquet de
+          passation. C'était un outil d'auteur : il n'a rien à faire devant
+          des visiteurs, et le laisser référencé empêchait toute la page de
+          se monter. Le <body> porte la combinaison validée. */}
     </>
   );
 };

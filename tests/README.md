@@ -1,0 +1,73 @@
+# Vérifications de la page de vente
+
+Ce dossier ne fait pas partie du site. Il n'introduit **aucune étape de build** :
+la vitrine reste du HTML statique servi tel quel, conformément au cahier des
+charges. Ces scripts se contentent de la charger dans un navigateur et de
+regarder si elle fonctionne.
+
+## Pourquoi ils existent
+
+La page a été livrée une fois **entièrement blanche** — logo affiché, rien
+derrière. La cause était une référence manquante (`useTweaks`, défini dans un
+fichier absent du paquet de passation), et elle n'avait été détectée par aucune
+vérification préalable.
+
+La raison de cet angle mort mérite d'être retenue : les contrôles précédents
+servaient la page mais **sans jamais exécuter React ni Babel**, faute d'accès à
+unpkg depuis l'environnement de travail. Ils prouvaient que les fichiers se
+chargeaient, jamais que la page marchait. Un test qui ne peut pas échouer ne
+sert à rien.
+
+`smoke.mjs` sert donc React, Babel, GSAP et Lenis depuis npm, applique la vraie
+politique de sécurité du contenu, et vérifie ce qui compte : que les sections
+sont réellement dans le DOM.
+
+## Lancer
+
+```sh
+cd tests
+npm install
+npm test
+```
+
+Chromium est cherché dans `/opt/pw-browsers/chromium-1194/chrome-linux/chrome`.
+Ailleurs, indiquez-le : `CHROMIUM_PATH=/usr/bin/chromium npm test`.
+
+## Ce que chaque script vérifie
+
+### `smoke.mjs` — la page fonctionne-t-elle ?
+
+Sur `/`, `/tarifs` et `/mentions-legales` :
+
+- **aucune erreur JavaScript** — c'est ce qui manquait le jour de la page blanche ;
+- **aucun refus de Content-Security-Policy**, la CSP étant lue directement dans
+  `_headers` pour tester celle qui sera réellement déployée ;
+- **les sections sont montées** : accueil, pour qui, fondateur, sécurité, FAQ,
+  contact, carte tarifaire, pied de page ;
+- **le rideau d'introduction se lève** (`display: none`) ;
+- **le CTA du configurateur porte ses paramètres** :
+  `?plan=studio&storage=…&billing=…&seats=…` ;
+- **les empreintes `integrity` sont exactes** — elles sont conservées, et c'est
+  Chromium qui les vérifie. Une empreinte fausse fait refuser le script et donne
+  une page blanche en production ;
+- **les quatre emplacements photo montrent quelque chose** — la photo si le
+  fichier est là, le cartouche neutre sinon, jamais l'icône d'image cassée. Les
+  emplacements sont câblés sur leur nom de fichier définitif avant l'arrivée des
+  photos : le test liste celles qui manquent encore (`⏳`) au lieu de compter
+  leur 404 comme une erreur, et échoue sur un 404 portant sur autre chose.
+
+### `bascule.mjs` — la migration vers l'apex tiendra-t-elle ?
+
+Sert `config.js` avec `app.alba-studio.co` à la place de l'origine actuelle, et
+vérifie que **tous** les liens vers l'application suivent — sans toucher aux
+adresses email. Un premier passage avait justement révélé que les liens des
+mentions légales ne suivaient pas.
+
+Voir `MIGRATION-APEX.md` pour le déroulé complet de la bascule.
+
+## En ajouter
+
+Quand un bug atteint la production, ajoutez-lui un test **et vérifiez qu'il
+échoue avant le correctif**. Les deux scripts ont été éprouvés ainsi : en
+remettant le bug, `smoke.mjs` rapporte bien `ReferenceError: useTweaks is not
+defined` et zéro section montée.
