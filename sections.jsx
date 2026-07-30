@@ -230,7 +230,7 @@ const Testimonials = () => (
           <div className="testi-mark">"</div>
           <p className="testi-quote">{L("ALBA a remplacé mon WeTransfer, mon Drive, ma boîte mail et mes tableurs. Mes clients voient enfin où on en est, et moi je récupère mes soirées.", "ALBA replaced my WeTransfer, my Drive, my inbox and my spreadsheets. My clients finally see where we stand, and I get my evenings back.")}</p>
           <div className="testi-foot">
-            <div className="testi-avatar-slot"><image-slot id="testi-camille" shape="circle" placeholder="CL"></image-slot></div>
+            <div className="testi-avatar-slot"><image-slot id="testi-camille" shape="circle" src="images/testi-camille.jpg" alt="Camille Lavigne" placeholder="CL"></image-slot></div>
             <div>
               <div className="testi-name">Camille Lavigne</div>
               <div className="testi-role">{L("ARCHITECTE DPLG · LYON", "REGISTERED ARCHITECT · LYON")}</div>
@@ -241,7 +241,7 @@ const Testimonials = () => (
           <div className="testi-mark">"</div>
           <p className="testi-quote">{L("La traçabilité des décisions, c'est l'argument qui m'a convaincu. Plus jamais de SAV un an après.", "Decision traceability is what won me over. No more disputes a year later.")}</p>
           <div className="testi-foot">
-            <div className="testi-avatar-slot"><image-slot id="testi-marc" shape="circle" placeholder="MN"></image-slot></div>
+            <div className="testi-avatar-slot"><image-slot id="testi-marc" shape="circle" src="images/testi-marc.jpg" alt="Marc Noiret" placeholder="MN"></image-slot></div>
             <div>
               <div className="testi-name">Marc Noiret</div>
               <div className="testi-role">STUDIO MN · BORDEAUX</div>
@@ -252,7 +252,7 @@ const Testimonials = () => (
           <div className="testi-mark">"</div>
           <p className="testi-quote">{L("Mes maîtres d'ouvrage adorent. Ils ont l'impression d'avoir leur propre app, c'est notre marque blanche.", "My clients love it. They feel like they have their own app, it's our white label.")}</p>
           <div className="testi-foot">
-            <div className="testi-avatar-slot"><image-slot id="testi-sophie" shape="circle" placeholder="SO"></image-slot></div>
+            <div className="testi-avatar-slot"><image-slot id="testi-sophie" shape="circle" src="images/testi-sophie.jpg" alt="Sophie Obellier" placeholder="SO"></image-slot></div>
             <div>
               <div className="testi-name">Sophie Obellier</div>
               <div className="testi-role">ATELIER VAUBAN · PARIS</div>

@@ -6,7 +6,7 @@ const Founder = () => (
       <Reveal className="founder">
         <div className="founder-photo">
           <div className="frame">
-            <image-slot id="founder-portrait" shape="rect" placeholder={L("Glissez votre portrait ici", "Drop your portrait here")}></image-slot>
+            <image-slot id="founder-portrait" shape="rect" src="images/founder-portrait.jpg" alt="Anthony Cardona, fondateur d'ALBA Studio" placeholder={L("Glissez votre portrait ici", "Drop your portrait here")}></image-slot>
           </div>
           <div className="founder-badge">
             <div className="fb-logo"><img src="images/logo-alba.png" alt=""/></div>

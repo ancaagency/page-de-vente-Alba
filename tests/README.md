@@ -49,7 +49,12 @@ Sur `/`, `/tarifs` et `/mentions-legales` :
   `?plan=studio&storage=…&billing=…&seats=…` ;
 - **les empreintes `integrity` sont exactes** — elles sont conservées, et c'est
   Chromium qui les vérifie. Une empreinte fausse fait refuser le script et donne
-  une page blanche en production.
+  une page blanche en production ;
+- **les quatre emplacements photo montrent quelque chose** — la photo si le
+  fichier est là, le cartouche neutre sinon, jamais l'icône d'image cassée. Les
+  emplacements sont câblés sur leur nom de fichier définitif avant l'arrivée des
+  photos : le test liste celles qui manquent encore (`⏳`) au lieu de compter
+  leur 404 comme une erreur, et échoue sur un 404 portant sur autre chose.
 
 ### `bascule.mjs` — la migration vers l'apex tiendra-t-elle ?
 

@@ -12,8 +12,13 @@
  * mise en page : la taille, le rayon et l'ombre viennent de founder.css et
  * sections.css, qui ciblent déjà `image-slot`.
  *
- * POUR POSER LES VRAIES PHOTOS — ajouter un attribut src :
- *   <image-slot id="founder-portrait" shape="rect" src="images/portrait-anthony.jpg"></image-slot>
+ * POUR POSER LES VRAIES PHOTOS — les quatre emplacements sont déjà câblés sur
+ * leur nom de fichier définitif. Il suffit de déposer le fichier dans images/ :
+ *   · images/founder-portrait.jpg  (portrait du fondateur, cadrage vertical)
+ *   · images/testi-camille.jpg     (avatars de témoignages, carrés)
+ *   · images/testi-marc.jpg
+ *   · images/testi-sophie.jpg
+ * Tant qu'un fichier est absent, l'emplacement retombe sur son cartouche neutre.
  *
  * Attributs : src · alt · shape ("rect" par défaut, ou "circle") · placeholder
  */
@@ -82,6 +87,18 @@
         : `<div class="ph">${escapeText(placeholder)}</div>`;
 
       this.shadowRoot.innerHTML = `<style>${STYLE}</style>${body}`;
+
+      // Repli si le fichier n'est pas là. Les emplacements sont câblés sur leur
+      // nom de fichier définitif AVANT que les photos n'arrivent : poser une
+      // photo se réduit alors à déposer le fichier dans images/, sans toucher au
+      // code. Sans ce repli, un fichier manquant afficherait l'icône d'image
+      // cassée du navigateur — pire que le cartouche neutre.
+      const img = this.shadowRoot.querySelector('img');
+      if (img) {
+        img.addEventListener('error', () => {
+          this.shadowRoot.innerHTML = `<style>${STYLE}</style><div class="ph">${escapeText(placeholder)}</div>`;
+        }, { once: true });
+      }
     }
   }
 

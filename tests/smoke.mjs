@@ -89,6 +89,20 @@ await new Promise((r) => server.listen(8790, r));
 const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH || '/opt/pw-browsers/chromium-1194/chrome-linux/chrome' });
 let echecs = 0;
 
+/**
+ * Photos non encore fournies. Retirer une entrée dès que le fichier est déposé
+ * dans images/ : le test exigera alors qu'elle s'affiche réellement.
+ */
+const PHOTOS_EN_ATTENTE = [
+  'founder-portrait.jpg',
+  'testi-camille.jpg',
+  'testi-marc.jpg',
+  'testi-sophie.jpg',
+];
+
+/** Les quatre emplacements <image-slot> de la page d'accueil. */
+const EMPLACEMENTS = ['founder-portrait', 'testi-camille', 'testi-marc', 'testi-sophie'];
+
 /** Sections attendues sur la page d'accueil, par ancre ou classe. */
 const ATTENDU_ACCUEIL = [
   ['#fonctionnalites', 'section Fonctionnalités'],
@@ -111,10 +125,22 @@ for (const [route, attendus] of [
   const page = await browser.newPage();
   const erreurs = [];
   const cspRefus = [];
+  const photosAbsentes = [];
   page.on('console', (m) => {
     const t = m.text();
+    // Pour une ressource qui échoue, Chromium écrit « Failed to load resource…»
+    // et ne met PAS l'URL dans le texte : elle est dans location().url. Filtrer
+    // sur le seul texte laissait donc passer les quatre 404 attendus dans les
+    // erreurs — c'est ce qui faisait échouer ce test sans rien afficher.
+    const url = m.location()?.url || '';
     if (/Content Security Policy|Refused to/i.test(t)) cspRefus.push(t);
-    else if (m.type() === 'error') erreurs.push(t);
+    // Les quatre emplacements photo sont câblés sur leur nom de fichier
+    // définitif avant que les photos n'arrivent (voir image-slot.js). Le 404 est
+    // donc attendu, et attendu de ces quatre fichiers UNIQUEMENT : il est compté
+    // à part plutôt que d'être noyé dans les erreurs, pour qu'on voie d'un coup
+    // d'œil ce qui manque encore — et pour qu'un 404 sur autre chose échoue.
+    else if (PHOTOS_EN_ATTENTE.some((f) => t.includes(f) || url.includes(f))) photosAbsentes.push(url || t);
+    else if (m.type() === 'error') erreurs.push(`${t}${url ? ` — ${url}` : ''}`);
   });
   page.on('pageerror', (e) => erreurs.push(`${e.name}: ${e.message}`));
 
@@ -123,12 +149,6 @@ for (const [route, attendus] of [
   await page.waitForTimeout(6000);
 
   console.log(`\n===== ${route} =====`);
-
-  console.log(`Erreurs JavaScript (${erreurs.length}) ${erreurs.length ? '❌' : '✅ aucune'}`);
-  erreurs.slice(0, 8).forEach((t) => console.log('   ' + t.slice(0, 200)));
-
-  console.log(`Refus CSP (${cspRefus.length}) ${cspRefus.length ? '❌' : '✅ aucun'}`);
-  cspRefus.slice(0, 5).forEach((t) => console.log('   ' + t.slice(0, 200)));
 
   // La preuve qui compte : le contenu est-il réellement dans le DOM ?
   for (const [sel, nom] of attendus) {
@@ -152,7 +172,51 @@ for (const [route, attendus] of [
     const ok = cta && /[?&]plan=studio&storage=\d+&billing=(monthly|yearly)&seats=\d/.test(cta);
     console.log(`   ${ok ? '✅' : '❌'} CTA tarifaire paramétré → ${cta || 'introuvable'}`);
     if (!ok) echecs++;
+
+    // Les emplacements photo doivent TOUJOURS montrer quelque chose : la photo
+    // si elle est là, sinon le cartouche neutre. Jamais l'icône d'image cassée
+    // du navigateur, qui est ce qu'on obtient si le repli de image-slot lâche.
+    //
+    // Les images portent loading="lazy" : hors de l'écran, le navigateur ne les
+    // demande même pas — ni chargement, ni échec, ni repli. Il faut donc les
+    // amener dans le champ de vision, comme le fait un visiteur, sinon le test
+    // mesure un état qui n'existe pas encore. (Première version de ce test :
+    // elle rapportait « image cassée » pour les quatre, sans qu'aucune requête
+    // n'ait été émise.)
+    for (const id of EMPLACEMENTS) {
+      await page.locator(`#${id}`).scrollIntoViewIfNeeded().catch(() => {});
+    }
+    await page.waitForTimeout(1500);
+
+    const etats = await page.evaluate((ids) => ids.map((id) => {
+      const el = document.getElementById(id);
+      if (!el || !el.shadowRoot) return { id, etat: 'emplacement absent' };
+      const img = el.shadowRoot.querySelector('img');
+      if (img) return { id, etat: img.naturalWidth > 0 ? 'photo' : 'image cassée' };
+      return { id, etat: el.shadowRoot.querySelector('.ph') ? 'cartouche' : 'vide' };
+    }), EMPLACEMENTS);
+
+    for (const { id, etat } of etats) {
+      const bon = etat === 'photo' || etat === 'cartouche';
+      console.log(`   ${bon ? '✅' : '❌'} emplacement ${id.padEnd(17)} → ${etat}`);
+      if (!bon) echecs++;
+    }
   }
+
+  if (photosAbsentes.length) {
+    console.log(`   ⏳ photos encore attendues : ${
+      PHOTOS_EN_ATTENTE.filter((f) => photosAbsentes.some((t) => t.includes(f))).join(', ')}`);
+  }
+
+  // Le bilan console est imprimé EN DERNIER, et non juste après le chargement :
+  // le défilement déclenche des requêtes (images en loading="lazy"), donc un
+  // bilan affiché trop tôt annonce « aucune erreur » alors que le compteur en
+  // voit quatre. C'est exactement l'écart qu'on avait ici.
+  console.log(`   Erreurs JavaScript (${erreurs.length}) ${erreurs.length ? '❌' : '✅ aucune'}`);
+  erreurs.slice(0, 8).forEach((t) => console.log('      ' + t.slice(0, 200)));
+
+  console.log(`   Refus CSP (${cspRefus.length}) ${cspRefus.length ? '❌' : '✅ aucun'}`);
+  cspRefus.slice(0, 5).forEach((t) => console.log('      ' + t.slice(0, 200)));
 
   if (erreurs.length || cspRefus.length) echecs++;
   await page.close();

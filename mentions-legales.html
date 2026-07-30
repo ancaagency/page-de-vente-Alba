@@ -104,7 +104,7 @@
 <main class="legal-wrap">
   <div class="legal-eyebrow">Informations légales</div>
   <h1>Mentions légales</h1>
-  <div class="legal-updated">DERNIÈRE MISE À JOUR : <span class="todo">À COMPLÉTER : date de publication</span></div>
+  <div class="legal-updated">DERNIÈRE MISE À JOUR : 30 JUILLET 2026</div>
 
   <h2>1 · Éditeur du <em>site</em></h2>
   <div class="legal-id">
@@ -112,8 +112,12 @@
       <dt>Dénomination</dt>
       <dd>ANCA</dd>
 
+      <!-- Forme juridique telle que publiée par l'INSEE et le RNE. Une EURL est
+           une SARL à associé unique : les pages de l'application écrivent
+           « EURL », ce qui reste exact, mais on reprend ici le libellé du
+           registre, qui est celui qu'un visiteur retrouvera en vérifiant. -->
       <dt>Forme juridique</dt>
-      <dd>EURL (entreprise unipersonnelle à responsabilité limitée)</dd>
+      <dd>Société à responsabilité limitée (SARL)</dd>
 
       <dt>Capital social</dt>
       <dd>1 000 €</dd>
@@ -122,19 +126,19 @@
       <dd>952 847 945</dd>
 
       <dt>SIRET (siège)</dt>
-      <dd><span class="todo">À COMPLÉTER : SIRET à 14 chiffres</span></dd>
+      <dd>952 847 945 00013</dd>
 
       <dt>RCS</dt>
-      <dd>RCS <span class="todo">À VÉRIFIER : ville d'immatriculation, Lyon a priori</span> 952 847 945</dd>
+      <dd>RCS Lyon 952 847 945 — immatriculée le 25 mai 2023</dd>
 
       <dt>TVA intracom.</dt>
-      <dd>FR19 952 847 945 <span class="todo">À VÉRIFIER auprès de votre comptable</span></dd>
+      <dd>FR19 952 847 945</dd>
 
       <dt>Siège social</dt>
       <dd>311 rue Paul Bert, 69003 Lyon, France</dd>
 
       <dt>Code APE / NAF</dt>
-      <dd><span class="todo">À COMPLÉTER</span></dd>
+      <dd>6201Z — Programmation informatique</dd>
 
       <dt>Contact</dt>
       <dd><a href="mailto:contact@alba-studio.co">contact@alba-studio.co</a></dd>
@@ -167,13 +171,22 @@
     </dl>
   </div>
   <p>
-    L'application ALBA Studio et les données de ses utilisateurs sont hébergées
-    séparément. Les hébergeurs concernés, les régions d'hébergement et les
-    sous-traitants sont détaillés dans la
-    <a href="https://alba-studio.co/privacy-policy" data-alba-path="/privacy-policy">politique de confidentialité</a>.
+    L'application ALBA Studio est hébergée séparément du présent site. La base de
+    données, l'authentification et le stockage des fichiers déposés par les
+    utilisateurs sont opérés par <strong>Supabase</strong> en qualité de
+    sous-traitant.
   </p>
+  <!-- Ce paragraphe disait auparavant que « les hébergeurs, les régions
+       d'hébergement et les sous-traitants sont détaillés dans la politique de
+       confidentialité ». C'était faux : la politique de confidentialité de
+       l'application ne mentionne aujourd'hui aucun hébergeur ni sous-traitant
+       (vérifié dans src/pages/PrivacyPolicy.tsx du dépôt de l'application).
+       Renvoyer vers une section inexistante est plus dommageable que d'afficher
+       ce qu'il reste à écrire. Les deux points ci-dessous se renseignent d'un
+       coup, et le renvoi redeviendra exact quand la politique de
+       confidentialité aura sa section « sous-traitants ». -->
   <p>
-    <span class="todo">À COMPLÉTER : hébergeur de l'application (raison sociale, adresse) et région d'hébergement des données</span>
+    <span class="todo">À COMPLÉTER : région d'hébergement des données (France annoncée, à confirmer dans la console Supabase) et hébergeur du front-end de l'application</span>
   </p>
 
   <h2>4 · Propriété <em>intellectuelle</em></h2>
