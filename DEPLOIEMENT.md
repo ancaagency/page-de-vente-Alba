@@ -4,9 +4,14 @@ Vitrine statique ALBA Studio → **Cloudflare Pages**, servie sur `www.alba-stud
 
 ---
 
-## ⚠️ À lire avant toute manipulation DNS
+## ⚠️ État au 30 juillet 2026 — ce chapitre décrit la situation d'AVANT
 
-**L'application web occupe déjà l'apex `alba-studio.co`, et l'app iOS le charge en direct.**
+Le dépôt de l'application a depuis basculé sur `app.alba-studio.co`, et la
+vitrine doit prendre l'apex. **L'état courant et ce qu'il reste à faire sont dans
+`MIGRATION-APEX.md`.** Ce qui suit est conservé parce que le raisonnement reste
+la raison d'être de l'ordre choisi.
+
+**L'application web occupait l'apex `alba-studio.co`, et l'app iOS le chargeait en direct.**
 
 `capacitor.config.ts` (dépôt `ancaagency/alba-studio`) contient :
 
@@ -65,8 +70,9 @@ Réglages de build :
 | Build output directory | `/` |
 | Root directory | `/` |
 
-Il n'y a pas d'étape de build : le projet est du HTML statique avec React chargé
-depuis un CDN et transpilé par Babel dans le navigateur. C'est volontaire.
+Cloudflare ne construit rien : le projet est du HTML statique, avec React chargé
+depuis un CDN. Les `.jsx` sont transpilés **avant** publication et les `.js`
+produits sont versionnés (voir « Le code, lui, demande une transpilation »).
 
 À la fin, Cloudflare donne une URL du type `page-de-vente-alba.pages.dev`.
 **Validez la page sur cette URL avant de toucher au DNS.**
@@ -154,18 +160,33 @@ faire sur le domaine public. Les règles sont dans `_redirects`.
 
 ### À propos de la CSP
 
-Elle autorise `'unsafe-eval'` et `'unsafe-inline'` sur les scripts. Ce n'est pas
-un oubli : la page transpile ses `.jsx` dans le navigateur avec Babel standalone,
-ce qui est de l'évaluation de code à la volée. Les retirer donne une page
-blanche. La CSP restreint donc les **origines** joignables, pas l'exécution.
+`script-src 'self' https://unpkg.com`, **sans `'unsafe-eval'` ni
+`'unsafe-inline'`**, et `connect-src 'none'`.
 
-Elle a été vérifiée dans Chromium sur `/` et `/tarifs` : aucun refus.
+Ce n'était pas le cas au départ : la page transpilait ses `.jsx` dans le
+navigateur avec Babel standalone, c'est-à-dire de l'évaluation de code à la
+volée. `'unsafe-eval'` était alors obligatoire — et une CSP qui autorise l'eval
+ne protège de rien contre une injection de script. La transpilation préalable
+(voir « Modifier le code » plus haut) a supprimé ce besoin ; sortir les trois
+blocs `<script>` en ligne a supprimé celui de `'unsafe-inline'`.
+
+Les cinq scripts tiers portent tous une empreinte `integrity` : un unpkg
+compromis ne peut pas leur substituer autre chose, le navigateur refuserait.
+
+`style-src` garde `'unsafe-inline'` : React pose des styles par attribut `style`
+et les pages ont des blocs `<style>`. Un style injecté ne s'exécute pas, le
+risque n'a rien de comparable.
+
+Vérifiée dans Chromium sur les trois pages : aucun refus. `tests/entetes.mjs`
+verrouille chaque décision, `tests/transpile.mjs` vérifie qu'aucune page ne
+réintroduit un script en ligne ou un `.jsx`.
 
 ### À propos du cache
 
-Aucun nom de fichier ne porte d'empreinte (pas de `styles.a1b2c3.css`, puisqu'il
-n'y a pas de build). Le HTML, le CSS et le JSX sont donc revalidés à chaque
-visite, faute de quoi une mise à jour resterait invisible chez les visiteurs.
+Aucun nom de fichier ne porte d'empreinte (pas de `styles.a1b2c3.css` : la
+transpilation produit `x.js` à partir de `x.jsx`, sans empreinte). Le HTML, le
+CSS et le JavaScript sont donc revalidés à chaque visite, faute de quoi une mise
+à jour resterait invisible chez les visiteurs.
 Images et médias sont mis en cache une semaine.
 
 ---
@@ -263,6 +284,26 @@ quels : ils sont déjà sous la taille nécessaire en densité double.
 
 Appliquez la même règle aux trois avatars de témoignages : JPEG qualité 86,
 carrés, environ 176 px de côté suffisent (affichage 44 px, densité double, marge).
+
+### Le code, lui, demande une transpilation
+
+Les composants sont écrits en JSX (`.jsx`) et **transpilés avant publication** en
+`.js`, qui sont les fichiers réellement servis. C'est ce qui permet à la page de
+se passer de `'unsafe-eval'`.
+
+Après toute modification d'un `.jsx` :
+
+```sh
+node outils/transpiler.mjs
+```
+
+Les deux versions sont versionnées. Oublier de régénérer ne casse rien
+visiblement : le site continue de servir l'ancienne version, sans erreur ni page
+blanche. C'est précisément pour ça que `tests/transpile.mjs` refuse de passer
+quand un `.js` ne correspond plus à son `.jsx`.
+
+**Rien de tout cela pour un texte** : `contenu.js` est du JavaScript ordinaire,
+modifiable sur github.com sans aucune transpilation.
 
 ### Avant de publier une série de modifications
 

@@ -68,7 +68,7 @@ const EXIGES = [
   ["frame-ancestors", "'none'"],
   ["base-uri", "'self'"],
   ["form-action", "'self'"],
-  ["connect-src", "'self'"],
+  ["connect-src", "'none'"],
   ["img-src", "'self' data: blob:"],
   ["media-src", "'self'"],
 ];
@@ -78,13 +78,19 @@ for (const [nom, valeur] of EXIGES) {
 
 ok(directive('upgrade-insecure-requests') === '', 'upgrade-insecure-requests');
 
-// unpkg n'a rien à faire ailleurs que dans script-src : les bibliothèques y sont
-// chargées par <script src>, jamais par fetch. Une origine joignable de moins,
-// c'est une voie d'exfiltration de moins si un script était altéré.
-ok(!(directive('connect-src') || '').includes('unpkg'), "connect-src ne joint pas unpkg");
+// Plus rien ne fait de requête réseau depuis le code : le 'self' d'avant servait
+// à Babel, qui allait chercher chaque .jsx par fetch(). Plus de Babel, donc plus
+// aucune destination possible pour une exfiltration.
+ok(directive('connect-src') === "'none'", "connect-src 'none' — plus aucune destination réseau");
 
-// 'unsafe-eval' est assumé (Babel transpile dans le navigateur) mais doit rester
-// cantonné aux scripts : nulle part ailleurs, et jamais dans default-src.
+// LE point de tout l'exercice de transpilation préalable. Ces deux mots-clés
+// rendaient la CSP inopérante contre l'injection de script. Les réintroduire
+// annulerait le gain, et il n'y a plus aucune raison technique de le faire.
+ok(!(directive('script-src') || '').includes("'unsafe-eval'"), "script-src sans 'unsafe-eval'");
+ok(!(directive('script-src') || '').includes("'unsafe-inline'"), "script-src sans 'unsafe-inline'");
+
+// Aucune source ne doit pouvoir réintroduire d'assouplissement par une autre
+// directive que script-src, ni par le repli de default-src.
 ok(!(directive('default-src') || '').includes('unsafe'), "default-src sans 'unsafe-*'");
 ok(!(directive('style-src') || '').includes('unsafe-eval'), "style-src sans 'unsafe-eval'");
 

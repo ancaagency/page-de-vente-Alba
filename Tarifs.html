@@ -26,7 +26,6 @@
 
   <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" integrity="sha384-DGyLxAyjq0f9SPpVevD6IgztCFlnMF6oW/XQGmfe+IsZ8TqEiDrcHkMLKI6fiB/Z" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" integrity="sha384-gTGxhz21lVGYNMcdJOyq01Edg0jhn/c22nsx0kyqP0TxaV5WVdsSH1fSDUf5YJj1" crossorigin="anonymous"></script>
-  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
   <script src="i18n.js"></script>
   <!-- Textes de la page, modifiables sans toucher au code. Chargé après i18n.js,
        qui définit T(). Si ce fichier est absent ou mal formé, la page retombe sur
@@ -63,37 +62,9 @@
 
 <main id="app"></main>
 
-<script type="text/babel" src="components.jsx"></script>
-<script type="text/babel" src="sections.jsx"></script>
+<script src="components.js"></script>
+<script src="sections.js"></script>
 
-<script type="text/babel">
-const PricingPage = () => {
-  const [lang, setLang] = React.useState(window.__albaLang || "fr");
-  window.__albaLang = lang;
-  window.__setLang = setLang;
-  React.useEffect(() => {
-    document.documentElement.lang = lang;
-    document.title = lang === "en" ? "Pricing — ALBA Studio" : "Tarif — ALBA Studio";
-    document.querySelectorAll("#lang-toggle button").forEach((b) => b.classList.toggle("is-active", b.dataset.lang === lang));
-    const cta = document.getElementById("nav-cta");
-    if (cta) cta.textContent = lang === "en" ? "Try for free" : "Essayer gratuitement";
-  }, [lang]);
-  return (
-    <div key={lang} style={{paddingTop: 72}}>
-      <Pricing/>
-      <TrustBand/>
-      <Faq/>
-      <Contact/>
-      <Footer/>
-    </div>
-  );
-};
-
-ReactDOM.createRoot(document.getElementById("app")).render(<PricingPage/>);
-
-document.querySelectorAll("#lang-toggle button").forEach((b) => {
-  b.addEventListener("click", () => { if (window.__setLang) window.__setLang(b.dataset.lang); });
-});
-</script>
+<script src="page-tarifs.js"></script>
 </body>
 </html>

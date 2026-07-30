@@ -2,13 +2,14 @@
   "name": "alba-landing-tests",
   "private": true,
   "type": "module",
-  "description": "Vérifications de la page de vente. Aucun rapport avec le site lui-même, qui n'a pas d'étape de build.",
+  "description": "Vérifications de la page de vente, et outillage de la transpilation préalable des .jsx. Le site publié, lui, reste du HTML statique sans dépendance.",
   "scripts": {
-    "test": "node entetes.mjs && node smoke.mjs && node contenu.mjs && node bascule.mjs",
+    "test": "node transpile.mjs && node entetes.mjs && node smoke.mjs && node contenu.mjs && node bascule.mjs",
     "smoke": "node smoke.mjs",
     "contenu": "node contenu.mjs",
     "bascule": "node bascule.mjs",
-    "entetes": "node entetes.mjs"
+    "entetes": "node entetes.mjs",
+    "transpile": "node transpile.mjs"
   },
   "devDependencies": {
     "@babel/standalone": "7.29.0",

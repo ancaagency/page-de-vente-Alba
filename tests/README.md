@@ -1,9 +1,12 @@
 # Vérifications de la page de vente
 
-Ce dossier ne fait pas partie du site. Il n'introduit **aucune étape de build** :
-la vitrine reste du HTML statique servi tel quel, conformément au cahier des
-charges. Ces scripts se contentent de la charger dans un navigateur et de
-regarder si elle fonctionne.
+Ce dossier ne fait pas partie du site. Il contient les vérifications, et les
+dépendances de l'outil de transpilation (`outils/transpiler.mjs`).
+
+Le site publié, lui, n'a aucune dépendance : c'est du HTML statique servi tel
+quel. La seule étape préalable est la transpilation des `.jsx` en `.js`, ajoutée
+pour retirer `'unsafe-eval'` de la politique de sécurité du contenu. Elle produit
+des fichiers versionnés ; Cloudflare ne construit rien.
 
 ## Pourquoi ils existent
 
@@ -18,9 +21,10 @@ unpkg depuis l'environnement de travail. Ils prouvaient que les fichiers se
 chargeaient, jamais que la page marchait. Un test qui ne peut pas échouer ne
 sert à rien.
 
-`smoke.mjs` sert donc React, Babel, GSAP et Lenis depuis npm, applique la vraie
+`smoke.mjs` sert donc React, GSAP et Lenis depuis npm, applique la vraie
 politique de sécurité du contenu, et vérifie ce qui compte : que les sections
-sont réellement dans le DOM.
+sont réellement dans le DOM. (Babel n'y figure plus : il ne s'exécute plus dans
+le navigateur.)
 
 ## Lancer
 
@@ -77,6 +81,22 @@ Quatre contrôles :
   (l'édition n'aurait aucun effet), pas d'entrée sans appel (on éditerait un
   texte invisible).
 
+### `transpile.mjs` — les `.js` publiés correspondent-ils aux `.jsx` ?
+
+C'est le prix de la transpilation préalable, et il faut le payer explicitement :
+il y a deux versions de chaque composant dans le dépôt, la source et le produit.
+Modifier un `.jsx` sans relancer `node outils/transpiler.mjs` laisse le site
+servir l'ancienne version — **sans erreur, sans page blanche, sans rien qui le
+signale**. Ce test rejoue la transpilation en mémoire et compare.
+
+Il vérifie aussi les trois conditions qui permettent à la CSP de se passer de
+`'unsafe-eval'` et de `'unsafe-inline'` : aucune page ne charge Babel, aucune ne
+charge un `.jsx`, aucune ne contient de script en ligne. Et que tout script
+tiers porte une empreinte `integrity`.
+
+Éprouvé en ajoutant une ligne à `founder.jsx` sans régénérer : le test signale
+bien `founder.js` à régénérer.
+
 ### `entetes.mjs` — la posture de sécurité est-elle intacte ?
 
 Sans navigateur ni réseau : il analyse `_headers` et vérifie chaque décision qui
@@ -88,9 +108,10 @@ appliquant cette même CSP dans Chromium) mais **d'empêcher qu'un durcissement
 soit défait sans qu'on le remarque**. Les origines tierces sont énumérées : en
 ajouter une fait échouer le test, ce qui force à en faire un choix explicite.
 
-Deux absences sont assertées, pas oubliées : `preload` sur HSTS engagerait
-l'apex, dont nous ne maîtrisons pas les en-têtes ; `unsafe-eval` doit rester
-cantonné à `script-src`.
+Trois absences sont assertées, pas oubliées : `'unsafe-eval'` et
+`'unsafe-inline'` ne doivent pas revenir dans `script-src` — c'est tout l'objet
+de la transpilation préalable — et `preload` sur HSTS engagerait l'apex, dont
+nous ne maîtrisons pas les en-têtes.
 
 ### `bascule.mjs` — la migration vers l'apex tiendra-t-elle ?
 

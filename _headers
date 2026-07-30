@@ -15,29 +15,32 @@
 
   # Politique de sécurité du contenu.
   #
-  # 'unsafe-eval' et 'unsafe-inline' sont INDISPENSABLES ici : la page transpile
-  # ses .jsx dans le navigateur avec Babel standalone, ce qui est littéralement
-  # de l'évaluation de code à la volée. Les retirer donne une page blanche.
+  # script-src 'self' https://unpkg.com — sans 'unsafe-eval' NI 'unsafe-inline'.
   #
-  # ⚠️ Conséquence à assumer : contre une injection de script, cette CSP ne
-  # protège PAS. Elle vaut par ce qu'elle interdit d'autre — les origines
-  # joignables, l'exfiltration, les plugins, l'encadrement. La page n'offre
-  # d'ailleurs aucune prise : elle ne lit ni paramètre d'URL, ni fragment, ni
-  # référent, et ne rend aucune donnée d'origine extérieure. La seule voie
-  # d'injection HTML du projet (un innerHTML dans image-slot.js) a été remplacée
-  # par des appels DOM. Le vrai gain de sécurité serait de transpiler les .jsx
-  # avant publication, ce qui permettrait de retirer 'unsafe-eval' ET la
-  # dépendance à unpkg — au prix d'une étape de build.
+  # C'est le résultat de la transpilation préalable des .jsx (outils/transpiler.mjs).
+  # La page compilait auparavant son JSX dans le navigateur avec Babel standalone,
+  # ce qui est de l'évaluation de code à la volée : 'unsafe-eval' était
+  # obligatoire, et une CSP qui autorise l'eval ne protège de rien contre une
+  # injection de script. Les trois blocs <script> en ligne ont été sortis dans des
+  # fichiers, ce qui permet de retirer aussi 'unsafe-inline'. Il ne reste aucun
+  # script en ligne dans les trois pages.
   #
-  # connect-src 'self' : Babel récupère chaque .jsx par fetch() sur notre propre
-  #   origine. unpkg en a été RETIRÉ — les bibliothèques y sont chargées par
-  #   <script src>, jamais par fetch. Une origine de moins joignable, donc une
-  #   voie d'exfiltration de moins si un script était altéré.
+  # Les cinq scripts tiers portent tous une empreinte `integrity` : un unpkg
+  # compromis ne peut pas leur substituer autre chose, le navigateur refuserait.
+  # (GSAP, ScrollTrigger et Lenis n'en avaient aucune jusqu'ici.)
+  #
+  # connect-src 'none' : plus rien ne fait de requête réseau depuis le code. Ce
+  #   'self' servait à Babel, qui allait chercher chaque .jsx par fetch(). Il n'y
+  #   a plus de Babel, donc plus de fetch — et plus aucune destination possible
+  #   pour une exfiltration.
   # object-src / frame-src / worker-src 'none' : plus strict que le repli sur
   #   default-src. Vérifié : ni <object>, ni <embed>, ni <iframe>, ni Worker,
   #   ni Service Worker dans le projet.
+  # style-src garde 'unsafe-inline' : React pose des styles par attribut `style`,
+  #   et les pages ont des blocs <style>. Un style injecté ne s'exécute pas ;
+  #   le risque n'a rien de comparable à celui d'un script.
   # media-src 'self' sert au son d'apparition de Léo (uploads/*.mp3).
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; media-src 'self'; connect-src 'self'; object-src 'none'; frame-src 'none'; worker-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests
+  Content-Security-Policy: default-src 'self'; script-src 'self' https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; media-src 'self'; connect-src 'none'; object-src 'none'; frame-src 'none'; worker-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests
 
   # Deux en-têtes volontairement ABSENTS, pour ne pas confondre durcissement et
   # dégâts :

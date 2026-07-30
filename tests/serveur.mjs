@@ -3,10 +3,11 @@
  *
  * Il sert le site tel qu'il sera déployé, à deux nuances près, toutes deux
  * nécessaires pour que la page s'exécute vraiment dans ce bac à sable :
- *   · React, Babel, GSAP et Lenis viennent de node_modules et non d'unpkg, qui
- *     est bloqué ici. Les empreintes `integrity` sont CONSERVÉES : les fichiers
+ *   · React, GSAP et Lenis viennent de node_modules et non d'unpkg, qui est
+ *     bloqué ici. Les empreintes `integrity` sont CONSERVÉES : les fichiers
  *     proviennent du même paquet npm, donc Chromium doit les valider. Une
- *     empreinte fausse fait refuser le script — c'est ce qu'on veut détecter ;
+ *     empreinte fausse fait refuser le script — c'est ce qu'on veut détecter,
+ *     et les cinq scripts tiers en portent une depuis la transpilation ;
  *   · les polices Google sont neutralisées, pour ne pas dépendre du réseau.
  *
  * La CSP est lue dans `_headers` : c'est celle de production qui est éprouvée,
@@ -22,7 +23,6 @@ const NM = path.resolve(new URL('.', import.meta.url).pathname, 'node_modules');
 const CDN = {
   '/vendor/react.js': `${NM}/react/umd/react.production.min.js`,
   '/vendor/react-dom.js': `${NM}/react-dom/umd/react-dom.production.min.js`,
-  '/vendor/babel.js': `${NM}/@babel/standalone/babel.min.js`,
   '/vendor/gsap.js': `${NM}/gsap/dist/gsap.min.js`,
   '/vendor/scrolltrigger.js': `${NM}/gsap/dist/ScrollTrigger.min.js`,
   '/vendor/lenis.js': `${NM}/lenis/dist/lenis.min.js`,
@@ -45,7 +45,6 @@ function reecrireHtml(html) {
   return html
     .replace(/https:\/\/unpkg\.com\/react@[^"]*/g, '/vendor/react.js')
     .replace(/https:\/\/unpkg\.com\/react-dom@[^"]*/g, '/vendor/react-dom.js')
-    .replace(/https:\/\/unpkg\.com\/@babel\/standalone@[^"]*/g, '/vendor/babel.js')
     .replace(/https:\/\/unpkg\.com\/gsap@[^"]*ScrollTrigger\.min\.js/g, '/vendor/scrolltrigger.js')
     .replace(/https:\/\/unpkg\.com\/gsap@[^"]*gsap\.min\.js/g, '/vendor/gsap.js')
     .replace(/https:\/\/unpkg\.com\/lenis@[^"]*/g, '/vendor/lenis.js')
