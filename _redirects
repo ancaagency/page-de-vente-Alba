@@ -69,6 +69,11 @@
 /online/*             https://app.alba-studio.co/online/:splat        301
 /invite/*             https://app.alba-studio.co/invite/:splat        301
 /pv/*                 https://app.alba-studio.co/pv/:splat            301
+# /delivery/:token — lien de livraison envoyé à un maître d'ouvrage. Manquait :
+# ajouté après confrontation ligne à ligne aux routes publiques de App.tsx.
+/delivery/*           https://app.alba-studio.co/delivery/:splat      301
+/mes-projets          https://app.alba-studio.co/mes-projets          301
+/selections           https://app.alba-studio.co/selections           301
 /reset-password       https://app.alba-studio.co/reset-password       301
 /onboarding           https://app.alba-studio.co/onboarding           301
 /trash                https://app.alba-studio.co/trash                301
