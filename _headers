@@ -8,18 +8,52 @@
   Permissions-Policy: geolocation=(), microphone=(), camera=(), payment=(), usb=()
   Strict-Transport-Security: max-age=31536000
 
+  # Coupe le lien `window.opener` avec toute fenêtre d'une autre origine.
+  # Vérifié avant de le poser : la page n'ouvre aucune fenêtre (`window.open`,
+  # `target="_blank"` : zéro occurrence), donc rien à casser.
+  Cross-Origin-Opener-Policy: same-origin
+
   # Politique de sécurité du contenu.
   #
   # 'unsafe-eval' et 'unsafe-inline' sont INDISPENSABLES ici : la page transpile
   # ses .jsx dans le navigateur avec Babel standalone, ce qui est littéralement
   # de l'évaluation de code à la volée. Les retirer donne une page blanche.
-  # Cette CSP ne protège donc pas contre l'injection de script ; elle restreint
-  # les ORIGINES joignables, ce qui reste utile (aucun domaine tiers ne peut
-  # être appelé si un script était altéré).
   #
-  # connect-src 'self' est requis : Babel récupère chaque .jsx par fetch().
+  # ⚠️ Conséquence à assumer : contre une injection de script, cette CSP ne
+  # protège PAS. Elle vaut par ce qu'elle interdit d'autre — les origines
+  # joignables, l'exfiltration, les plugins, l'encadrement. La page n'offre
+  # d'ailleurs aucune prise : elle ne lit ni paramètre d'URL, ni fragment, ni
+  # référent, et ne rend aucune donnée d'origine extérieure. La seule voie
+  # d'injection HTML du projet (un innerHTML dans image-slot.js) a été remplacée
+  # par des appels DOM. Le vrai gain de sécurité serait de transpiler les .jsx
+  # avant publication, ce qui permettrait de retirer 'unsafe-eval' ET la
+  # dépendance à unpkg — au prix d'une étape de build.
+  #
+  # connect-src 'self' : Babel récupère chaque .jsx par fetch() sur notre propre
+  #   origine. unpkg en a été RETIRÉ — les bibliothèques y sont chargées par
+  #   <script src>, jamais par fetch. Une origine de moins joignable, donc une
+  #   voie d'exfiltration de moins si un script était altéré.
+  # object-src / frame-src / worker-src 'none' : plus strict que le repli sur
+  #   default-src. Vérifié : ni <object>, ni <embed>, ni <iframe>, ni Worker,
+  #   ni Service Worker dans le projet.
   # media-src 'self' sert au son d'apparition de Léo (uploads/*.mp3).
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; media-src 'self'; connect-src 'self' https://unpkg.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; media-src 'self'; connect-src 'self'; object-src 'none'; frame-src 'none'; worker-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests
+
+  # Deux en-têtes volontairement ABSENTS, pour ne pas confondre durcissement et
+  # dégâts :
+  #
+  # · Cross-Origin-Embedder-Policy — exigerait que unpkg serve ses scripts avec
+  #   un en-tête CORP. Il ne le fait pas : la page deviendrait blanche.
+  #
+  # · Cross-Origin-Resource-Policy — empêcherait les autres sites de charger nos
+  #   images, y compris l'aperçu `og:image` sur lequel s'appuient les réseaux
+  #   sociaux et les messageries. Le gain (fuites inter-origines de type Spectre)
+  #   ne vaut pas la perte des aperçus de lien.
+  #
+  # Et une valeur volontairement NON ajoutée : `preload` sur HSTS. Le préchargement
+  # se demande pour le domaine entier, apex compris — or l'apex sert
+  # l'application, dont nous ne maîtrisons pas les en-têtes, et l'inscription est
+  # difficile à défaire. `includeSubDomains` ne couvrirait que *.www, sans objet.
 
 ## --- Politique de cache ---------------------------------------------------
 # Le projet n'a pas d'empreinte dans les noms de fichiers (pas de build, donc

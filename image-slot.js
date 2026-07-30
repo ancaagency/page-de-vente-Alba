@@ -82,40 +82,59 @@
       // Sans texte fourni, on n'affiche rien plutôt qu'un mot inventé.
       const placeholder = this.getAttribute('placeholder') || '';
 
-      const body = src
-        ? `<img src="${escapeAttr(src)}" alt="${escapeAttr(alt)}" loading="lazy">`
-        : `<div class="ph">${escapeText(placeholder)}</div>`;
+      /* Construction par API DOM, et non par innerHTML.
+         Cette méthode assemblait une chaîne HTML en échappant ses variables à la
+         main. L'échappement était correct, mais c'était la seule primitive
+         d'injection HTML de tout le projet, et un échappement juste aujourd'hui
+         ne le reste que si personne ne touche au gabarit. Ici, `textContent` et
+         l'affectation de propriété ne peuvent pas produire de balise : il n'y a
+         plus rien à échapper, donc plus rien à oublier d'échapper. */
+      const racine = this.shadowRoot;
+      racine.textContent = '';
 
-      this.shadowRoot.innerHTML = `<style>${STYLE}</style>${body}`;
+      const style = document.createElement('style');
+      style.textContent = STYLE;
+      racine.appendChild(style);
+
+      if (!src) {
+        racine.appendChild(cartouche(placeholder));
+        return;
+      }
+
+      const img = document.createElement('img');
+      img.setAttribute('loading', 'lazy');
+      img.alt = alt;
+      img.src = src;
 
       // Repli si le fichier n'est pas là. Les emplacements sont câblés sur leur
       // nom de fichier définitif AVANT que les photos n'arrivent : poser une
       // photo se réduit alors à déposer le fichier dans images/, sans toucher au
       // code. Sans ce repli, un fichier manquant afficherait l'icône d'image
       // cassée du navigateur — pire que le cartouche neutre.
-      const img = this.shadowRoot.querySelector('img');
-      if (img) {
-        img.addEventListener('error', () => {
-          this.shadowRoot.innerHTML = `<style>${STYLE}</style><div class="ph">${escapeText(placeholder)}</div>`;
-          /* Un fichier déposé sous un autre nom ne s'afficherait pas, et rien ne
-             le signalerait : le cartouche est le même que si aucune photo
-             n'avait été fournie. On dit donc en clair quel chemin est attendu. */
-          if (window.console && console.info) {
-            console.info(
-              `[image-slot] « ${src} » est introuvable : l'emplacement affiche son cartouche. ` +
-              `Pour poser la photo, déposez le fichier sous CE nom exact (minuscules, extension comprise).`
-            );
-          }
-        }, { once: true });
-      }
+      img.addEventListener('error', () => {
+        img.remove();
+        racine.appendChild(cartouche(placeholder));
+        /* Un fichier déposé sous un autre nom ne s'afficherait pas, et rien ne
+           le signalerait : le cartouche est le même que si aucune photo n'avait
+           été fournie. On dit donc en clair quel chemin est attendu. */
+        if (window.console && console.info) {
+          console.info(
+            '[image-slot] « ' + src + ' » est introuvable : l\'emplacement affiche son cartouche. ' +
+            'Pour poser la photo, déposez le fichier sous CE nom exact (minuscules, extension comprise).'
+          );
+        }
+      }, { once: true });
+
+      racine.appendChild(img);
     }
   }
 
-  function escapeAttr(v) {
-    return String(v).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
-  }
-  function escapeText(v) {
-    return String(v).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  /** Cartouche neutre affiché tant qu'aucune image n'est disponible. */
+  function cartouche(texte) {
+    const div = document.createElement('div');
+    div.className = 'ph';
+    div.textContent = texte;
+    return div;
   }
 
   if (!customElements.get('image-slot')) {

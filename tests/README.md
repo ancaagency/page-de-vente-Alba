@@ -77,6 +77,21 @@ Quatre contrôles :
   (l'édition n'aurait aucun effet), pas d'entrée sans appel (on éditerait un
   texte invisible).
 
+### `entetes.mjs` — la posture de sécurité est-elle intacte ?
+
+Sans navigateur ni réseau : il analyse `_headers` et vérifie chaque décision qui
+y est argumentée — en-têtes de sécurité, directives de CSP, origines tierces
+autorisées, politique de cache.
+
+Son rôle n'est pas de prouver que la page marche (`smoke.mjs` le fait en
+appliquant cette même CSP dans Chromium) mais **d'empêcher qu'un durcissement
+soit défait sans qu'on le remarque**. Les origines tierces sont énumérées : en
+ajouter une fait échouer le test, ce qui force à en faire un choix explicite.
+
+Deux absences sont assertées, pas oubliées : `preload` sur HSTS engagerait
+l'apex, dont nous ne maîtrisons pas les en-têtes ; `unsafe-eval` doit rester
+cantonné à `script-src`.
+
 ### `bascule.mjs` — la migration vers l'apex tiendra-t-elle ?
 
 Sert `config.js` avec `app.alba-studio.co` à la place de l'origine actuelle, et
