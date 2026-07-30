@@ -35,6 +35,8 @@ var PricingPage = function PricingPage() {
     });
     var cta = document.getElementById("nav-cta");
     if (cta) cta.textContent = lang === "en" ? "Try for free" : "Essayer gratuitement";
+    var connexion = document.getElementById("nav-login");
+    if (connexion) connexion.textContent = lang === "en" ? "Log in" : "Se connecter";
   }, [lang]);
   return /*#__PURE__*/React.createElement("div", {
     key: lang,

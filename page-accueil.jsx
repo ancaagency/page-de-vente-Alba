@@ -139,8 +139,8 @@ ReactDOM.createRoot(document.getElementById("app")).render(<App/>);
 /* Nav language toggle */
 (() => {
   const NAV_TEXTS = {
-    fr: { links: ["Fonctionnalités", "La plateforme", "Pour qui ?", "Notre vision", "Tarif tout inclus", "Questions"], cta: "Essayer gratuitement" },
-    en: { links: ["Features", "The platform", "Who it is for", "Our vision", "All-in pricing", "Questions"], cta: "Try for free" },
+    fr: { links: ["Fonctionnalités", "La plateforme", "Pour qui ?", "Notre vision", "Tarif tout inclus", "Questions"], cta: "Essayer gratuitement", connexion: "Se connecter" },
+    en: { links: ["Features", "The platform", "Who it is for", "Our vision", "All-in pricing", "Questions"], cta: "Try for free", connexion: "Log in" },
   };
   window.__applyNavLang = (lang) => {
     const t = NAV_TEXTS[lang] || NAV_TEXTS.fr;
@@ -150,6 +150,10 @@ ReactDOM.createRoot(document.getElementById("app")).render(<App/>);
     if (cta) cta.textContent = t.cta;
     const mcta = document.getElementById("mobile-menu-cta");
     if (mcta) mcta.textContent = t.cta;
+    for (const id of ["nav-login", "mobile-menu-login"]) {
+      const el = document.getElementById(id);
+      if (el) el.textContent = t.connexion;
+    }
     document.querySelectorAll("#lang-toggle button").forEach((b) => {
       b.classList.toggle("is-active", b.dataset.lang === lang);
     });

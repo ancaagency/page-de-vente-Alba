@@ -43,6 +43,13 @@ window.ALBA_APP_ORIGIN = "https://app.alba-studio.co";
       // connexion (Auth.tsx, dépôt de l'application).
       a.setAttribute("href", origine + "/inscription");
     });
+    // Le bouton « Se connecter » vise /auth, qui ouvre l'écran sur la
+    // CONNEXION, là où /inscription l'ouvre sur la création de compte
+    // (Auth.tsx, dépôt de l'application). Deux marques distinctes, pour que
+    // les deux boutons suivent l'origine sans se confondre.
+    document.querySelectorAll("[data-alba-login]").forEach(function (a) {
+      a.setAttribute("href", origine + "/auth");
+    });
     document.querySelectorAll("[data-alba-path]").forEach(function (a) {
       a.setAttribute("href", origine + a.getAttribute("data-alba-path"));
     });

@@ -146,11 +146,13 @@ ReactDOM.createRoot(document.getElementById("app")).render(/*#__PURE__*/React.cr
   var NAV_TEXTS = {
     fr: {
       links: ["Fonctionnalités", "La plateforme", "Pour qui ?", "Notre vision", "Tarif tout inclus", "Questions"],
-      cta: "Essayer gratuitement"
+      cta: "Essayer gratuitement",
+      connexion: "Se connecter"
     },
     en: {
       links: ["Features", "The platform", "Who it is for", "Our vision", "All-in pricing", "Questions"],
-      cta: "Try for free"
+      cta: "Try for free",
+      connexion: "Log in"
     }
   };
   window.__applyNavLang = function (lang) {
@@ -165,6 +167,11 @@ ReactDOM.createRoot(document.getElementById("app")).render(/*#__PURE__*/React.cr
     if (cta) cta.textContent = t.cta;
     var mcta = document.getElementById("mobile-menu-cta");
     if (mcta) mcta.textContent = t.cta;
+    for (var _i = 0, _arr = ["nav-login", "mobile-menu-login"]; _i < _arr.length; _i++) {
+      var id = _arr[_i];
+      var el = document.getElementById(id);
+      if (el) el.textContent = t.connexion;
+    }
     document.querySelectorAll("#lang-toggle button").forEach(function (b) {
       b.classList.toggle("is-active", b.dataset.lang === lang);
     });

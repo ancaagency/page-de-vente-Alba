@@ -366,6 +366,11 @@ section {
   font-family: var(--font-display);
   font-size: 18px;
   letter-spacing: 0.02em;
+  /* La marque ne rétrécit pas et ne se coupe pas. Sans cela, dès que la barre
+     se resserre, flexbox la comprime et « ALBA Studio » passe sur deux lignes —
+     c'est arrivé en ajoutant le lien de connexion. */
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 .brand-mark {
   width: 34px; height: 34px;
@@ -427,9 +432,49 @@ section {
 }
 .nav-burger.open span:nth-child(1) { transform: translateY(3.75px) rotate(45deg); }
 .nav-burger.open span:nth-child(2) { transform: translateY(-3.75px) rotate(-45deg); }
+/* Lien « Se connecter » de la barre.
+   Volontairement discret : il emprunte exactement la grammaire de .nav-links a
+   — meme taille, meme couleur, meme soulignement dore au survol — pour ne pas
+   entrer en concurrence avec le bouton d'essai, qui reste l'action principale. */
+.nav-login {
+  position: relative;
+  padding: 4px 0;
+  font-size: 13px;
+  color: rgba(var(--on-bg-rgb), 0.75);
+  transition: color .2s;
+  white-space: nowrap;
+}
+.nav-login:hover { color: var(--on-bg); }
+.nav-login::after {
+  content: "";
+  position: absolute;
+  bottom: 0; left: 0;
+  width: 0; height: 1px;
+  background: var(--accent);
+  transition: width .3s ease;
+}
+.nav-login:hover::after { width: 100%; }
+
 @media (max-width: 820px) {
   .nav-burger { display: flex; }
   #nav-cta { display: none; }
+}
+
+/* « Se connecter » disparaît de la barre bien avant le seuil du menu mobile.
+   Mesure : la barre complète réclame 1146 px de contenu, dont 100 px pour ce
+   lien et sa gouttière. En deçà, flexbox comprime la marque et « ALBA Studio »
+   se coupe en deux. Le lien reste atteignable — il est repris dans le menu
+   déroulant, et il y a un « Se connecter » dans le pied de page. */
+@media (max-width: 1200px) {
+  .nav-login { display: none; }
+}
+
+/* Au-dessus du seuil, la barre porte un élément de plus et doit tenir sur UNE
+   ligne : sans cela un libellé se coupe en plein milieu (« La / plateforme »).
+   La règle est volontairement bornée à cette plage — en dessous, le lien de
+   connexion a disparu et la barre se comporte exactement comme avant son ajout. */
+@media (min-width: 1201px) {
+  .nav-links a { white-space: nowrap; }
 }
 
 /* Mobile menu overlay */
@@ -474,6 +519,20 @@ section {
   opacity: 1;
   transform: translateY(0);
 }
+
+/* « Se connecter » dans le menu mobile.
+   Sous 820 px, la barre masque le lien : sans cette reprise il deviendrait
+   inatteignable au telephone. Meme sobriete que dans la barre — un lien, pas un
+   second bouton qui concurrencerait l'essai gratuit. */
+.mobile-menu-login {
+  display: block;
+  text-align: center;
+  margin-top: 20px;
+  font-size: 15px;
+  color: rgba(var(--on-bg-rgb), 0.7);
+  transition: color .2s;
+}
+.mobile-menu-login:hover { color: var(--accent); }
 .mobile-menu.open .mobile-menu-links a:nth-child(1) { transition-delay: .06s; }
 .mobile-menu.open .mobile-menu-links a:nth-child(2) { transition-delay: .12s; }
 .mobile-menu.open .mobile-menu-links a:nth-child(3) { transition-delay: .18s; }

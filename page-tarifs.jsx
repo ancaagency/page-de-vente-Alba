@@ -11,6 +11,8 @@ const PricingPage = () => {
     document.querySelectorAll("#lang-toggle button").forEach((b) => b.classList.toggle("is-active", b.dataset.lang === lang));
     const cta = document.getElementById("nav-cta");
     if (cta) cta.textContent = lang === "en" ? "Try for free" : "Essayer gratuitement";
+    const connexion = document.getElementById("nav-login");
+    if (connexion) connexion.textContent = lang === "en" ? "Log in" : "Se connecter";
   }, [lang]);
   return (
     <div key={lang} style={{paddingTop: 72}}>
