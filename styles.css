@@ -135,6 +135,23 @@ a:hover { color: var(--accent); }
 .btn:hover, .brand:hover, .nav-links a:hover, .foot-col a:hover { color: inherit; }
 .nav-links a:hover { color: var(--on-bg); }
 .foot-col a:hover { color: var(--accent); }
+/* Aucun defilement horizontal, jamais.
+   La page en presentait sur iPhone : le contenu partait a droite et se coupait a
+   gauche. Mesure en Chromium a 360, 390 et 430 px, le debordement n'etait que de
+   1 a 7 px — beaucoup moins que ce que montrait l'appareil. Faute de pouvoir
+   reproduire Safari iOS depuis ici, on traite la cause connue ET on rend le
+   symptome impossible.
+
+   `clip` et non `hidden` : `hidden` cree un conteneur de defilement, ce qui
+   casse `position: sticky` — utilise a six endroits dans ce projet, dont la
+   barre du carrousel et la carte tarifaire. `clip` rogne sans creer ce
+   conteneur. Les navigateurs qui ne le connaissent pas ignorent la declaration :
+   ils retrouvent le comportement d'avant, rien n'est casse. */
+html, body {
+  overflow-x: clip;
+  max-width: 100%;
+}
+
 button { font: inherit; color: inherit; cursor: pointer; }
 
 /* Lisible par les lecteurs d'écran et les moteurs, invisible à l'œil.

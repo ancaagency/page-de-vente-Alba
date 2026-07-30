@@ -12,6 +12,28 @@
   z-index: 5;
 }
 .fc-tabs { display: flex; gap: 8px; flex-wrap: wrap; }
+
+/* Sur telephone, cinq pastilles qui reviennent a la ligne donnent une grille
+   dechiquetee — une seule sur la premiere ligne, deux sur la deuxieme, une sur
+   la troisieme. On passe a une bande qui defile horizontalement : c'est le
+   geste attendu pour des onglets, et les fleches « precedent / suivant » juste
+   en dessous restent disponibles pour qui ne le devine pas. */
+@media (max-width: 640px) {
+  .fc-tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    /* La bande deborde volontairement des gouttieres du conteneur, pour qu'on
+       voie qu'elle continue au-dela du bord. */
+    margin-inline: calc(var(--gutter) * -1);
+    padding-inline: var(--gutter);
+    padding-bottom: 2px;
+  }
+  .fc-tabs::-webkit-scrollbar { display: none; }
+  .fc-tab { flex: 0 0 auto; scroll-snap-align: start; }
+}
 .fc-tab {
   display: inline-flex;
   align-items: baseline;

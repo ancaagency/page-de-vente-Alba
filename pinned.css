@@ -584,8 +584,14 @@
   .dev-duo .phone-shot { width: 32%; }
 }
 @media (max-width: 560px) {
-  .dev-duo { height: 330px; }
-  .dev-duo .tablet-shot { width: 82%; left: -8%; bottom: -8%; }
-  .dev-duo .phone-shot { width: 32%; right: -4%; bottom: 14%; }
+  /* La tablette est posee en absolu et debordait de sa boite dans les DEUX
+     sens : `tablette-crop.png` fait 550x869, soit un rapport de 1,58, donc a
+     82 % d'une colonne de ~340 px elle mesure ~440 px de haut pour une boite de
+     330. Elle recouvrait le paragraphe au-dessus et mordait sur la section
+     suivante. La boite est dimensionnee pour la contenir, et le debordement
+     volontaire vers le bas est ramene a zero. */
+  .dev-duo { height: 460px; }
+  .dev-duo .tablet-shot { width: 82%; left: -8%; bottom: 0; }
+  .dev-duo .phone-shot { width: 32%; right: -4%; bottom: 18%; }
   .laptop-shot { width: 108%; }
 }
