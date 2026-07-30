@@ -97,6 +97,15 @@
       if (img) {
         img.addEventListener('error', () => {
           this.shadowRoot.innerHTML = `<style>${STYLE}</style><div class="ph">${escapeText(placeholder)}</div>`;
+          /* Un fichier déposé sous un autre nom ne s'afficherait pas, et rien ne
+             le signalerait : le cartouche est le même que si aucune photo
+             n'avait été fournie. On dit donc en clair quel chemin est attendu. */
+          if (window.console && console.info) {
+            console.info(
+              `[image-slot] « ${src} » est introuvable : l'emplacement affiche son cartouche. ` +
+              `Pour poser la photo, déposez le fichier sous CE nom exact (minuscules, extension comprise).`
+            );
+          }
         }, { once: true });
       }
     }
