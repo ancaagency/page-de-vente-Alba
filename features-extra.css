@@ -129,7 +129,9 @@
 @keyframes leo-app-in { from { opacity: 0; transform: scale(1.05); filter: blur(6px); } to { opacity: 1; transform: none; filter: none; } }
 .leo-intro {
   position: absolute; inset: 0; z-index: 40;
-  background: radial-gradient(ellipse at 50% 45%, #16203A 0%, #0A0F1E 62%);
+  /* Meme raison que le rideau d'accueil : le panneau qu'elle recouvre est
+     desormais clair, l'apparition ne peut pas rester bleu nuit. */
+  background: radial-gradient(ellipse at 50% 45%, #FFFFFF 0%, #EDEFF3 62%);
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   cursor: pointer;
 }
@@ -142,8 +144,8 @@
 }
 @keyframes leo-glow-pulse { 0% { opacity: 0; transform: scale(.4); } 45% { opacity: 1; transform: scale(1); } 100% { opacity: .55; transform: scale(1.1); } }
 .leo-intro-spark {
-  position: relative; color: #E0C687;
-  filter: drop-shadow(0 0 26px rgba(201,168,106,0.65));
+  position: relative; color: #C9A86A;
+  filter: drop-shadow(0 0 26px rgba(201,168,106,0.45));
   animation: leo-spark-in 1.7s cubic-bezier(.18,.9,.25,1) both;
 }
 @keyframes leo-spark-in {
@@ -154,12 +156,12 @@
 }
 .leo-intro-name {
   font-family: var(--font-display); font-size: 34px; letter-spacing: 0.28em;
-  color: var(--on-bg); margin-top: 14px; padding-left: 0.28em;
+  color: var(--ink); margin-top: 14px; padding-left: 0.28em;
   animation: leo-txt-in .7s ease-out .75s both;
 }
 .leo-intro-sub {
   font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
-  color: rgba(201,168,106,0.85); margin-top: 6px;
+  color: #8F6E33; margin-top: 6px;
   animation: leo-txt-in .7s ease-out .95s both;
 }
 @keyframes leo-txt-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }

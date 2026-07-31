@@ -50,7 +50,10 @@ html.lenis { scroll-behavior: auto !important; }
   position: fixed;
   inset: 0;
   z-index: 5000;
-  background: #0A0F1E;
+  /* Clair, comme le reste de la page. Le lever de soleil dore qui suit
+     etait dessine pour du bleu nuit : ses valeurs sont remontees en
+     consequence, sinon il devient invisible sur du blanc. */
+  background: #FFFFFF;
   display: grid;
   place-items: center;
   overflow: hidden;
@@ -68,7 +71,7 @@ html.lenis { scroll-behavior: auto !important; }
   height: 34vmin;
   transform: translate(-50%, 55%);
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(240, 217, 166, 0.32) 0%, rgba(221, 184, 120, 0.16) 34%, rgba(201, 168, 106, 0.06) 58%, transparent 75%);
+  background: radial-gradient(circle, rgba(201, 168, 106, 0.30) 0%, rgba(201, 168, 106, 0.16) 34%, rgba(201, 168, 106, 0.07) 58%, transparent 75%);
   opacity: 0;
 }
 .intro-sun::after { content: none; }
@@ -88,9 +91,9 @@ html.lenis { scroll-behavior: auto !important; }
   width: 76px; height: 76px;
   margin: 0 auto 18px;
   border-radius: 18px;
-  background: #fff;
+  background: #F2F4F8;
   display: grid; place-items: center;
-  box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+  box-shadow: 0 12px 40px rgba(11,18,36,0.14);
 }
 .intro-mark img {
   width: 68%;
@@ -102,9 +105,9 @@ html.lenis { scroll-behavior: auto !important; }
   font-family: var(--font-display);
   font-size: 26px;
   letter-spacing: 0.02em;
-  color: #E9ECF2;
+  color: var(--ink);
 }
-.intro-name em { font-style: normal; color: rgba(233, 236, 242,0.6); }
+.intro-name em { font-style: normal; color: rgba(11, 18, 36, 0.45); }
 .intro-line {
   width: 160px;
   height: 1px;
