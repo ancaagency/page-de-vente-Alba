@@ -178,19 +178,23 @@
     L'application ALBA Studio est hébergée séparément du présent site. La base de
     données, l'authentification et le stockage des fichiers déposés par les
     utilisateurs sont opérés par <strong>Supabase</strong> en qualité de
-    sous-traitant.
+    sous-traitant. Les données sont hébergées <strong>en France</strong>, sur
+    l'infrastructure Amazon Web Services de la région eu-west-3 (Paris).
   </p>
+  <!-- Région relevée sur la console Supabase du projet « Alba Studio » (AWS,
+       eu-west-3). C'est bien la France : la phrase « données hébergées en
+       France » n'est donc plus une annonce commerciale mais un fait vérifiable.
+       Reste l'hébergeur du front-end de l'application, qui n'est pas Supabase et
+       que rien dans les deux dépôts ne permet d'établir. -->
   <!-- Ce paragraphe disait auparavant que « les hébergeurs, les régions
        d'hébergement et les sous-traitants sont détaillés dans la politique de
        confidentialité ». C'était faux : la politique de confidentialité de
        l'application ne mentionne aujourd'hui aucun hébergeur ni sous-traitant
        (vérifié dans src/pages/PrivacyPolicy.tsx du dépôt de l'application).
-       Renvoyer vers une section inexistante est plus dommageable que d'afficher
-       ce qu'il reste à écrire. Les deux points ci-dessous se renseignent d'un
-       coup, et le renvoi redeviendra exact quand la politique de
-       confidentialité aura sa section « sous-traitants ». -->
+       Le renvoi redeviendra exact quand elle aura sa section
+       « sous-traitants ». -->
   <p>
-    <span class="todo">À COMPLÉTER : région d'hébergement des données (France annoncée, à confirmer dans la console Supabase) et hébergeur du front-end de l'application</span>
+    <span class="todo">À COMPLÉTER : hébergeur du front-end de l'application (app.alba-studio.co)</span>
   </p>
 
   <h2>4 · Propriété <em>intellectuelle</em></h2>
