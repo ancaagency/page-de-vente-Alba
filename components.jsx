@@ -79,7 +79,7 @@ const Icon = ({ name, size = 18, stroke = 1.5, ...rest }) => {
 /* Photo placeholder, tonal, no real photos used (architecture vibe) */
 const PhotoPlaceholder = ({ label = "ARCHITECTURE", tone = "stone", ratio = "16/9", style }) => {
   const tones = {
-    stone:    { a: "#7B6F58", b: "#3E372B", c: "#A8987A" },
+    stone:    { a: "#59637A", b: "#2C313D", c: "#A8987A" },
     forest:   { a: "#3B4E3D", b: "#1F2E25", c: "#5C7560" },
     terracotta:{a: "#A86547", b: "#5C2E1E", c: "#D08F6E" },
     sky:      { a: "#5C7088", b: "#2A3850", c: "#8AA0BB" },
@@ -196,9 +196,9 @@ const MockupSidebar = ({ active = "Cockpit", mode = "project" }) => {
       </div>
       {mode === "project" && (
         <div className="m-side-card">
-          <div style={{fontFamily:"var(--font-mono)", fontSize:8, letterSpacing:"0.08em", color:"rgba(242,235,218,0.5)", marginBottom:5}}>‹ TOUS LES PROJETS</div>
+          <div style={{fontFamily:"var(--font-mono)", fontSize:8, letterSpacing:"0.08em", color:"rgba(233, 236, 242,0.5)", marginBottom:5}}>‹ TOUS LES PROJETS</div>
           <div className="m-side-title">Grange Lissieu</div>
-          <div style={{fontSize:9, color:"rgba(242,235,218,0.6)", margin:"2px 0 7px"}}>340 m² · Lissieu</div>
+          <div style={{fontSize:9, color:"rgba(233, 236, 242,0.6)", margin:"2px 0 7px"}}>340 m² · Lissieu</div>
           <div style={{display:"inline-flex", alignItems:"center", gap:5, fontFamily:"var(--font-mono)", fontSize:7.5, letterSpacing:"0.07em", color:"#7ED9A0", background:"rgba(74,222,128,0.1)", border:"1px solid rgba(74,222,128,0.25)", borderRadius:999, padding:"2px 7px"}}>
             <span className="m-pill ok"/> ESPACE PUBLIÉ
           </div>
@@ -221,7 +221,7 @@ const MockupSidebar = ({ active = "Cockpit", mode = "project" }) => {
         <div className="m-avatar">A</div>
         <div>
           <div style={{fontSize:11, fontWeight:500}}>Anthony</div>
-          <div style={{fontSize:9, color:"rgba(242,235,218,0.66)"}}>Phase courante · APS</div>
+          <div style={{fontSize:9, color:"rgba(233, 236, 242,0.66)"}}>Phase courante · APS</div>
         </div>
       </div>
     </aside>
@@ -238,13 +238,13 @@ const MockupCockpit = () => (
 
       <div style={{borderRadius:12, overflow:"hidden", background:"#10182C", border:"1px solid rgba(255,255,255,0.06)", display:"grid", gridTemplateColumns:"1.45fr 1fr"}}>
         <div style={{padding:"16px 16px 14px", background:"radial-gradient(120% 140% at 0% 0%, rgba(201,168,106,0.16), transparent 55%)"}}>
-          <span style={{display:"inline-flex", alignItems:"center", gap:5, fontFamily:"var(--font-mono)", fontSize:6.5, letterSpacing:"0.12em", color:"rgba(242,235,218,0.8)", border:"1px solid rgba(255,255,255,0.16)", borderRadius:999, padding:"3px 8px"}}><span className="m-pill ok"/> LISSIEU, 69380 · RÉNOVATION</span>
-          <div style={{fontFamily:"var(--font-display)", fontSize:24, fontWeight:500, color:"#F2EBDA", margin:"8px 0 3px", letterSpacing:"-0.01em"}}>Grange Lissieu</div>
-          <div style={{fontSize:9.5, color:"rgba(242,235,218,0.65)", marginBottom:12}}>Rénovation à Lissieu (340 m²) — Suivi piloté pour Marine Armand.</div>
+          <span style={{display:"inline-flex", alignItems:"center", gap:5, fontFamily:"var(--font-mono)", fontSize:6.5, letterSpacing:"0.12em", color:"rgba(233, 236, 242,0.8)", border:"1px solid rgba(255,255,255,0.16)", borderRadius:999, padding:"3px 8px"}}><span className="m-pill ok"/> LISSIEU, 69380 · RÉNOVATION</span>
+          <div style={{fontFamily:"var(--font-display)", fontSize:24, fontWeight:500, color:"#E9ECF2", margin:"8px 0 3px", letterSpacing:"-0.01em"}}>Grange Lissieu</div>
+          <div style={{fontSize:9.5, color:"rgba(233, 236, 242,0.65)", marginBottom:12}}>Rénovation à Lissieu (340 m²) — Suivi piloté pour Marine Armand.</div>
           <div style={{display:"flex", gap:6, flexWrap:"wrap"}}>
             <button className="btn-mini light xs">Demander une validation</button>
-            <button className="btn-mini ghost xs" style={{borderColor:"rgba(255,255,255,0.22)", color:"#F2EBDA"}}>Aperçu côté MO</button>
-            <button className="btn-mini ghost xs" style={{borderColor:"rgba(255,255,255,0.22)", color:"#F2EBDA"}}>Mettre en pause</button>
+            <button className="btn-mini ghost xs" style={{borderColor:"rgba(255,255,255,0.22)", color:"#E9ECF2"}}>Aperçu côté MO</button>
+            <button className="btn-mini ghost xs" style={{borderColor:"rgba(255,255,255,0.22)", color:"#E9ECF2"}}>Mettre en pause</button>
           </div>
         </div>
         <div style={{padding:"14px 16px", borderLeft:"1px solid rgba(255,255,255,0.08)", background:"rgba(255,255,255,0.03)", display:"grid", gridTemplateColumns:"1fr 1fr", gap:"10px 14px", alignContent:"center"}}>
@@ -255,9 +255,9 @@ const MockupCockpit = () => (
             { k: "DÉCISIONS EN ATTENTE", v: "1", f: "APS — Choix confirmé" },
           ].map((s) => (
             <div key={s.k}>
-              <div style={{fontFamily:"var(--font-mono)", fontSize:6.5, letterSpacing:"0.12em", color:"rgba(242,235,218,0.5)", whiteSpace:"nowrap"}}>{s.k}</div>
-              <div style={{fontFamily:"var(--font-display)", fontSize:19, color:"#F2EBDA", margin:"3px 0 2px"}}>{s.v}{s.u && <span style={{fontSize:10, color:"rgba(242,235,218,0.6)"}}> {s.u}</span>}</div>
-              <div style={{fontSize:7.5, color: s.warn ? "#FF9C8A" : "rgba(242,235,218,0.55)"}}>{s.f}</div>
+              <div style={{fontFamily:"var(--font-mono)", fontSize:6.5, letterSpacing:"0.12em", color:"rgba(233, 236, 242,0.5)", whiteSpace:"nowrap"}}>{s.k}</div>
+              <div style={{fontFamily:"var(--font-display)", fontSize:19, color:"#E9ECF2", margin:"3px 0 2px"}}>{s.v}{s.u && <span style={{fontSize:10, color:"rgba(233, 236, 242,0.6)"}}> {s.u}</span>}</div>
+              <div style={{fontSize:7.5, color: s.warn ? "#FF9C8A" : "rgba(233, 236, 242,0.55)"}}>{s.f}</div>
             </div>
           ))}
         </div>
@@ -382,7 +382,7 @@ const MockupDecisions = () => (
           <div style={{fontFamily:"var(--font-mono)", fontSize:7.5, letterSpacing:"0.05em", color:"#6E7890", marginTop:3}}>Chaque décision matérialise un arbitrage financier. Les deux vues sont liées.</div>
         </div>
         <div style={{display:"flex", gap:5}}>
-          <span style={{...MDEC_CHIP, background:"#0B1224", color:"#F2EBDA"}}>Vue décisions <b style={{color:"#C9A86A"}}>5</b></span>
+          <span style={{...MDEC_CHIP, background:"#0B1224", color:"#E9ECF2"}}>Vue décisions <b style={{color:"#C9A86A"}}>5</b></span>
           <span style={{...MDEC_CHIP, background:"#fff", border:"1px solid rgba(11,18,36,0.12)", color:"#3A445C"}}>€ Vue financière</span>
         </div>
       </div>
@@ -414,7 +414,7 @@ const MockupDecisions = () => (
       </div>
 
       <div style={{display:"flex", alignItems:"center", gap:5}}>
-        <span style={{...MDEC_CHIP, background:"#0B1224", color:"#F2EBDA"}}>Toutes <b style={{color:"#C9A86A"}}>5</b></span>
+        <span style={{...MDEC_CHIP, background:"#0B1224", color:"#E9ECF2"}}>Toutes <b style={{color:"#C9A86A"}}>5</b></span>
         <span style={{...MDEC_CHIP, background:"#fff", border:"1px solid rgba(11,18,36,0.12)", color:"#3A445C"}}>À décider 1</span>
         <span style={{...MDEC_CHIP, background:"#fff", border:"1px solid rgba(11,18,36,0.12)", color:"#3A445C"}}>Validées 3</span>
         <button className="btn-mini light xs" style={{marginLeft:"auto"}}><Icon name="plus" size={9}/> Créer une décision</button>
@@ -433,7 +433,7 @@ const MockupDecisions = () => (
               <button className="btn-mini ghost xs" style={{flex:"none"}}>Relancer le MO</button>
             </div>
             <div style={{display:"flex", gap:4, flexWrap:"wrap", margin:"6px 0 0"}}>
-              <span style={{...MDEC_CHIP, background:"#F4F1EA", color:"#6E7890"}}>{d.sent}</span>
+              <span style={{...MDEC_CHIP, background:"#ECEEF2", color:"#6E7890"}}>{d.sent}</span>
               <span style={d.ok
                 ? {...MDEC_CHIP, background:"rgba(74,222,128,0.1)", border:"1px solid rgba(74,222,128,0.3)", color:"#3E8E5A"}
                 : {...MDEC_CHIP, background:"rgba(192,97,79,0.1)", border:"1px solid rgba(192,97,79,0.35)", color:"#C0614F"}}>{d.ok ? "✓ " : "✕ "}{d.status}</span>
@@ -487,11 +487,11 @@ const MockupMessagerie = () => (
 const MockupMateriaux = () => {
   const swatches = [
     { n: "Chêne massif brossé", r: "CHB-240-NAT", p: "84 €/m²", bg: "repeating-linear-gradient(90deg, rgba(60,35,10,0.14) 0 2px, transparent 2px 11px), linear-gradient(135deg, #C9A876, #96733F)" },
-    { n: "Pierre de Bourgogne", r: "PBG-060-ADO", p: "146 €/m²", bg: "linear-gradient(135deg, #D8CBB2, #AC9D80)" },
+    { n: "Pierre de Bourgogne", r: "PBG-060-ADO", p: "146 €/m²", bg: "linear-gradient(135deg, #BCC1CE, #858FA7)" },
     { n: "Laiton brossé", r: "LTB-015-BRO", p: "215 €/ml", bg: "linear-gradient(120deg, #D9B36B, #A67C3B 40%, #E8CD8F 65%, #B98F4C)" },
     { n: "Béton ciré minéral", r: "BCM-020-GRA", p: "92 €/m²", bg: "linear-gradient(135deg, #9DA3AB, #686E78)" },
     { n: "Verre cannelé clair", r: "VCC-008-CAN", p: "310 €/m²", bg: "repeating-linear-gradient(90deg, rgba(255,255,255,0.4) 0 3px, rgba(190,212,220,0.18) 3px 11px), linear-gradient(135deg, #B9CDD4, #93ABB4)" },
-    { n: "Enduit chaux ferré", r: "ECF-010-SAB", p: "46 €/m²", bg: "linear-gradient(135deg, #E6DFD0, #CBC0A8)" },
+    { n: "Enduit chaux ferré", r: "ECF-010-SAB", p: "46 €/m²", bg: "linear-gradient(135deg, #D5D9E1, #AEB5C5)" },
   ];
   return (
     <MockupShell title="alba-studio.co/materiautheque">
@@ -527,7 +527,7 @@ const MockupChantier = () => (
     <main className="m-main">
       <div style={{display:"flex", gap:4, justifyContent:"flex-end"}}>
         {["Visuels 16", "Phases", "Calendrier", "Terrain", "Réserves"].map((t) => (
-          <span key={t} style={{...MDEC_CHIP, ...(t === "Terrain" ? {background:"#0B1224", color:"#F2EBDA"} : {background:"#fff", border:"1px solid rgba(11,18,36,0.12)", color:"#3A445C"})}}>{t}</span>
+          <span key={t} style={{...MDEC_CHIP, ...(t === "Terrain" ? {background:"#0B1224", color:"#E9ECF2"} : {background:"#fff", border:"1px solid rgba(11,18,36,0.12)", color:"#3A445C"})}}>{t}</span>
         ))}
       </div>
       <div className="m-page-h">
@@ -539,7 +539,7 @@ const MockupChantier = () => (
       </div>
 
       <div style={{display:"flex", gap:5}}>
-        <span style={{...MDEC_CHIP, background:"#0B1224", color:"#F2EBDA"}}>Chronologie <b style={{color:"#C9A86A"}}>18</b></span>
+        <span style={{...MDEC_CHIP, background:"#0B1224", color:"#E9ECF2"}}>Chronologie <b style={{color:"#C9A86A"}}>18</b></span>
         <span style={{...MDEC_CHIP, background:"#fff", border:"1px solid rgba(11,18,36,0.12)", color:"#3A445C"}}>Remarques 3</span>
       </div>
 
@@ -563,7 +563,7 @@ const MockupChantier = () => (
       <div style={{background:"#fff", border:"1px solid rgba(11,18,36,0.07)", borderRadius:10, padding:"9px 11px"}}>
         <div style={{display:"flex", alignItems:"center", justifyContent:"space-between"}}>
           <div style={{display:"inline-flex", alignItems:"center", gap:5, fontFamily:"var(--font-mono)", fontSize:7, letterSpacing:"0.1em", color:"#6E7890"}}><span className="m-pill"/> PRÉ-RÉCEPTION (OPR)</div>
-          <span style={{...MDEC_CHIP, background:"#F4F1EA", color:"#6E7890"}}>Brouillon</span>
+          <span style={{...MDEC_CHIP, background:"#ECEEF2", color:"#6E7890"}}>Brouillon</span>
         </div>
         <div style={{fontFamily:"var(--font-display)", fontSize:13, fontWeight:500, color:"#0B1224", marginTop:4}}>Nouvelle pré-réception (OPR)</div>
       </div>
@@ -572,7 +572,7 @@ const MockupChantier = () => (
         <div style={{display:"flex", alignItems:"center", gap:5}}>
           <span style={{...MDEC_CHIP, background:"rgba(201,168,106,0.16)", border:"1px solid rgba(201,168,106,0.45)", color:"#A98C50"}}><Icon name="doc" size={8}/> PV RÉCEPTION</span>
           <span style={{fontFamily:"var(--font-mono)", fontSize:7, letterSpacing:"0.1em", color:"#6E7890"}}>ACTE JURIDIQUE</span>
-          <span style={{...MDEC_CHIP, background:"#F4F1EA", color:"#6E7890", marginLeft:"auto"}}>Brouillon</span>
+          <span style={{...MDEC_CHIP, background:"#ECEEF2", color:"#6E7890", marginLeft:"auto"}}>Brouillon</span>
         </div>
         <div style={{fontFamily:"var(--font-display)", fontSize:13, fontWeight:500, color:"#0B1224", margin:"5px 0 2px"}}>Réception finale</div>
         <div style={{fontSize:8.5, color:"#6E7890"}}>25 juin 2026 · 0 réserve retenue · <span style={{color:"#3E8E5A", fontWeight:600}}>Sans réserve</span></div>

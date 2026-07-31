@@ -74,7 +74,7 @@
   inset: 0;
   padding: 24px;
   background: linear-gradient(180deg, transparent 30%, rgba(11,18,36,0.92) 100%);
-  color: #F2EBDA;
+  color: #E9ECF2;
   display: flex; flex-direction: column; justify-content: flex-end;
   opacity: 0;
   transition: opacity .4s;

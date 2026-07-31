@@ -93,8 +93,8 @@
 .fc-slide .materials-section,
 .fc-slide .calendar-section,
 .fc-slide .chat-section { padding-top: 34px; padding-bottom: 10px; background: transparent; }
-.fc-novel { font-family: var(--font-mono); font-size: 7px; letter-spacing: 0.1em; background: var(--accent); color: #1A1407; border-radius: 999px; padding: 2px 6px; margin-left: 2px; }
-.fc-tab.is-active .fc-novel { background: var(--accent); color: #1A1407; }
+.fc-novel { font-family: var(--font-mono); font-size: 7px; letter-spacing: 0.1em; background: var(--accent); color: #0E0F13; border-radius: 999px; padding: 2px 6px; margin-left: 2px; }
+.fc-tab.is-active .fc-novel { background: var(--accent); color: #0E0F13; }
 .fc-dots { display: flex; justify-content: center; gap: 8px; margin-top: 26px; }
 .fc-dots button {
   width: 8px; height: 8px;

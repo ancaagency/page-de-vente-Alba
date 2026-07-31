@@ -78,7 +78,7 @@ var MAT_DATA = [{
   delai: "6 sem.",
   projets: ["Grange Lissieu", "Maison Écully"],
   champ: true,
-  bg: "radial-gradient(ellipse at 30% 30%, #E2D6BC, transparent 60%), linear-gradient(135deg, #D8CBB2, #AC9D80)"
+  bg: "radial-gradient(ellipse at 30% 30%, #C7CCD7, transparent 60%), linear-gradient(135deg, #BCC1CE, #858FA7)"
 }, {
   id: 3,
   name: "Béton ciré minéral gris",
@@ -112,7 +112,7 @@ var MAT_DATA = [{
   projets: ["Grange Lissieu", "Maison Écully"],
   champ: true,
   tags: ["biosourcé"],
-  bg: "radial-gradient(ellipse at 40% 60%, rgba(255,255,255,0.25), transparent 55%), linear-gradient(135deg, #E6DFD0, #CBC0A8)"
+  bg: "radial-gradient(ellipse at 40% 60%, rgba(255,255,255,0.25), transparent 55%), linear-gradient(135deg, #D5D9E1, #AEB5C5)"
 }, {
   id: 6,
   name: "Chanvre projeté isolant",
@@ -123,7 +123,7 @@ var MAT_DATA = [{
   delai: "2 sem.",
   projets: [],
   tags: ["biosourcé", "isolant"],
-  bg: "radial-gradient(ellipse at 30% 70%, rgba(200,190,150,0.3), transparent 50%), linear-gradient(135deg, #B5AC8B, #8F865F)"
+  bg: "radial-gradient(ellipse at 30% 70%, rgba(200,190,150,0.3), transparent 50%), linear-gradient(135deg, #919AAF, #8F865F)"
 }, {
   id: 7,
   size: "H240×L60",
@@ -134,7 +134,7 @@ var MAT_DATA = [{
   prix: "128 €/m²",
   delai: "5 sem.",
   projets: ["Atelier Paris 11e"],
-  bg: "repeating-linear-gradient(90deg, rgba(30,15,5,0.2) 0 2px, transparent 2px 9px), linear-gradient(135deg, #7A5636, #4A3220)"
+  bg: "repeating-linear-gradient(90deg, rgba(30,15,5,0.2) 0 2px, transparent 2px 9px), linear-gradient(135deg, #7A5636, #2D323D)"
 }, {
   id: 8,
   size: "Sur mesure",
@@ -188,7 +188,7 @@ var MAT_DATA = [{
   prix: "58 €/ml",
   delai: "2 sem.",
   projets: ["Grange Lissieu"],
-  bg: "repeating-linear-gradient(0deg, rgba(120,100,70,0.12) 0 1px, transparent 1px 4px), repeating-linear-gradient(90deg, rgba(120,100,70,0.12) 0 1px, transparent 1px 4px), linear-gradient(135deg, #DCD2BC, #C4B89E)"
+  bg: "repeating-linear-gradient(0deg, rgba(120,100,70,0.12) 0 1px, transparent 1px 4px), repeating-linear-gradient(90deg, rgba(120,100,70,0.12) 0 1px, transparent 1px 4px), linear-gradient(135deg, #C4C9D4, #A5ACBD)"
 }];
 var MAT_SIDE_ITEMS_GET = function MAT_SIDE_ITEMS_GET() {
   return [{

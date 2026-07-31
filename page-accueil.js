@@ -66,7 +66,7 @@ var App = function App() {
     key: lang
   }, /*#__PURE__*/React.createElement(Hero, null), /*#__PURE__*/React.createElement(Logos, null), /*#__PURE__*/React.createElement(Manifesto, null), /*#__PURE__*/React.createElement(Audience, {
     variant: tweaks.audienceVariant
-  }), /*#__PURE__*/React.createElement(Pains, null), /*#__PURE__*/React.createElement(Features, null), /*#__PURE__*/React.createElement(FeatureCarousel, null), /*#__PURE__*/React.createElement(PinnedDevices, null), /*#__PURE__*/React.createElement(CTABand, null), /*#__PURE__*/React.createElement(Pricing, null), /*#__PURE__*/React.createElement(TrustBand, null), /*#__PURE__*/React.createElement(Testimonials, null), /*#__PURE__*/React.createElement(Founder, null), /*#__PURE__*/React.createElement(Faq, null), /*#__PURE__*/React.createElement(Contact, null), /*#__PURE__*/React.createElement(Footer, null)), /*#__PURE__*/React.createElement(Notifications, {
+  }), /*#__PURE__*/React.createElement(FeatureCarousel, null), /*#__PURE__*/React.createElement(PinnedDevices, null), /*#__PURE__*/React.createElement(CTABand, null), /*#__PURE__*/React.createElement(Pricing, null), /*#__PURE__*/React.createElement(TrustBand, null), /*#__PURE__*/React.createElement(Testimonials, null), /*#__PURE__*/React.createElement(Founder, null), /*#__PURE__*/React.createElement(Faq, null), /*#__PURE__*/React.createElement(Contact, null), /*#__PURE__*/React.createElement(Footer, null)), /*#__PURE__*/React.createElement(Notifications, {
     lang: lang
   }), /*#__PURE__*/React.createElement(ImmersiveFX, {
     signal: "".concat(tweaks.audienceVariant, "-").concat(tweaks.density, "-").concat(tweaks.theme, "-").concat(tweaks.typoHero, "-").concat(lang)

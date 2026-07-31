@@ -8,8 +8,8 @@
   --bg: #0E1729;
   --bg-2: #131D34;
   --bg-3: #1A2540;
-  --surface: #FAF6EC;
-  --surface-2: #F2EBDA;
+  --surface: #F2F4F8;
+  --surface-2: #E9ECF2;
   --ink: #0B1224;
   --ink-2: #2A3553;
   --muted: #5D6880;
@@ -19,10 +19,10 @@
   --line-dark: rgba(15, 24, 48, 0.10);
 
   /* Text on dark (--bg) surfaces — flips in light/crème modes */
-  --on-bg: #F2EBDA;
-  --on-bg-rgb: 242, 235, 218;
+  --on-bg: #E9ECF2;
+  --on-bg-rgb: 233, 236, 242;
   /* Text on accent surfaces (buttons, chips) */
-  --accent-contrast: #1A1407;
+  --accent-contrast: #0E0F13;
 
   --accent: #C9A86A;       /* or */
   --accent-2: #E2C58A;
@@ -53,7 +53,7 @@
      encombrement d'avant.
      C'EST LE SEUL CHIFFRE A TOUCHER si les titres paraissent trop grands ou
      trop petits : il s'applique aux dix tailles de titre de la page. */
-  --echelle-titres: 0.88;
+  --echelle-titres: 0.80;
 
   /* Spacing scale */
   --section-y: 120px;
@@ -101,14 +101,14 @@
   --accent-line: rgba(224, 167, 137, 0.32);
 }
 [data-palette="creme"] {
-  --bg: #F5EFDE;
-  --bg-2: #EFE7D1;
-  --bg-3: #E4DABE;
+  --bg: #E6E8ED;
+  --bg-2: #DBDEE5;
+  --bg-3: #CACED8;
   --accent: #8F6E33;
   --accent-2: #75591F;
   --accent-soft: rgba(143, 110, 51, 0.10);
   --accent-line: rgba(143, 110, 51, 0.35);
-  --accent-contrast: #FFF9EA;
+  --accent-contrast: #F3F4F6;
   --on-bg: #131C33;
   --on-bg-rgb: 19, 28, 51;
   --line: rgba(11, 18, 36, 0.08);
@@ -116,14 +116,14 @@
 }
 
 body[data-theme="light"] {
-  --bg: #F3EDDC;
-  --bg-2: #ECE4CE;
-  --bg-3: #E2D7BC;
+  --bg: #E4E6EB;
+  --bg-2: #D8DBE2;
+  --bg-3: #C7CCD7;
   --accent: #96712F;
   --accent-2: #7C5D26;
   --accent-soft: rgba(150, 113, 47, 0.10);
   --accent-line: rgba(150, 113, 47, 0.35);
-  --accent-contrast: #FFF9EA;
+  --accent-contrast: #F3F4F6;
   --on-bg: #131C33;
   --on-bg-rgb: 19, 28, 51;
   --line: rgba(11, 18, 36, 0.08);
@@ -189,7 +189,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 /* Selection + scrollbar in brand colors */
 ::selection {
   background: var(--accent);
-  color: #1A1407;
+  color: #0E0F13;
 }
 ::-webkit-scrollbar { width: 12px; }
 ::-webkit-scrollbar-track { background: #0A0F1E; }
@@ -374,9 +374,9 @@ section {
   transform: translateY(-1px);
 }
 .btn-cream {
-  background: #F2EBDA;
+  background: #E9ECF2;
   color: #0E1729;
-  border-color: #F2EBDA;
+  border-color: #E9ECF2;
 }
 .btn-cream:hover { background: #fff; border-color: #fff; transform: translateY(-1px); }
 
@@ -557,7 +557,7 @@ section {
   font-size: 32px;
   font-weight: 500;
   letter-spacing: -0.01em;
-  color: #F2EBDA;
+  color: #E9ECF2;
   padding: 8px 20px;
   opacity: 0;
   transform: translateY(16px);
@@ -647,7 +647,7 @@ section {
   z-index: 300;
   background: linear-gradient(90deg,
     #2B4C9B 0 33.4%,
-    #EDE6D4 33.4% 66.7%,
+    #DCDFE5 33.4% 66.7%,
     #C74A4A 66.7% 100%);
   opacity: 0.9;
   pointer-events: none;
@@ -660,7 +660,7 @@ section {
   vertical-align: -1px;
   background: linear-gradient(90deg,
     #2B4C9B 0 33.4%,
-    #EDE6D4 33.4% 66.7%,
+    #DCDFE5 33.4% 66.7%,
     #C74A4A 66.7% 100%);
   box-shadow: 0 0 0 1px rgba(0,0,0,0.08);
 }
@@ -672,7 +672,7 @@ section {
   margin-top: 10px;
   background: linear-gradient(90deg,
     #2B4C9B 0 33.4%,
-    #EDE6D4 33.4% 66.7%,
+    #DCDFE5 33.4% 66.7%,
     #C74A4A 66.7% 100%);
   opacity: 0.75;
 }
@@ -741,9 +741,9 @@ section {
 }
 .store-badges.light .store-badge:hover { border-color: var(--accent); background: #fff; }
 .store-badges.dark .store-badge {
-  border: 1px solid rgba(242, 235, 218, 0.2); background: rgba(242, 235, 218, 0.05); color: #F2EBDA;
+  border: 1px solid rgba(233, 236, 242, 0.2); background: rgba(233, 236, 242, 0.05); color: #E9ECF2;
 }
-.store-badges.dark .store-badge:hover { border-color: var(--accent); background: rgba(242, 235, 218, 0.1); }
+.store-badges.dark .store-badge:hover { border-color: var(--accent); background: rgba(233, 236, 242, 0.1); }
 .store-note {
   flex-basis: 100%;
   margin: 4px 0 0;
@@ -751,12 +751,12 @@ section {
   line-height: 1.5;
   max-width: 44ch;
 }
-.store-badges.dark .store-note { color: rgba(242, 235, 218, 0.72); }
+.store-badges.dark .store-note { color: rgba(233, 236, 242, 0.72); }
 .store-badges.light .store-note { color: rgba(11, 18, 36, 0.62); }
 .foot-apps { margin-top: 26px; }
 .foot-apps h5 {
   font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.16em;
-  text-transform: uppercase; color: rgba(242, 235, 218, 0.5); margin: 0;
+  text-transform: uppercase; color: rgba(233, 236, 242, 0.5); margin: 0;
 }
 .foot-apps .store-badges { margin-top: 12px; }
 @media (max-width: 560px) { .store-badge { padding: 7px 13px 7px 11px; } .store-badge b { font-size: 12.5px; } }

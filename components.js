@@ -282,8 +282,8 @@ var PhotoPlaceholder = function PhotoPlaceholder(_ref2) {
     style = _ref2.style;
   var tones = {
     stone: {
-      a: "#7B6F58",
-      b: "#3E372B",
+      a: "#59637A",
+      b: "#2C313D",
       c: "#A8987A"
     },
     forest: {
@@ -568,7 +568,7 @@ var MockupSidebar = function MockupSidebar(_ref6) {
       fontFamily: "var(--font-mono)",
       fontSize: 8,
       letterSpacing: "0.08em",
-      color: "rgba(242,235,218,0.5)",
+      color: "rgba(233, 236, 242,0.5)",
       marginBottom: 5
     }
   }, "\u2039 TOUS LES PROJETS"), /*#__PURE__*/React.createElement("div", {
@@ -576,7 +576,7 @@ var MockupSidebar = function MockupSidebar(_ref6) {
   }, "Grange Lissieu"), /*#__PURE__*/React.createElement("div", {
     style: {
       fontSize: 9,
-      color: "rgba(242,235,218,0.6)",
+      color: "rgba(233, 236, 242,0.6)",
       margin: "2px 0 7px"
     }
   }, "340 m\xB2 \xB7 Lissieu"), /*#__PURE__*/React.createElement("div", {
@@ -631,7 +631,7 @@ var MockupSidebar = function MockupSidebar(_ref6) {
   }, "Anthony"), /*#__PURE__*/React.createElement("div", {
     style: {
       fontSize: 9,
-      color: "rgba(242,235,218,0.66)"
+      color: "rgba(233, 236, 242,0.66)"
     }
   }, "Phase courante \xB7 APS"))));
 };
@@ -679,7 +679,7 @@ var MockupCockpit = function MockupCockpit() {
       fontFamily: "var(--font-mono)",
       fontSize: 6.5,
       letterSpacing: "0.12em",
-      color: "rgba(242,235,218,0.8)",
+      color: "rgba(233, 236, 242,0.8)",
       border: "1px solid rgba(255,255,255,0.16)",
       borderRadius: 999,
       padding: "3px 8px"
@@ -691,14 +691,14 @@ var MockupCockpit = function MockupCockpit() {
       fontFamily: "var(--font-display)",
       fontSize: 24,
       fontWeight: 500,
-      color: "#F2EBDA",
+      color: "#E9ECF2",
       margin: "8px 0 3px",
       letterSpacing: "-0.01em"
     }
   }, "Grange Lissieu"), /*#__PURE__*/React.createElement("div", {
     style: {
       fontSize: 9.5,
-      color: "rgba(242,235,218,0.65)",
+      color: "rgba(233, 236, 242,0.65)",
       marginBottom: 12
     }
   }, "R\xE9novation \xE0 Lissieu (340 m\xB2) \u2014 Suivi pilot\xE9 pour Marine Armand."), /*#__PURE__*/React.createElement("div", {
@@ -713,13 +713,13 @@ var MockupCockpit = function MockupCockpit() {
     className: "btn-mini ghost xs",
     style: {
       borderColor: "rgba(255,255,255,0.22)",
-      color: "#F2EBDA"
+      color: "#E9ECF2"
     }
   }, "Aper\xE7u c\xF4t\xE9 MO"), /*#__PURE__*/React.createElement("button", {
     className: "btn-mini ghost xs",
     style: {
       borderColor: "rgba(255,255,255,0.22)",
-      color: "#F2EBDA"
+      color: "#E9ECF2"
     }
   }, "Mettre en pause"))), /*#__PURE__*/React.createElement("div", {
     style: {
@@ -758,25 +758,25 @@ var MockupCockpit = function MockupCockpit() {
         fontFamily: "var(--font-mono)",
         fontSize: 6.5,
         letterSpacing: "0.12em",
-        color: "rgba(242,235,218,0.5)",
+        color: "rgba(233, 236, 242,0.5)",
         whiteSpace: "nowrap"
       }
     }, s.k), /*#__PURE__*/React.createElement("div", {
       style: {
         fontFamily: "var(--font-display)",
         fontSize: 19,
-        color: "#F2EBDA",
+        color: "#E9ECF2",
         margin: "3px 0 2px"
       }
     }, s.v, s.u && /*#__PURE__*/React.createElement("span", {
       style: {
         fontSize: 10,
-        color: "rgba(242,235,218,0.6)"
+        color: "rgba(233, 236, 242,0.6)"
       }
     }, " ", s.u)), /*#__PURE__*/React.createElement("div", {
       style: {
         fontSize: 7.5,
-        color: s.warn ? "#FF9C8A" : "rgba(242,235,218,0.55)"
+        color: s.warn ? "#FF9C8A" : "rgba(233, 236, 242,0.55)"
       }
     }, s.f));
   }))), /*#__PURE__*/React.createElement("div", {
@@ -1077,7 +1077,7 @@ var MockupDecisions = function MockupDecisions() {
   }, /*#__PURE__*/React.createElement("span", {
     style: _objectSpread(_objectSpread({}, MDEC_CHIP), {}, {
       background: "#0B1224",
-      color: "#F2EBDA"
+      color: "#E9ECF2"
     })
   }, "Vue d\xE9cisions ", /*#__PURE__*/React.createElement("b", {
     style: {
@@ -1175,7 +1175,7 @@ var MockupDecisions = function MockupDecisions() {
   }, /*#__PURE__*/React.createElement("span", {
     style: _objectSpread(_objectSpread({}, MDEC_CHIP), {}, {
       background: "#0B1224",
-      color: "#F2EBDA"
+      color: "#E9ECF2"
     })
   }, "Toutes ", /*#__PURE__*/React.createElement("b", {
     style: {
@@ -1270,7 +1270,7 @@ var MockupDecisions = function MockupDecisions() {
       }
     }, /*#__PURE__*/React.createElement("span", {
       style: _objectSpread(_objectSpread({}, MDEC_CHIP), {}, {
-        background: "#F4F1EA",
+        background: "#ECEEF2",
         color: "#6E7890"
       })
     }, d.sent), /*#__PURE__*/React.createElement("span", {
@@ -1369,7 +1369,7 @@ var MockupMateriaux = function MockupMateriaux() {
     n: "Pierre de Bourgogne",
     r: "PBG-060-ADO",
     p: "146 €/m²",
-    bg: "linear-gradient(135deg, #D8CBB2, #AC9D80)"
+    bg: "linear-gradient(135deg, #BCC1CE, #858FA7)"
   }, {
     n: "Laiton brossé",
     r: "LTB-015-BRO",
@@ -1389,7 +1389,7 @@ var MockupMateriaux = function MockupMateriaux() {
     n: "Enduit chaux ferré",
     r: "ECF-010-SAB",
     p: "46 €/m²",
-    bg: "linear-gradient(135deg, #E6DFD0, #CBC0A8)"
+    bg: "linear-gradient(135deg, #D5D9E1, #AEB5C5)"
   }];
   return /*#__PURE__*/React.createElement(MockupShell, {
     title: "alba-studio.co/materiautheque"
@@ -1474,7 +1474,7 @@ var MockupChantier = function MockupChantier() {
       key: t,
       style: _objectSpread(_objectSpread({}, MDEC_CHIP), t === "Terrain" ? {
         background: "#0B1224",
-        color: "#F2EBDA"
+        color: "#E9ECF2"
       } : {
         background: "#fff",
         border: "1px solid rgba(11,18,36,0.12)",
@@ -1512,7 +1512,7 @@ var MockupChantier = function MockupChantier() {
   }, /*#__PURE__*/React.createElement("span", {
     style: _objectSpread(_objectSpread({}, MDEC_CHIP), {}, {
       background: "#0B1224",
-      color: "#F2EBDA"
+      color: "#E9ECF2"
     })
   }, "Chronologie ", /*#__PURE__*/React.createElement("b", {
     style: {
@@ -1587,7 +1587,7 @@ var MockupChantier = function MockupChantier() {
     className: "m-pill"
   }), " PR\xC9-R\xC9CEPTION (OPR)"), /*#__PURE__*/React.createElement("span", {
     style: _objectSpread(_objectSpread({}, MDEC_CHIP), {}, {
-      background: "#F4F1EA",
+      background: "#ECEEF2",
       color: "#6E7890"
     })
   }, "Brouillon")), /*#__PURE__*/React.createElement("div", {
@@ -1629,7 +1629,7 @@ var MockupChantier = function MockupChantier() {
     }
   }, "ACTE JURIDIQUE"), /*#__PURE__*/React.createElement("span", {
     style: _objectSpread(_objectSpread({}, MDEC_CHIP), {}, {
-      background: "#F4F1EA",
+      background: "#ECEEF2",
       color: "#6E7890",
       marginLeft: "auto"
     })

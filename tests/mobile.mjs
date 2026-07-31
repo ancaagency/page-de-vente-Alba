@@ -126,6 +126,11 @@ for (const [largeur, nom] of LARGEURS) {
     ok(vues.every((v) => v && !v.deborde), 'aucune capture plus large que l\'écran');
     ok(vues.every((v) => v && v.alt > 20), 'chaque capture porte une description alternative');
     ok(maquettes === 0, `aucune maquette d'ordinateur ne subsiste (${maquettes})`);
+  } else {
+    // La section a été retirée de l'accueil. On le DIT, plutôt que de laisser
+    // cinq contrôles disparaître en silence : un test qui ne teste plus rien
+    // ressemble à un test qui passe.
+    console.log('   — section « La plateforme » absente de la page, 5 contrôles sans objet');
   }
 
   await page.close();

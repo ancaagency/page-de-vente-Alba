@@ -48,8 +48,15 @@ const App = () => {
         <Logos/>
         <Manifesto/>
         <Audience variant={tweaks.audienceVariant}/>
-        <Pains/>
-        <Features/>
+        {/* <Pains/> et <Features/> retirees : la page etait trop longue.
+            · Pains portait « Ce que vous ne ferez plus » et les trois chiffres
+              (6 h, 100 %, 4,8/5) ;
+            · Features portait « Une suite complete, specialement pensee pour
+              vous » et les trois onglets cockpit / decisions / chantier.
+            Les composants restent definis dans sections.jsx : les remettre ne
+            demande que de retirer ces commentaires. Le carrousel qui suit
+            couvre deja les fonctionnalites, et la section « Partout ou vous
+            travaillez » montre l'application sur les trois appareils. */}
         <FeatureCarousel/>
         <PinnedDevices/>
         <CTABand/>
