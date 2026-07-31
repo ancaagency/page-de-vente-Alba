@@ -167,7 +167,7 @@
   color: #14192B;
 }
 .ml-title em {
-  font-style: italic;
+  font-style: normal;
   font-weight: 400;
   color: #C9A86A;
 }
@@ -591,7 +591,7 @@
   color: #0B1224;
   margin: 6px 0 3px;
 }
-.mam-title em { font-style: italic; color: #A98C50; font-weight: 400; }
+.mam-title em { font-style: normal; color: #A98C50; font-weight: 400; }
 .mam-sub { font-size: 10.5px; color: #6E7890; margin: 0; }
 .mam-body {
   display: grid;

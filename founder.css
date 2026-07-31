@@ -74,7 +74,7 @@
   line-height: 1.08;
   margin: 0 0 26px;
 }
-.founder-text h2 em { font-style: italic; color: var(--accent); font-weight: 400; }
+.founder-text h2 em { font-style: normal; color: var(--accent); font-weight: 400; }
 .founder-text p {
   font-size: 16.5px;
   line-height: 1.7;

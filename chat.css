@@ -22,7 +22,7 @@
   line-height: 1.03;
   margin: 16px 0 18px;
 }
-.chat-text h2 em { font-style: italic; color: var(--accent); font-weight: 400; }
+.chat-text h2 em { font-style: normal; color: var(--accent); font-weight: 400; }
 .chat-text > p {
   font-size: 16px;
   line-height: 1.6;

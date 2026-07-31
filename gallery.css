@@ -38,7 +38,7 @@
   line-height: 1.0;
   margin: 16px 0 0;
 }
-.gallery-head h2 em { font-style: italic; color: var(--accent); font-weight: 400; }
+.gallery-head h2 em { font-style: normal; color: var(--accent); font-weight: 400; }
 .gallery-head p {
   font-size: 16px; line-height: 1.6;
   color: var(--muted-2);

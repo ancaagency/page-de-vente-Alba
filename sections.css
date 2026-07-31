@@ -29,7 +29,7 @@
 }
 .proof-val {
   font-family: var(--font-display);
-  font-size: clamp(38px, 4.4vw, 60px);
+  font-size: calc(clamp(38px, 4.4vw, 60px) * var(--echelle-titres));
   font-weight: 500;
   letter-spacing: -0.02em;
   line-height: 1;
@@ -65,7 +65,7 @@
 .cta-band-title {
   font-family: var(--font-display);
   font-weight: 500;
-  font-size: clamp(26px, 3vw, 36px);
+  font-size: calc(clamp(26px, 3vw, 36px) * var(--echelle-titres));
   letter-spacing: -0.01em;
   color: var(--ink);
 }
@@ -97,7 +97,7 @@
 .hero h1 {
   margin: 24px auto 0;
   max-width: 880px;
-  font-size: clamp(48px, 7vw, 96px);
+  font-size: calc(clamp(48px, 7vw, 96px) * var(--echelle-titres));
 }
 .hero-sub {
   margin: 28px auto 0;
@@ -163,14 +163,16 @@
 .logos-eyebrow {
   text-align: center;
   font-family: var(--font-display);
-  font-size: clamp(22px, 2.4vw, 30px);
+  font-size: calc(clamp(22px, 2.4vw, 30px) * var(--echelle-titres));
   font-weight: 500;
   letter-spacing: -0.01em;
   color: rgba(var(--on-bg-rgb), 0.9);
   margin-bottom: 40px;
 }
+/* Meme raison que pour .display em : l'italique de SF n'a pas le contraste de
+   celui de Cormorant. L'emphase passe par la couleur et la graisse. */
 .logos-eyebrow em {
-  font-style: italic;
+  font-style: normal;
   font-weight: 400;
   color: var(--accent);
 }
@@ -209,7 +211,7 @@
 .s-head .eyebrow { justify-content: center; display: inline-flex; }
 .s-head h2 {
   margin: 18px 0 16px;
-  font-size: clamp(36px, 4.6vw, 56px);
+  font-size: calc(clamp(36px, 4.6vw, 56px) * var(--echelle-titres));
   color: var(--ink);
 }
 .s-head p {
@@ -396,7 +398,7 @@
 .tour-text h3 {
   font-family: var(--font-display);
   font-weight: 500;
-  font-size: clamp(30px, 3.4vw, 44px);
+  font-size: calc(clamp(30px, 3.4vw, 44px) * var(--echelle-titres));
   letter-spacing: -0.02em;
   margin: 16px 0 18px;
   line-height: 1.05;
@@ -904,7 +906,7 @@
 .contact-side h2 {
   font-family: var(--font-display);
   font-weight: 500;
-  font-size: clamp(36px, 4.4vw, 52px);
+  font-size: calc(clamp(36px, 4.4vw, 52px) * var(--echelle-titres));
   letter-spacing: -0.02em;
   line-height: 1.05;
   margin: 18px 0 18px;
@@ -1040,7 +1042,7 @@
 .final-cta h2 {
   font-family: var(--font-display);
   font-weight: 500;
-  font-size: clamp(48px, 6vw, 88px);
+  font-size: calc(clamp(48px, 6vw, 88px) * var(--echelle-titres));
   letter-spacing: -0.03em;
   line-height: 1.02;
   max-width: 800px;
@@ -1253,7 +1255,7 @@
 }
 .pricing-config .display {
   margin: 14px 0 0;
-  font-size: clamp(36px, 4.6vw, 56px);
+  font-size: calc(clamp(36px, 4.6vw, 56px) * var(--echelle-titres));
   line-height: 1.05;
   color: var(--on-bg);
 }

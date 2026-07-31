@@ -11,7 +11,11 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Geist+Mono:wght@400;500&family=Geist:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <!-- Inter seulement, et en dernier recours : la pile systeme sert SF Pro sur
+     Mac, iPhone et iPad, ou rien n'est telecharge. Un navigateur ne recupere
+     que les polices qu'il utilise reellement, donc les visiteurs Apple ne
+     telechargeront jamais ce fichier. -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..700&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="sections.css">
@@ -36,8 +40,9 @@
       text-transform: uppercase; color: var(--accent); margin-bottom: 18px;
     }
     .legal-wrap h1 {
-      font-family: var(--font-display); font-weight: 500;
-      font-size: clamp(34px, 5vw, 52px); line-height: 1.1; margin: 0 0 10px;
+      font-family: var(--font-display); font-weight: 600;
+      font-size: calc(clamp(34px, 5vw, 52px) * var(--echelle-titres));
+      letter-spacing: -0.025em; line-height: 1.1; margin: 0 0 10px;
       color: var(--on-bg);
     }
     .legal-updated {
@@ -45,10 +50,11 @@
       color: rgba(var(--on-bg-rgb), 0.45); margin-bottom: 52px;
     }
     .legal-wrap h2 {
-      font-family: var(--font-display); font-weight: 500; font-size: 25px;
-      margin: 48px 0 16px; color: var(--on-bg);
+      font-family: var(--font-display); font-weight: 600; font-size: 25px;
+      letter-spacing: -0.015em; margin: 48px 0 16px; color: var(--on-bg);
     }
-    .legal-wrap h2 em { font-style: italic; color: var(--accent); }
+    /* Emphase par la couleur, pas par l'italique : voir styles.css, .display em. */
+    .legal-wrap h2 em { font-style: normal; font-weight: 400; color: var(--accent); }
     .legal-wrap p, .legal-wrap li {
       font-size: 15px; line-height: 1.75; color: rgba(var(--on-bg-rgb), 0.76);
     }
@@ -82,7 +88,7 @@
     }
   </style>
 </head>
-<body data-density="standard" data-theme="dark" data-palette="studio" data-typo="serif">
+<body data-density="standard" data-theme="dark" data-palette="studio" data-typo="sans">
 
 <div class="liseret-top"></div>
 

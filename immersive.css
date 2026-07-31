@@ -104,7 +104,7 @@ html.lenis { scroll-behavior: auto !important; }
   letter-spacing: 0.02em;
   color: #F2EBDA;
 }
-.intro-name em { font-style: italic; color: rgba(242,235,218,0.6); }
+.intro-name em { font-style: normal; color: rgba(242,235,218,0.6); }
 .intro-line {
   width: 160px;
   height: 1px;
