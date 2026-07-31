@@ -16,6 +16,12 @@
  *   · la maquette tablette recouvrait le paragraphe au-dessus et mordait sur la
  *     section suivante (rapport d'image 1,58 dans une boîte trop basse) ;
  *   · les cinq onglets du carrousel revenaient à la ligne en grille déchiquetée.
+ *
+ * Et que la section « La plateforme » sert bien les captures de l'application
+ * mobile. Elle affichait les maquettes d'écran d'ordinateur : barre latérale de
+ * 168 px fixes, il ne restait qu'environ 180 px pour le contenu, tout était
+ * tronqué. Rien ne débordait pour autant — le contrôle ci-dessus ne l'aurait
+ * jamais vu — d'où un contrôle dédié.
  */
 import { chromium } from 'playwright-core';
 import { demarrer } from './serveur.mjs';
@@ -88,6 +94,38 @@ for (const [largeur, nom] of LARGEURS) {
     ok(onglets.lignes === 1,
        `les ${onglets.nb} onglets tiennent sur une seule ligne (${onglets.lignes})`);
     ok(onglets.defile, 'et la bande défile horizontalement');
+  }
+
+  // « La plateforme » : captures de l'app mobile, pas maquettes d'ordinateur.
+  const plateforme = await page.evaluate(async () => {
+    const sec = document.querySelector('#features');
+    if (!sec) return null;
+    sec.scrollIntoView();
+    const onglets = [...sec.querySelectorAll('.f-tab')];
+    const vues = [];
+    // Les images sont paresseuses et les volets inactifs sont en display:none :
+    // elles ne sont demandées qu'une fois leur onglet ouvert. On les ouvre tous.
+    for (const onglet of onglets) {
+      onglet.click();
+      await new Promise((r) => setTimeout(r, 700));
+      const img = sec.querySelector('.f-stage-pane.is-active .f-shot img');
+      const large = document.documentElement.clientWidth;
+      vues.push(img
+        ? { chargee: img.complete && img.naturalWidth > 0, src: img.src.split('/').pop(),
+            alt: (img.alt || '').length, deborde: Math.round(img.getBoundingClientRect().width) > large }
+        : null);
+    }
+    return { vues, maquettes: sec.querySelectorAll('.mockup').length };
+  });
+  if (plateforme) {
+    const { vues, maquettes } = plateforme;
+    ok(vues.length === 3 && vues.every(Boolean),
+       `les 3 onglets montrent une capture mobile (${vues.filter(Boolean).length}/3)`);
+    ok(vues.every((v) => v && v.chargee),
+       `les 3 captures se chargent${vues.some((v) => v && !v.chargee) ? ` — en échec : ${vues.filter((v) => v && !v.chargee).map((v) => v.src).join(', ')}` : ''}`);
+    ok(vues.every((v) => v && !v.deborde), 'aucune capture plus large que l\'écran');
+    ok(vues.every((v) => v && v.alt > 20), 'chaque capture porte une description alternative');
+    ok(maquettes === 0, `aucune maquette d'ordinateur ne subsiste (${maquettes})`);
   }
 
   await page.close();

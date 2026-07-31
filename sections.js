@@ -289,27 +289,60 @@ var Pains = function Pains() {
 };
 
 /* FEATURES */
+/* Les maquettes AppMockup reproduisent l'écran d'ORDINATEUR : une barre latérale
+   de 168 px fixes à côté du contenu, sur une hauteur minimale de 540 px. Dans la
+   colonne d'un téléphone il ne restait qu'environ 180 px pour le contenu — texte
+   coupé, colonnes tronquées, rien de lisible. Sous 900 px on sert donc les
+   captures réelles de l'application mobile, à la place et non en plus : elles
+   montrent la même chose, dans la forme où le visiteur la verra vraiment. */
 var Features = function Features() {
   var tabs = [{
     eyebrow: Txt("fonctionnalites.01-cockpit", "01 — Cockpit", "01 — Cockpit"),
     title: Txt("fonctionnalites.une-vue-d-ensemble-qui-rassure", "Une vue d'ensemble qui rassure", "An overview that reassures"),
     desc: Txt("fonctionnalites.avancement-prochaines-echeances-decisions-en", "Avancement, prochaines échéances, décisions en attente. Vos clients savent où en est leur projet sans vous appeler.", "Progress, upcoming deadlines, pending decisions. Your clients know where their project stands without calling you."),
-    mockup: "cockpit"
+    mockup: "cockpit",
+    shot: "uploads/app-mobile-cockpit.jpg",
+    shotAlt: L("ALBA Studio sur mobile — cockpit du projet Grange Lissieu : avancement, phase courante, budget", "ALBA Studio on mobile — Grange Lissieu project cockpit: progress, current phase, budget")
   }, {
     eyebrow: Txt("fonctionnalites.02-decisions", "02 — Décisions", "02 — Decisions"),
     title: Txt("fonctionnalites.validations-structurees-tracables", "Validations structurées, traçables", "Structured, traceable approvals"),
     desc: Txt("fonctionnalites.fini-le-j-ai-oublie-ce", "Fini le « j'ai oublié ce qu'on avait dit ». Chaque arbitrage est horodaté, signé et archivé. Plus de SAV un an plus tard.", "No more \"I forgot what we agreed on\". Every decision is timestamped, signed and archived. No disputes a year later."),
-    mockup: "decisions"
+    mockup: "decisions",
+    shot: "uploads/app-mobile-decisions.jpg",
+    shotAlt: L("ALBA Studio sur mobile — vue décisions : arbitrages validés et impact financier", "ALBA Studio on mobile — decisions view: approved arbitrations and financial impact")
   }, {
     eyebrow: Txt("fonctionnalites.03-chantier", "03 — Chantier", "03 — Site"),
     title: Txt("fonctionnalites.le-chantier-suivi-les-reserves-levees", "Le chantier suivi, les réserves levées", "Site visits tracked, punch lists cleared"),
     desc: Txt("fonctionnalites.comptes-rendus-de-visite-reserves-photograph", "Comptes-rendus de visite, réserves photographiées et assignées par lot, diffusion automatique aux entreprises. Le chantier documenté, sans y passer vos dimanches.", "Visit reports, photographed punch-list items assigned by trade, automatic distribution to contractors. The site documented, without losing your Sundays."),
-    mockup: "chantier"
+    mockup: "chantier",
+    shot: "uploads/app-mobile-chantier.jpg",
+    shotAlt: L("ALBA Studio sur mobile — suivi de chantier : visites, comptes-rendus et remarques", "ALBA Studio on mobile — site tracking: visits, reports and punch-list items")
   }];
   var _React$useState = React.useState(0),
     _React$useState2 = _slicedToArray(_React$useState, 2),
     active = _React$useState2[0],
     setActive = _React$useState2[1];
+  var _React$useState3 = React.useState(function () {
+      return window.matchMedia("(max-width: 900px)").matches;
+    }),
+    _React$useState4 = _slicedToArray(_React$useState3, 2),
+    mobile = _React$useState4[0],
+    setMobile = _React$useState4[1];
+
+  // La bascule doit suivre la rotation de l'appareil : un iPhone Pro Max passe
+  // de 430 à 932 px en tournant, soit d'un côté à l'autre de la limite.
+  React.useEffect(function () {
+    var mq = window.matchMedia("(max-width: 900px)");
+    var suivre = function suivre() {
+      return setMobile(mq.matches);
+    };
+    // addListener : Safari n'a accepté addEventListener sur MediaQueryList qu'à
+    // partir de la version 14.
+    if (mq.addEventListener) mq.addEventListener("change", suivre);else mq.addListener(suivre);
+    return function () {
+      if (mq.removeEventListener) mq.removeEventListener("change", suivre);else mq.removeListener(suivre);
+    };
+  }, []);
   return /*#__PURE__*/React.createElement("section", {
     className: "section section-cream-2",
     id: "features"
@@ -345,7 +378,16 @@ var Features = function Features() {
     return /*#__PURE__*/React.createElement("div", {
       key: i,
       className: "f-stage-pane ".concat(active === i ? "is-active" : "")
-    }, /*#__PURE__*/React.createElement(AppMockup, {
+    }, mobile ? /*#__PURE__*/React.createElement("div", {
+      className: "f-shot"
+    }, /*#__PURE__*/React.createElement("img", {
+      src: t.shot,
+      alt: t.shotAlt,
+      width: "900",
+      height: "1541",
+      loading: "lazy",
+      decoding: "async"
+    })) : /*#__PURE__*/React.createElement(AppMockup, {
       variant: t.mockup
     }));
   })))));
@@ -487,23 +529,23 @@ var Pricing = function Pricing() {
   var projectsFor = function projectsFor(go) {
     return Math.round(go / 10);
   };
-  var _React$useState3 = React.useState(0),
-    _React$useState4 = _slicedToArray(_React$useState3, 2),
-    tier = _React$useState4[0],
-    setTier = _React$useState4[1];
-  var _React$useState5 = React.useState(false),
+  var _React$useState5 = React.useState(0),
     _React$useState6 = _slicedToArray(_React$useState5, 2),
-    yearly = _React$useState6[0],
-    setYearly = _React$useState6[1];
+    tier = _React$useState6[0],
+    setTier = _React$useState6[1];
+  var _React$useState7 = React.useState(false),
+    _React$useState8 = _slicedToArray(_React$useState7, 2),
+    yearly = _React$useState8[0],
+    setYearly = _React$useState8[1];
   var baseFor = function baseFor(tr) {
     return yearly ? Math.round(tr.price * 0.82) : tr.price;
   };
   var t = tiers[tier];
   var base = baseFor(t);
-  var _React$useState7 = React.useState(1),
-    _React$useState8 = _slicedToArray(_React$useState7, 2),
-    seats = _React$useState8[0],
-    setSeats = _React$useState8[1];
+  var _React$useState9 = React.useState(1),
+    _React$useState0 = _slicedToArray(_React$useState9, 2),
+    seats = _React$useState0[0],
+    setSeats = _React$useState0[1];
   var extraSeats = Math.max(0, seats - 1);
   var extraCost = extraSeats * 15;
   var total = base + extraCost;
@@ -716,10 +758,10 @@ var Faq = function Faq() {
     q: Txt("faq.quel-est-le-delai-pour-demarrer", "Quel est le délai pour démarrer ?", "How long does it take to get started?"),
     a: Txt("faq.si-vous-voulez-vous-demarrez-aujourd", "Si vous voulez, vous démarrez aujourd'hui. La création de compte prend 3 minutes ; importer vos projets en cours prend en moyenne une demi-journée. On vous accompagne sur l'onboarding sans frais.", "You can start today. Account creation takes 3 minutes; importing your active projects takes half a day on average. We help with onboarding at no charge.")
   }];
-  var _React$useState9 = React.useState(0),
-    _React$useState0 = _slicedToArray(_React$useState9, 2),
-    open = _React$useState0[0],
-    setOpen = _React$useState0[1];
+  var _React$useState1 = React.useState(0),
+    _React$useState10 = _slicedToArray(_React$useState1, 2),
+    open = _React$useState10[0],
+    setOpen = _React$useState10[1];
   return /*#__PURE__*/React.createElement("section", {
     className: "section section-cream-2",
     id: "faq"
@@ -758,7 +800,7 @@ var Faq = function Faq() {
 
 /* CONTACT */
 var Contact = function Contact() {
-  var _React$useState1 = React.useState({
+  var _React$useState11 = React.useState({
       name: "",
       agency: "",
       email: "",
@@ -766,29 +808,29 @@ var Contact = function Contact() {
       projects: "1-3",
       msg: ""
     }),
-    _React$useState10 = _slicedToArray(_React$useState1, 2),
-    data = _React$useState10[0],
-    setData = _React$useState10[1];
-  var _React$useState11 = React.useState({}),
     _React$useState12 = _slicedToArray(_React$useState11, 2),
-    errors = _React$useState12[0],
-    setErrors = _React$useState12[1];
-  var _React$useState13 = React.useState(false),
+    data = _React$useState12[0],
+    setData = _React$useState12[1];
+  var _React$useState13 = React.useState({}),
     _React$useState14 = _slicedToArray(_React$useState13, 2),
-    submitted = _React$useState14[0],
-    setSubmitted = _React$useState14[1];
+    errors = _React$useState14[0],
+    setErrors = _React$useState14[1];
+  var _React$useState15 = React.useState(false),
+    _React$useState16 = _slicedToArray(_React$useState15, 2),
+    submitted = _React$useState16[0],
+    setSubmitted = _React$useState16[1];
   /* "repos" | "envoi" | "erreur" — le succès est porté par `submitted`, qui
      existait déjà et gouverne le bloc de confirmation du design. */
-  var _React$useState15 = React.useState("repos"),
-    _React$useState16 = _slicedToArray(_React$useState15, 2),
-    envoi = _React$useState16[0],
-    setEnvoi = _React$useState16[1];
+  var _React$useState17 = React.useState("repos"),
+    _React$useState18 = _slicedToArray(_React$useState17, 2),
+    envoi = _React$useState18[0],
+    setEnvoi = _React$useState18[1];
   /* Champ-piège : invisible pour un visiteur, rempli par les robots qui
      remplissent tout. Il vit dans l'état comme les autres champs. */
-  var _React$useState17 = React.useState(""),
-    _React$useState18 = _slicedToArray(_React$useState17, 2),
-    piege = _React$useState18[0],
-    setPiege = _React$useState18[1];
+  var _React$useState19 = React.useState(""),
+    _React$useState20 = _slicedToArray(_React$useState19, 2),
+    piege = _React$useState20[0],
+    setPiege = _React$useState20[1];
   /* Instant d'affichage du formulaire. Le serveur refuse un envoi survenu moins
      de deux secondes après : personne ne remplit six champs en deux secondes. */
   var afficheA = React.useRef(Date.now());

@@ -351,6 +351,34 @@
   .features-stage { position: static; }
 }
 
+/* Sous 900 px, sections.jsx sert la capture réelle de l'application mobile au
+   lieu de la maquette d'écran d'ordinateur, qui s'y retrouvait illisible.
+   Le cadre de carte de .features-stage n'a alors plus lieu d'être — une carte
+   qui contient un téléphone — et son fond blanc écrasait le crème de la
+   section. On l'efface, et la capture porte elle-même son cadre d'appareil. */
+@media (max-width: 900px) {
+  .features-stage {
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    overflow: visible;
+    min-height: 0;
+  }
+  .f-shot { display: flex; justify-content: center; padding: 4px 0; }
+  .f-shot img {
+    display: block;
+    width: min(340px, 100%);
+    height: auto;
+    border-radius: 26px;
+    /* Même vocabulaire que .phone-frame de la section « Partout où vous
+       travaillez » : liseré sombre, angles arrondis, ombre portée basse. */
+    border: 7px solid #1A2540;
+    background: #0A0F1E;
+    box-shadow: 0 34px 70px -28px rgba(11, 18, 36, 0.55);
+  }
+}
+
 /* Visite guidée — sections produit */
 .product-tour {
   display: flex;

@@ -159,13 +159,35 @@ const Pains = () => {
 };
 
 /* FEATURES */
+/* Les maquettes AppMockup reproduisent l'écran d'ORDINATEUR : une barre latérale
+   de 168 px fixes à côté du contenu, sur une hauteur minimale de 540 px. Dans la
+   colonne d'un téléphone il ne restait qu'environ 180 px pour le contenu — texte
+   coupé, colonnes tronquées, rien de lisible. Sous 900 px on sert donc les
+   captures réelles de l'application mobile, à la place et non en plus : elles
+   montrent la même chose, dans la forme où le visiteur la verra vraiment. */
 const Features = () => {
   const tabs = [
-    { eyebrow: Txt("fonctionnalites.01-cockpit", "01 — Cockpit", "01 — Cockpit"), title: Txt("fonctionnalites.une-vue-d-ensemble-qui-rassure", "Une vue d'ensemble qui rassure", "An overview that reassures"), desc: Txt("fonctionnalites.avancement-prochaines-echeances-decisions-en", "Avancement, prochaines échéances, décisions en attente. Vos clients savent où en est leur projet sans vous appeler.", "Progress, upcoming deadlines, pending decisions. Your clients know where their project stands without calling you."), mockup: "cockpit" },
-    { eyebrow: Txt("fonctionnalites.02-decisions", "02 — Décisions", "02 — Decisions"), title: Txt("fonctionnalites.validations-structurees-tracables", "Validations structurées, traçables", "Structured, traceable approvals"), desc: Txt("fonctionnalites.fini-le-j-ai-oublie-ce", "Fini le « j'ai oublié ce qu'on avait dit ». Chaque arbitrage est horodaté, signé et archivé. Plus de SAV un an plus tard.", "No more \"I forgot what we agreed on\". Every decision is timestamped, signed and archived. No disputes a year later."), mockup: "decisions" },
-    { eyebrow: Txt("fonctionnalites.03-chantier", "03 — Chantier", "03 — Site"), title: Txt("fonctionnalites.le-chantier-suivi-les-reserves-levees", "Le chantier suivi, les réserves levées", "Site visits tracked, punch lists cleared"), desc: Txt("fonctionnalites.comptes-rendus-de-visite-reserves-photograph", "Comptes-rendus de visite, réserves photographiées et assignées par lot, diffusion automatique aux entreprises. Le chantier documenté, sans y passer vos dimanches.", "Visit reports, photographed punch-list items assigned by trade, automatic distribution to contractors. The site documented, without losing your Sundays."), mockup: "chantier" },
+    { eyebrow: Txt("fonctionnalites.01-cockpit", "01 — Cockpit", "01 — Cockpit"), title: Txt("fonctionnalites.une-vue-d-ensemble-qui-rassure", "Une vue d'ensemble qui rassure", "An overview that reassures"), desc: Txt("fonctionnalites.avancement-prochaines-echeances-decisions-en", "Avancement, prochaines échéances, décisions en attente. Vos clients savent où en est leur projet sans vous appeler.", "Progress, upcoming deadlines, pending decisions. Your clients know where their project stands without calling you."), mockup: "cockpit",
+      shot: "uploads/app-mobile-cockpit.jpg", shotAlt: L("ALBA Studio sur mobile — cockpit du projet Grange Lissieu : avancement, phase courante, budget", "ALBA Studio on mobile — Grange Lissieu project cockpit: progress, current phase, budget") },
+    { eyebrow: Txt("fonctionnalites.02-decisions", "02 — Décisions", "02 — Decisions"), title: Txt("fonctionnalites.validations-structurees-tracables", "Validations structurées, traçables", "Structured, traceable approvals"), desc: Txt("fonctionnalites.fini-le-j-ai-oublie-ce", "Fini le « j'ai oublié ce qu'on avait dit ». Chaque arbitrage est horodaté, signé et archivé. Plus de SAV un an plus tard.", "No more \"I forgot what we agreed on\". Every decision is timestamped, signed and archived. No disputes a year later."), mockup: "decisions",
+      shot: "uploads/app-mobile-decisions.jpg", shotAlt: L("ALBA Studio sur mobile — vue décisions : arbitrages validés et impact financier", "ALBA Studio on mobile — decisions view: approved arbitrations and financial impact") },
+    { eyebrow: Txt("fonctionnalites.03-chantier", "03 — Chantier", "03 — Site"), title: Txt("fonctionnalites.le-chantier-suivi-les-reserves-levees", "Le chantier suivi, les réserves levées", "Site visits tracked, punch lists cleared"), desc: Txt("fonctionnalites.comptes-rendus-de-visite-reserves-photograph", "Comptes-rendus de visite, réserves photographiées et assignées par lot, diffusion automatique aux entreprises. Le chantier documenté, sans y passer vos dimanches.", "Visit reports, photographed punch-list items assigned by trade, automatic distribution to contractors. The site documented, without losing your Sundays."), mockup: "chantier",
+      shot: "uploads/app-mobile-chantier.jpg", shotAlt: L("ALBA Studio sur mobile — suivi de chantier : visites, comptes-rendus et remarques", "ALBA Studio on mobile — site tracking: visits, reports and punch-list items") },
   ];
   const [active, setActive] = React.useState(0);
+  const [mobile, setMobile] = React.useState(() => window.matchMedia("(max-width: 900px)").matches);
+
+  // La bascule doit suivre la rotation de l'appareil : un iPhone Pro Max passe
+  // de 430 à 932 px en tournant, soit d'un côté à l'autre de la limite.
+  React.useEffect(() => {
+    const mq = window.matchMedia("(max-width: 900px)");
+    const suivre = () => setMobile(mq.matches);
+    // addListener : Safari n'a accepté addEventListener sur MediaQueryList qu'à
+    // partir de la version 14.
+    if (mq.addEventListener) mq.addEventListener("change", suivre); else mq.addListener(suivre);
+    return () => { if (mq.removeEventListener) mq.removeEventListener("change", suivre); else mq.removeListener(suivre); };
+  }, []);
+
   return (
     <section className="section section-cream-2" id="features">
       <div className="container">
@@ -186,7 +208,13 @@ const Features = () => {
           <Reveal className="features-stage">
             {tabs.map((t, i) => (
               <div key={i} className={`f-stage-pane ${active === i ? "is-active" : ""}`}>
-                <AppMockup variant={t.mockup}/>
+                {mobile
+                  ? <div className="f-shot">
+                      {/* width/height : la place est réservée avant le chargement,
+                          sinon la page se décale sous le doigt du visiteur. */}
+                      <img src={t.shot} alt={t.shotAlt} width="900" height="1541" loading="lazy" decoding="async"/>
+                    </div>
+                  : <AppMockup variant={t.mockup}/>}
               </div>
             ))}
           </Reveal>
