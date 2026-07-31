@@ -40,7 +40,7 @@
   left: -16px;
   z-index: 2;
   background: var(--bg);
-  color: #E9ECF2;
+  color: var(--on-bg);
   border-radius: 14px;
   padding: 12px 18px;
   box-shadow: 0 18px 40px -14px rgba(0,0,0,0.4);
@@ -60,7 +60,7 @@
   font-family: var(--font-mono);
   font-size: 9px;
   letter-spacing: 0.1em;
-  color: rgba(233, 236, 242,0.6);
+  color: rgba(var(--on-bg-rgb), 0.6);
   text-transform: uppercase;
   margin-top: 2px;
 }

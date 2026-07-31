@@ -671,7 +671,7 @@ var Pricing = function Pricing() {
   })), /*#__PURE__*/React.createElement("a", {
     href: "".concat(SIGNUP_URL, "?plan=studio&storage=").concat(t.go, "&billing=").concat(yearly ? "yearly" : "monthly", "&seats=").concat(seats),
     className: "btn btn-primary pricing-cta"
-  }, Txt("tarifs.demarrer-avec-un-projet-gratuit", "Démarrer avec un projet gratuit", "Start with a free project"), " ", /*#__PURE__*/React.createElement(Icon, {
+  }, Txt("tarifs.s-abonner", "S'abonner", "Subscribe"), " ", /*#__PURE__*/React.createElement(Icon, {
     name: "arrow-right",
     size: 14,
     className: "btn-arrow"

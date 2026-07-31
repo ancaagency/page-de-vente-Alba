@@ -387,7 +387,7 @@ const Pricing = () => {
                   <li key={i}><Icon name="check" size={12}/> {it}</li>
                 ))}
               </ul>
-              <a href={`${SIGNUP_URL}?plan=studio&storage=${t.go}&billing=${yearly ? "yearly" : "monthly"}&seats=${seats}`} className="btn btn-primary pricing-cta">{Txt("tarifs.demarrer-avec-un-projet-gratuit", "Démarrer avec un projet gratuit", "Start with a free project")} <Icon name="arrow-right" size={14} className="btn-arrow"/></a>
+              <a href={`${SIGNUP_URL}?plan=studio&storage=${t.go}&billing=${yearly ? "yearly" : "monthly"}&seats=${seats}`} className="btn btn-primary pricing-cta">{Txt("tarifs.s-abonner", "S'abonner", "Subscribe")} <Icon name="arrow-right" size={14} className="btn-arrow"/></a>
               <div className="pricing-foot">{Txt("tarifs.gratuit-a-vie-pour-1-projet", "GRATUIT À VIE POUR 1 PROJET · SANS CB · SANS ENGAGEMENT", "FREE FOREVER FOR 1 PROJECT · NO CARD · NO COMMITMENT")}</div>
             </div>
           </Reveal>

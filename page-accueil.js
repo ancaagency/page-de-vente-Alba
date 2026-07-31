@@ -25,7 +25,7 @@ function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
 var TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
   "palette": "studio",
   "density": "standard",
-  "theme": "dark",
+  "theme": "light",
   "typoHero": "serif",
   "audienceVariant": "A"
 } /*EDITMODE-END*/;

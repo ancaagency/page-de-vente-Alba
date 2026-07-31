@@ -6,7 +6,7 @@
 const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
   "palette": "studio",
   "density": "standard",
-  "theme": "dark",
+  "theme": "light",
   "typoHero": "serif",
   "audienceVariant": "A"
 }/*EDITMODE-END*/;

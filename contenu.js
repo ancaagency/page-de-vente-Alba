@@ -666,9 +666,9 @@ window.ALBA_CONTENU = {
     fr: "/ mois HT",
     en: "/ month excl. VAT",
   },
-  "tarifs.demarrer-avec-un-projet-gratuit": {
-    fr: "Démarrer avec un projet gratuit",
-    en: "Start with a free project",
+  "tarifs.s-abonner": {
+    fr: "S'abonner",
+    en: "Subscribe",
   },
   "tarifs.gratuit-a-vie-pour-1-projet": {
     fr: "GRATUIT À VIE POUR 1 PROJET · SANS CB · SANS ENGAGEMENT",

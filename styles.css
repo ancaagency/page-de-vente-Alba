@@ -115,10 +115,16 @@
   --line-strong: rgba(11, 18, 36, 0.2);
 }
 
+/* Thème clair — celui qu'on sert désormais.
+   Blanc et gris de l'application, en alternance : c'est le rythme d'Apple, deux
+   valeurs très proches qui séparent les sections sans jamais les colorer.
+   Le bleu nuit ne disparaît pas, il redevient ce qu'il aurait dû rester : une
+   touche. Il survit dans le texte (--ink), les maquettes d'application, les
+   cadres d'appareil et le liseré du haut. */
 body[data-theme="light"] {
-  --bg: #E4E6EB;
-  --bg-2: #D8DBE2;
-  --bg-3: #C7CCD7;
+  --bg: #FFFFFF;
+  --bg-2: #F2F4F8;
+  --bg-3: #E9ECF2;
   --accent: #96712F;
   --accent-2: #7C5D26;
   --accent-soft: rgba(150, 113, 47, 0.10);
@@ -373,10 +379,14 @@ section {
   border-color: currentColor;
   transform: translateY(-1px);
 }
+/* Bouton inverse : il prend toujours le contraire du fond de sa section.
+   `color: #0E1729` etait ecrit en dur — en theme clair, --on-bg devient sombre
+   et le texte sombre disparaissait sur un bouton sombre. En le liant a --bg,
+   l'inversion tient dans les deux themes. */
 .btn-cream {
-  background: #E9ECF2;
-  color: #0E1729;
-  border-color: #E9ECF2;
+  background: var(--on-bg);
+  color: var(--bg);
+  border-color: var(--on-bg);
 }
 .btn-cream:hover { background: #fff; border-color: #fff; transform: translateY(-1px); }
 
@@ -557,7 +567,9 @@ section {
   font-size: 32px;
   font-weight: 500;
   letter-spacing: -0.01em;
-  color: #E9ECF2;
+  /* Fige en clair : le voile du menu est sombre en dur, il ne suit pas le
+     theme, donc son texte ne doit pas le suivre non plus. */
+  color: #F2F4F8;
   padding: 8px 20px;
   opacity: 0;
   transform: translateY(16px);
@@ -577,7 +589,7 @@ section {
   text-align: center;
   margin-top: 20px;
   font-size: 15px;
-  color: rgba(var(--on-bg-rgb), 0.7);
+  color: rgba(242, 244, 248, 0.7);   /* meme raison : voile sombre en dur */
   transition: color .2s;
 }
 .mobile-menu-login:hover { color: var(--accent); }
@@ -741,9 +753,9 @@ section {
 }
 .store-badges.light .store-badge:hover { border-color: var(--accent); background: #fff; }
 .store-badges.dark .store-badge {
-  border: 1px solid rgba(233, 236, 242, 0.2); background: rgba(233, 236, 242, 0.05); color: #E9ECF2;
+  border: 1px solid rgba(var(--on-bg-rgb), 0.2); background: rgba(var(--on-bg-rgb), 0.05); color: var(--on-bg);
 }
-.store-badges.dark .store-badge:hover { border-color: var(--accent); background: rgba(233, 236, 242, 0.1); }
+.store-badges.dark .store-badge:hover { border-color: var(--accent); background: rgba(var(--on-bg-rgb), 0.1); }
 .store-note {
   flex-basis: 100%;
   margin: 4px 0 0;
@@ -751,12 +763,12 @@ section {
   line-height: 1.5;
   max-width: 44ch;
 }
-.store-badges.dark .store-note { color: rgba(233, 236, 242, 0.72); }
+.store-badges.dark .store-note { color: rgba(var(--on-bg-rgb), 0.72); }
 .store-badges.light .store-note { color: rgba(11, 18, 36, 0.62); }
 .foot-apps { margin-top: 26px; }
 .foot-apps h5 {
   font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.16em;
-  text-transform: uppercase; color: rgba(233, 236, 242, 0.5); margin: 0;
+  text-transform: uppercase; color: rgba(var(--on-bg-rgb), 0.5); margin: 0;
 }
 .foot-apps .store-badges { margin-top: 12px; }
 @media (max-width: 560px) { .store-badge { padding: 7px 13px 7px 11px; } .store-badge b { font-size: 12.5px; } }

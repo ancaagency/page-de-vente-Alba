@@ -7,7 +7,7 @@
   /* 3 panneaux × 100vh pour la durée de scroll */
   height: 300vh;
   background: var(--bg);
-  color: #E9ECF2;
+  color: var(--on-bg);
 }
 
 .pinned-stage {
@@ -27,15 +27,22 @@
   transition: background 1.2s cubic-bezier(.7,0,.3,1);
   background: var(--bg);
 }
-.pinned-stage[data-active="0"] .pinned-bg { background: linear-gradient(135deg, #0E1729 0%, #1A2540 100%); }
-.pinned-stage[data-active="1"] .pinned-bg { background: linear-gradient(135deg, #2A1A14 0%, #44261C 100%); }
-.pinned-stage[data-active="2"] .pinned-bg { background: linear-gradient(135deg, #1A2A22 0%, #2A4032 100%); }
+/* Fonds de la section « Partout ou vous travaillez ».
+   C'etait la derniere grande surface coloree de la page : bleu nuit, puis brun,
+   puis vert, en pleine largeur. Trois teintes pour une seule section, c'est
+   exactement ce qu'on cherchait a retirer. Elles deviennent trois gris tres
+   proches — la progression au defilement reste perceptible, mais elle ne
+   colore plus la page. Les cadres d'appareil, eux, restent sombres : ce sont
+   des objets poses dessus, pas un fond. */
+.pinned-stage[data-active="0"] .pinned-bg { background: linear-gradient(135deg, #FFFFFF 0%, #F2F4F8 100%); }
+.pinned-stage[data-active="1"] .pinned-bg { background: linear-gradient(135deg, #F4F6F9 0%, #E9ECF2 100%); }
+.pinned-stage[data-active="2"] .pinned-bg { background: linear-gradient(135deg, #FFFFFF 0%, #EDEFF3 100%); }
 
 .pinned-grid {
   position: absolute;
   inset: 0;
   background-image:
-    linear-gradient(to right, rgba(233, 236, 242,0.05) 1px, transparent 1px);
+    linear-gradient(to right, rgba(var(--on-bg-rgb), 0.05) 1px, transparent 1px);
   background-size: calc(100% / 12) 100%;
   pointer-events: none;
   opacity: 0.5;
@@ -79,7 +86,7 @@
   letter-spacing: -0.03em;
   line-height: 1.0;
   margin: 0 0 32px;
-  color: #E9ECF2;
+  color: var(--on-bg);
 }
 .pinned-pane-text .pinned-eyebrow {
   font-family: var(--font-mono);
@@ -98,19 +105,19 @@
 .pinned-pane-text .lead {
   font-size: 18px;
   line-height: 1.6;
-  color: rgba(233, 236, 242, 0.9);
+  color: rgba(var(--on-bg-rgb), 0.9);
   font-weight: 500;
   max-width: 480px;
   margin: 0 0 16px;
 }
 .pinned-pane-text .lead b {
-  color: #E9ECF2;
+  color: var(--on-bg);
   font-weight: 600;
 }
 .pinned-pane-text p {
   font-size: 15px;
   line-height: 1.65;
-  color: rgba(233, 236, 242, 0.76);
+  color: rgba(var(--on-bg-rgb), 0.76);
   max-width: 480px;
   margin: 0;
 }
@@ -182,7 +189,7 @@
   border-radius: 12px;
   padding: 12px;
 }
-.phone-card.dark { background: #0E1729; color: #E9ECF2; border-color: transparent; }
+.phone-card.dark { background: #0E1729; color: var(--on-bg); border-color: transparent; }
 .phone-greeting {
   font-family: var(--font-display);
   font-size: 18px;
@@ -192,7 +199,7 @@
 }
 .phone-subtitle {
   font-size: 9.5px;
-  color: rgba(233, 236, 242,0.76);
+  color: rgba(var(--on-bg-rgb), 0.76);
 }
 .phone-pill {
   display: inline-flex; align-items: center; gap: 5px;
@@ -335,7 +342,7 @@
   display: flex; flex-direction: column; align-items: center; gap: 3px;
   padding: 8px 4px;
   font-size: 8.5px;
-  color: rgba(233, 236, 242,0.72);
+  color: rgba(var(--on-bg-rgb), 0.72);
   border-radius: 6px;
 }
 .tablet-side-item.is-active {
@@ -393,7 +400,7 @@
   z-index: 3;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  border-top: 1px solid rgba(233, 236, 242, 0.18);
+  border-top: 1px solid rgba(var(--on-bg-rgb), 0.18);
   background: rgba(14, 23, 41, 0.4);
   backdrop-filter: blur(10px);
 }
@@ -403,13 +410,13 @@
   font-size: 12px;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: rgba(233, 236, 242, 0.6);
+  color: rgba(var(--on-bg-rgb), 0.6);
   position: relative;
   transition: color .3s;
   text-align: center;
 }
 .pinned-nav-item.is-active {
-  color: #E9ECF2;
+  color: var(--on-bg);
 }
 .pinned-nav-progress {
   position: absolute;
@@ -431,9 +438,9 @@
   top: 45%;
   width: 48px; height: 48px;
   border-radius: 50%;
-  border: 1px solid rgba(233, 236, 242, 0.25);
+  border: 1px solid rgba(var(--on-bg-rgb), 0.25);
   background: transparent;
-  color: rgba(233, 236, 242, 0.76);
+  color: rgba(var(--on-bg-rgb), 0.76);
   display: grid; place-items: center;
   cursor: pointer;
   transition: all .3s;
@@ -443,7 +450,7 @@
 .pinned-arrow.left { left: 32px; }
 .pinned-arrow.right { right: 32px; }
 .pinned-arrow:disabled { opacity: 0.2; cursor: not-allowed; }
-.pinned-arrow:disabled:hover { border-color: rgba(233, 236, 242, 0.25); color: rgba(233, 236, 242, 0.76); }
+.pinned-arrow:disabled:hover { border-color: rgba(var(--on-bg-rgb), 0.25); color: rgba(var(--on-bg-rgb), 0.76); }
 
 /* Heading on top */
 .pinned-head {
