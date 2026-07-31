@@ -45,16 +45,16 @@ window.ALBA_CONTENU = {
     en: "The platform built for independent architects: every decision, document and message lives in one place. Your clients follow along. You stay in control.",
   },
   "accueil.creer-mon-projet-gratuit": {
-    fr: "Créer mon projet gratuit",
-    en: "Create my free project",
+    fr: "Créer mon espace",
+    en: "Create my workspace",
   },
   "accueil.demander-une-demo": {
     fr: "Demander une démo",
     en: "Request a demo",
   },
   "accueil.gratuit-a-vie-pour-1-projet": {
-    fr: "Gratuit à vie pour 1 projet",
-    en: "Free forever for 1 project",
+    fr: "Premier projet offert",
+    en: "First project on us",
   },
   "accueil.sans-engagement": {
     fr: "Sans engagement",
@@ -95,16 +95,16 @@ window.ALBA_CONTENU = {
 
   /* ——— Bandeau d'appel à l'action ——— */
   "bandeau-cta.gratuit-a-vie-pour-1-projet": {
-    fr: "Gratuit à vie pour 1 projet.",
-    en: "Free forever for 1 project.",
+    fr: "Premier projet offert.",
+    en: "First project on us.",
   },
   "bandeau-cta.gerez-un-projet-complet-gratuitement-sans": {
-    fr: "Gérez un projet complet gratuitement, sans carte bleue, sans limite de temps.",
-    en: "Run one full project free, no credit card, no time limit.",
+    fr: "Créez votre espace en dix minutes. Le premier projet est offert, sans carte bleue.",
+    en: "Set up your workspace in ten minutes. The first project is on us, no credit card.",
   },
   "bandeau-cta.creer-mon-projet-gratuit": {
-    fr: "Créer mon projet gratuit",
-    en: "Create my free project",
+    fr: "Créer mon espace",
+    en: "Create my workspace",
   },
   "bandeau-cta.voir-le-tarif": {
     fr: "Voir le tarif",
@@ -671,8 +671,8 @@ window.ALBA_CONTENU = {
     en: "Subscribe",
   },
   "tarifs.gratuit-a-vie-pour-1-projet": {
-    fr: "GRATUIT À VIE POUR 1 PROJET · SANS CB · SANS ENGAGEMENT",
-    en: "FREE FOREVER FOR 1 PROJECT · NO CARD · NO COMMITMENT",
+    fr: "SANS ENGAGEMENT · RÉSILIABLE À TOUT MOMENT",
+    en: "NO COMMITMENT · CANCEL ANYTIME",
   },
 
   /* ——— Bloc sécurité et conformité ——— */
@@ -719,8 +719,8 @@ window.ALBA_CONTENU = {
     en: "What does the free project include?",
   },
   "faq.un-projet-complet-sans-limite-de": {
-    fr: "Un projet complet, sans limite de temps : cockpit, décisions signées, messagerie, documents, matériauthèque, accès maître d'ouvrage et co-traitants. Aucune carte bleue demandée. Vous passez au tarif Studio uniquement quand vous créez votre deuxième projet, et tout ce que vous avez construit reste en place.",
-    en: "One complete project, with no time limit: cockpit, signed decisions, messaging, documents, material library, client and consultant access. No credit card required. You only move to the Studio plan when you create your second project, and everything you've built stays in place.",
+    fr: "Un projet complet pour commencer : cockpit, décisions signées, messagerie, documents, matériauthèque, accès maître d'ouvrage et co-traitants. Aucune carte bleue demandée. Vous passez au tarif Studio quand vous créez votre deuxième projet, et tout ce que vous avez construit reste en place.",
+    en: "One complete project to get started: cockpit, signed decisions, messaging, documents, material library, client and consultant access. No credit card required. You move to the Studio plan when you create your second project, and everything you've built stays in place.",
   },
   "faq.comment-alba-s-integre-a-ma": {
     fr: "Comment ALBA s'intègre à ma méthode actuelle ?",
@@ -865,7 +865,7 @@ window.ALBA_CONTENU = {
     en: "Video call · 30 min · no commitment",
   },
   "contact.ou-creez-directement-votre-compte-gratuit": {
-    fr: "Ou créez directement votre compte gratuit →",
+    fr: "Ou créez directement votre compte →",
     en: "Or create your free account right away →",
   },
   "contact.nom-complet": {

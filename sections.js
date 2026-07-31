@@ -118,7 +118,7 @@ var Hero = function Hero() {
   }, /*#__PURE__*/React.createElement("a", {
     href: SIGNUP_URL,
     className: "btn btn-primary"
-  }, Txt("accueil.creer-mon-projet-gratuit", "Créer mon projet gratuit", "Create my free project"), " ", /*#__PURE__*/React.createElement(Icon, {
+  }, Txt("accueil.creer-mon-projet-gratuit", "Créer mon espace", "Create my workspace"), " ", /*#__PURE__*/React.createElement(Icon, {
     name: "arrow-right",
     size: 14,
     className: "btn-arrow"
@@ -140,7 +140,7 @@ var Hero = function Hero() {
       verticalAlign: "-2px",
       marginRight: 6
     }
-  }), " ", Txt("accueil.gratuit-a-vie-pour-1-projet", "Gratuit à vie pour 1 projet", "Free forever for 1 project")), /*#__PURE__*/React.createElement("span", {
+  }), " ", Txt("accueil.gratuit-a-vie-pour-1-projet", "Premier projet offert", "First project on us")), /*#__PURE__*/React.createElement("span", {
     className: "sep"
   }), /*#__PURE__*/React.createElement("span", null, Txt("accueil.sans-engagement", "Sans engagement", "No commitment")), /*#__PURE__*/React.createElement("span", {
     className: "sep"
@@ -256,14 +256,14 @@ var CTABand = function CTABand() {
     className: "container cta-band-inner"
   }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
     className: "cta-band-title"
-  }, Txt("bandeau-cta.gratuit-a-vie-pour-1-projet", "Gratuit à vie pour 1 projet.", "Free forever for 1 project.")), /*#__PURE__*/React.createElement("div", {
+  }, Txt("bandeau-cta.gratuit-a-vie-pour-1-projet", "Premier projet offert.", "First project on us.")), /*#__PURE__*/React.createElement("div", {
     className: "cta-band-sub"
-  }, Txt("bandeau-cta.gerez-un-projet-complet-gratuitement-sans", "Gérez un projet complet gratuitement, sans carte bleue, sans limite de temps.", "Run one full project free, no credit card, no time limit."))), /*#__PURE__*/React.createElement("div", {
+  }, Txt("bandeau-cta.gerez-un-projet-complet-gratuitement-sans", "Créez votre espace en dix minutes. Le premier projet est offert, sans carte bleue.", "Set up your workspace in ten minutes. The first project is on us, no credit card."))), /*#__PURE__*/React.createElement("div", {
     className: "cta-band-actions"
   }, /*#__PURE__*/React.createElement("a", {
     href: SIGNUP_URL,
     className: "btn btn-primary"
-  }, Txt("bandeau-cta.creer-mon-projet-gratuit", "Créer mon projet gratuit", "Create my free project"), " ", /*#__PURE__*/React.createElement(Icon, {
+  }, Txt("bandeau-cta.creer-mon-projet-gratuit", "Créer mon espace", "Create my workspace"), " ", /*#__PURE__*/React.createElement(Icon, {
     name: "arrow-right",
     size: 14,
     className: "btn-arrow"
@@ -677,7 +677,7 @@ var Pricing = function Pricing() {
     className: "btn-arrow"
   })), /*#__PURE__*/React.createElement("div", {
     className: "pricing-foot"
-  }, Txt("tarifs.gratuit-a-vie-pour-1-projet", "GRATUIT À VIE POUR 1 PROJET · SANS CB · SANS ENGAGEMENT", "FREE FOREVER FOR 1 PROJECT · NO CARD · NO COMMITMENT")))))));
+  }, Txt("tarifs.gratuit-a-vie-pour-1-projet", "SANS ENGAGEMENT · RÉSILIABLE À TOUT MOMENT", "NO COMMITMENT · CANCEL ANYTIME")))))));
 };
 
 /* TRUST BAND — sécurité & données */
@@ -726,7 +726,7 @@ var TrustBand = function TrustBand() {
 var Faq = function Faq() {
   var items = [{
     q: Txt("faq.que-comprend-le-projet-gratuit", "Que comprend le projet gratuit ?", "What does the free project include?"),
-    a: Txt("faq.un-projet-complet-sans-limite-de", "Un projet complet, sans limite de temps : cockpit, décisions signées, messagerie, documents, matériauthèque, accès maître d'ouvrage et co-traitants. Aucune carte bleue demandée. Vous passez au tarif Studio uniquement quand vous créez votre deuxième projet, et tout ce que vous avez construit reste en place.", "One complete project, with no time limit: cockpit, signed decisions, messaging, documents, material library, client and consultant access. No credit card required. You only move to the Studio plan when you create your second project, and everything you've built stays in place.")
+    a: Txt("faq.un-projet-complet-sans-limite-de", "Un projet complet pour commencer : cockpit, décisions signées, messagerie, documents, matériauthèque, accès maître d'ouvrage et co-traitants. Aucune carte bleue demandée. Vous passez au tarif Studio quand vous créez votre deuxième projet, et tout ce que vous avez construit reste en place.", "One complete project to get started: cockpit, signed decisions, messaging, documents, material library, client and consultant access. No credit card required. You move to the Studio plan when you create your second project, and everything you've built stays in place.")
   }, {
     q: Txt("faq.comment-alba-s-integre-a-ma", "Comment ALBA s'intègre à ma méthode actuelle ?", "How does ALBA fit my current workflow?"),
     a: Txt("faq.alba-s-adapte-a-votre-process", "ALBA s'adapte à votre process, pas l'inverse. Vous configurez les phases (esquisse, APS, APD, permis, DCE, chantier), nous gérons les rappels, les jalons et la mémoire du projet. Aucune formation longue : la plupart des architectes sont opérationnels en moins d'une heure.", "ALBA adapts to your process, not the other way round. You configure the phases (concept, design, permits, tender, construction); we handle reminders, milestones and the project's memory. No lengthy training: most architects are up and running in under an hour.")
@@ -963,7 +963,7 @@ var Contact = function Contact() {
   }, Txt("contact.visio-30-min-sans-engagement", "Visio · 30 min · sans engagement", "Video call · 30 min · no commitment")), /*#__PURE__*/React.createElement("a", {
     href: SIGNUP_URL,
     className: "fl-link"
-  }, Txt("contact.ou-creez-directement-votre-compte-gratuit", "Ou créez directement votre compte gratuit →", "Or create your free account right away →"))), submitted && /*#__PURE__*/React.createElement("div", {
+  }, Txt("contact.ou-creez-directement-votre-compte-gratuit", "Ou créez directement votre compte →", "Or create your free account right away →"))), submitted && /*#__PURE__*/React.createElement("div", {
     className: "form-success"
   }, /*#__PURE__*/React.createElement(Icon, {
     name: "check",

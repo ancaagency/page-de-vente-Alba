@@ -37,6 +37,7 @@
  * version aux robots, sans que rien ne le signale.
  */
 import fs from 'node:fs';
+import { injecter as injecterFaqJsonLd } from './faq-jsonld.mjs';
 import path from 'node:path';
 import { createRequire } from 'node:module';
 import { pathToFileURL } from 'node:url';
@@ -169,7 +170,9 @@ if (import.meta.url === `file://${process.argv[1]}`) {
       console.log(`   ${bon ? '✅' : '❌'} ${fichier.padEnd(24)} ${bon ? 'à jour' : 'PÉRIMÉ'}`);
       if (!bon) ecarts++;
     } else {
-      fs.writeFileSync(chemin, attendu);
+      // Les donnees structurees de la FAQ sont derivees de contenu.js a chaque
+      // passage : sans ca, elles restent figees pendant que la page evolue.
+      fs.writeFileSync(chemin, injecterFaqJsonLd(attendu));
       const texte = rendus.get(fichier).replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
       console.log(`   ${fichier.padEnd(24)} ${(rendus.get(fichier).length / 1024).toFixed(0)} Ko — ${texte.length} caractères de texte`);
     }

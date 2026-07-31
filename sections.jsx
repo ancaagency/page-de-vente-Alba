@@ -48,13 +48,13 @@ const Hero = () => (
       </Reveal>
       <Reveal delay={360}>
         <div className="hero-actions">
-          <a href={SIGNUP_URL} className="btn btn-primary">{Txt("accueil.creer-mon-projet-gratuit", "Créer mon projet gratuit", "Create my free project")} <Icon name="arrow-right" size={14} className="btn-arrow"/></a>
+          <a href={SIGNUP_URL} className="btn btn-primary">{Txt("accueil.creer-mon-projet-gratuit", "Créer mon espace", "Create my workspace")} <Icon name="arrow-right" size={14} className="btn-arrow"/></a>
           <a href="#contact" className="btn btn-ghost" onClick={() => window.__setContactMode && window.__setContactMode("demo")}>{Txt("accueil.demander-une-demo", "Demander une démo", "Request a demo")}</a>
         </div>
       </Reveal>
       <Reveal delay={480}>
         <div className="hero-meta">
-          <span><Icon name="check" size={12} style={{display:"inline", verticalAlign:"-2px", marginRight:6}}/> {Txt("accueil.gratuit-a-vie-pour-1-projet", "Gratuit à vie pour 1 projet", "Free forever for 1 project")}</span>
+          <span><Icon name="check" size={12} style={{display:"inline", verticalAlign:"-2px", marginRight:6}}/> {Txt("accueil.gratuit-a-vie-pour-1-projet", "Premier projet offert", "First project on us")}</span>
           <span className="sep"/>
           <span>{Txt("accueil.sans-engagement", "Sans engagement", "No commitment")}</span>
           <span className="sep"/>
@@ -131,11 +131,11 @@ const CTABand = () => (
   <section className="cta-band">
     <div className="container cta-band-inner">
       <div>
-        <div className="cta-band-title">{Txt("bandeau-cta.gratuit-a-vie-pour-1-projet", "Gratuit à vie pour 1 projet.", "Free forever for 1 project.")}</div>
-        <div className="cta-band-sub">{Txt("bandeau-cta.gerez-un-projet-complet-gratuitement-sans", "Gérez un projet complet gratuitement, sans carte bleue, sans limite de temps.", "Run one full project free, no credit card, no time limit.")}</div>
+        <div className="cta-band-title">{Txt("bandeau-cta.gratuit-a-vie-pour-1-projet", "Premier projet offert.", "First project on us.")}</div>
+        <div className="cta-band-sub">{Txt("bandeau-cta.gerez-un-projet-complet-gratuitement-sans", "Créez votre espace en dix minutes. Le premier projet est offert, sans carte bleue.", "Set up your workspace in ten minutes. The first project is on us, no credit card.")}</div>
       </div>
       <div className="cta-band-actions">
-        <a href={SIGNUP_URL} className="btn btn-primary">{Txt("bandeau-cta.creer-mon-projet-gratuit", "Créer mon projet gratuit", "Create my free project")} <Icon name="arrow-right" size={14} className="btn-arrow"/></a>
+        <a href={SIGNUP_URL} className="btn btn-primary">{Txt("bandeau-cta.creer-mon-projet-gratuit", "Créer mon espace", "Create my workspace")} <Icon name="arrow-right" size={14} className="btn-arrow"/></a>
         <a href="#pricing" className="btn btn-ghost">{Txt("bandeau-cta.voir-le-tarif", "Voir le tarif", "See pricing")}</a>
       </div>
     </div>
@@ -388,7 +388,7 @@ const Pricing = () => {
                 ))}
               </ul>
               <a href={`${SIGNUP_URL}?plan=studio&storage=${t.go}&billing=${yearly ? "yearly" : "monthly"}&seats=${seats}`} className="btn btn-primary pricing-cta">{Txt("tarifs.s-abonner", "S'abonner", "Subscribe")} <Icon name="arrow-right" size={14} className="btn-arrow"/></a>
-              <div className="pricing-foot">{Txt("tarifs.gratuit-a-vie-pour-1-projet", "GRATUIT À VIE POUR 1 PROJET · SANS CB · SANS ENGAGEMENT", "FREE FOREVER FOR 1 PROJECT · NO CARD · NO COMMITMENT")}</div>
+              <div className="pricing-foot">{Txt("tarifs.gratuit-a-vie-pour-1-projet", "SANS ENGAGEMENT · RÉSILIABLE À TOUT MOMENT", "NO COMMITMENT · CANCEL ANYTIME")}</div>
             </div>
           </Reveal>
 
@@ -429,7 +429,7 @@ const TrustBand = () => {
 /* FAQ */
 const Faq = () => {
   const items = [
-    { q: Txt("faq.que-comprend-le-projet-gratuit", "Que comprend le projet gratuit ?", "What does the free project include?"), a: Txt("faq.un-projet-complet-sans-limite-de", "Un projet complet, sans limite de temps : cockpit, décisions signées, messagerie, documents, matériauthèque, accès maître d'ouvrage et co-traitants. Aucune carte bleue demandée. Vous passez au tarif Studio uniquement quand vous créez votre deuxième projet, et tout ce que vous avez construit reste en place.", "One complete project, with no time limit: cockpit, signed decisions, messaging, documents, material library, client and consultant access. No credit card required. You only move to the Studio plan when you create your second project, and everything you've built stays in place.") },
+    { q: Txt("faq.que-comprend-le-projet-gratuit", "Que comprend le projet gratuit ?", "What does the free project include?"), a: Txt("faq.un-projet-complet-sans-limite-de", "Un projet complet pour commencer : cockpit, décisions signées, messagerie, documents, matériauthèque, accès maître d'ouvrage et co-traitants. Aucune carte bleue demandée. Vous passez au tarif Studio quand vous créez votre deuxième projet, et tout ce que vous avez construit reste en place.", "One complete project to get started: cockpit, signed decisions, messaging, documents, material library, client and consultant access. No credit card required. You move to the Studio plan when you create your second project, and everything you've built stays in place.") },
     { q: Txt("faq.comment-alba-s-integre-a-ma", "Comment ALBA s'intègre à ma méthode actuelle ?", "How does ALBA fit my current workflow?"), a: Txt("faq.alba-s-adapte-a-votre-process", "ALBA s'adapte à votre process, pas l'inverse. Vous configurez les phases (esquisse, APS, APD, permis, DCE, chantier), nous gérons les rappels, les jalons et la mémoire du projet. Aucune formation longue : la plupart des architectes sont opérationnels en moins d'une heure.", "ALBA adapts to your process, not the other way round. You configure the phases (concept, design, permits, tender, construction); we handle reminders, milestones and the project's memory. No lengthy training: most architects are up and running in under an hour.") },
     { q: Txt("faq.mes-clients-doivent-ils-telecharger-une", "Mes clients doivent-ils télécharger une application ?", "Do my clients need to download an app?"), a: Txt("faq.non-alba-fonctionne-entierement-dans-le", "Non. ALBA fonctionne entièrement dans le navigateur, sur ordinateur comme sur téléphone. Un lien, un mot de passe, vos maîtres d'ouvrage accèdent à leur cockpit en 30 secondes.", "No. ALBA runs entirely in the browser, on desktop and phone. A link, a password, your clients reach their cockpit in 30 seconds.") },
     { q: Txt("faq.que-se-passe-t-il-pour", "Que se passe-t-il pour mes données si j'arrête ?", "What happens to my data if I leave?"), a: Txt("faq.elles-sont-a-vous-a-tout", "Elles sont à vous. À tout moment, vous exportez l'intégralité de vos projets (PDF, ZIP, CSV) en un clic. Vos archives papier-numérique restent lisibles 10 ans après.", "It's yours. At any time, export all your projects (PDF, ZIP, CSV) in one click. Your digital archives remain readable 10 years on.") },
@@ -557,7 +557,7 @@ const Contact = () => {
             <div className="form-lead">
               <span className="fl-t">{Txt("contact.demander-une-demo", "Demander une démo", "Request a demo")}</span>
               <span className="fl-s">{Txt("contact.visio-30-min-sans-engagement", "Visio · 30 min · sans engagement", "Video call · 30 min · no commitment")}</span>
-              <a href={SIGNUP_URL} className="fl-link">{Txt("contact.ou-creez-directement-votre-compte-gratuit", "Ou créez directement votre compte gratuit →", "Or create your free account right away →")}</a>
+              <a href={SIGNUP_URL} className="fl-link">{Txt("contact.ou-creez-directement-votre-compte-gratuit", "Ou créez directement votre compte →", "Or create your free account right away →")}</a>
             </div>
             {submitted && (
               <div className="form-success">
