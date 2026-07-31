@@ -549,7 +549,7 @@ var Pricing = function Pricing() {
   var extraSeats = Math.max(0, seats - 1);
   var extraCost = extraSeats * 15;
   var total = base + extraCost;
-  var includes = [Txt("tarifs.clients-co-traitants-illimites", "Clients & co-traitants illimités", "Unlimited clients & consultants"), Txt("tarifs.1-collaborateur-inclus-15-mois-par", "1 collaborateur inclus — +15 €/mois par collaborateur ajouté (4 max)", "1 team member included — +€15/month per added member (4 max)"), L("".concat(t.go, " Go de stockage \u2014 \u2248 ").concat(projectsFor(t.go), " projets"), "".concat(t.go, " GB of storage \u2014 \u2248 ").concat(projectsFor(t.go), " projects")), Txt("tarifs.decisions-horodatees-signees", "Décisions horodatées & signées", "Timestamped & signed decisions"), Txt("tarifs.messagerie-projet-securisee", "Messagerie projet sécurisée", "Secure project messaging"), Txt("tarifs.materiautheque-fournisseurs", "Matériauthèque & fournisseurs", "Material library & suppliers"), Txt("tarifs.cr-de-chantier-reserves-photos", "CR de chantier, réserves & photos", "Site reports, punch lists & photos"), Txt("tarifs.visionneuse-plans-dans-le-navigateur", "Visionneuse plans dans le navigateur", "In-browser plan viewer"), Txt("tarifs.exports-pdf-comptables", "Exports PDF & comptables", "PDF & accounting exports"), Txt("tarifs.marque-blanche-maitre-d-ouvrage", "Marque blanche maître d'ouvrage", "White-label client portal"), Txt("tarifs.support-prioritaire-7j-7", "Support prioritaire 7j/7", "Priority support 7 days a week")];
+  var includes = [Txt("tarifs.clients-co-traitants-illimites", "Clients & co-traitants illimités", "Unlimited clients & consultants"), Txt("tarifs.1-collaborateur-inclus-15-mois-par", "1 collaborateur inclus — +15 €/mois HT par collaborateur ajouté (4 max)", "1 team member included — +€15/month excl. VAT per added member (4 max)"), L("".concat(t.go, " Go de stockage \u2014 \u2248 ").concat(projectsFor(t.go), " projets"), "".concat(t.go, " GB of storage \u2014 \u2248 ").concat(projectsFor(t.go), " projects")), Txt("tarifs.decisions-horodatees-signees", "Décisions horodatées & signées", "Timestamped & signed decisions"), Txt("tarifs.messagerie-projet-securisee", "Messagerie projet sécurisée", "Secure project messaging"), Txt("tarifs.materiautheque-fournisseurs", "Matériauthèque & fournisseurs", "Material library & suppliers"), Txt("tarifs.cr-de-chantier-reserves-photos", "CR de chantier, réserves & photos", "Site reports, punch lists & photos"), Txt("tarifs.visionneuse-plans-dans-le-navigateur", "Visionneuse plans dans le navigateur", "In-browser plan viewer"), Txt("tarifs.exports-pdf-comptables", "Exports PDF & comptables", "PDF & accounting exports"), Txt("tarifs.marque-blanche-maitre-d-ouvrage", "Marque blanche maître d'ouvrage", "White-label client portal"), Txt("tarifs.support-prioritaire-7j-7", "Support prioritaire 7j/7", "Priority support 7 days a week")];
   return /*#__PURE__*/React.createElement("section", {
     className: "section section-dark",
     id: "pricing"
@@ -598,7 +598,7 @@ var Pricing = function Pricing() {
       className: "p-tier-main"
     }, /*#__PURE__*/React.createElement("b", null, tr.go, " ", Txt("tarifs.go", "Go", "GB")), /*#__PURE__*/React.createElement("span", null, L("\u2248 ".concat(projectsFor(tr.go), " projets"), "\u2248 ".concat(projectsFor(tr.go), " projects")))), /*#__PURE__*/React.createElement("span", {
       className: "p-tier-price"
-    }, baseFor(tr), " \u20AC", /*#__PURE__*/React.createElement("i", null, Txt("tarifs.mois", "/mois", "/mo"))));
+    }, baseFor(tr), " \u20AC", /*#__PURE__*/React.createElement("i", null, Txt("tarifs.mois", "/mois HT", "/mo excl. VAT"))));
   })), /*#__PURE__*/React.createElement("div", {
     className: "p-config-label"
   }, Txt("tarifs.3-votre-equipe", "3 · Votre équipe", "3 · Your team")), /*#__PURE__*/React.createElement("div", {
@@ -627,7 +627,7 @@ var Pricing = function Pricing() {
     size: 12
   })), /*#__PURE__*/React.createElement("div", {
     className: "p-seat-note"
-  }, extraSeats > 0 ? L("1 inclus + ".concat(extraSeats, " \xD7 15 \u20AC/mois \xB7 4 max"), "1 included + ".concat(extraSeats, " \xD7 \u20AC15/mo \xB7 4 max")) : Txt("tarifs.1-inclus-jusqu-a-4-par", "1 inclus · jusqu'à 4 par espace", "1 included · up to 4 per workspace"))), /*#__PURE__*/React.createElement("div", {
+  }, extraSeats > 0 ? L("1 inclus + ".concat(extraSeats, " \xD7 15 \u20AC/mois HT \xB7 4 max"), "1 included + ".concat(extraSeats, " \xD7 \u20AC15/mo excl. VAT \xB7 4 max")) : Txt("tarifs.1-inclus-jusqu-a-4-par", "1 inclus · jusqu'à 4 par espace", "1 included · up to 4 per workspace"))), /*#__PURE__*/React.createElement("div", {
     className: "pricing-go-note"
   }, Txt("tarifs.un-projet-d-architecture-occupe-en", "Un projet d'architecture occupe en moyenne 10 Go, plans, photos, documents et échanges inclus. Vous pourrez changer de palier à tout moment, en un clic.", "An architecture project takes about 10 GB on average, plans, photos, documents and messages included. You can change tiers anytime, in one click."))), /*#__PURE__*/React.createElement(Reveal, {
     delay: 120,
@@ -651,15 +651,15 @@ var Pricing = function Pricing() {
     key: "".concat(tier, "-").concat(total)
   }, total), /*#__PURE__*/React.createElement("span", {
     className: "p"
-  }, Txt("tarifs.mois-2", "/ mois", "/ month"))), yearly && /*#__PURE__*/React.createElement("div", {
+  }, Txt("tarifs.mois-2", "/ mois HT", "/ month excl. VAT"))), yearly && /*#__PURE__*/React.createElement("div", {
     className: "pricing-save"
   }, /*#__PURE__*/React.createElement("span", {
     className: "ps-badge"
   }, "\u221218%"), /*#__PURE__*/React.createElement("span", {
     className: "ps-text"
-  }, L("Vous \xE9conomisez ".concat((t.price - base) * 12, " \u20AC par an"), "You save \u20AC".concat((t.price - base) * 12, " a year")), /*#__PURE__*/React.createElement("i", null, L("Factur\xE9 ".concat(total * 12, " \u20AC en une fois, au lieu de ").concat((t.price + extraCost) * 12, " \u20AC en mensuel"), "Billed \u20AC".concat(total * 12, " once a year, instead of \u20AC").concat((t.price + extraCost) * 12, " monthly"))))), extraSeats > 0 && /*#__PURE__*/React.createElement("div", {
+  }, L("Vous \xE9conomisez ".concat((t.price - base) * 12, " \u20AC HT par an"), "You save \u20AC".concat((t.price - base) * 12, " excl. VAT a year")), /*#__PURE__*/React.createElement("i", null, L("Factur\xE9 ".concat(total * 12, " \u20AC HT en une fois, au lieu de ").concat((t.price + extraCost) * 12, " \u20AC en mensuel"), "Billed \u20AC".concat(total * 12, " excl. VAT once a year, instead of \u20AC").concat((t.price + extraCost) * 12, " monthly"))))), extraSeats > 0 && /*#__PURE__*/React.createElement("div", {
     className: "pricing-seats-line"
-  }, L("Dont ".concat(extraCost, " \u20AC / mois : ").concat(extraSeats, " collaborateur").concat(extraSeats > 1 ? "s" : "", " suppl\xE9mentaire").concat(extraSeats > 1 ? "s" : ""), "Includes \u20AC".concat(extraCost, " / month for ").concat(extraSeats, " extra team member").concat(extraSeats > 1 ? "s" : ""))), /*#__PURE__*/React.createElement("ul", {
+  }, L("Dont ".concat(extraCost, " \u20AC / mois HT : ").concat(extraSeats, " collaborateur").concat(extraSeats > 1 ? "s" : "", " suppl\xE9mentaire").concat(extraSeats > 1 ? "s" : ""), "Includes \u20AC".concat(extraCost, " / month for ").concat(extraSeats, " extra team member").concat(extraSeats > 1 ? "s" : ""))), /*#__PURE__*/React.createElement("ul", {
     className: "pricing-includes"
   }, includes.map(function (it, i) {
     return /*#__PURE__*/React.createElement("li", {
@@ -744,7 +744,7 @@ var Faq = function Faq() {
     a: Txt("faq.bien-sur-les-co-traitants-accedent", "Bien sûr. Les co-traitants accèdent gratuitement aux projets sur lesquels vous les invitez, avec le niveau de droits que vous définissez (lecture, commentaire, dépôt de pièces).", "Of course. Consultants get free access to the projects you invite them to, with the permission level you set (view, comment, upload).")
   }, {
     q: Txt("faq.combien-de-collaborateurs-de-mon-agence", "Combien de collaborateurs de mon agence sont inclus ?", "How many team members are included?"),
-    a: Txt("faq.le-tarif-studio-inclut-1-collaborateur", "Le tarif Studio inclut 1 collaborateur. Vous pouvez en ajouter jusqu'à 3 autres (4 par espace au maximum), à 15 €/mois chacun, ajustable à tout moment. Vos clients et co-traitants, eux, sont illimités et gratuits.", "The Studio plan includes 1 team member. You can add up to 3 more (4 per workspace maximum), at €15/month each, adjustable anytime. Clients and consultants are unlimited and free.")
+    a: Txt("faq.le-tarif-studio-inclut-1-collaborateur", "Le tarif Studio inclut 1 collaborateur. Vous pouvez en ajouter jusqu'à 3 autres (4 par espace au maximum), à 15 €/mois HT chacun, ajustable à tout moment. Vos clients et co-traitants, eux, sont illimités et gratuits.", "The Studio plan includes 1 team member. You can add up to 3 more (4 per workspace maximum), at €15/month excl. VAT each, adjustable anytime. Clients and consultants are unlimited and free.")
   }, {
     q: Txt("faq.et-pendant-le-chantier", "Et pendant le chantier ?", "What about the construction phase?"),
     a: Txt("faq.alba-vous-suit-sur-site-comptes", "ALBA vous suit sur site : comptes-rendus de visite, réserves photographiées et assignées par lot, diffusion automatique aux entreprises et au maître d'ouvrage. Chaque CR est signé et archivé, comme une décision.", "ALBA follows you on site: visit reports, photographed punch-list items assigned by trade, automatic distribution to contractors and the client. Every report is signed and archived, like a decision.")
@@ -754,6 +754,9 @@ var Faq = function Faq() {
   }, {
     q: Txt("faq.ou-sont-hebergees-mes-donnees", "Où sont hébergées mes données ?", "Where is my data hosted?"),
     a: Txt("faq.en-france-chez-un-hebergeur-certifie", "En France, chez un hébergeur certifié ISO 27001. Chiffrement AES-256 au repos, TLS en transit, sauvegardes quotidiennes. Conformité RGPD native.", "In France, with an ISO 27001-certified host. AES-256 encryption at rest, TLS in transit, daily backups. GDPR-compliant by design.")
+  }, {
+    q: Txt("faq.les-prix-affiches-sont-ils-hors", "Les prix affichés sont-ils hors taxes ?", "Are the prices shown excluding tax?"),
+    a: Txt("faq.oui-tous-les-montants-de-cette", "Oui, tous les montants de cette page sont hors taxes. La TVA applicable est calculée au moment du paiement, selon votre pays et votre statut : 20 % pour une agence assujettie en France. Si vous disposez d'un numéro de TVA intracommunautaire, il vous sera demandé lors de la souscription. Votre facture est émise automatiquement après chaque prélèvement.", "Yes, every amount on this page is exclusive of tax. Applicable VAT is calculated at checkout, based on your country and status: 20% for a practice registered in France. If you have an EU VAT number, you will be asked for it during signup. Your invoice is issued automatically after each payment.")
   }, {
     q: Txt("faq.quel-est-le-delai-pour-demarrer", "Quel est le délai pour démarrer ?", "How long does it take to get started?"),
     a: Txt("faq.si-vous-voulez-vous-demarrez-aujourd", "Si vous voulez, vous démarrez aujourd'hui. La création de compte prend 3 minutes ; importer vos projets en cours prend en moyenne une demi-journée. On vous accompagne sur l'onboarding sans frais.", "You can start today. Account creation takes 3 minutes; importing your active projects takes half a day on average. We help with onboarding at no charge.")

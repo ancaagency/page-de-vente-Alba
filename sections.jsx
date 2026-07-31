@@ -312,7 +312,7 @@ const Pricing = () => {
   const total = base + extraCost;
   const includes = [
     Txt("tarifs.clients-co-traitants-illimites", "Clients & co-traitants illimités", "Unlimited clients & consultants"),
-    Txt("tarifs.1-collaborateur-inclus-15-mois-par", "1 collaborateur inclus — +15 €/mois par collaborateur ajouté (4 max)", "1 team member included — +€15/month per added member (4 max)"),
+    Txt("tarifs.1-collaborateur-inclus-15-mois-par", "1 collaborateur inclus — +15 €/mois HT par collaborateur ajouté (4 max)", "1 team member included — +€15/month excl. VAT per added member (4 max)"),
     L(`${t.go} Go de stockage — ≈ ${projectsFor(t.go)} projets`, `${t.go} GB of storage — ≈ ${projectsFor(t.go)} projects`),
     Txt("tarifs.decisions-horodatees-signees", "Décisions horodatées & signées", "Timestamped & signed decisions"),
     Txt("tarifs.messagerie-projet-securisee", "Messagerie projet sécurisée", "Secure project messaging"),
@@ -346,7 +346,7 @@ const Pricing = () => {
                     <b>{tr.go} {Txt("tarifs.go", "Go", "GB")}</b>
                     <span>{L(`≈ ${projectsFor(tr.go)} projets`, `≈ ${projectsFor(tr.go)} projects`)}</span>
                   </span>
-                  <span className="p-tier-price">{baseFor(tr)} €<i>{Txt("tarifs.mois", "/mois", "/mo")}</i></span>
+                  <span className="p-tier-price">{baseFor(tr)} €<i>{Txt("tarifs.mois", "/mois HT", "/mo excl. VAT")}</i></span>
                 </button>
               ))}
             </div>
@@ -355,7 +355,7 @@ const Pricing = () => {
               <button type="button" className="p-seat-btn" onClick={() => setSeats(Math.max(1, seats - 1))} aria-label={Txt("tarifs.moins", "Moins", "Fewer")}><Icon name="minus" size={12}/></button>
               <div className="p-seat-val"><b>{seats}</b><span>{seats > 1 ? Txt("tarifs.collaborateurs", "collaborateurs", "team members") : Txt("tarifs.collaborateur", "collaborateur", "team member")}</span></div>
               <button type="button" className="p-seat-btn" onClick={() => setSeats(Math.min(4, seats + 1))} aria-label={Txt("tarifs.plus", "Plus", "More")}><Icon name="plus" size={12}/></button>
-              <div className="p-seat-note">{extraSeats > 0 ? L(`1 inclus + ${extraSeats} × 15 €/mois · 4 max`, `1 included + ${extraSeats} × €15/mo · 4 max`) : Txt("tarifs.1-inclus-jusqu-a-4-par", "1 inclus · jusqu'à 4 par espace", "1 included · up to 4 per workspace")}</div>
+              <div className="p-seat-note">{extraSeats > 0 ? L(`1 inclus + ${extraSeats} × 15 €/mois HT · 4 max`, `1 included + ${extraSeats} × €15/mo excl. VAT · 4 max`) : Txt("tarifs.1-inclus-jusqu-a-4-par", "1 inclus · jusqu'à 4 par espace", "1 included · up to 4 per workspace")}</div>
             </div>
             <div className="pricing-go-note">{Txt("tarifs.un-projet-d-architecture-occupe-en", "Un projet d'architecture occupe en moyenne 10 Go, plans, photos, documents et échanges inclus. Vous pourrez changer de palier à tout moment, en un clic.", "An architecture project takes about 10 GB on average, plans, photos, documents and messages included. You can change tiers anytime, in one click.")}</div>
           </Reveal>
@@ -368,19 +368,19 @@ const Pricing = () => {
               <div className="pricing-amt">
                 <span className="c">€</span>
                 <span className="v" key={`${tier}-${total}`}>{total}</span>
-                <span className="p">{Txt("tarifs.mois-2", "/ mois", "/ month")}</span>
+                <span className="p">{Txt("tarifs.mois-2", "/ mois HT", "/ month excl. VAT")}</span>
               </div>
               {yearly && (
                 <div className="pricing-save">
                   <span className="ps-badge">−18%</span>
                   <span className="ps-text">
-                    {L(`Vous économisez ${(t.price - base) * 12} € par an`, `You save €${(t.price - base) * 12} a year`)}
-                    <i>{L(`Facturé ${total * 12} € en une fois, au lieu de ${(t.price + extraCost) * 12} € en mensuel`, `Billed €${total * 12} once a year, instead of €${(t.price + extraCost) * 12} monthly`)}</i>
+                    {L(`Vous économisez ${(t.price - base) * 12} € HT par an`, `You save €${(t.price - base) * 12} excl. VAT a year`)}
+                    <i>{L(`Facturé ${total * 12} € HT en une fois, au lieu de ${(t.price + extraCost) * 12} € en mensuel`, `Billed €${total * 12} excl. VAT once a year, instead of €${(t.price + extraCost) * 12} monthly`)}</i>
                   </span>
                 </div>
               )}
               {extraSeats > 0 && (
-                <div className="pricing-seats-line">{L(`Dont ${extraCost} € / mois : ${extraSeats} collaborateur${extraSeats > 1 ? "s" : ""} supplémentaire${extraSeats > 1 ? "s" : ""}`, `Includes €${extraCost} / month for ${extraSeats} extra team member${extraSeats > 1 ? "s" : ""}`)}</div>
+                <div className="pricing-seats-line">{L(`Dont ${extraCost} € / mois HT : ${extraSeats} collaborateur${extraSeats > 1 ? "s" : ""} supplémentaire${extraSeats > 1 ? "s" : ""}`, `Includes €${extraCost} / month for ${extraSeats} extra team member${extraSeats > 1 ? "s" : ""}`)}</div>
               )}
               <ul className="pricing-includes">
                 {includes.map((it, i) => (
@@ -435,10 +435,11 @@ const Faq = () => {
     { q: Txt("faq.que-se-passe-t-il-pour", "Que se passe-t-il pour mes données si j'arrête ?", "What happens to my data if I leave?"), a: Txt("faq.elles-sont-a-vous-a-tout", "Elles sont à vous. À tout moment, vous exportez l'intégralité de vos projets (PDF, ZIP, CSV) en un clic. Vos archives papier-numérique restent lisibles 10 ans après.", "It's yours. At any time, export all your projects (PDF, ZIP, CSV) in one click. Your digital archives remain readable 10 years on.") },
     { q: Txt("faq.les-decisions-sont-elles-juridiquement-valab", "Les décisions sont-elles juridiquement valables ?", "Are decisions legally valid?"), a: Txt("faq.chaque-decision-est-horodatee-archivee-et", "Chaque décision est horodatée, archivée et signée électroniquement (eIDAS, niveau simple) : l'auteur, la date et l'horodatage serveur sont conservés à titre de preuve. Pour un acte qui exige une signature avancée ou qualifiée, passez par votre voie habituelle.", "Every decision is timestamped, archived and electronically signed (eIDAS, simple level): the author, date and server timestamp are kept as evidence. For a document requiring an advanced or qualified signature, use your usual channel.") },
     { q: Txt("faq.puis-je-inviter-mon-bet-et", "Puis-je inviter mon BET et mes co-traitants ?", "Can I invite my engineers and consultants?"), a: Txt("faq.bien-sur-les-co-traitants-accedent", "Bien sûr. Les co-traitants accèdent gratuitement aux projets sur lesquels vous les invitez, avec le niveau de droits que vous définissez (lecture, commentaire, dépôt de pièces).", "Of course. Consultants get free access to the projects you invite them to, with the permission level you set (view, comment, upload).") },
-    { q: Txt("faq.combien-de-collaborateurs-de-mon-agence", "Combien de collaborateurs de mon agence sont inclus ?", "How many team members are included?"), a: Txt("faq.le-tarif-studio-inclut-1-collaborateur", "Le tarif Studio inclut 1 collaborateur. Vous pouvez en ajouter jusqu'à 3 autres (4 par espace au maximum), à 15 €/mois chacun, ajustable à tout moment. Vos clients et co-traitants, eux, sont illimités et gratuits.", "The Studio plan includes 1 team member. You can add up to 3 more (4 per workspace maximum), at €15/month each, adjustable anytime. Clients and consultants are unlimited and free.") },
+    { q: Txt("faq.combien-de-collaborateurs-de-mon-agence", "Combien de collaborateurs de mon agence sont inclus ?", "How many team members are included?"), a: Txt("faq.le-tarif-studio-inclut-1-collaborateur", "Le tarif Studio inclut 1 collaborateur. Vous pouvez en ajouter jusqu'à 3 autres (4 par espace au maximum), à 15 €/mois HT chacun, ajustable à tout moment. Vos clients et co-traitants, eux, sont illimités et gratuits.", "The Studio plan includes 1 team member. You can add up to 3 more (4 per workspace maximum), at €15/month excl. VAT each, adjustable anytime. Clients and consultants are unlimited and free.") },
     { q: Txt("faq.et-pendant-le-chantier", "Et pendant le chantier ?", "What about the construction phase?"), a: Txt("faq.alba-vous-suit-sur-site-comptes", "ALBA vous suit sur site : comptes-rendus de visite, réserves photographiées et assignées par lot, diffusion automatique aux entreprises et au maître d'ouvrage. Chaque CR est signé et archivé, comme une décision.", "ALBA follows you on site: visit reports, photographed punch-list items assigned by trade, automatic distribution to contractors and the client. Every report is signed and archived, like a decision.") },
     { q: Txt("faq.quels-formats-de-fichiers-puis-je", "Quels formats de fichiers puis-je partager ?", "What file formats can I share?"), a: Txt("faq.tous-pdf-dwg-ifc-images-videos", "Tous — PDF, DWG, IFC, images, vidéos, jusqu'à 100 Mo par fichier. Les plans PDF et les images s'ouvrent directement dans le navigateur : vos clients n'ont besoin d'aucun logiciel.", "All of them — PDF, DWG, IFC, images, videos, up to 100 MB per file. PDF plans and images open right in the browser: your clients don't need any software.") },
     { q: Txt("faq.ou-sont-hebergees-mes-donnees", "Où sont hébergées mes données ?", "Where is my data hosted?"), a: Txt("faq.en-france-chez-un-hebergeur-certifie", "En France, chez un hébergeur certifié ISO 27001. Chiffrement AES-256 au repos, TLS en transit, sauvegardes quotidiennes. Conformité RGPD native.", "In France, with an ISO 27001-certified host. AES-256 encryption at rest, TLS in transit, daily backups. GDPR-compliant by design.") },
+    { q: Txt("faq.les-prix-affiches-sont-ils-hors", "Les prix affichés sont-ils hors taxes ?", "Are the prices shown excluding tax?"), a: Txt("faq.oui-tous-les-montants-de-cette", "Oui, tous les montants de cette page sont hors taxes. La TVA applicable est calculée au moment du paiement, selon votre pays et votre statut : 20 % pour une agence assujettie en France. Si vous disposez d'un numéro de TVA intracommunautaire, il vous sera demandé lors de la souscription. Votre facture est émise automatiquement après chaque prélèvement.", "Yes, every amount on this page is exclusive of tax. Applicable VAT is calculated at checkout, based on your country and status: 20% for a practice registered in France. If you have an EU VAT number, you will be asked for it during signup. Your invoice is issued automatically after each payment.") },
     { q: Txt("faq.quel-est-le-delai-pour-demarrer", "Quel est le délai pour démarrer ?", "How long does it take to get started?"), a: Txt("faq.si-vous-voulez-vous-demarrez-aujourd", "Si vous voulez, vous démarrez aujourd'hui. La création de compte prend 3 minutes ; importer vos projets en cours prend en moyenne une demi-journée. On vous accompagne sur l'onboarding sans frais.", "You can start today. Account creation takes 3 minutes; importing your active projects takes half a day on average. We help with onboarding at no charge.") },
   ];
   const [open, setOpen] = React.useState(0);

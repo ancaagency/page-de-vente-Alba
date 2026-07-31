@@ -551,8 +551,8 @@ window.ALBA_CONTENU = {
     en: "Unlimited clients & consultants",
   },
   "tarifs.1-collaborateur-inclus-15-mois-par": {
-    fr: "1 collaborateur inclus — +15 €/mois par collaborateur ajouté (4 max)",
-    en: "1 team member included — +€15/month per added member (4 max)",
+    fr: "1 collaborateur inclus — +15 €/mois HT par collaborateur ajouté (4 max)",
+    en: "1 team member included — +€15/month excl. VAT per added member (4 max)",
   },
   "tarifs.decisions-horodatees-signees": {
     fr: "Décisions horodatées & signées",
@@ -623,8 +623,8 @@ window.ALBA_CONTENU = {
     en: "GB",
   },
   "tarifs.mois": {
-    fr: "/mois",
-    en: "/mo",
+    fr: "/mois HT",
+    en: "/mo excl. VAT",
   },
   "tarifs.3-votre-equipe": {
     fr: "3 · Votre équipe",
@@ -663,8 +663,8 @@ window.ALBA_CONTENU = {
     en: "Everything you need to run your projects with confidence, no hidden extras.",
   },
   "tarifs.mois-2": {
-    fr: "/ mois",
-    en: "/ month",
+    fr: "/ mois HT",
+    en: "/ month excl. VAT",
   },
   "tarifs.demarrer-avec-un-projet-gratuit": {
     fr: "Démarrer avec un projet gratuit",
@@ -767,8 +767,8 @@ window.ALBA_CONTENU = {
     en: "How many team members are included?",
   },
   "faq.le-tarif-studio-inclut-1-collaborateur": {
-    fr: "Le tarif Studio inclut 1 collaborateur. Vous pouvez en ajouter jusqu'à 3 autres (4 par espace au maximum), à 15 €/mois chacun, ajustable à tout moment. Vos clients et co-traitants, eux, sont illimités et gratuits.",
-    en: "The Studio plan includes 1 team member. You can add up to 3 more (4 per workspace maximum), at €15/month each, adjustable anytime. Clients and consultants are unlimited and free.",
+    fr: "Le tarif Studio inclut 1 collaborateur. Vous pouvez en ajouter jusqu'à 3 autres (4 par espace au maximum), à 15 €/mois HT chacun, ajustable à tout moment. Vos clients et co-traitants, eux, sont illimités et gratuits.",
+    en: "The Studio plan includes 1 team member. You can add up to 3 more (4 per workspace maximum), at €15/month excl. VAT each, adjustable anytime. Clients and consultants are unlimited and free.",
   },
   "faq.et-pendant-le-chantier": {
     fr: "Et pendant le chantier ?",
@@ -793,6 +793,14 @@ window.ALBA_CONTENU = {
   "faq.en-france-chez-un-hebergeur-certifie": {
     fr: "En France, chez un hébergeur certifié ISO 27001. Chiffrement AES-256 au repos, TLS en transit, sauvegardes quotidiennes. Conformité RGPD native.",
     en: "In France, with an ISO 27001-certified host. AES-256 encryption at rest, TLS in transit, daily backups. GDPR-compliant by design.",
+  },
+  "faq.les-prix-affiches-sont-ils-hors": {
+    fr: "Les prix affichés sont-ils hors taxes ?",
+    en: "Are the prices shown excluding tax?",
+  },
+  "faq.oui-tous-les-montants-de-cette": {
+    fr: "Oui, tous les montants de cette page sont hors taxes. La TVA applicable est calculée au moment du paiement, selon votre pays et votre statut : 20 % pour une agence assujettie en France. Si vous disposez d'un numéro de TVA intracommunautaire, il vous sera demandé lors de la souscription. Votre facture est émise automatiquement après chaque prélèvement.",
+    en: "Yes, every amount on this page is exclusive of tax. Applicable VAT is calculated at checkout, based on your country and status: 20% for a practice registered in France. If you have an EU VAT number, you will be asked for it during signup. Your invoice is issued automatically after each payment.",
   },
   "faq.quel-est-le-delai-pour-demarrer": {
     fr: "Quel est le délai pour démarrer ?",
