@@ -540,7 +540,10 @@ section {
   position: fixed;
   inset: 0;
   z-index: 90;
-  background: rgba(10, 15, 30, 0.97);
+  /* Clair comme le reste de la page. Il etait le dernier voile sombre.
+     Son texte redevient donc dependant du theme : il avait ete fige en clair
+     tant que ce fond l'etait, ce qui n'a plus lieu d'etre. */
+  background: rgba(255, 255, 255, 0.97);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   display: flex;
@@ -567,9 +570,7 @@ section {
   font-size: 32px;
   font-weight: 500;
   letter-spacing: -0.01em;
-  /* Fige en clair : le voile du menu est sombre en dur, il ne suit pas le
-     theme, donc son texte ne doit pas le suivre non plus. */
-  color: #F2F4F8;
+  color: var(--on-bg);
   padding: 8px 20px;
   opacity: 0;
   transform: translateY(16px);
@@ -589,7 +590,7 @@ section {
   text-align: center;
   margin-top: 20px;
   font-size: 15px;
-  color: rgba(242, 244, 248, 0.7);   /* meme raison : voile sombre en dur */
+  color: rgba(var(--on-bg-rgb), 0.7);
   transition: color .2s;
 }
 .mobile-menu-login:hover { color: var(--accent); }

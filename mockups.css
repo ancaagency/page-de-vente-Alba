@@ -3,7 +3,11 @@
    ============================================ */
 
 .mockup {
-  background: #0E1729;
+  /* Cadre des captures d'application. Le fond ne se voit qu'aux angles arrondis
+     et pendant le chargement de l'image, mais il se voyait en bleu nuit sur une
+     page claire. La barre de navigateur au-dessus, elle, reste sombre : elle
+     imite un navigateur, elle n'est pas l'interface. */
+  background: #F2F4F8;
   border-radius: 14px;
   overflow: hidden;
   box-shadow: var(--shadow-deep);

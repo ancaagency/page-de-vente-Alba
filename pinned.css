@@ -486,7 +486,11 @@
 .pinned-section.is-mobile {
   height: auto;
   padding: 80px 0 40px;
-  background: linear-gradient(135deg, #0E1729 0%, #1A2540 100%);
+  /* Version MOBILE de la section, code separe de la version bureau : elle a ses
+     propres fonds, et ils etaient restes bleu nuit alors que la page etait
+     passee en clair. Le texte, lui, suit --on-bg-rgb : il etait donc devenu
+     sombre sur sombre, c'est-a-dire invisible. */
+  background: linear-gradient(135deg, #FFFFFF 0%, #F2F4F8 100%);
 }
 .pm-head {
   text-align: center;
@@ -506,8 +510,10 @@
   align-items: center;
   padding: 40px 24px 56px;
 }
-.pm-block[data-tone="1"] { background: linear-gradient(135deg, #2A1A14 0%, #44261C 100%); }
-.pm-block[data-tone="2"] { background: linear-gradient(135deg, #1A2A22 0%, #2A4032 100%); }
+/* Le brun et le vert des deux blocs suivent le meme sort que leurs jumeaux du
+   bureau : trois teintes pour une section, c'est ce qu'on retirait. */
+.pm-block[data-tone="1"] { background: linear-gradient(135deg, #F4F6F9 0%, #E9ECF2 100%); }
+.pm-block[data-tone="2"] { background: linear-gradient(135deg, #FFFFFF 0%, #EDEFF3 100%); }
 .pm-text {
   position: static !important;
   opacity: 1 !important;

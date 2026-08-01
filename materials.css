@@ -28,7 +28,7 @@
 
 /* Browser frame */
 .mat-app {
-  background: #0A0F1E;
+  background: #FFFFFF;
   border: 1px solid rgba(255,255,255,0.09);
   border-radius: 18px;
   box-shadow: 0 50px 120px -40px rgba(0,0,0,0.7);
@@ -45,7 +45,7 @@
 
 /* Sidebar — like real app */
 .ml-side {
-  background: #0A0F1E;
+  background: #FFFFFF;
   color: #D8DBE2;
   padding: 16px 10px;
   display: flex; flex-direction: column;
@@ -263,7 +263,7 @@
 }
 .ml-chip:hover { border-color: rgba(201, 168, 106, 0.6); }
 .ml-chip.is-active {
-  background: #14192B;
+  background: #F2F4F8;
   border-color: #14192B;
   color: var(--on-bg);
 }
@@ -545,7 +545,7 @@
   position: absolute;
   inset: 0;
   z-index: 30;
-  background: rgba(10, 15, 30, 0.55);
+  background: rgba(11,18,36,0.22);
   backdrop-filter: blur(3px);
   display: flex;
   align-items: center;
@@ -973,7 +973,7 @@
 /* ============ Real-app restyle: icon rail + topbar + cards ============ */
 .ml-shell.is-rail { grid-template-columns: 52px 1fr; }
 .ml-rail {
-  background: #0E1729;
+  background: #F2F4F8;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1069,7 +1069,7 @@
   place-items: center;
   color: #98A0B0;
 }
-.ml-viewtoggle span.is-active { background: #14192B; color: var(--on-bg); }
+.ml-viewtoggle span.is-active { background: #F2F4F8; color: var(--on-bg); }
 .ml-grid.is-wide { grid-template-columns: repeat(3, 1fr); gap: 22px 18px; }
 .ml-grid.is-wide .ml-card { background: transparent; border: 0; box-shadow: none; border-radius: 0; }
 .ml-grid.is-wide .ml-card:hover { transform: none; box-shadow: none; }

@@ -1,5 +1,5 @@
 /* ============ Assistant IA ============ */
-.assist-app { position: relative; background: #0A0F1E; border: 1px solid rgba(20,25,43,0.14); border-radius: 18px; box-shadow: 0 50px 110px -45px rgba(20,25,43,0.45); overflow: hidden; max-width: 1220px; margin: 0 auto; }
+.assist-app { position: relative; background: #FFFFFF; border: 1px solid rgba(20,25,43,0.14); border-radius: 18px; box-shadow: 0 50px 110px -45px rgba(20,25,43,0.45); overflow: hidden; max-width: 1220px; margin: 0 auto; }
 .as-model { margin-left: auto; display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: 8.5px; letter-spacing: 0.08em; color: #6E7890; }
 .as-live { width: 6px; height: 6px; border-radius: 50%; background: #4E9668; box-shadow: 0 0 0 3px rgba(78,150,104,0.18); }
 .as-window { display: flex; flex-direction: column; background: #fff; border: 1px solid rgba(11,18,36,0.08); border-radius: 14px; overflow: hidden; }
@@ -10,7 +10,7 @@
 .as-welcome-s { font-size: 11px; color: #98A0B0; margin-top: 4px; }
 .as-row { display: flex; gap: 10px; }
 .as-row.user { justify-content: flex-end; }
-.as-bubble.user { background: #14192B; color: var(--on-bg); border-radius: 14px 14px 4px 14px; padding: 9px 14px; font-size: 12.5px; max-width: 74%; line-height: 1.5; }
+.as-bubble.user { background: #F2F4F8; color: var(--on-bg); border-radius: 14px 14px 4px 14px; padding: 9px 14px; font-size: 12.5px; max-width: 74%; line-height: 1.5; }
 .as-avatar { width: 28px; height: 28px; flex: none; border-radius: 50%; display: grid; place-items: center; color: #fff; background: radial-gradient(circle at 32% 28%, #E0C687, #C9A86A 55%, #A6824A); }
 .as-answer { background: #F4F5F7; border: 1px solid rgba(201,168,106,0.22); border-radius: 4px 14px 14px 14px; padding: 12px 14px; max-width: 80%; }
 .as-lead { font-size: 12.5px; color: #0B1224; margin: 0 0 9px; line-height: 1.55; }
@@ -170,18 +170,18 @@
   position: absolute; z-index: 45; right: 14px; bottom: 12px;
   display: inline-flex; align-items: center; gap: 6px;
   border: 1px solid rgba(var(--on-bg-rgb), 0.16); border-radius: 999px;
-  background: rgba(10,15,30,0.6); color: rgba(var(--on-bg-rgb), 0.7);
+  background: rgba(11,18,36,0.22); color: rgba(var(--on-bg-rgb), 0.7);
   padding: 6px 12px; font-size: 10px; cursor: pointer; transition: all .2s;
 }
 .leo-replay:hover { border-color: #C9A86A; color: #E0C687; }
 .leo-app.intro-playing .leo-replay, .leo-app.intro-idle .leo-replay { opacity: 0; pointer-events: none; }
 
 /* ============ Météo chantier ============ */
-.wx-app { position: relative; background: #0A0F1E; border: 1px solid rgba(20,25,43,0.14); border-radius: 18px; box-shadow: 0 50px 110px -45px rgba(20,25,43,0.45); overflow: hidden; max-width: 1220px; margin: 0 auto; }
+.wx-app { position: relative; background: #FFFFFF; border: 1px solid rgba(20,25,43,0.14); border-radius: 18px; box-shadow: 0 50px 110px -45px rgba(20,25,43,0.45); overflow: hidden; max-width: 1220px; margin: 0 auto; }
 .wx-sites { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
 .wx-site { display: inline-flex; align-items: center; gap: 8px; border: 1px solid rgba(11,18,36,0.12); background: #fff; border-radius: 11px; padding: 8px 13px; cursor: pointer; transition: all .2s; }
 .wx-site:hover { border-color: var(--accent); }
-.wx-site.is-active { background: #14192B; border-color: #14192B; }
+.wx-site.is-active { background: #F2F4F8; border-color: #14192B; }
 .wx-site.is-active .wx-site-n { color: var(--on-bg); }
 .wx-site.is-active .wx-site-c { color: rgba(var(--on-bg-rgb), 0.6); }
 .wx-site-n { font-size: 12px; font-weight: 500; color: #0B1224; }
