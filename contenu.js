@@ -666,6 +666,14 @@ window.ALBA_CONTENU = {
     fr: "/ mois HT",
     en: "/ month excl. VAT",
   },
+  "tarifs.ouverture-du-paiement": {
+    fr: "Ouverture du paiement…",
+    en: "Opening checkout…",
+  },
+  "tarifs.creer-un-compte-gratuit": {
+    fr: "Créer un compte gratuit",
+    en: "Create a free account",
+  },
   "tarifs.s-abonner": {
     fr: "S'abonner",
     en: "Subscribe",

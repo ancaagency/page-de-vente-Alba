@@ -13,15 +13,15 @@
    ═══════════════════════════════════════════════════════════════════════════ */
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 var _excluded = ["as", "delay", "children", "className"];
-function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
-function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); } r ? i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n : (o("next", 0), o("throw", 1), o("return", 2)); }, _regeneratorDefine2(e, r, n, t); }
-function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
-function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
 function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
 function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
 function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
 function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
+function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); } r ? i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n : (o("next", 0), o("throw", 1), o("return", 2)); }, _regeneratorDefine2(e, r, n, t); }
+function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
 function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
@@ -546,6 +546,105 @@ var Pricing = function Pricing() {
     _React$useState0 = _slicedToArray(_React$useState9, 2),
     seats = _React$useState0[0],
     setSeats = _React$useState0[1];
+
+  /* Paiement public : on envoie un PALIER, jamais un prix.
+     Les price_id sont résolus côté serveur, depuis la base — quelqu'un qui
+     bricole la requête obtient au pire un autre palier, jamais un autre tarif.
+     Aucune authentification : le visiteur n'a pas de compte, c'est le principe
+     même de ce parcours. La CSP autorise déjà cette origine, et elle seule. */
+  var POINT_PAIEMENT = "https://fhrkkjvbzgkbmlnlnxce.supabase.co/functions/v1/creer-paiement-public";
+  var _React$useState1 = React.useState("repos"),
+    _React$useState10 = _slicedToArray(_React$useState1, 2),
+    paiement = _React$useState10[0],
+    setPaiement = _React$useState10[1]; // repos | envoi | erreur
+  var _React$useState11 = React.useState(null),
+    _React$useState12 = _slicedToArray(_React$useState11, 2),
+    erreurPaiement = _React$useState12[0],
+    setErreurPaiement = _React$useState12[1];
+  /* Verrou de double-clic. Il ne peut PAS reposer sur `paiement` : React ne
+     rafraîchit l'état qu'au rendu suivant, si bien que trois clics rapides
+     lisent tous « repos » et partent tous les trois. Le plafond du serveur est
+     de cinq ouvertures par heure — un visiteur nerveux en brûlerait trois pour
+     un seul achat. Une référence, elle, change à l'instant même. */
+  var ouvertureEnCours = React.useRef(false);
+  var indisponible = L("Le paiement est momentanément indisponible. Réessayez dans quelques minutes.", "Payment is temporarily unavailable. Please try again in a few minutes.");
+  var MESSAGES = {
+    trop_de_tentatives: L("Trop de tentatives. Réessayez dans un moment.", "Too many attempts. Please try again shortly."),
+    tarif_indisponible: indisponible,
+    cgu_non_configurees: indisponible
+  };
+  var abonner = /*#__PURE__*/function () {
+    var _ref3 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee(ev) {
+      var reponse, donnees, _t;
+      return _regenerator().w(function (_context) {
+        while (1) switch (_context.p = _context.n) {
+          case 0:
+            /* Le lien reste un vrai lien : sans JavaScript, il mène à l'inscription
+               classique, qui reste valable. On n'intercepte que si on peut faire mieux. */
+            ev.preventDefault();
+            if (!ouvertureEnCours.current) {
+              _context.n = 1;
+              break;
+            }
+            return _context.a(2);
+          case 1:
+            ouvertureEnCours.current = true;
+            setPaiement("envoi");
+            setErreurPaiement(null);
+            _context.p = 2;
+            _context.n = 3;
+            return fetch(POINT_PAIEMENT, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify({
+                storage: t.go,
+                billing: yearly ? "yearly" : "monthly",
+                seats: seats
+              })
+            });
+          case 3:
+            reponse = _context.v;
+            _context.n = 4;
+            return reponse.json()["catch"](function () {
+              return null;
+            });
+          case 4:
+            donnees = _context.v;
+            if (!(reponse.ok && donnees && donnees.url)) {
+              _context.n = 5;
+              break;
+            }
+            window.location.href = donnees.url;
+            return _context.a(2);
+          case 5:
+            /* « palier_inconnu » n'est pas une erreur du visiteur mais un défaut de
+               cette page : le journal doit le dire, l'écran ne doit pas l'étaler. */
+            if (donnees && donnees.error === "palier_inconnu") {
+              console.error("[paiement] palier refusé par le serveur :", t.go);
+            }
+            setErreurPaiement(donnees && MESSAGES[donnees.error] || L("Le paiement n'a pas pu s'ouvrir. Réessayez.", "Checkout could not open. Please try again."));
+            setPaiement("erreur");
+            ouvertureEnCours.current = false; // relâché sur échec seulement : un succès quitte la page
+            _context.n = 7;
+            break;
+          case 6:
+            _context.p = 6;
+            _t = _context.v;
+            console.error("[paiement] appel impossible", _t);
+            setErreurPaiement(L("Le paiement n'a pas pu s'ouvrir. Vérifiez votre connexion.", "Checkout could not open. Check your connection."));
+            setPaiement("erreur");
+            ouvertureEnCours.current = false;
+          case 7:
+            return _context.a(2);
+        }
+      }, _callee, null, [[2, 6]]);
+    }));
+    return function abonner(_x) {
+      return _ref3.apply(this, arguments);
+    };
+  }();
   var extraSeats = Math.max(0, seats - 1);
   var extraCost = extraSeats * 15;
   var total = base + extraCost;
@@ -670,14 +769,22 @@ var Pricing = function Pricing() {
     }), " ", it);
   })), /*#__PURE__*/React.createElement("a", {
     href: "".concat(SIGNUP_URL, "?plan=studio&storage=").concat(t.go, "&billing=").concat(yearly ? "yearly" : "monthly", "&seats=").concat(seats),
-    className: "btn btn-primary pricing-cta"
-  }, Txt("tarifs.s-abonner", "S'abonner", "Subscribe"), " ", /*#__PURE__*/React.createElement(Icon, {
+    className: "btn btn-primary pricing-cta",
+    onClick: abonner,
+    "aria-busy": paiement === "envoi"
+  }, paiement === "envoi" ? Txt("tarifs.ouverture-du-paiement", "Ouverture du paiement…", "Opening checkout…") : Txt("tarifs.s-abonner", "S'abonner", "Subscribe"), /*#__PURE__*/React.createElement(Icon, {
     name: "arrow-right",
     size: 14,
     className: "btn-arrow"
-  })), /*#__PURE__*/React.createElement("div", {
+  })), erreurPaiement && /*#__PURE__*/React.createElement("div", {
+    className: "pricing-erreur",
+    role: "alert"
+  }, erreurPaiement), /*#__PURE__*/React.createElement("div", {
     className: "pricing-foot"
-  }, Txt("tarifs.gratuit-a-vie-pour-1-projet", "SANS ENGAGEMENT · RÉSILIABLE À TOUT MOMENT", "NO COMMITMENT · CANCEL ANYTIME")))))));
+  }, Txt("tarifs.gratuit-a-vie-pour-1-projet", "SANS ENGAGEMENT · RÉSILIABLE À TOUT MOMENT", "NO COMMITMENT · CANCEL ANYTIME")), /*#__PURE__*/React.createElement("a", {
+    href: "".concat(SIGNUP_URL, "?plan=studio&storage=").concat(t.go, "&billing=").concat(yearly ? "yearly" : "monthly", "&seats=").concat(seats),
+    className: "pricing-porte-2"
+  }, Txt("tarifs.creer-un-compte-gratuit", "Créer un compte gratuit", "Create a free account")))))));
 };
 
 /* TRUST BAND — sécurité & données */
@@ -761,10 +868,10 @@ var Faq = function Faq() {
     q: Txt("faq.quel-est-le-delai-pour-demarrer", "Quel est le délai pour démarrer ?", "How long does it take to get started?"),
     a: Txt("faq.si-vous-voulez-vous-demarrez-aujourd", "Si vous voulez, vous démarrez aujourd'hui. La création de compte prend 3 minutes ; importer vos projets en cours prend en moyenne une demi-journée. On vous accompagne sur l'onboarding sans frais.", "You can start today. Account creation takes 3 minutes; importing your active projects takes half a day on average. We help with onboarding at no charge.")
   }];
-  var _React$useState1 = React.useState(0),
-    _React$useState10 = _slicedToArray(_React$useState1, 2),
-    open = _React$useState10[0],
-    setOpen = _React$useState10[1];
+  var _React$useState13 = React.useState(0),
+    _React$useState14 = _slicedToArray(_React$useState13, 2),
+    open = _React$useState14[0],
+    setOpen = _React$useState14[1];
   return /*#__PURE__*/React.createElement("section", {
     className: "section section-cream-2",
     id: "faq"
@@ -803,7 +910,7 @@ var Faq = function Faq() {
 
 /* CONTACT */
 var Contact = function Contact() {
-  var _React$useState11 = React.useState({
+  var _React$useState15 = React.useState({
       name: "",
       agency: "",
       email: "",
@@ -811,29 +918,29 @@ var Contact = function Contact() {
       projects: "1-3",
       msg: ""
     }),
-    _React$useState12 = _slicedToArray(_React$useState11, 2),
-    data = _React$useState12[0],
-    setData = _React$useState12[1];
-  var _React$useState13 = React.useState({}),
-    _React$useState14 = _slicedToArray(_React$useState13, 2),
-    errors = _React$useState14[0],
-    setErrors = _React$useState14[1];
-  var _React$useState15 = React.useState(false),
     _React$useState16 = _slicedToArray(_React$useState15, 2),
-    submitted = _React$useState16[0],
-    setSubmitted = _React$useState16[1];
+    data = _React$useState16[0],
+    setData = _React$useState16[1];
+  var _React$useState17 = React.useState({}),
+    _React$useState18 = _slicedToArray(_React$useState17, 2),
+    errors = _React$useState18[0],
+    setErrors = _React$useState18[1];
+  var _React$useState19 = React.useState(false),
+    _React$useState20 = _slicedToArray(_React$useState19, 2),
+    submitted = _React$useState20[0],
+    setSubmitted = _React$useState20[1];
   /* "repos" | "envoi" | "erreur" — le succès est porté par `submitted`, qui
      existait déjà et gouverne le bloc de confirmation du design. */
-  var _React$useState17 = React.useState("repos"),
-    _React$useState18 = _slicedToArray(_React$useState17, 2),
-    envoi = _React$useState18[0],
-    setEnvoi = _React$useState18[1];
+  var _React$useState21 = React.useState("repos"),
+    _React$useState22 = _slicedToArray(_React$useState21, 2),
+    envoi = _React$useState22[0],
+    setEnvoi = _React$useState22[1];
   /* Champ-piège : invisible pour un visiteur, rempli par les robots qui
      remplissent tout. Il vit dans l'état comme les autres champs. */
-  var _React$useState19 = React.useState(""),
-    _React$useState20 = _slicedToArray(_React$useState19, 2),
-    piege = _React$useState20[0],
-    setPiege = _React$useState20[1];
+  var _React$useState23 = React.useState(""),
+    _React$useState24 = _slicedToArray(_React$useState23, 2),
+    piege = _React$useState24[0],
+    setPiege = _React$useState24[1];
   /* Instant d'affichage du formulaire. Le serveur refuse un envoi survenu moins
      de deux secondes après : personne ne remplit six champs en deux secondes. */
   var afficheA = React.useRef(Date.now());
@@ -860,28 +967,28 @@ var Contact = function Contact() {
      un simple fetch suffit. La CSP autorise cette origine, et elle seule. */
   var POINT_CONTACT = "https://fhrkkjvbzgkbmlnlnxce.supabase.co/functions/v1/contact-vitrine";
   var submit = /*#__PURE__*/function () {
-    var _ref3 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee(ev) {
-      var reponse, _t;
-      return _regenerator().w(function (_context) {
-        while (1) switch (_context.p = _context.n) {
+    var _ref4 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee2(ev) {
+      var reponse, _t2;
+      return _regenerator().w(function (_context2) {
+        while (1) switch (_context2.p = _context2.n) {
           case 0:
             ev.preventDefault();
             if (validate()) {
-              _context.n = 1;
+              _context2.n = 1;
               break;
             }
-            return _context.a(2);
+            return _context2.a(2);
           case 1:
             if (!(envoi === "envoi")) {
-              _context.n = 2;
+              _context2.n = 2;
               break;
             }
-            return _context.a(2);
+            return _context2.a(2);
           case 2:
             // double-clic
             setEnvoi("envoi");
-            _context.p = 3;
-            _context.n = 4;
+            _context2.p = 3;
+            _context2.n = 4;
             return fetch(POINT_CONTACT, {
               method: "POST",
               headers: {
@@ -900,32 +1007,32 @@ var Contact = function Contact() {
               })
             });
           case 4:
-            reponse = _context.v;
+            reponse = _context2.v;
             if (reponse.ok) {
-              _context.n = 5;
+              _context2.n = 5;
               break;
             }
             throw new Error("HTTP " + reponse.status);
           case 5:
             setEnvoi("repos");
             setSubmitted(true);
-            _context.n = 7;
+            _context2.n = 7;
             break;
           case 6:
-            _context.p = 6;
-            _t = _context.v;
+            _context2.p = 6;
+            _t2 = _context2.v;
             /* Ne JAMAIS afficher la confirmation quand l'envoi a échoué : c'est
                exactement le défaut qu'on corrige. Le visiteur doit pouvoir réessayer,
                et l'adresse e-mail lui est donnée comme porte de sortie. */
-            console.error("[contact] envoi impossible", _t);
+            console.error("[contact] envoi impossible", _t2);
             setEnvoi("erreur");
           case 7:
-            return _context.a(2);
+            return _context2.a(2);
         }
-      }, _callee, null, [[3, 6]]);
+      }, _callee2, null, [[3, 6]]);
     }));
-    return function submit(_x) {
-      return _ref3.apply(this, arguments);
+    return function submit(_x2) {
+      return _ref4.apply(this, arguments);
     };
   }();
   return /*#__PURE__*/React.createElement("section", {

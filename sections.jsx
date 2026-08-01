@@ -307,6 +307,64 @@ const Pricing = () => {
   const t = tiers[tier];
   const base = baseFor(t);
   const [seats, setSeats] = React.useState(1);
+
+  /* Paiement public : on envoie un PALIER, jamais un prix.
+     Les price_id sont résolus côté serveur, depuis la base — quelqu'un qui
+     bricole la requête obtient au pire un autre palier, jamais un autre tarif.
+     Aucune authentification : le visiteur n'a pas de compte, c'est le principe
+     même de ce parcours. La CSP autorise déjà cette origine, et elle seule. */
+  const POINT_PAIEMENT = "https://fhrkkjvbzgkbmlnlnxce.supabase.co/functions/v1/creer-paiement-public";
+  const [paiement, setPaiement] = React.useState("repos");   // repos | envoi | erreur
+  const [erreurPaiement, setErreurPaiement] = React.useState(null);
+  /* Verrou de double-clic. Il ne peut PAS reposer sur `paiement` : React ne
+     rafraîchit l'état qu'au rendu suivant, si bien que trois clics rapides
+     lisent tous « repos » et partent tous les trois. Le plafond du serveur est
+     de cinq ouvertures par heure — un visiteur nerveux en brûlerait trois pour
+     un seul achat. Une référence, elle, change à l'instant même. */
+  const ouvertureEnCours = React.useRef(false);
+
+  const indisponible = L("Le paiement est momentanément indisponible. Réessayez dans quelques minutes.",
+                         "Payment is temporarily unavailable. Please try again in a few minutes.");
+  const MESSAGES = {
+    trop_de_tentatives: L("Trop de tentatives. Réessayez dans un moment.", "Too many attempts. Please try again shortly."),
+    tarif_indisponible: indisponible,
+    cgu_non_configurees: indisponible,
+  };
+
+  const abonner = async (ev) => {
+    /* Le lien reste un vrai lien : sans JavaScript, il mène à l'inscription
+       classique, qui reste valable. On n'intercepte que si on peut faire mieux. */
+    ev.preventDefault();
+    if (ouvertureEnCours.current) return;
+    ouvertureEnCours.current = true;
+    setPaiement("envoi");
+    setErreurPaiement(null);
+    try {
+      const reponse = await fetch(POINT_PAIEMENT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ storage: t.go, billing: yearly ? "yearly" : "monthly", seats }),
+      });
+      const donnees = await reponse.json().catch(() => null);
+      if (reponse.ok && donnees && donnees.url) { window.location.href = donnees.url; return; }
+      /* « palier_inconnu » n'est pas une erreur du visiteur mais un défaut de
+         cette page : le journal doit le dire, l'écran ne doit pas l'étaler. */
+      if (donnees && donnees.error === "palier_inconnu") {
+        console.error("[paiement] palier refusé par le serveur :", t.go);
+      }
+      setErreurPaiement((donnees && MESSAGES[donnees.error]) ||
+        L("Le paiement n'a pas pu s'ouvrir. Réessayez.", "Checkout could not open. Please try again."));
+      setPaiement("erreur");
+      ouvertureEnCours.current = false;   // relâché sur échec seulement : un succès quitte la page
+    } catch (e) {
+      console.error("[paiement] appel impossible", e);
+      setErreurPaiement(L("Le paiement n'a pas pu s'ouvrir. Vérifiez votre connexion.",
+                          "Checkout could not open. Check your connection."));
+      setPaiement("erreur");
+      ouvertureEnCours.current = false;
+    }
+  };
+
   const extraSeats = Math.max(0, seats - 1);
   const extraCost = extraSeats * 15;
   const total = base + extraCost;
@@ -387,8 +445,22 @@ const Pricing = () => {
                   <li key={i}><Icon name="check" size={12}/> {it}</li>
                 ))}
               </ul>
-              <a href={`${SIGNUP_URL}?plan=studio&storage=${t.go}&billing=${yearly ? "yearly" : "monthly"}&seats=${seats}`} className="btn btn-primary pricing-cta">{Txt("tarifs.s-abonner", "S'abonner", "Subscribe")} <Icon name="arrow-right" size={14} className="btn-arrow"/></a>
+              <a href={`${SIGNUP_URL}?plan=studio&storage=${t.go}&billing=${yearly ? "yearly" : "monthly"}&seats=${seats}`}
+                 className="btn btn-primary pricing-cta" onClick={abonner} aria-busy={paiement === "envoi"}>
+                {paiement === "envoi"
+                  ? Txt("tarifs.ouverture-du-paiement", "Ouverture du paiement…", "Opening checkout…")
+                  : Txt("tarifs.s-abonner", "S'abonner", "Subscribe")}
+                <Icon name="arrow-right" size={14} className="btn-arrow"/>
+              </a>
+              {erreurPaiement && <div className="pricing-erreur" role="alert">{erreurPaiement}</div>}
               <div className="pricing-foot">{Txt("tarifs.gratuit-a-vie-pour-1-projet", "SANS ENGAGEMENT · RÉSILIABLE À TOUT MOMENT", "NO COMMITMENT · CANCEL ANYTIME")}</div>
+              {/* Seconde porte. Quelqu'un qui ne veut pas payer aujourd'hui ne
+                  doit pas se heurter à un mur : collaborateurs invités, maîtres
+                  d'ouvrage, architectes qui veulent d'abord essayer. Discrète,
+                  parce que ce n'est plus l'argument de la page. */}
+              <a href={`${SIGNUP_URL}?plan=studio&storage=${t.go}&billing=${yearly ? "yearly" : "monthly"}&seats=${seats}`} className="pricing-porte-2">
+                {Txt("tarifs.creer-un-compte-gratuit", "Créer un compte gratuit", "Create a free account")}
+              </a>
             </div>
           </Reveal>
 

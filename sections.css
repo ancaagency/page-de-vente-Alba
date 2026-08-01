@@ -829,6 +829,36 @@
   width: 100%;
   justify-content: center;
 }
+/* Message d'échec du tunnel de paiement. Sous le bouton, pas au-dessus : on ne
+   déplace pas le bouton quand l'erreur apparaît, sinon le second clic tombe à
+   côté. `role="alert"` le fait annoncer par les lecteurs d'écran. */
+.pricing-erreur {
+  margin-top: 12px;
+  padding: 10px 14px;
+  border: 1px solid rgba(192, 57, 43, 0.28);
+  border-radius: 10px;
+  background: rgba(192, 57, 43, 0.06);
+  font-size: 13px;
+  line-height: 1.45;
+  color: #C0392B;
+  text-align: center;
+}
+
+/* Seconde porte : créer un compte sans payer. Volontairement discrète — ce
+   n'est plus l'argument de la page — mais présente, parce qu'un visiteur qui ne
+   veut pas payer aujourd'hui ne doit pas se heurter à un mur. */
+.pricing-porte-2 {
+  display: block;
+  margin-top: 14px;
+  text-align: center;
+  font-size: 13px;
+  color: rgba(var(--on-bg-rgb), 0.55);
+  text-decoration: none;
+  border-bottom: 0;
+  transition: color .2s;
+}
+.pricing-porte-2:hover { color: var(--accent); }
+
 .pricing-foot {
   margin-top: 18px;
   font-size: 11px;
