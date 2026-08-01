@@ -579,20 +579,26 @@ var Pricing = function Pricing() {
       return _regenerator().w(function (_context) {
         while (1) switch (_context.p = _context.n) {
           case 0:
-            /* Le lien reste un vrai lien : sans JavaScript, il mène à l'inscription
-               classique, qui reste valable. On n'intercepte que si on peut faire mieux. */
-            ev.preventDefault();
-            if (!ouvertureEnCours.current) {
+            if (!(typeof window === "undefined" || !window.ALBA_PAIEMENT_DIRECT)) {
               _context.n = 1;
               break;
             }
             return _context.a(2);
           case 1:
+            /* Le lien reste un vrai lien : sans JavaScript, il mène à l'inscription
+               classique, qui reste valable. On n'intercepte que si on peut faire mieux. */
+            ev.preventDefault();
+            if (!ouvertureEnCours.current) {
+              _context.n = 2;
+              break;
+            }
+            return _context.a(2);
+          case 2:
             ouvertureEnCours.current = true;
             setPaiement("envoi");
             setErreurPaiement(null);
-            _context.p = 2;
-            _context.n = 3;
+            _context.p = 3;
+            _context.n = 4;
             return fetch(POINT_PAIEMENT, {
               method: "POST",
               headers: {
@@ -604,21 +610,21 @@ var Pricing = function Pricing() {
                 seats: seats
               })
             });
-          case 3:
+          case 4:
             reponse = _context.v;
-            _context.n = 4;
+            _context.n = 5;
             return reponse.json()["catch"](function () {
               return null;
             });
-          case 4:
+          case 5:
             donnees = _context.v;
             if (!(reponse.ok && donnees && donnees.url)) {
-              _context.n = 5;
+              _context.n = 6;
               break;
             }
             window.location.href = donnees.url;
             return _context.a(2);
-          case 5:
+          case 6:
             /* « palier_inconnu » n'est pas une erreur du visiteur mais un défaut de
                cette page : le journal doit le dire, l'écran ne doit pas l'étaler. */
             if (donnees && donnees.error === "palier_inconnu") {
@@ -627,19 +633,19 @@ var Pricing = function Pricing() {
             setErreurPaiement(donnees && MESSAGES[donnees.error] || L("Le paiement n'a pas pu s'ouvrir. Réessayez.", "Checkout could not open. Please try again."));
             setPaiement("erreur");
             ouvertureEnCours.current = false; // relâché sur échec seulement : un succès quitte la page
-            _context.n = 7;
+            _context.n = 8;
             break;
-          case 6:
-            _context.p = 6;
+          case 7:
+            _context.p = 7;
             _t = _context.v;
             console.error("[paiement] appel impossible", _t);
             setErreurPaiement(L("Le paiement n'a pas pu s'ouvrir. Vérifiez votre connexion.", "Checkout could not open. Check your connection."));
             setPaiement("erreur");
             ouvertureEnCours.current = false;
-          case 7:
+          case 8:
             return _context.a(2);
         }
-      }, _callee, null, [[2, 6]]);
+      }, _callee, null, [[3, 7]]);
     }));
     return function abonner(_x) {
       return _ref3.apply(this, arguments);

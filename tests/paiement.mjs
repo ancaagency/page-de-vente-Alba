@@ -34,7 +34,7 @@ const navigateur = await chromium.launch({
 });
 
 /** Ouvre la page tarifs, prête à cliquer. */
-async function ouvrir(reponse) {
+async function ouvrir(reponse, direct = true) {
   const page = await navigateur.newPage({ viewport: { width: 1280, height: 900 } });
   const envois = [];
   await page.route(POINT, async (route) => {
@@ -45,8 +45,17 @@ async function ouvrir(reponse) {
   // La redirection vers Stripe ne doit pas emmener le test ailleurs.
   await page.route('https://checkout.stripe.com/**', (r) =>
     r.fulfill({ status: 200, contentType: 'text/html', body: '<p>tunnel simulé</p>' }));
+  // Le parcours d'inscription ne doit pas sortir du test : sans réseau, la
+  // navigation échouerait et on ne saurait plus dire OÙ le clic a mené.
+  await page.route('https://app.alba-studio.co/**', (r) =>
+    r.fulfill({ status: 200, contentType: 'text/html', body: '<p>inscription simulée</p>' }));
   await page.goto('http://localhost:8942/tarifs', { waitUntil: 'load', timeout: 40000 });
   await page.waitForTimeout(4000);
+  /* L'interrupteur se pose APRÈS le chargement, jamais avant : config.js
+     l'écrit lui-même, et il écraserait toute valeur posée en amont. Cet ordre
+     n'est pas un détail de test — c'est la preuve que config.js fait autorité,
+     et donc qu'un oubli d'interrupteur ne peut pas être contourné ailleurs. */
+  if (direct) await page.evaluate(() => { window.ALBA_PAIEMENT_DIRECT = true; });
   return { page, envois };
 }
 
@@ -129,6 +138,25 @@ console.log('\n===== la seconde porte reste ouverte =====');
   const repli = await page.$eval('.pricing-cta', (e) => e.getAttribute('href')).catch(() => null);
   ok(repli !== null && repli.includes('/inscription'),
      `le bouton garde un href de repli pour les visiteurs sans JavaScript`);
+  await page.close();
+}
+
+console.log('\n===== interrupteur fermé : on retombe sur l\'inscription =====');
+{
+  // Position réelle de config.js, sans rien forcer.
+  const { page, envois } = await ouvrir({ status: 200, corps: { url: 'https://checkout.stripe.com/c/pay/cs_test' } }, false);
+  const ferme = await page.evaluate(() => window.ALBA_PAIEMENT_DIRECT === false);
+  ok(ferme, 'config.js livre l\'interrupteur fermé (tant que /bienvenue n\'existe pas)');
+
+  await page.click('.pricing-cta').catch(() => {});
+  await page.waitForTimeout(900);
+  ok(envois.length === 0, `aucun appel au tunnel de paiement (${envois.length})`);
+  // Le point qui compte : le bouton ne doit pas être inerte, il doit MENER
+  // quelque part. Un interrupteur fermé qui casse le bouton serait pire que
+  // le risque qu'il évite.
+  const arrivee = page.url();
+  ok(arrivee.includes('/inscription') || arrivee.includes('app.alba-studio.co'),
+     `le clic mène quand même à l'inscription (${arrivee.slice(0, 64)})`);
   await page.close();
 }
 

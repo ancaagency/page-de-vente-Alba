@@ -23,6 +23,29 @@
  */
 window.ALBA_APP_ORIGIN = "https://app.alba-studio.co";
 
+/* ─────────────────────────────────────────────────────────────────────────────
+ * PAIEMENT DIRECT DEPUIS LA CARTE TARIFAIRE — interrupteur
+ *
+ * À `true`, « S'abonner » ouvre Stripe Checkout sans passer par la création de
+ * compte : le compte est créé après paiement, et Stripe renvoie l'architecte
+ * sur app.alba-studio.co/bienvenue.
+ *
+ * À `false`, le bouton retombe sur le parcours classique — un simple lien vers
+ * /inscription, qui reste valable et branché.
+ *
+ * ⚠️ NE PASSER À `true` QU'UNE FOIS /bienvenue PUBLIÉE.
+ *
+ * Ce n'est pas une précaution de principe. Entre le déploiement de la fonction
+ * et la publication de la page de retour, il existe une fenêtre où un paiement
+ * aboutit — argent prélevé, compte créé — et où l'architecte atterrit sur une
+ * page introuvable, sans rien pour lui dire que tout s'est bien passé. Il
+ * repaierait, ou il appellerait.
+ *
+ * Vérification avant de basculer : ouvrir https://app.alba-studio.co/bienvenue
+ * dans un navigateur. Si ce n'est pas une page d'accueil, laisser `false`.
+ * ───────────────────────────────────────────────────────────────────────────── */
+window.ALBA_PAIEMENT_DIRECT = false;
+
 /* Applique l'origine aux liens du HTML statique.
  *
  * Les CTA gardent une href écrite en dur dans le HTML : elle reste correcte si

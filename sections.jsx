@@ -332,6 +332,13 @@ const Pricing = () => {
   };
 
   const abonner = async (ev) => {
+    /* Interrupteur de config.js. Tant qu'il est à `false`, on ne touche à rien :
+       le clic suit le href du lien, c'est-à-dire le parcours d'inscription
+       classique. AUCUN preventDefault avant ce test, sinon un interrupteur
+       fermé rendrait le bouton inerte au lieu de le faire retomber sur
+       l'ancien chemin. */
+    if (typeof window === "undefined" || !window.ALBA_PAIEMENT_DIRECT) return;
+
     /* Le lien reste un vrai lien : sans JavaScript, il mène à l'inscription
        classique, qui reste valable. On n'intercepte que si on peut faire mieux. */
     ev.preventDefault();
