@@ -214,6 +214,63 @@ console.log('\n===== la barre rend-elle pareil sur toutes les pages ? =====');
   }
 }
 
+/* ─────────────────────────────────────────────────────────────────────────────
+ * Le bouton flottant mène-t-il bien à l'essai, et pas à un formulaire ?
+ *
+ * Il s'appelait « Demander une démo » et pointait sur #contact : on réclamait
+ * un nom et une adresse avant de montrer quoi que ce soit. Il s'appelle
+ * désormais « Tester en 1 clic » et pointe sur le carrousel #fonctionnalites,
+ * qui est le simulateur.
+ *
+ * Deux façons de casser ça sans que rien ne le signale : renommer la cible du
+ * carrousel (l'ancre deviendrait un lien mort qui ne défile nulle part), ou
+ * remettre l'ancienne destination en croyant réparer un lien. On vérifie donc
+ * que la cible EXISTE et que le clic déplace réellement la page jusqu'à elle.
+ * ───────────────────────────────────────────────────────────────────────────── */
+console.log('\n===== « Tester en 1 clic » atteint-il le simulateur ? =====');
+{
+  const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+  await page.goto('http://localhost:8790/', { waitUntil: 'load', timeout: 40000 });
+  await page.waitForTimeout(5000);
+
+  const cible = await page.$eval('.float-cta', (e) => e.getAttribute('href')).catch(() => null);
+  const bon = cible === '#fonctionnalites';
+  console.log(`   ${bon ? '✅' : '❌'} le bouton vise le simulateur (${cible || 'ABSENT'})`);
+  if (!bon) echecs++;
+
+  const libelle = await page.$eval('.float-cta', (e) => e.textContent.trim()).catch(() => '');
+  const promet = /tester/i.test(libelle) && !/d[ée]mo/i.test(libelle);
+  console.log(`   ${promet ? '✅' : '❌'} et il promet un essai, pas un rendez-vous (« ${libelle} »)`);
+  if (!promet) echecs++;
+
+  const existe = await page.locator('#fonctionnalites').count();
+  console.log(`   ${existe ? '✅' : '❌'} la section visée existe (${existe})`);
+  if (!existe) echecs++;
+
+  /* Le point qui compte : une ancre peut être correcte et la page ne pas
+     bouger — c'est le cas quand la cible a été renommée ailleurs, ou quand un
+     gestionnaire de défilement avale le clic sans rien faire. */
+  if (existe) {
+    // On descend assez bas pour que le bouton s'affiche ET que la remontée
+    // vers le carrousel soit mesurable.
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight * 0.6));
+    await page.waitForTimeout(900);
+    const avant = await page.evaluate(() => window.scrollY);
+    await page.evaluate(() => document.querySelector('.float-cta').click());
+    await page.waitForTimeout(2500);
+    const apres = await page.evaluate(() => window.scrollY);
+    const dansLeCadre = await page.evaluate(() => {
+      const r = document.getElementById('fonctionnalites').getBoundingClientRect();
+      return r.top < window.innerHeight && r.bottom > 0;
+    });
+    const bouge = Math.abs(apres - avant) > 200;
+    console.log(`   ${bouge && dansLeCadre ? '✅' : '❌'} le clic amène le simulateur à l'écran (${avant} → ${apres} px)`);
+    if (!(bouge && dansLeCadre)) echecs++;
+  }
+
+  await page.close();
+}
+
 await browser.close();
 server.close();
 console.log(`\n${echecs ? `❌ ${echecs} problème(s)` : '✅ tout est vert'}`);

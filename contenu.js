@@ -509,28 +509,28 @@ window.ALBA_CONTENU = {
     en: "A word from the founder",
   },
   "fondateur.alba-est-ne-sur-un-chantier": {
-    fr: "Je ne suis pas architecte. ",
-    en: "I'm not an architect. ",
+    fr: "Au départ, ",
+    en: "At the start, ",
   },
   "fondateur.pas-dans-un-open-space": {
-    fr: "Je travaille avec eux depuis deux ans.",
-    en: "I've been working alongside them for two years.",
+    fr: "je venais juste mesurer les murs.",
+    en: "I just came to measure the walls.",
   },
   "fondateur.pendant-des-annees-j-ai-vu": {
-    fr: "Mon métier, c'est le relevé de mesures. Je vais sur site, je relève l'existant, j'en tire un modèle 3D et des plans 2D, souvent les photos qui vont avec. Ce sont des architectes qui me commandent ce travail — c'est comme ça que je suis entré dans leurs agences.",
-    en: "My trade is measured surveys. I go on site, record the existing building, and produce a 3D model and 2D drawings from it, often the photographs too. Architects are the ones who commission that work — that's how I ended up inside their practices.",
+    fr: "Mon métier, c'est le relevé. J'arrive dans une maison vide, je mesure les murs, les hauteurs, les décalages que personne n'avait vus, et j'en ressors un modèle 3D, des plans 2D, souvent les photos qui vont avec. Ce sont des architectes qui m'appellent pour ça. Depuis deux ans, je passe donc mes semaines dans leurs agences, entre deux relevés.",
+    en: "My trade is surveying. I turn up in an empty house, measure the walls, the heights, the misalignments nobody had noticed, and come away with a 3D model, 2D drawings, often the photographs too. Architects are the ones who call me in. For two years now I've spent my weeks inside their practices, between two surveys.",
   },
   "fondateur.ce-temps-la-ne-produit-rien": {
-    fr: "En deux ans, j'ai vu la même scène se répéter : le plan que je viens de livrer dort dans un WeTransfer expiré, la version validée se trouve quelque part dans un fil de mails, et ce qui a été décidé en réunion n'est écrit nulle part.",
-    en: "In two years I've watched the same scene repeat itself: the drawing I've just delivered sits in an expired WeTransfer, the approved version is somewhere in an email thread, and what was decided in the meeting is written down nowhere.",
+    fr: "Un matin, un architecte me redemande un plan livré trois mois plus tôt. Le lien de téléchargement avait expiré. On a cherché ensemble dans sa boîte mail : trois versions du même fichier, et aucun moyen de savoir laquelle son client avait validée. Il a fini par rappeler son maître d'ouvrage pour lui reposer une question à laquelle celui-ci avait déjà répondu.",
+    en: "One morning, an architect asked me for a drawing I had delivered three months earlier. The download link had expired. We searched his inbox together: three versions of the same file, and no way of telling which one his client had signed off. He ended up phoning the client to ask again a question the man had already answered.",
   },
   "fondateur.alba-existe-pour-le-rendre-a": {
-    fr: "Personne ne travaille mal : c'est l'outil qui manque.",
-    en: "Nobody is doing their job badly: the tool is what's missing.",
+    fr: "Ce n'est pas lui qui travaillait mal. Il n'avait rien pour se souvenir à sa place.",
+    en: "He wasn't the one doing his job badly. He simply had nothing to remember for him.",
   },
   "fondateur.chaque-fonctionnalite-est-testee-avec-de": {
-    fr: "C'est de là qu'est venu ALBA. Chaque écran part d'une demande précise, formulée par quelqu'un qui avait le problème sous les yeux. Et si vous écrivez, c'est moi qui réponds.",
-    en: "That's where ALBA came from. Every screen starts from a specific request, made by someone who had the problem in front of them. And if you write in, I'm the one who answers.",
+    fr: "J'ai vu cette scène assez de fois pour arrêter de la trouver normale. ALBA est né là : un endroit où le plan, la version validée et la personne qui a validé tiennent ensemble, six mois après comme le premier jour. Chaque écran part d'une demande d'agence, notée sur un carnet entre deux relevés. Et quand vous écrivez, c'est encore moi qui réponds.",
+    en: "I saw that scene often enough to stop finding it normal. ALBA was born there: one place where the drawing, the approved version and the person who approved it hold together, six months on as on day one. Every screen starts from a request made by a practice, jotted in a notebook between two surveys. And when you write in, I'm still the one who answers.",
   },
   "fondateur.fondateur": {
     fr: "Fondateur",

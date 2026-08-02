@@ -603,7 +603,12 @@
      330. Elle recouvrait le paragraphe au-dessus et mordait sur la section
      suivante. La boite est dimensionnee pour la contenir, et le debordement
      volontaire vers le bas est ramene a zero. */
-  .dev-duo { height: 460px; }
+  /* La tablette collait au texte : 32 px seulement entre le bas du bloc de
+     texte et le haut de l'image, alors que la boite laissait de la place en
+     dessous. On descend la maquette entiere plutot que la seule tablette, pour
+     que le telephone garde sa position relative et que la composition ne se
+     deforme pas. La marge est prise sur le vide deja present sous l'image. */
+  .dev-duo { height: 460px; margin-top: 44px; }
   .dev-duo .tablet-shot { width: 82%; left: -8%; bottom: 0; }
   .dev-duo .phone-shot { width: 32%; right: -4%; bottom: 18%; }
   .laptop-shot { width: 108%; }

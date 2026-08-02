@@ -628,6 +628,22 @@ var initSectionFX = function initSectionFX(coarse) {
     });
   }
 };
+
+/* Bouton flottant : « Tester en 1 clic ».
+ *
+ * Il menait a #contact, c'est-a-dire a un formulaire de demande de demo — on
+ * demandait a l'architecte son nom et son adresse avant de lui montrer quoi que
+ * ce soit. Il mene desormais au carrousel #fonctionnalites, qui EST le
+ * simulateur : cinq ecrans reels de l'application (Leo, meteo, materiaux,
+ * calendrier, messagerie) sur lesquels on peut cliquer tout de suite, sans
+ * compte et sans rendez-vous.
+ *
+ * Consequence sur la regle d'affichage : le bouton se cachait a l'approche du
+ * formulaire de contact. Il se cache maintenant quand le carrousel est a
+ * l'ecran — proposer d'aller voir ce qu'on est deja en train de regarder n'a
+ * aucun sens. Et comme le carrousel arrive tot dans la page, le bouton ne
+ * reapparait qu'une fois qu'on l'a depasse.
+ */
 var FloatingCTA = function FloatingCTA() {
   var _React$useState = React.useState(false),
     _React$useState2 = _slicedToArray(_React$useState, 2),
@@ -637,9 +653,13 @@ var FloatingCTA = function FloatingCTA() {
     var onScroll = function onScroll() {
       var vh = window.innerHeight;
       var past = window.scrollY > vh * 1.2;
+      var demo = document.getElementById("fonctionnalites");
+      // Visible a l'ecran, meme partiellement.
+      var r = demo && demo.getBoundingClientRect();
+      var surEcran = r && r.top < vh && r.bottom > 0;
       var contact = document.getElementById("contact");
       var nearContact = contact && contact.getBoundingClientRect().top < vh * 0.9;
-      setShow(past && !nearContact);
+      setShow(past && !surEcran && !nearContact);
     };
     window.addEventListener("scroll", onScroll, {
       passive: true
@@ -650,11 +670,11 @@ var FloatingCTA = function FloatingCTA() {
     };
   }, []);
   return /*#__PURE__*/React.createElement("a", {
-    href: "#contact",
+    href: "#fonctionnalites",
     className: "float-cta ".concat(show ? "show" : "")
   }, /*#__PURE__*/React.createElement("span", {
     className: "fc-dot"
-  }), " ", L("Demander une démo", "Request a demo"));
+  }), " ", L("Tester en 1 clic", "Try it in one click"));
 };
 var ScrollTop = function ScrollTop() {
   var _React$useState3 = React.useState(false),
