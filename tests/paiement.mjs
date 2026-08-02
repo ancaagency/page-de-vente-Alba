@@ -34,7 +34,7 @@ const navigateur = await chromium.launch({
 });
 
 /** Ouvre la page tarifs, prête à cliquer. */
-async function ouvrir(reponse, direct = true) {
+async function ouvrir(reponse, direct = true, route = '/tarifs') {
   const page = await navigateur.newPage({ viewport: { width: 1280, height: 900 } });
   const envois = [];
   await page.route(POINT, async (route) => {
@@ -49,7 +49,7 @@ async function ouvrir(reponse, direct = true) {
   // navigation échouerait et on ne saurait plus dire OÙ le clic a mené.
   await page.route('https://app.alba-studio.co/**', (r) =>
     r.fulfill({ status: 200, contentType: 'text/html', body: '<p>inscription simulée</p>' }));
-  await page.goto('http://localhost:8942/tarifs', { waitUntil: 'load', timeout: 40000 });
+  await page.goto('http://localhost:8942' + route, { waitUntil: 'load', timeout: 40000 });
   await page.waitForTimeout(4000);
   /* L'interrupteur se pose APRÈS le chargement, jamais avant : config.js
      l'écrit lui-même, et il écraserait toute valeur posée en amont. Cet ordre
@@ -59,9 +59,15 @@ async function ouvrir(reponse, direct = true) {
   return { page, envois };
 }
 
-console.log('\n===== ce qui part quand on clique =====');
+/* Les deux pages montent le MÊME composant <Pricing/> — l'accueil et /tarifs.
+   C'est vrai aujourd'hui ; rien ne garantit que ça le reste, et un tunnel de
+   paiement qui ne fonctionne que sur une des deux pages est le genre de panne
+   qu'on ne découvre qu'en lisant ses statistiques de vente. On rejoue donc le
+   parcours complet sur les deux. */
+for (const route of ['/tarifs', '/']) {
+console.log(`\n===== ce qui part quand on clique — ${route} =====`);
 {
-  const { page, envois } = await ouvrir({ status: 200, corps: { url: 'https://checkout.stripe.com/c/pay/cs_test' } });
+  const { page, envois } = await ouvrir({ status: 200, corps: { url: 'https://checkout.stripe.com/c/pay/cs_test' } }, true, route);
 
   // Choix délibérément différent des valeurs par défaut : 300 Go, annuel,
   // 3 sièges. Un test qui ne change rien ne prouve rien.
@@ -89,6 +95,7 @@ console.log('\n===== ce qui part quand on clique =====');
   ok(await page.evaluate(() => location.href.includes('checkout.stripe.com')),
      'le visiteur est bien redirigé vers Stripe');
   await page.close();
+}
 }
 
 console.log('\n===== le double-clic ne consomme pas deux tentatives =====');
