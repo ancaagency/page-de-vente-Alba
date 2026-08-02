@@ -59,7 +59,10 @@ const App = () => {
             travaillez » montre l'application sur les trois appareils. */}
         <FeatureCarousel/>
         <PinnedDevices/>
-        <CTABand/>
+        {/* <CTABand/> retiré : le bandeau « Premier projet offert » faisait
+            doublon avec la carte tarifaire, et remettait la gratuité en avant
+            alors qu'on venait de la reculer. Le composant reste défini dans
+            sections.jsx. */}
         <Pricing/>
         <TrustBand/>
         <Testimonials/>

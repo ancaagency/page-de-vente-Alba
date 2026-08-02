@@ -19,13 +19,15 @@ var Gallery = function Gallery() {
     img: "images/chateau-a-renover.jpg",
     eyebrow: L("RÉNOVATION · VAL DE LOIRE", "RENOVATION · LOIRE VALLEY"),
     h: L("Château à rénover, suivi complet dans ALBA", "Château to renovate, fully tracked in ALBA"),
-    alt: "Château Renaissance au bord de l'eau, projet de rénovation"
+    alt: "Château Renaissance au bord de l'eau, projet de rénovation",
+    gain: L("Six mois après, on sait encore qui a validé quoi", "Six months on, you still know who approved what")
   }, {
     cls: "g-2",
     img: "images/pause-lecture.jpg",
     eyebrow: L("L'ESPRIT ALBA", "THE ALBA SPIRIT"),
     h: L("Le temps repris sur la paperasse", "Time won back from paperwork"),
-    alt: "Tasse de thé posée sur des livres devant une fenêtre"
+    alt: "Tasse de thé posée sur des livres devant une fenêtre",
+    gain: L("Les comptes-rendus s\u2019\xE9crivent depuis les notes de visite", "Site reports write themselves from your visit notes")
   }, {
     cls: "g-4",
     quote: true,
@@ -36,13 +38,15 @@ var Gallery = function Gallery() {
     img: "images/escalier-spirale.jpg",
     eyebrow: L("DÉTAIL D'EXÉCUTION", "CONSTRUCTION DETAIL"),
     h: L("Escalier hélicoïdal, béton & chêne", "Spiral staircase, concrete & oak"),
-    alt: "Escalier en spirale vu du dessus, béton et bois"
+    alt: "Escalier en spirale vu du dessus, béton et bois",
+    gain: L("Une seule version du détail : celle qui a été validée", "One version of the detail: the one that was approved")
   }, {
     cls: "g-5",
     img: "images/villa-interieur.jpg",
     eyebrow: L("LIVRAISON", "DELIVERED"),
     h: L("Villa contemporaine, bois & lumière", "Contemporary villa, timber & light"),
-    alt: "Intérieur de villa contemporaine, plafond bois et grandes baies"
+    alt: "Intérieur de villa contemporaine, plafond bois et grandes baies",
+    gain: L("Le PV de réception signé le jour même, diffusé à tous", "Handover report signed the same day, sent to everyone")
   }];
   return /*#__PURE__*/React.createElement("div", {
     className: "gallery-embed"
@@ -73,7 +77,12 @@ var Gallery = function Gallery() {
       className: "gtile-overlay"
     }, /*#__PURE__*/React.createElement("div", {
       className: "eyebrow"
-    }, t.eyebrow), /*#__PURE__*/React.createElement("h4", null, t.h)));
+    }, t.eyebrow), /*#__PURE__*/React.createElement("h4", null, t.h), t.gain && /*#__PURE__*/React.createElement("p", {
+      className: "gtile-gain"
+    }, /*#__PURE__*/React.createElement(Icon, {
+      name: "check",
+      size: 13
+    }), " ", t.gain)));
   })));
 };
 window.Gallery = Gallery;

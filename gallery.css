@@ -73,8 +73,13 @@
   position: absolute;
   inset: 0;
   padding: 24px;
-  background: linear-gradient(180deg, transparent 30%, rgba(11,18,36,0.92) 100%);
-  color: var(--on-bg);
+  /* Voile RENFORCÉ, et texte figé en clair. Ces légendes reposent sur une
+     PHOTO, pas sur le thème de la page : elles suivaient --on-bg, devenu
+     sombre, et le titre disparaissait sur un château en plein soleil. Une
+     photo est claire ou sombre selon le cliché, jamais selon le thème — donc
+     on garantit le contraste par le voile, pas par la couleur du texte. */
+  background: linear-gradient(180deg, transparent 12%, rgba(11,18,36,0.55) 48%, rgba(11,18,36,0.94) 100%);
+  color: #F2F4F8;
   display: flex; flex-direction: column; justify-content: flex-end;
   opacity: 0;
   transition: opacity .4s;
@@ -88,9 +93,22 @@
 }
 .gtile-overlay h4 {
   font-family: var(--font-display);
-  font-weight: 500; font-size: 18px;
-  margin: 0; letter-spacing: -0.01em;
+  font-weight: 600; font-size: 18px;
+  margin: 0; letter-spacing: -0.015em;
+  text-shadow: 0 1px 12px rgba(11,18,36,0.5);
 }
+/* Ce que le projet a gagné avec ALBA. Une ligne, sous le titre. */
+.gtile-gain {
+  margin: 8px 0 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: rgba(242, 244, 248, 0.9);
+  text-shadow: 0 1px 10px rgba(11,18,36,0.6);
+}
+.gtile-gain svg { flex: none; margin-top: 2px; color: #E2C58A; }
 
 /* Sizes — 5 tiles */
 .g-1 { grid-column: span 7; grid-row: span 4; }

@@ -42,9 +42,11 @@ window.ALBA_APP_ORIGIN = "https://app.alba-studio.co";
  * repaierait, ou il appellerait.
  *
  * Vérification avant de basculer : ouvrir https://app.alba-studio.co/bienvenue
- * dans un navigateur. Si ce n'est pas une page d'accueil, laisser `false`.
+ * dans un navigateur. Si ce n'est pas une page d'accueil, remettre `false`.
+ *
+ * OUVERT le 31 juillet 2026, /bienvenue confirmée en ligne.
  * ───────────────────────────────────────────────────────────────────────────── */
-window.ALBA_PAIEMENT_DIRECT = false;
+window.ALBA_PAIEMENT_DIRECT = true;
 
 /* Applique l'origine aux liens du HTML statique.
  *

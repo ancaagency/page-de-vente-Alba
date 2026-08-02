@@ -148,12 +148,25 @@ console.log('\n===== la seconde porte reste ouverte =====');
   await page.close();
 }
 
-console.log('\n===== interrupteur fermé : on retombe sur l\'inscription =====');
+console.log('\n===== l\'interrupteur commande vraiment le parcours =====');
 {
-  // Position réelle de config.js, sans rien forcer.
+  /* Position réelle livrée par config.js. Elle est passée à `true` le jour où
+     /bienvenue est entrée en ligne. Ce contrôle ne fige PAS la valeur — il
+     vérifie qu'elle est explicite et que le comportement la suit : un
+     interrupteur qui ne commanderait rien serait un faux filet. */
+  const { page } = await ouvrir({ status: 200, corps: { url: 'https://checkout.stripe.com/c/pay/cs_test' } }, false);
+  const position = await page.evaluate(() => window.ALBA_PAIEMENT_DIRECT);
+  ok(typeof position === 'boolean',
+     `config.js livre une position explicite (${position})`);
+  await page.close();
+}
+
+console.log('\n===== forcé à false : on retombe sur l\'inscription =====');
+{
   const { page, envois } = await ouvrir({ status: 200, corps: { url: 'https://checkout.stripe.com/c/pay/cs_test' } }, false);
-  const ferme = await page.evaluate(() => window.ALBA_PAIEMENT_DIRECT === false);
-  ok(ferme, 'config.js livre l\'interrupteur fermé (tant que /bienvenue n\'existe pas)');
+  // On le ferme explicitement, quelle que soit sa valeur livrée : c'est le
+  // COMPORTEMENT de repli qu'on éprouve, pas la valeur du jour.
+  await page.evaluate(() => { window.ALBA_PAIEMENT_DIRECT = false; });
 
   await page.click('.pricing-cta').catch(() => {});
   await page.waitForTimeout(900);

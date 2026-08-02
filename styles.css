@@ -599,6 +599,14 @@ section {
   opacity: 0;
   pointer-events: none;
   transition: opacity .35s;
+  /* Le voile couvre TOUT l'écran, barre comprise : sans réserve en haut, le
+     premier lien venait se coller sous le logo. `justify-content: center`
+     centrait bien le bloc, mais dans une hauteur qui incluait la barre.
+     On réserve sa hauteur, et on autorise le défilement : six liens, un lien
+     de connexion et un bouton ne tiennent pas sur un petit téléphone. */
+  padding: 104px 20px 40px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
 .mobile-menu.open {
   opacity: 1;

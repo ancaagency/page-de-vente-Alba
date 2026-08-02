@@ -509,28 +509,28 @@ window.ALBA_CONTENU = {
     en: "A word from the founder",
   },
   "fondateur.alba-est-ne-sur-un-chantier": {
-    fr: "ALBA est né sur un chantier, ",
-    en: "ALBA was born on a building site, ",
+    fr: "Je ne suis pas architecte. ",
+    en: "I'm not an architect. ",
   },
   "fondateur.pas-dans-un-open-space": {
-    fr: "pas dans un open space.",
-    en: "not in an open space.",
+    fr: "Je travaille avec eux depuis deux ans.",
+    en: "I've been working alongside them for two years.",
   },
   "fondateur.pendant-des-annees-j-ai-vu": {
-    fr: "Pendant des années, j'ai vu des architectes brillants perdre leurs soirées à chercher un email, relancer une validation, reconstituer l'historique d'une décision prise six mois plus tôt.",
-    en: "For years, I watched brilliant architects lose their evenings hunting for an email, chasing an approval, piecing together the history of a decision made six months earlier.",
+    fr: "Mon métier, c'est le relevé de mesures. Je vais sur site, je relève l'existant, j'en tire un modèle 3D et des plans 2D, souvent les photos qui vont avec. Ce sont des architectes qui me commandent ce travail — c'est comme ça que je suis entré dans leurs agences.",
+    en: "My trade is measured surveys. I go on site, record the existing building, and produce a 3D model and 2D drawings from it, often the photographs too. Architects are the ones who commission that work — that's how I ended up inside their practices.",
   },
   "fondateur.ce-temps-la-ne-produit-rien": {
-    fr: "Ce temps-là ne produit rien. Il ne dessine rien. Il use.",
-    en: "That time produces nothing. It draws nothing. It wears you down.",
+    fr: "En deux ans, j'ai vu la même scène se répéter : le plan que je viens de livrer dort dans un WeTransfer expiré, la version validée se trouve quelque part dans un fil de mails, et ce qui a été décidé en réunion n'est écrit nulle part.",
+    en: "In two years I've watched the same scene repeat itself: the drawing I've just delivered sits in an expired WeTransfer, the approved version is somewhere in an email thread, and what was decided in the meeting is written down nowhere.",
   },
   "fondateur.alba-existe-pour-le-rendre-a": {
-    fr: "ALBA existe pour le rendre à ceux qui construisent.",
-    en: "ALBA exists to give it back to the people who build.",
+    fr: "Personne ne travaille mal : c'est l'outil qui manque.",
+    en: "Nobody is doing their job badly: the tool is what's missing.",
   },
   "fondateur.chaque-fonctionnalite-est-testee-avec-de": {
-    fr: "Chaque fonctionnalité est testée avec de vraies agences, sur de vrais projets, et si vous nous écrivez, c'est moi qui réponds.",
-    en: "Every feature is tested with real practices, on real projects, and if you write to us, I'm the one who replies.",
+    fr: "C'est de là qu'est venu ALBA. Chaque écran part d'une demande précise, formulée par quelqu'un qui avait le problème sous les yeux. Et si vous écrivez, c'est moi qui réponds.",
+    en: "That's where ALBA came from. Every screen starts from a specific request, made by someone who had the problem in front of them. And if you write in, I'm the one who answers.",
   },
   "fondateur.fondateur": {
     fr: "Fondateur",
