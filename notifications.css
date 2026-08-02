@@ -100,36 +100,3 @@
   .notif-stack { top: 70px; right: 16px; }
 }
 
-/* ============================================
-   Language toggle (nav)
-   ============================================ */
-.lang-toggle {
-  display: inline-flex;
-  align-items: center;
-  gap: 2px;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.08em;
-  color: rgba(var(--on-bg-rgb), 0.5);
-  border: 1px solid var(--line-strong);
-  border-radius: 999px;
-  padding: 3px;
-}
-.lang-toggle button {
-  border: 0;
-  background: transparent;
-  color: rgba(var(--on-bg-rgb), 0.55);
-  font-family: var(--font-mono);
-  font-size: 10.5px;
-  letter-spacing: 0.08em;
-  padding: 5px 10px;
-  border-radius: 999px;
-  cursor: pointer;
-  transition: all .2s;
-}
-.lang-toggle button:hover { color: var(--on-bg); }
-.lang-toggle button.is-active {
-  background: var(--accent);
-  color: var(--accent-contrast);
-  font-weight: 600;
-}

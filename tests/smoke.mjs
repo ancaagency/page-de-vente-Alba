@@ -158,6 +158,62 @@ for (const [route, attendus] of [
   await page.close();
 }
 
+/* ─────────────────────────────────────────────────────────────────────────────
+ * La barre de navigation est-elle la MÊME sur toutes les pages ?
+ *
+ * La bascule de langue était stylée dans notifications.css. L'accueil charge
+ * quatorze feuilles de style dont celle-là, la page tarifs seulement deux : la
+ * pastille dorée y devenait deux boutons nus, et rien ne le signalait. Le HTML
+ * était pourtant identique aux deux endroits — c'est la feuille qui manquait.
+ *
+ * On ne peut pas vérifier « chaque page charge ce qu'il lui faut » en général.
+ * Mais la barre, elle, est écrite à l'identique partout : elle doit donc RENDRE
+ * à l'identique. Toute divergence trahit une feuille oubliée.
+ * ───────────────────────────────────────────────────────────────────────────── */
+console.log('\n===== la barre rend-elle pareil sur toutes les pages ? =====');
+{
+  /* Propriétés qui trahissent une règle absente : sans la feuille, un <div>
+     retombe sur `display: block` et un <button> sur les bordures du navigateur. */
+  const RELEVE = `(() => {
+    const q = (sel, props) => {
+      const e = document.querySelector(sel);
+      if (!e) return sel + ' : ABSENT';
+      const st = getComputedStyle(e);
+      return sel + ' ' + props.map((p) => p + '=' + st[p]).join(' ');
+    };
+    return [
+      q('.lang-toggle', ['display', 'borderRadius', 'borderTopWidth', 'padding']),
+      q('.lang-toggle button.is-active', ['backgroundColor', 'color', 'borderRadius']),
+      q('.nav-login', ['color', 'fontSize']),
+    ];
+  })()`;
+
+  const releves = {};
+  for (const route of ['/', '/tarifs', '/mentions-legales.html']) {
+    const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+    await page.goto('http://localhost:8790' + route, { waitUntil: 'load', timeout: 40000 });
+    await page.waitForTimeout(3500);
+    releves[route] = await page.evaluate(RELEVE);
+    await page.close();
+  }
+
+  const reference = releves['/'];
+  for (const [route, valeurs] of Object.entries(releves)) {
+    if (route === '/') continue;
+    valeurs.forEach((v, i) => {
+      // La page des mentions légales n'a pas de bascule de langue : son absence
+      // y est normale, et seule une DIVERGENCE de style compte.
+      const absentPartout = v.includes('ABSENT') && route === '/mentions-legales.html' && v.startsWith('.lang-toggle');
+      const identique = v === reference[i] || absentPartout;
+      console.log(`   ${identique ? '✅' : '❌'} ${route} — ${v.slice(0, 96)}`);
+      if (!identique) {
+        console.log(`      accueil : ${reference[i].slice(0, 96)}`);
+        echecs++;
+      }
+    });
+  }
+}
+
 await browser.close();
 server.close();
 console.log(`\n${echecs ? `❌ ${echecs} problème(s)` : '✅ tout est vert'}`);

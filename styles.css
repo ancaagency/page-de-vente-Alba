@@ -494,6 +494,51 @@ section {
    Volontairement discret : il emprunte exactement la grammaire de .nav-links a
    — meme taille, meme couleur, meme soulignement dore au survol — pour ne pas
    entrer en concurrence avec le bouton d'essai, qui reste l'action principale. */
+/* ============================================
+   Bascule de langue (barre de navigation)
+   ============================================
+
+   Ce bloc vivait dans notifications.css. Conséquence : la page tarifs, qui ne
+   charge que styles.css et sections.css, affichait deux boutons nus au lieu de
+   la pastille — l'accueil, lui, était correct, parce qu'il charge quatorze
+   feuilles dont celle-là.
+
+   C'est le piège des feuilles de style découpées par section : un composant de
+   la BARRE n'a rien à faire dans celle des notifications, et l'erreur ne se
+   voit que sur les pages qui n'ont pas la chance de tout charger. Il est
+   désormais avec le reste de la barre, dans la seule feuille que toutes les
+   pages chargent. */
+.lang-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: rgba(var(--on-bg-rgb), 0.5);
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  padding: 3px;
+}
+.lang-toggle button {
+  border: 0;
+  background: transparent;
+  color: rgba(var(--on-bg-rgb), 0.55);
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  padding: 5px 10px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all .2s;
+}
+.lang-toggle button:hover { color: var(--on-bg); }
+.lang-toggle button.is-active {
+  background: var(--accent);
+  color: var(--accent-contrast);
+  font-weight: 600;
+}
+
 .nav-login {
   position: relative;
   padding: 4px 0;
