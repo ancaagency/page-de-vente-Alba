@@ -49,7 +49,12 @@ const Hero = () => (
       <Reveal delay={360}>
         <div className="hero-actions">
           <a href={SIGNUP_URL} className="btn btn-primary">{Txt("accueil.creer-mon-projet-gratuit", "Créer mon espace", "Create my workspace")} <Icon name="arrow-right" size={14} className="btn-arrow"/></a>
-          <a href="#contact" className="btn btn-ghost" onClick={() => window.__setContactMode && window.__setContactMode("demo")}>{Txt("accueil.demander-une-demo", "Demander une démo", "Request a demo")}</a>
+          {/* Même changement que le bouton flottant : le second bouton du hero
+              menait au formulaire de contact, donc à un rendez-vous. Il mène au
+              carrousel #fonctionnalites, qui est le simulateur — on essaie
+              l'application avant de donner son nom. La clé de traduction ne
+              change pas : c'est un identifiant, pas du texte. */}
+          <a href="#fonctionnalites" className="btn btn-ghost">{Txt("accueil.demander-une-demo", "Tester en 1 clic", "Try it in one click")}</a>
         </div>
       </Reveal>
       <Reveal delay={480}>

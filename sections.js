@@ -123,12 +123,9 @@ var Hero = function Hero() {
     size: 14,
     className: "btn-arrow"
   })), /*#__PURE__*/React.createElement("a", {
-    href: "#contact",
-    className: "btn btn-ghost",
-    onClick: function onClick() {
-      return window.__setContactMode && window.__setContactMode("demo");
-    }
-  }, Txt("accueil.demander-une-demo", "Demander une démo", "Request a demo")))), /*#__PURE__*/React.createElement(Reveal, {
+    href: "#fonctionnalites",
+    className: "btn btn-ghost"
+  }, Txt("accueil.demander-une-demo", "Tester en 1 clic", "Try it in one click")))), /*#__PURE__*/React.createElement(Reveal, {
     delay: 480
   }, /*#__PURE__*/React.createElement("div", {
     className: "hero-meta"
