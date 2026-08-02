@@ -48,13 +48,19 @@ const Hero = () => (
       </Reveal>
       <Reveal delay={360}>
         <div className="hero-actions">
-          <a href={SIGNUP_URL} className="btn btn-primary">{Txt("accueil.creer-mon-projet-gratuit", "Créer mon espace", "Create my workspace")} <Icon name="arrow-right" size={14} className="btn-arrow"/></a>
-          {/* Même changement que le bouton flottant : le second bouton du hero
-              menait au formulaire de contact, donc à un rendez-vous. Il mène au
-              carrousel #fonctionnalites, qui est le simulateur — on essaie
-              l'application avant de donner son nom. La clé de traduction ne
-              change pas : c'est un identifiant, pas du texte. */}
-          <a href="#fonctionnalites" className="btn btn-ghost">{Txt("accueil.demander-une-demo", "Tester en 1 clic", "Try it in one click")}</a>
+          {/* Les deux boutons du hero, dans l'ordre du parcours : on essaie
+              d'abord, on s'abonne ensuite.
+
+              · « Tester en 1 clic » mène au carrousel #fonctionnalites, qui est
+                le simulateur — cinq écrans réels, cliquables sans compte.
+              · « S'abonner » mène à #pricing, PAS directement au tunnel Stripe :
+                depuis le hero on ignore le palier de stockage, la périodicité et
+                le nombre de sièges. Envoyer un palier par défaut ferait payer au
+                visiteur autre chose que ce qu'il aurait choisi. Il descend donc
+                à la carte tarifaire, coche ce qu'il veut, et c'est le bouton de
+                la carte qui ouvre le paiement. */}
+          <a href="#fonctionnalites" className="btn btn-primary">{Txt("accueil.tester-en-1-clic", "Tester en 1 clic", "Try it in one click")} <Icon name="arrow-right" size={14} className="btn-arrow"/></a>
+          <a href="#pricing" className="btn btn-ghost">{Txt("accueil.s-abonner", "S'abonner", "Subscribe")}</a>
         </div>
       </Reveal>
       <Reveal delay={480}>

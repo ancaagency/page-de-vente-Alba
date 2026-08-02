@@ -233,6 +233,26 @@ console.log('\n===== « Tester en 1 clic » atteint-il le simulateur ? =====');
   await page.goto('http://localhost:8790/', { waitUntil: 'load', timeout: 40000 });
   await page.waitForTimeout(5000);
 
+  /* Les boutons du hero passent par Txt(), et contenu.js REMPLACE le texte
+     écrit dans le .jsx — c'est tout son intérêt, mais c'est aussi un piège :
+     renommer un bouton dans le .jsx sans toucher contenu.js ne change RIEN à
+     l'écran, et rien ne le signale. tests/contenu.mjs compte les clés, il ne
+     lit pas ce qu'elles disent. C'est arrivé une fois : le hero annonçait
+     encore « Demander une démo » alors que le code disait « Tester en 1 clic ».
+     On lit donc le texte RENDU, pas le code. */
+  const HERO = [
+    ['.hero-actions .btn-primary', /tester en 1 clic/i, '#fonctionnalites'],
+    ['.hero-actions .btn-ghost', /s'abonner/i, '#pricing'],
+  ];
+  for (const [sel, attendu, cible] of HERO) {
+    const vu = await page.$eval(sel, (e) => ({
+      texte: e.textContent.trim(), href: e.getAttribute('href'),
+    })).catch(() => null);
+    const bon = vu && attendu.test(vu.texte) && vu.href === cible;
+    console.log(`   ${bon ? '✅' : '❌'} hero ${sel} → « ${vu ? vu.texte : 'ABSENT'} » vers ${vu ? vu.href : '—'}`);
+    if (!bon) echecs++;
+  }
+
   const cible = await page.$eval('.float-cta', (e) => e.getAttribute('href')).catch(() => null);
   const bon = cible === '#fonctionnalites';
   console.log(`   ${bon ? '✅' : '❌'} le bouton vise le simulateur (${cible || 'ABSENT'})`);

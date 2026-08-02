@@ -116,16 +116,16 @@ var Hero = function Hero() {
   }, /*#__PURE__*/React.createElement("div", {
     className: "hero-actions"
   }, /*#__PURE__*/React.createElement("a", {
-    href: SIGNUP_URL,
+    href: "#fonctionnalites",
     className: "btn btn-primary"
-  }, Txt("accueil.creer-mon-projet-gratuit", "Créer mon espace", "Create my workspace"), " ", /*#__PURE__*/React.createElement(Icon, {
+  }, Txt("accueil.tester-en-1-clic", "Tester en 1 clic", "Try it in one click"), " ", /*#__PURE__*/React.createElement(Icon, {
     name: "arrow-right",
     size: 14,
     className: "btn-arrow"
   })), /*#__PURE__*/React.createElement("a", {
-    href: "#fonctionnalites",
+    href: "#pricing",
     className: "btn btn-ghost"
-  }, Txt("accueil.demander-une-demo", "Tester en 1 clic", "Try it in one click")))), /*#__PURE__*/React.createElement(Reveal, {
+  }, Txt("accueil.s-abonner", "S'abonner", "Subscribe")))), /*#__PURE__*/React.createElement(Reveal, {
     delay: 480
   }, /*#__PURE__*/React.createElement("div", {
     className: "hero-meta"

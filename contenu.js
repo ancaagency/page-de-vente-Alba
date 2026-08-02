@@ -44,13 +44,17 @@ window.ALBA_CONTENU = {
     fr: "La plateforme pensée pour les architectes indépendants : chaque décision, document et message vit au même endroit. Vos clients suivent. Vous gardez la main.",
     en: "The platform built for independent architects: every decision, document and message lives in one place. Your clients follow along. You stay in control.",
   },
-  "accueil.creer-mon-projet-gratuit": {
-    fr: "Créer mon espace",
-    en: "Create my workspace",
+  /* Les deux boutons du hero. Les clés ont été renommées avec leur libellé :
+     « accueil.creer-mon-projet-gratuit » et « accueil.demander-une-demo »
+     décrivaient des boutons qui n'existent plus, et une clé qui ment sur son
+     contenu finit par faire rétablir l'ancien texte à celui qui la relit. */
+  "accueil.tester-en-1-clic": {
+    fr: "Tester en 1 clic",
+    en: "Try it in one click",
   },
-  "accueil.demander-une-demo": {
-    fr: "Demander une démo",
-    en: "Request a demo",
+  "accueil.s-abonner": {
+    fr: "S'abonner",
+    en: "Subscribe",
   },
   "accueil.gratuit-a-vie-pour-1-projet": {
     fr: "Premier projet offert",
