@@ -70,6 +70,16 @@ window.ALBA_PAIEMENT_DIRECT = true;
  *   · l'espace vit 7 jours puis il est supprimé ;
  *   · aucune adresse e-mail n'est demandée ni envoyée ;
  *   · le plafond est de 3 essais par heure et 10 par jour et par adresse IP.
+ *
+ * ⚠️ CETTE LIGNE EST UN REMPLACEMENT, PAS LA SOURCE.
+ *
+ * L'adresse est écrite en dur dans <BoutonEssai/> (components.jsx) ; celle-ci
+ * ne fait que la couvrir. C'est volontaire, et c'est la correction d'une panne
+ * réelle : le composant EXIGEAIT cette constante et retombait sinon sur un
+ * simple lien d'ancre. Un config.js d'avant son ajout, resté en cache, suffisait
+ * donc à rendre le bouton inerte — on cliquait, on restait sur la page.
+ *
+ * Retirer cette ligne ne casse plus rien. La changer déplace le bouton.
  * ───────────────────────────────────────────────────────────────────────────── */
 window.ALBA_POINT_ESSAI =
   "https://fhrkkjvbzgkbmlnlnxce.supabase.co/functions/v1/demo-express";

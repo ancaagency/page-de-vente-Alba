@@ -315,6 +315,59 @@ console.log('\n===== l\'essai express ne peut pas être déclenché par un robot
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
+ * Le bouton résiste-t-il à un config.js périmé ?
+ *
+ * PANNE RÉELLE, remontée par Anthony : « on clique, on reste sur la page ».
+ *
+ * <BoutonEssai/> lisait window.ALBA_POINT_ESSAI et, à défaut, rendait un
+ * <a href="#fonctionnalites">. Un config.js d'avant l'ajout de cette constante
+ * — resté dans le cache du navigateur ou en périphérie — suffisait donc à
+ * transformer le bouton en ancre : React montait, remplaçait le formulaire
+ * correct du HTML prérendu, et le clic se contentait de faire défiler la page.
+ * Rien à l'écran ne distinguait les deux boutons.
+ *
+ * Le repli a été supprimé : l'adresse vit dans le composant, config.js ne fait
+ * que la remplacer. Ce contrôle rejoue la page avec un config.js amputé de la
+ * constante et exige quand même un formulaire qui poste.
+ * ───────────────────────────────────────────────────────────────────────────── */
+console.log('\n===== un config.js périmé ne peut plus rendre le bouton inerte =====');
+{
+  for (const [nom, transformer] of [
+    ['sans ALBA_POINT_ESSAI', (s) => s.replace(/window\.ALBA_POINT_ESSAI[\s\S]*?;/, '')],
+    ['ALBA_POINT_ESSAI vide', (s) => s.replace(/window\.ALBA_POINT_ESSAI[\s\S]*?;/, 'window.ALBA_POINT_ESSAI = "";')],
+    ['config.js absent', null],
+  ]) {
+    const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+    let envoye = null;
+    await page.route('**/functions/v1/demo-express', async (r) => {
+      envoye = r.request().method();
+      await r.fulfill({ status: 200, contentType: 'text/html', body: 'ok' });
+    });
+    await page.route('**/config.js', async (r) => {
+      if (!transformer) return r.fulfill({ status: 404, body: '' });
+      const src = await r.fetch().then((x) => x.text());
+      await r.fulfill({ status: 200, contentType: 'text/javascript', body: transformer(src) });
+    });
+    await page.goto('http://localhost:8790/', { waitUntil: 'load', timeout: 40000 });
+    await page.waitForTimeout(5000);
+
+    const rendu = await page.$eval('.hero-actions .btn-primary', (e) => ({
+      balise: e.tagName,
+      action: e.closest('form') ? e.closest('form').getAttribute('action') : null,
+    })).catch(() => null);
+    const estFormulaire = rendu && rendu.balise === 'BUTTON' && (rendu.action || '').includes('demo-express');
+    console.log(`   ${estFormulaire ? '✅' : '❌'} ${nom} — rendu <${rendu ? rendu.balise.toLowerCase() : 'absent'}>, action ${rendu ? rendu.action : '—'}`);
+    if (!estFormulaire) echecs++;
+
+    await page.click('.hero-actions .btn-primary').catch(() => {});
+    await page.waitForTimeout(1500);
+    console.log(`   ${envoye === 'POST' ? '✅' : '❌'}    et le clic poste quand même (${envoye || 'RIEN ENVOYÉ'})`);
+    if (envoye !== 'POST') echecs++;
+    await page.close();
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
  * La CSP laisse-t-elle vraiment partir ce formulaire ?
  *
  * `form-action` valait 'self'. Cette directive ne se replie PAS sur

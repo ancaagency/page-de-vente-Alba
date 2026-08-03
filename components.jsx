@@ -618,17 +618,35 @@ const RealShot = ({ src, title = "alba-studio.co", alt = "Interface ALBA Studio"
    en page : le <button> se comporte comme s'il était l'enfant direct de
    `.hero-actions`, sans quoi il sortirait de la disposition en flex.
 
-   L'adresse vient de config.js, point unique de vérité. Si elle manque — script
-   non chargé, valeur effacée — on n'affiche PAS un bouton mort : on retombe sur
-   le carrousel de démonstration de la page, qui montre les mêmes écrans sans
-   créer de compte. Un bouton qui ne fait rien est pire qu'un bouton qui fait
-   moins.
+   ─────────────────────────────────────────────────────────────────────────────
+   L'ADRESSE EST ÉCRITE ICI, ET config.js NE FAIT QUE LA REMPLACER
+
+   Ce composant lisait `window.ALBA_POINT_ESSAI` et, à défaut, rendait un
+   <a href="#fonctionnalites"> — un repli qui paraissait prudent. Il ne l'était
+   pas : il produisait un bouton d'apparence identique qui se contentait de
+   faire défiler la page. Symptôme exact remonté par Anthony, « on clique, on
+   reste sur la page ».
+
+   Et il suffisait pour ça d'un config.js d'avant l'ajout de la constante,
+   resté dans le cache du navigateur ou en périphérie Cloudflare. La page se
+   chargeait, React montait, et remplaçait le formulaire correct du HTML
+   prérendu par une ancre inerte.
+
+   D'où l'inversion : l'adresse est la valeur par défaut du composant, et
+   config.js ne peut que la REMPLACER. Un config.js absent, périmé ou muet
+   laisse désormais un formulaire qui marche. Il n'existe plus aucun chemin de
+   code qui transforme ce bouton en lien — tests/smoke.mjs le vérifie en
+   rejouant la page avec un config.js amputé.
    ═════════════════════════════════════════════════════════════════════════════ */
+const POINT_ESSAI_PAR_DEFAUT =
+  "https://fhrkkjvbzgkbmlnlnxce.supabase.co/functions/v1/demo-express";
+
 const BoutonEssai = ({ className = "btn btn-primary", children }) => {
-  const point = typeof window !== "undefined" ? window.ALBA_POINT_ESSAI : null;
-  if (!point) {
-    return <a href="#fonctionnalites" className={className}>{children}</a>;
-  }
+  const remplacement = typeof window !== "undefined" ? window.ALBA_POINT_ESSAI : null;
+  // Une valeur vide, nulle ou non textuelle ne remplace rien.
+  const point = typeof remplacement === "string" && remplacement.trim()
+    ? remplacement.trim()
+    : POINT_ESSAI_PAR_DEFAUT;
   return (
     <form className="essai-express" method="post" action={point}>
       <button type="submit" className={className}>{children}</button>
