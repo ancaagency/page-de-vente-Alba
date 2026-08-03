@@ -230,7 +230,7 @@ var initSectionFX = function initSectionFX(coarse) {
         y: 26,
         autoAlpha: 0,
         duration: 0.85
-      }, 0.68).from(".hero-meta", {
+      }, 0.68).from(".hero-essai-note", {
         y: 18,
         autoAlpha: 0,
         duration: 0.7
@@ -251,7 +251,7 @@ var initSectionFX = function initSectionFX(coarse) {
       }, 1.7);
     } else {
       // Remount (e.g. language switch): show everything, quick word settle
-      gsap.set(".hero .tag, .hero-sub, .hero-actions, .hero-meta, .hero-mockup-wrap, .hero-float, .hero-cue", {
+      gsap.set(".hero .tag, .hero-sub, .hero-actions, .hero-essai-note, .hero-mockup-wrap, .hero-float, .hero-cue", {
         clearProps: "all"
       });
       gsap.fromTo(words, {

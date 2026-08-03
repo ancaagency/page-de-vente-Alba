@@ -128,23 +128,7 @@ var Hero = function Hero() {
     delay: 420
   }, /*#__PURE__*/React.createElement("p", {
     className: "hero-essai-note"
-  }, Txt("accueil.note-essai", "Un espace d'essai complet, ouvert 7 jours. Sans inscription ni carte bancaire.", "A complete trial workspace, open for 7 days. No sign-up, no credit card."))), /*#__PURE__*/React.createElement(Reveal, {
-    delay: 480
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "hero-meta"
-  }, /*#__PURE__*/React.createElement("span", null, /*#__PURE__*/React.createElement(Icon, {
-    name: "check",
-    size: 12,
-    style: {
-      display: "inline",
-      verticalAlign: "-2px",
-      marginRight: 6
-    }
-  }), " ", Txt("accueil.gratuit-a-vie-pour-1-projet", "Premier projet offert", "First project on us")), /*#__PURE__*/React.createElement("span", {
-    className: "sep"
-  }), /*#__PURE__*/React.createElement("span", null, Txt("accueil.sans-engagement", "Sans engagement", "No commitment")), /*#__PURE__*/React.createElement("span", {
-    className: "sep"
-  }), /*#__PURE__*/React.createElement("span", null, Txt("accueil.setup-en-10-min", "Setup en 10 min", "10-min setup"))))), /*#__PURE__*/React.createElement(Reveal, {
+  }, Txt("accueil.note-essai", "Un espace d'essai complet, ouvert 7 jours. Sans inscription ni carte bancaire.", "A complete trial workspace, open for 7 days. No sign-up, no credit card.")))), /*#__PURE__*/React.createElement(Reveal, {
     delay: 600,
     className: "hero-mockup-wrap container"
   }, /*#__PURE__*/React.createElement("div", {

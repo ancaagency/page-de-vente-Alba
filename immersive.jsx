@@ -161,13 +161,13 @@ const initSectionFX = (coarse) => {
         .to(words, { yPercent: 0, autoAlpha: 1, duration: 1.05, stagger: 0.05 }, 0.15)
         .from(".hero-sub", { y: 26, autoAlpha: 0, duration: 0.85 }, 0.55)
         .from(".hero-actions", { y: 26, autoAlpha: 0, duration: 0.85 }, 0.68)
-        .from(".hero-meta", { y: 18, autoAlpha: 0, duration: 0.7 }, 0.8)
+        .from(".hero-essai-note", { y: 18, autoAlpha: 0, duration: 0.7 }, 0.8)
         .from(".hero-mockup-wrap", { y: 120, duration: 1.4, ease: "power3.out" }, 0.6)
         .from(".hero-float", { y: 34, autoAlpha: 0, scale: 0.86, duration: 0.8, stagger: 0.14, ease: "back.out(1.6)" }, 1.35)
         .from(".hero-cue", { autoAlpha: 0, duration: 0.6 }, 1.7);
     } else {
       // Remount (e.g. language switch): show everything, quick word settle
-      gsap.set(".hero .tag, .hero-sub, .hero-actions, .hero-meta, .hero-mockup-wrap, .hero-float, .hero-cue", { clearProps: "all" });
+      gsap.set(".hero .tag, .hero-sub, .hero-actions, .hero-essai-note, .hero-mockup-wrap, .hero-float, .hero-cue", { clearProps: "all" });
       gsap.fromTo(words, { yPercent: 30, autoAlpha: 0 }, { yPercent: 0, autoAlpha: 1, duration: 0.5, stagger: 0.02, ease: "power3.out" });
     }
 

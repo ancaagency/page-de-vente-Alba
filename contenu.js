@@ -64,18 +64,10 @@ window.ALBA_CONTENU = {
     fr: "Un espace d'essai complet, ouvert 7 jours. Sans inscription ni carte bancaire.",
     en: "A complete trial workspace, open for 7 days. No sign-up, no credit card.",
   },
-  "accueil.gratuit-a-vie-pour-1-projet": {
-    fr: "Premier projet offert",
-    en: "First project on us",
-  },
-  "accueil.sans-engagement": {
-    fr: "Sans engagement",
-    en: "No commitment",
-  },
-  "accueil.setup-en-10-min": {
-    fr: "Setup en 10 min",
-    en: "10-min setup",
-  },
+  /* Retirées avec la ligne « Premier projet offert · Sans engagement · Setup en
+     10 min » du hero : elle annonçait une autre promesse que l'essai de 7 jours
+     juste au-dessus. Les clés jumelles de la carte tarifaire et du bandeau
+     (« tarifs.… », « bandeau-cta.… ») existent toujours et restent utilisées. */
   "accueil.decision-validee": {
     fr: "Décision validée",
     en: "Decision approved",

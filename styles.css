@@ -761,8 +761,7 @@ section {
   .hero-sub { font-size: 15px; padding: 0 8px; }
   .hero-actions { flex-direction: column; width: 100%; padding: 0 12px; }
   .hero-actions .btn { width: 100%; justify-content: center; }
-  .hero-meta { flex-wrap: wrap; gap: 10px 14px; justify-content: center; }
-  .hero-meta .sep { display: none; }
+  .hero-essai-note { font-size: 12.5px; padding: 0 12px; }
   .hero-mockup-wrap { margin-top: 48px; }
 
   /* Section headers */

@@ -51,8 +51,9 @@ const Hero = () => (
           {/* Les deux boutons du hero, dans l'ordre du parcours : on essaie
               d'abord, on s'abonne ensuite.
 
-              · « Tester en 1 clic » mène au carrousel #fonctionnalites, qui est
-                le simulateur — cinq écrans réels, cliquables sans compte.
+              · « Tester en 1 clic » poste vers demo-express et ouvre un vrai
+                espace d'essai. C'est un <form>, pas un lien — voir le long
+                commentaire de <BoutonEssai/> dans components.jsx.
               · « S'abonner » mène à #pricing, PAS directement au tunnel Stripe :
                 depuis le hero on ignore le palier de stockage, la périodicité et
                 le nombre de sièges. Envoyer un palier par défaut ferait payer au
@@ -70,15 +71,14 @@ const Hero = () => (
           {Txt("accueil.note-essai", "Un espace d'essai complet, ouvert 7 jours. Sans inscription ni carte bancaire.", "A complete trial workspace, open for 7 days. No sign-up, no credit card.")}
         </p>
       </Reveal>
-      <Reveal delay={480}>
-        <div className="hero-meta">
-          <span><Icon name="check" size={12} style={{display:"inline", verticalAlign:"-2px", marginRight:6}}/> {Txt("accueil.gratuit-a-vie-pour-1-projet", "Premier projet offert", "First project on us")}</span>
-          <span className="sep"/>
-          <span>{Txt("accueil.sans-engagement", "Sans engagement", "No commitment")}</span>
-          <span className="sep"/>
-          <span>{Txt("accueil.setup-en-10-min", "Setup en 10 min", "10-min setup")}</span>
-        </div>
-      </Reveal>
+      {/* La ligne « Premier projet offert · Sans engagement · Setup en 10 min »
+          a été retirée : elle faisait une seconde ligne de petit texte sous les
+          boutons, et surtout elle annonçait une AUTRE promesse que l'essai —
+          un premier projet gratuit là où le bouton ouvre un espace de 7 jours.
+          Deux offres différentes à trois centimètres l'une de l'autre, c'est
+          une hésitation, pas une réassurance. La note d'essai reste seule.
+          Les trois clés de traduction ont été retirées de contenu.js avec elle :
+          tests/contenu.mjs échoue sur une clé déclarée que personne n'appelle. */}
     </div>
     <Reveal delay={600} className="hero-mockup-wrap container">
       <div className="hero-glow"/>
