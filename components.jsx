@@ -641,15 +641,84 @@ const RealShot = ({ src, title = "alba-studio.co", alt = "Interface ALBA Studio"
 const POINT_ESSAI_PAR_DEFAUT =
   "https://fhrkkjvbzgkbmlnlnxce.supabase.co/functions/v1/demo-express";
 
+/* ─────────────────────────────────────────────────────────────────────────────
+ * UN SEUL ENVOI, ET IL FAUT QUE ÇA SE VOIE
+ *
+ * Le serveur ne se contente pas d'ouvrir une session : il crée un compte, un
+ * espace de travail, deux chantiers avec leurs phases, leurs décisions, leur
+ * budget et leurs réserves. Sur un téléphone en 5G moyenne, ça prend plusieurs
+ * secondes pendant lesquelles la page ne bouge pas d'un pixel.
+ *
+ * Anthony a tapé plusieurs fois — n'importe qui l'aurait fait. Chaque tap
+ * relance un POST, et le plafond est de TROIS essais par heure : trois taps
+ * nerveux et le visiteur est verrouillé pour une heure, sur un bouton qui
+ * fonctionnait.
+ *
+ * Deux corrections, et le verrou compte plus que l'affichage :
+ *
+ *   · un verrou SYNCHRONE, hors de l'état React. Un `useState` est appliqué au
+ *     rendu suivant : deux taps rapprochés le liraient tous les deux à `false`
+ *     et partiraient tous les deux. C'est la même erreur que sur le bouton de
+ *     paiement, où tests/paiement.mjs l'avait attrapée ;
+ *   · il est PARTAGÉ par tous les boutons de la page — le hero et le flottant
+ *     portent le même libellé et le même geste, un verrou par instance
+ *     laisserait passer un envoi par bouton.
+ *
+ * Ce qu'on ne fait SURTOUT pas : `disabled` sur le bouton. Désactiver un bouton
+ * de soumission pendant que l'événement `submit` se propage annule la
+ * soumission dans plusieurs navigateurs — on empêcherait le second envoi en
+ * supprimant le premier. Le verrou bloque dans `onSubmit`, le reste n'est que
+ * du visuel.
+ *
+ * Et le filet : si la navigation n'aboutit pas — réseau coupé, serveur muet —
+ * le verrou se relâche au bout de 25 secondes. Sans quoi un échec silencieux
+ * laisserait un bouton mort jusqu'au rechargement.
+ * ───────────────────────────────────────────────────────────────────────────── */
+let ESSAI_EN_COURS = false;                     // partagé par tous les boutons
+const EVENEMENT_ESSAI = "alba:essai-en-cours";  // pour que tous l'affichent
+
 const BoutonEssai = ({ className = "btn btn-primary", children }) => {
   const remplacement = typeof window !== "undefined" ? window.ALBA_POINT_ESSAI : null;
   // Une valeur vide, nulle ou non textuelle ne remplace rien.
   const point = typeof remplacement === "string" && remplacement.trim()
     ? remplacement.trim()
     : POINT_ESSAI_PAR_DEFAUT;
+
+  const [ouverture, setOuverture] = React.useState(false);
+
+  React.useEffect(() => {
+    const suivre = () => setOuverture(ESSAI_EN_COURS);
+    /* Retour par le bouton « précédent » : iOS restitue la page telle qu'elle
+       était, verrou compris. Sans cette remise à zéro, le visiteur revient sur
+       un bouton qui annonce « Ouverture… » et ne répond plus. */
+    const reprise = () => { ESSAI_EN_COURS = false; setOuverture(false); };
+    window.addEventListener(EVENEMENT_ESSAI, suivre);
+    window.addEventListener("pageshow", reprise);
+    return () => {
+      window.removeEventListener(EVENEMENT_ESSAI, suivre);
+      window.removeEventListener("pageshow", reprise);
+    };
+  }, []);
+
+  const envoyer = (ev) => {
+    if (ESSAI_EN_COURS) { ev.preventDefault(); return; }  // le tap de trop
+    ESSAI_EN_COURS = true;
+    // Pas de preventDefault ici : le formulaire DOIT partir.
+    window.dispatchEvent(new Event(EVENEMENT_ESSAI));
+    window.setTimeout(() => {
+      ESSAI_EN_COURS = false;
+      window.dispatchEvent(new Event(EVENEMENT_ESSAI));
+    }, 25000);
+  };
+
   return (
-    <form className="essai-express" method="post" action={point}>
-      <button type="submit" className={className}>{children}</button>
+    <form className="essai-express" method="post" action={point} onSubmit={envoyer}>
+      <button type="submit" className={`${className}${ouverture ? " est-en-ouverture" : ""}`}
+              aria-busy={ouverture ? "true" : "false"}>
+        {ouverture
+          ? <><span className="essai-rouet" aria-hidden="true"/>{L("Ouverture de votre espace…", "Opening your workspace…")}</>
+          : children}
+      </button>
     </form>
   );
 };

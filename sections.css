@@ -124,6 +124,31 @@
    redevient un bloc et le bouton doit quand même remplir la largeur. */
 .essai-express { display: contents; }
 
+/* Pendant l'ouverture de l'espace. Le bouton n'est PAS `disabled` — désactiver
+   un bouton de soumission pendant que l'événement `submit` se propage annule la
+   soumission dans plusieurs navigateurs. Le verrou est en JavaScript ; ceci ne
+   fait que le montrer, et décourager le tap suivant. */
+.est-en-ouverture {
+  cursor: progress;
+  opacity: 0.82;
+}
+.essai-rouet {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  animation: essai-tourne 0.7s linear infinite;
+  flex-shrink: 0;
+}
+@keyframes essai-tourne { to { transform: rotate(360deg); } }
+/* Un rouet qui tourne indéfiniment est une animation d'attente, pas un effet :
+   on le fige plutôt que de le supprimer, sinon il ne reste rien pour dire que
+   quelque chose se passe. */
+@media (prefers-reduced-motion: reduce) {
+  .essai-rouet { animation-duration: 0s; opacity: 0.6; }
+}
+
 /* Ce que promet l'essai, dit tout de suite : 7 jours puis suppression, aucune
    adresse demandée. Le taire ferait découvrir la limite au visiteur au pire
    moment — quand il a commencé à s'installer dedans. */

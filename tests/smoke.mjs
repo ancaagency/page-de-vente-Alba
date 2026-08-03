@@ -315,6 +315,68 @@ console.log('\n===== l\'essai express ne peut pas être déclenché par un robot
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
+ * Trois taps ne consomment pas trois essais
+ *
+ * PANNE RÉELLE. Le serveur crée un compte, un espace, deux chantiers avec leurs
+ * décisions et leurs réserves : plusieurs secondes pendant lesquelles la page
+ * ne bouge pas. Anthony a tapé plusieurs fois — n'importe qui l'aurait fait —
+ * et le plafond étant de TROIS essais par heure, il s'est verrouillé lui-même
+ * sur un bouton qui fonctionnait.
+ *
+ * Le verrou doit être synchrone (un useState est appliqué au rendu suivant,
+ * donc deux taps rapprochés le liraient tous les deux à false) et PARTAGÉ entre
+ * le bouton du hero et le bouton flottant, qui font la même chose.
+ * ───────────────────────────────────────────────────────────────────────────── */
+console.log('\n===== les taps répétés ne brûlent pas le plafond d\'essais =====');
+{
+  const page = await browser.newPage({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
+  const envois = [];
+  /* On répond 204. Face à un 204 sur une navigation, le navigateur RESTE sur la
+     page courante : c'est très exactement « on clique et rien ne s'ouvre », le
+     cas qui fait retaper — et le document reste intact, donc interrogeable.
+     (Une réponse lente ferait retaper aussi, mais la page serait en cours de
+     navigation et son DOM inaccessible ; un `abort` ferait basculer Chromium
+     sur sa page d'erreur, où le bouton n'existe plus.) */
+  await page.route('**/functions/v1/demo-express', async (r) => {
+    envois.push(r.request().method());
+    await r.fulfill({ status: 204 });
+  });
+  await page.goto('http://localhost:8790/', { waitUntil: 'load', timeout: 40000 });
+  await page.waitForTimeout(5000);
+
+  /* Les trois taps sont ESPACÉS, et ce n'est pas un détail : trois `click()`
+     dans la même tâche ne produisent qu'une navigation de toute façon — le
+     navigateur les fusionne — et le contrôle passerait même sans verrou.
+     Vérifié en neutralisant le verrou : la version groupée restait au vert.
+     Un humain qui s'impatiente tape à un rythme, pas dans la même milliseconde. */
+  for (let i = 0; i < 3; i++) {
+    await page.evaluate(() => document.querySelector('.hero-actions .btn-primary').click());
+    await page.waitForTimeout(700);
+  }
+  console.log(`   ${envois.length === 1 ? '✅' : '❌'} trois taps espacés sur le bouton du hero, un seul envoi (${envois.length})`);
+  if (envois.length !== 1) echecs++;
+
+  // Le libellé doit dire que ça travaille, sinon on retape par réflexe.
+  const libelle = await page.$eval('.hero-actions .btn-primary', (e) => e.textContent.trim()).catch(() => '');
+  const parle = /ouverture/i.test(libelle);
+  console.log(`   ${parle ? '✅' : '❌'} et le bouton dit ce qu'il fait (« ${libelle} »)`);
+  if (!parle) echecs++;
+
+  /* Le verrou doit être PARTAGÉ : le bouton flottant porte le même libellé et
+     fait la même chose. Un verrou par instance laisserait passer un envoi par
+     bouton, soit deux des trois essais de l'heure. */
+  await page.evaluate(() => {
+    const f = document.querySelector('.float-cta');
+    if (f) f.click();
+  });
+  await page.waitForTimeout(1200);
+  console.log(`   ${envois.length === 1 ? '✅' : '❌'} le bouton flottant ne relance rien non plus (${envois.length})`);
+  if (envois.length !== 1) echecs++;
+
+  await page.close();
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
  * Le bouton résiste-t-il à un config.js périmé ?
  *
  * PANNE RÉELLE, remontée par Anthony : « on clique, on reste sur la page ».
