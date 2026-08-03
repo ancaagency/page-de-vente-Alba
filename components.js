@@ -13,6 +13,12 @@
    ═══════════════════════════════════════════════════════════════════════════ */
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 var _excluded = ["name", "size", "stroke"];
+function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
 function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
 function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
@@ -265,6 +271,22 @@ var Icon = function Icon(_ref) {
     case "send":
       return /*#__PURE__*/React.createElement("svg", common, /*#__PURE__*/React.createElement("path", {
         d: "M4 12 20 4l-6 16-2.5-6.5z"
+      }));
+    /* Ajouté pour le message de retour de l'essai express. Sans lui, `default`
+       renvoie null : l'icône disparaissait sans que rien ne le signale. */
+    case "info":
+      return /*#__PURE__*/React.createElement("svg", common, /*#__PURE__*/React.createElement("circle", {
+        cx: "12",
+        cy: "12",
+        r: "9"
+      }), /*#__PURE__*/React.createElement("path", {
+        d: "M12 11v5"
+      }), /*#__PURE__*/React.createElement("circle", {
+        cx: "12",
+        cy: "7.8",
+        r: ".9",
+        fill: "currentColor",
+        stroke: "none"
       }));
     default:
       return null;
@@ -1698,7 +1720,107 @@ var RealShot = function RealShot(_ref7) {
     }
   }));
 };
+
+/* ═════════════════════════════════════════════════════════════════════════════
+   « Tester en 1 clic » — un FORMULAIRE, jamais un lien
+
+   Ce bouton poste vers demo-express, qui CRÉE UN COMPTE et renvoie le visiteur
+   dedans, déjà connecté. Écrit en <a href>, il en créerait un chaque fois qu'un
+   robot d'indexation suit le lien, qu'une messagerie déplie l'aperçu d'une URL,
+   ou qu'un antivirus d'entreprise vérifie une adresse : des centaines de comptes
+   sans qu'un humain ait cliqué. Le serveur refuse d'ailleurs les GET en 405.
+
+   Un <form method="post"> suffit, et il n'a besoin d'AUCUN JavaScript : les
+   robots ne postent pas. C'est aussi ce qui le rend fonctionnel avant même que
+   React ne soit monté, et chez un visiteur qui a coupé les scripts.
+
+   `display: contents` sur le <form> (styles.css) le rend transparent à la mise
+   en page : le <button> se comporte comme s'il était l'enfant direct de
+   `.hero-actions`, sans quoi il sortirait de la disposition en flex.
+
+   L'adresse vient de config.js, point unique de vérité. Si elle manque — script
+   non chargé, valeur effacée — on n'affiche PAS un bouton mort : on retombe sur
+   le carrousel de démonstration de la page, qui montre les mêmes écrans sans
+   créer de compte. Un bouton qui ne fait rien est pire qu'un bouton qui fait
+   moins.
+   ═════════════════════════════════════════════════════════════════════════════ */
+var BoutonEssai = function BoutonEssai(_ref8) {
+  var _ref8$className = _ref8.className,
+    className = _ref8$className === void 0 ? "btn btn-primary" : _ref8$className,
+    children = _ref8.children;
+  var point = typeof window !== "undefined" ? window.ALBA_POINT_ESSAI : null;
+  if (!point) {
+    return /*#__PURE__*/React.createElement("a", {
+      href: "#fonctionnalites",
+      className: className
+    }, children);
+  }
+  return /*#__PURE__*/React.createElement("form", {
+    className: "essai-express",
+    method: "post",
+    action: point
+  }, /*#__PURE__*/React.createElement("button", {
+    type: "submit",
+    className: className
+  }, children));
+};
+
+/* Message de retour de l'essai express.
+ *
+ * Quand le serveur ne peut pas ouvrir d'espace, il renvoie le visiteur ICI avec
+ * `?essai=trop_de_tentatives` ou `?essai=indisponible`. Sans ce composant, il
+ * revient sur la page d'accueil sans la moindre explication et croit que le
+ * bouton est cassé.
+ *
+ * L'adresse est nettoyée aussitôt (replaceState) : un rechargement ou un
+ * partage du lien ne doit pas rejouer un message qui n'a plus lieu d'être. */
+var MessageEssai = function MessageEssai() {
+  var _React$useState = React.useState(null),
+    _React$useState2 = _slicedToArray(_React$useState, 2),
+    code = _React$useState2[0],
+    setCode = _React$useState2[1];
+  React.useEffect(function () {
+    var vu = null;
+    try {
+      vu = new URLSearchParams(window.location.search).get("essai");
+    } catch (e) {
+      return;
+    }
+    if (!vu || vu === "1") return; // `essai=1` est le succès, côté application
+    setCode(vu);
+    try {
+      var u = new URL(window.location.href);
+      u.searchParams["delete"]("essai");
+      window.history.replaceState({}, "", u.pathname + u.search + u.hash);
+    } catch (e) {/* adresse exotique : le message reste, c'est le moindre mal */}
+  }, []);
+  if (!code) return null;
+  var MESSAGES = {
+    trop_de_tentatives: L("Vous avez déjà ouvert plusieurs essais récemment. Réessayez dans une heure, ou écrivez-nous — on vous ouvre l'accès nous-mêmes.", "You've already opened several trials recently. Try again in an hour, or write to us — we'll open access for you ourselves."),
+    indisponible: L("L'essai n'a pas pu s'ouvrir. Ce n'est pas de votre fait : écrivez-nous et on règle ça.", "The trial couldn't be opened. It's not your doing: write to us and we'll sort it out.")
+  };
+  var texte = MESSAGES[code] || MESSAGES.indisponible;
+  return /*#__PURE__*/React.createElement("div", {
+    className: "essai-message",
+    role: "status"
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "info",
+    size: 16
+  }), /*#__PURE__*/React.createElement("p", null, texte), /*#__PURE__*/React.createElement("a", {
+    href: "#contact",
+    className: "essai-message-lien"
+  }, L("Nous écrire", "Write to us")), /*#__PURE__*/React.createElement("button", {
+    type: "button",
+    className: "essai-message-fermer",
+    onClick: function onClick() {
+      return setCode(null);
+    },
+    "aria-label": L("Fermer", "Close")
+  }, "\xD7"));
+};
 window.Icon = Icon;
+window.BoutonEssai = BoutonEssai;
+window.MessageEssai = MessageEssai;
 window.StoreBadges = StoreBadges;
 window.PhotoPlaceholder = PhotoPlaceholder;
 window.AppMockup = AppMockup;

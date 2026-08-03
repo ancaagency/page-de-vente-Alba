@@ -56,6 +56,14 @@ window.ALBA_CONTENU = {
     fr: "S'abonner",
     en: "Subscribe",
   },
+  /* Les trois limites de l'essai, dites tout de suite. Si vous modifiez cette
+     phrase, gardez les 7 jours : l'espace est réellement supprimé au bout de
+     sept jours, et le taire ferait découvrir la limite au visiteur une fois
+     qu'il s'y est installé. */
+  "accueil.note-essai": {
+    fr: "Un espace d'essai complet, ouvert 7 jours. Sans inscription ni carte bancaire.",
+    en: "A complete trial workspace, open for 7 days. No sign-up, no credit card.",
+  },
   "accueil.gratuit-a-vie-pour-1-projet": {
     fr: "Premier projet offert",
     en: "First project on us",

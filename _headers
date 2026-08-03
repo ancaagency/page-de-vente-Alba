@@ -35,6 +35,20 @@
   #   navigateur bloquerait l'envoi. L'origine est nommée explicitement plutôt
   #   que 'self' ou un joker : c'est la seule adresse que la page a le droit de
   #   joindre.
+  # form-action : 'self' + les DEUX origines de l'essai express. Le bouton
+  #   « Tester en 1 clic » est un <form method="post"> vers demo-express (il ne
+  #   peut pas être un lien : le point d'entrée crée un compte, et les robots
+  #   suivent les liens). Avec 'self' seul, le navigateur bloquait purement et
+  #   simplement l'envoi — la directive ne se replie PAS sur default-src, mais
+  #   'self' était déjà écrit, donc il fallait l'élargir.
+  #
+  #   Pourquoi l'origine de l'application y figure aussi, alors que la page n'y
+  #   poste rien : le serveur répond en 303 vers un lien de connexion à usage
+  #   unique, qui redirige à son tour vers app.alba-studio.co. Les navigateurs ne
+  #   s'accordent pas sur l'application de form-action aux redirections — Chrome
+  #   a retiré ce contrôle, d'autres l'ont gardé. Nommer les deux origines coûte
+  #   peu : ce sont les nôtres, et la page y envoie déjà des visiteurs par des
+  #   liens ordinaires.
   # object-src / frame-src / worker-src 'none' : plus strict que le repli sur
   #   default-src. Vérifié : ni <object>, ni <embed>, ni <iframe>, ni Worker,
   #   ni Service Worker dans le projet.
@@ -42,7 +56,7 @@
   #   et les pages ont des blocs <style>. Un style injecté ne s'exécute pas ;
   #   le risque n'a rien de comparable à celui d'un script.
   # media-src 'self' sert au son d'apparition de Léo (uploads/*.mp3).
-  Content-Security-Policy: default-src 'self'; script-src 'self' https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; media-src 'self'; connect-src https://fhrkkjvbzgkbmlnlnxce.supabase.co; object-src 'none'; frame-src 'none'; worker-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests
+  Content-Security-Policy: default-src 'self'; script-src 'self' https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; media-src 'self'; connect-src https://fhrkkjvbzgkbmlnlnxce.supabase.co; object-src 'none'; frame-src 'none'; worker-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self' https://fhrkkjvbzgkbmlnlnxce.supabase.co https://app.alba-studio.co; upgrade-insecure-requests
 
   # Deux en-têtes volontairement ABSENTS, pour ne pas confondre durcissement et
   # dégâts :

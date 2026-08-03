@@ -44,6 +44,10 @@ const App = () => {
   return (
     <>
       <div key={lang}>
+        {/* Retour d'un essai express qui n'a pas pu s'ouvrir : le serveur
+            renvoie ici avec ?essai=… Sans ce message, le visiteur revient sur
+            l'accueil sans savoir ce qui s'est passé et croit le bouton cassé. */}
+        <MessageEssai/>
         <Hero/>
         <Logos/>
         <Manifesto/>

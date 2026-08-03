@@ -633,16 +633,13 @@ var initSectionFX = function initSectionFX(coarse) {
  *
  * Il menait a #contact, c'est-a-dire a un formulaire de demande de demo — on
  * demandait a l'architecte son nom et son adresse avant de lui montrer quoi que
- * ce soit. Il mene desormais au carrousel #fonctionnalites, qui EST le
- * simulateur : cinq ecrans reels de l'application (Leo, meteo, materiaux,
- * calendrier, messagerie) sur lesquels on peut cliquer tout de suite, sans
- * compte et sans rendez-vous.
+ * ce soit. Il ouvre desormais un vrai espace d'essai, comme le bouton du hero :
+ * meme libelle, meme geste, meme resultat. Deux boutons qui portent le meme mot
+ * et font deux choses differentes, c'est une facon sure de perdre le visiteur.
  *
- * Consequence sur la regle d'affichage : le bouton se cachait a l'approche du
- * formulaire de contact. Il se cache maintenant quand le carrousel est a
- * l'ecran — proposer d'aller voir ce qu'on est deja en train de regarder n'a
- * aucun sens. Et comme le carrousel arrive tot dans la page, le bouton ne
- * reapparait qu'une fois qu'on l'a depasse.
+ * Il passe par <BoutonEssai/>, donc par un <form method="post"> — voir le long
+ * commentaire dans components.jsx : ce point d'entree cree un compte, un lien y
+ * serait suivi par les robots.
  */
 var FloatingCTA = function FloatingCTA() {
   var _React$useState = React.useState(false),
@@ -653,13 +650,9 @@ var FloatingCTA = function FloatingCTA() {
     var onScroll = function onScroll() {
       var vh = window.innerHeight;
       var past = window.scrollY > vh * 1.2;
-      var demo = document.getElementById("fonctionnalites");
-      // Visible a l'ecran, meme partiellement.
-      var r = demo && demo.getBoundingClientRect();
-      var surEcran = r && r.top < vh && r.bottom > 0;
       var contact = document.getElementById("contact");
       var nearContact = contact && contact.getBoundingClientRect().top < vh * 0.9;
-      setShow(past && !surEcran && !nearContact);
+      setShow(past && !nearContact);
     };
     window.addEventListener("scroll", onScroll, {
       passive: true
@@ -669,8 +662,7 @@ var FloatingCTA = function FloatingCTA() {
       return window.removeEventListener("scroll", onScroll);
     };
   }, []);
-  return /*#__PURE__*/React.createElement("a", {
-    href: "#fonctionnalites",
+  return /*#__PURE__*/React.createElement(BoutonEssai, {
     className: "float-cta ".concat(show ? "show" : "")
   }, /*#__PURE__*/React.createElement("span", {
     className: "fc-dot"

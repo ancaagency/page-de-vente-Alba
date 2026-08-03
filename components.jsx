@@ -72,6 +72,10 @@ const Icon = ({ name, size = 18, stroke = 1.5, ...rest }) => {
       return <svg {...common}><rect x="4" y="8" width="16" height="11" rx="3"/><path d="M12 4v4M8.5 13v1.5M15.5 13v1.5"/><circle cx="12" cy="3.2" r="1.2"/></svg>;
     case "send":
       return <svg {...common}><path d="M4 12 20 4l-6 16-2.5-6.5z"/></svg>;
+    /* Ajouté pour le message de retour de l'essai express. Sans lui, `default`
+       renvoie null : l'icône disparaissait sans que rien ne le signale. */
+    case "info":
+      return <svg {...common}><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><circle cx="12" cy="7.8" r=".9" fill="currentColor" stroke="none"/></svg>;
     default: return null;
   }
 };
@@ -597,7 +601,90 @@ const RealShot = ({ src, title = "alba-studio.co", alt = "Interface ALBA Studio"
   </div>
 );
 
+/* ═════════════════════════════════════════════════════════════════════════════
+   « Tester en 1 clic » — un FORMULAIRE, jamais un lien
+
+   Ce bouton poste vers demo-express, qui CRÉE UN COMPTE et renvoie le visiteur
+   dedans, déjà connecté. Écrit en <a href>, il en créerait un chaque fois qu'un
+   robot d'indexation suit le lien, qu'une messagerie déplie l'aperçu d'une URL,
+   ou qu'un antivirus d'entreprise vérifie une adresse : des centaines de comptes
+   sans qu'un humain ait cliqué. Le serveur refuse d'ailleurs les GET en 405.
+
+   Un <form method="post"> suffit, et il n'a besoin d'AUCUN JavaScript : les
+   robots ne postent pas. C'est aussi ce qui le rend fonctionnel avant même que
+   React ne soit monté, et chez un visiteur qui a coupé les scripts.
+
+   `display: contents` sur le <form> (styles.css) le rend transparent à la mise
+   en page : le <button> se comporte comme s'il était l'enfant direct de
+   `.hero-actions`, sans quoi il sortirait de la disposition en flex.
+
+   L'adresse vient de config.js, point unique de vérité. Si elle manque — script
+   non chargé, valeur effacée — on n'affiche PAS un bouton mort : on retombe sur
+   le carrousel de démonstration de la page, qui montre les mêmes écrans sans
+   créer de compte. Un bouton qui ne fait rien est pire qu'un bouton qui fait
+   moins.
+   ═════════════════════════════════════════════════════════════════════════════ */
+const BoutonEssai = ({ className = "btn btn-primary", children }) => {
+  const point = typeof window !== "undefined" ? window.ALBA_POINT_ESSAI : null;
+  if (!point) {
+    return <a href="#fonctionnalites" className={className}>{children}</a>;
+  }
+  return (
+    <form className="essai-express" method="post" action={point}>
+      <button type="submit" className={className}>{children}</button>
+    </form>
+  );
+};
+
+/* Message de retour de l'essai express.
+ *
+ * Quand le serveur ne peut pas ouvrir d'espace, il renvoie le visiteur ICI avec
+ * `?essai=trop_de_tentatives` ou `?essai=indisponible`. Sans ce composant, il
+ * revient sur la page d'accueil sans la moindre explication et croit que le
+ * bouton est cassé.
+ *
+ * L'adresse est nettoyée aussitôt (replaceState) : un rechargement ou un
+ * partage du lien ne doit pas rejouer un message qui n'a plus lieu d'être. */
+const MessageEssai = () => {
+  const [code, setCode] = React.useState(null);
+  React.useEffect(() => {
+    let vu = null;
+    try {
+      vu = new URLSearchParams(window.location.search).get("essai");
+    } catch (e) { return; }
+    if (!vu || vu === "1") return;      // `essai=1` est le succès, côté application
+    setCode(vu);
+    try {
+      const u = new URL(window.location.href);
+      u.searchParams.delete("essai");
+      window.history.replaceState({}, "", u.pathname + u.search + u.hash);
+    } catch (e) { /* adresse exotique : le message reste, c'est le moindre mal */ }
+  }, []);
+
+  if (!code) return null;
+  const MESSAGES = {
+    trop_de_tentatives: L(
+      "Vous avez déjà ouvert plusieurs essais récemment. Réessayez dans une heure, ou écrivez-nous — on vous ouvre l'accès nous-mêmes.",
+      "You've already opened several trials recently. Try again in an hour, or write to us — we'll open access for you ourselves."),
+    indisponible: L(
+      "L'essai n'a pas pu s'ouvrir. Ce n'est pas de votre fait : écrivez-nous et on règle ça.",
+      "The trial couldn't be opened. It's not your doing: write to us and we'll sort it out."),
+  };
+  const texte = MESSAGES[code] || MESSAGES.indisponible;
+  return (
+    <div className="essai-message" role="status">
+      <Icon name="info" size={16}/>
+      <p>{texte}</p>
+      <a href="#contact" className="essai-message-lien">{L("Nous écrire", "Write to us")}</a>
+      <button type="button" className="essai-message-fermer" onClick={() => setCode(null)}
+              aria-label={L("Fermer", "Close")}>×</button>
+    </div>
+  );
+};
+
 window.Icon = Icon;
+window.BoutonEssai = BoutonEssai;
+window.MessageEssai = MessageEssai;
 window.StoreBadges = StoreBadges;
 window.PhotoPlaceholder = PhotoPlaceholder;
 window.AppMockup = AppMockup;

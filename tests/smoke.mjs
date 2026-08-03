@@ -240,54 +240,159 @@ console.log('\n===== « Tester en 1 clic » atteint-il le simulateur ? =====');
      lit pas ce qu'elles disent. C'est arrivé une fois : le hero annonçait
      encore « Demander une démo » alors que le code disait « Tester en 1 clic ».
      On lit donc le texte RENDU, pas le code. */
-  const HERO = [
-    ['.hero-actions .btn-primary', /tester en 1 clic/i, '#fonctionnalites'],
-    ['.hero-actions .btn-ghost', /s'abonner/i, '#pricing'],
-  ];
-  for (const [sel, attendu, cible] of HERO) {
-    const vu = await page.$eval(sel, (e) => ({
-      texte: e.textContent.trim(), href: e.getAttribute('href'),
-    })).catch(() => null);
-    const bon = vu && attendu.test(vu.texte) && vu.href === cible;
-    console.log(`   ${bon ? '✅' : '❌'} hero ${sel} → « ${vu ? vu.texte : 'ABSENT'} » vers ${vu ? vu.href : '—'}`);
-    if (!bon) echecs++;
-  }
+  const primaire = await page.$eval('.hero-actions .btn-primary', (e) => ({
+    texte: e.textContent.trim(), balise: e.tagName, type: e.getAttribute('type'),
+  })).catch(() => null);
+  const bonPrimaire = primaire && /tester en 1 clic/i.test(primaire.texte)
+                      && primaire.balise === 'BUTTON' && primaire.type === 'submit';
+  console.log(`   ${bonPrimaire ? '✅' : '❌'} hero bouton doré → « ${primaire ? primaire.texte : 'ABSENT'} » (<${primaire ? primaire.balise.toLowerCase() : '—'}>)`);
+  if (!bonPrimaire) echecs++;
 
-  const cible = await page.$eval('.float-cta', (e) => e.getAttribute('href')).catch(() => null);
-  const bon = cible === '#fonctionnalites';
-  console.log(`   ${bon ? '✅' : '❌'} le bouton vise le simulateur (${cible || 'ABSENT'})`);
-  if (!bon) echecs++;
+  const ghost = await page.$eval('.hero-actions .btn-ghost', (e) => ({
+    texte: e.textContent.trim(), href: e.getAttribute('href'),
+  })).catch(() => null);
+  const bonGhost = ghost && /s'abonner/i.test(ghost.texte) && ghost.href === '#pricing';
+  console.log(`   ${bonGhost ? '✅' : '❌'} hero bouton contour → « ${ghost ? ghost.texte : 'ABSENT'} » vers ${ghost ? ghost.href : '—'}`);
+  if (!bonGhost) echecs++;
 
   const libelle = await page.$eval('.float-cta', (e) => e.textContent.trim()).catch(() => '');
   const promet = /tester/i.test(libelle) && !/d[ée]mo/i.test(libelle);
-  console.log(`   ${promet ? '✅' : '❌'} et il promet un essai, pas un rendez-vous (« ${libelle} »)`);
+  console.log(`   ${promet ? '✅' : '❌'} le bouton flottant promet un essai, pas un rendez-vous (« ${libelle} »)`);
   if (!promet) echecs++;
 
-  const existe = await page.locator('#fonctionnalites').count();
-  console.log(`   ${existe ? '✅' : '❌'} la section visée existe (${existe})`);
-  if (!existe) echecs++;
+  /* Les deux boutons portent le même libellé : ils doivent faire la même
+     chose. Deux « Tester en 1 clic » qui mènent ailleurs l'un de l'autre est
+     une façon sûre de perdre le visiteur. */
+  const memeGeste = await page.evaluate(() => {
+    const f = (el) => el && el.closest('form') && el.closest('form').getAttribute('action');
+    return {
+      hero: f(document.querySelector('.hero-actions .btn-primary')),
+      flottant: f(document.querySelector('.float-cta')),
+    };
+  });
+  const accord = memeGeste.hero && memeGeste.hero === memeGeste.flottant;
+  console.log(`   ${accord ? '✅' : '❌'} les deux « Tester en 1 clic » postent au même endroit (${memeGeste.hero || 'ABSENT'} / ${memeGeste.flottant || 'ABSENT'})`);
+  if (!accord) echecs++;
 
-  /* Le point qui compte : une ancre peut être correcte et la page ne pas
-     bouger — c'est le cas quand la cible a été renommée ailleurs, ou quand un
-     gestionnaire de défilement avale le clic sans rien faire. */
-  if (existe) {
-    // On descend assez bas pour que le bouton s'affiche ET que la remontée
-    // vers le carrousel soit mesurable.
-    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight * 0.6));
-    await page.waitForTimeout(900);
-    const avant = await page.evaluate(() => window.scrollY);
-    await page.evaluate(() => document.querySelector('.float-cta').click());
-    await page.waitForTimeout(2500);
-    const apres = await page.evaluate(() => window.scrollY);
-    const dansLeCadre = await page.evaluate(() => {
-      const r = document.getElementById('fonctionnalites').getBoundingClientRect();
-      return r.top < window.innerHeight && r.bottom > 0;
-    });
-    const bouge = Math.abs(apres - avant) > 200;
-    console.log(`   ${bouge && dansLeCadre ? '✅' : '❌'} le clic amène le simulateur à l'écran (${avant} → ${apres} px)`);
-    if (!(bouge && dansLeCadre)) echecs++;
+  await page.close();
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+ * L'essai express : un formulaire, jamais un lien
+ *
+ * demo-express CRÉE UN COMPTE. Écrit en <a href>, il en créerait un chaque fois
+ * qu'un robot d'indexation suit le lien, qu'une messagerie déplie l'aperçu
+ * d'une URL, ou qu'un antivirus d'entreprise vérifie une adresse : des
+ * centaines de comptes sans qu'un humain ait cliqué.
+ *
+ * C'est le genre de régression qu'on introduit en croyant simplifier — « c'est
+ * juste un bouton, autant en faire un lien ». Ce contrôle balaie donc TOUTES
+ * les pages à la recherche d'un lien vers ce point d'entrée.
+ * ───────────────────────────────────────────────────────────────────────────── */
+console.log('\n===== l\'essai express ne peut pas être déclenché par un robot =====');
+{
+  for (const route of ['/', '/tarifs', '/mentions-legales.html']) {
+    const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+    await page.goto('http://localhost:8790' + route, { waitUntil: 'load', timeout: 40000 });
+    await page.waitForTimeout(4000);
+
+    const liens = await page.evaluate(() => [...document.querySelectorAll('a[href]')]
+      .map((a) => a.getAttribute('href'))
+      .filter((h) => h && h.includes('demo-express')));
+    console.log(`   ${liens.length === 0 ? '✅' : '❌'} ${route} — aucun <a> vers demo-express${liens.length ? ` : ${liens.join(', ')}` : ''}`);
+    if (liens.length) echecs++;
+
+    // Et si un formulaire est présent, il doit poster.
+    const formes = await page.evaluate(() => [...document.querySelectorAll('form')]
+      .filter((f) => (f.getAttribute('action') || '').includes('demo-express'))
+      .map((f) => (f.getAttribute('method') || 'get').toLowerCase()));
+    const tousEnPost = formes.every((m) => m === 'post');
+    console.log(`   ${tousEnPost ? '✅' : '❌'} ${route} — ${formes.length} formulaire(s) d'essai, tous en POST`);
+    if (!tousEnPost) echecs++;
+
+    await page.close();
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+ * La CSP laisse-t-elle vraiment partir ce formulaire ?
+ *
+ * `form-action` valait 'self'. Cette directive ne se replie PAS sur
+ * default-src : tant qu'elle était là, le navigateur bloquait l'envoi vers
+ * Supabase, en silence côté visiteur — le bouton semblait simplement ne rien
+ * faire. Rien dans le HTML ne l'aurait montré : il faut soumettre pour voir.
+ *
+ * Le serveur de test sert la CSP RÉELLE, lue dans _headers. On peut donc
+ * soumettre pour de bon, en interceptant la destination.
+ * ───────────────────────────────────────────────────────────────────────────── */
+console.log('\n===== la CSP laisse partir le formulaire d\'essai =====');
+{
+  const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+  const refus = [];
+  page.on('console', (m) => {
+    if (/Content Security Policy|Refused to/i.test(m.text())) refus.push(m.text());
+  });
+  let poste = null;
+  await page.route('https://fhrkkjvbzgkbmlnlnxce.supabase.co/functions/v1/demo-express', async (route) => {
+    poste = route.request().method();
+    await route.fulfill({ status: 200, contentType: 'text/html', body: '<p>essai simulé</p>' });
+  });
+  await page.goto('http://localhost:8790/', { waitUntil: 'load', timeout: 40000 });
+  await page.waitForTimeout(5000);
+  refus.length = 0;   // on ne compte que ce qui suit la soumission
+
+  await page.evaluate(() => document.querySelector('.hero-actions .btn-primary').click());
+  await page.waitForTimeout(2500);
+
+  console.log(`   ${poste === 'POST' ? '✅' : '❌'} la requête part, et elle part en POST (${poste || 'RIEN ENVOYÉ'})`);
+  if (poste !== 'POST') echecs++;
+
+  const bloque = refus.filter((r) => /form-action/i.test(r));
+  console.log(`   ${bloque.length === 0 ? '✅' : '❌'} aucun refus form-action${bloque.length ? ` : ${bloque[0].slice(0, 90)}` : ''}`);
+  if (bloque.length) echecs++;
+  await page.close();
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+ * Le retour d'un essai qui n'a pas pu s'ouvrir
+ *
+ * Le serveur renvoie le visiteur ici avec ?essai=trop_de_tentatives ou
+ * ?essai=indisponible. Sans message, il revient sur l'accueil sans rien
+ * comprendre et conclut que le bouton est cassé.
+ * ───────────────────────────────────────────────────────────────────────────── */
+console.log('\n===== le retour d\'un essai raté dit quelque chose =====');
+{
+  const CAS = [
+    ['trop_de_tentatives', /r[ée]essayez dans une heure/i],
+    ['indisponible', /n'a pas pu s'ouvrir/i],
+    // Un code inconnu ne doit pas laisser le visiteur sans explication.
+    ['code_jamais_vu', /n'a pas pu s'ouvrir/i],
+  ];
+  for (const [code, attendu] of CAS) {
+    const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+    await page.goto(`http://localhost:8790/?essai=${code}`, { waitUntil: 'load', timeout: 40000 });
+    await page.waitForTimeout(4500);
+    const texte = await page.$eval('.essai-message p', (e) => e.textContent).catch(() => null);
+    const bon = texte !== null && attendu.test(texte);
+    console.log(`   ${bon ? '✅' : '❌'} ${code} → « ${texte ? texte.slice(0, 56) : 'AUCUN MESSAGE'} »`);
+    if (!bon) echecs++;
+
+    /* L'adresse doit être nettoyée : sinon un rechargement, un partage du lien
+       ou un retour en arrière rejoue un message qui n'a plus lieu d'être. */
+    const url = await page.evaluate(() => window.location.search);
+    const propre = !url.includes('essai=');
+    console.log(`   ${propre ? '✅' : '❌'}    et l'adresse est nettoyée (${url || 'vide'})`);
+    if (!propre) echecs++;
+    await page.close();
   }
 
+  // Sans paramètre, aucun bandeau ne doit apparaître.
+  const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+  await page.goto('http://localhost:8790/', { waitUntil: 'load', timeout: 40000 });
+  await page.waitForTimeout(4500);
+  const n = await page.locator('.essai-message').count();
+  console.log(`   ${n === 0 ? '✅' : '❌'} sans paramètre, aucun bandeau (${n})`);
+  if (n !== 0) echecs++;
   await page.close();
 }
 

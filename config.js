@@ -48,6 +48,32 @@ window.ALBA_APP_ORIGIN = "https://app.alba-studio.co";
  * ───────────────────────────────────────────────────────────────────────────── */
 window.ALBA_PAIEMENT_DIRECT = true;
 
+/* ─────────────────────────────────────────────────────────────────────────────
+ * ESSAI EXPRESS — le point d'entrée de « Tester en 1 clic »
+ *
+ * Un POST ici crée un espace de démonstration complet et renvoie le visiteur
+ * dedans, déjà connecté (303). Il ne saisit rien : ni adresse, ni mot de passe.
+ *
+ * ⚠️ CE BOUTON N'EST PAS UN LIEN, ET IL NE DOIT JAMAIS EN DEVENIR UN.
+ *
+ * Ce point d'entrée CRÉE UN COMPTE. Avec un <a href>, il en créerait un chaque
+ * fois qu'un robot d'indexation suit le lien, qu'une messagerie déplie l'aperçu
+ * d'une URL, ou qu'un antivirus d'entreprise vérifie une adresse — des
+ * centaines de comptes sans qu'un humain ait cliqué. Le serveur refuse
+ * d'ailleurs les GET en 405.
+ *
+ * D'où un <form method="post"> et un <button>, sans JavaScript : les robots ne
+ * postent pas. tests/essai.mjs vérifie qu'aucun lien vers ce point d'entrée
+ * n'est réapparu dans les pages.
+ *
+ * Trois choses à savoir, dites sur la page à côté du bouton :
+ *   · l'espace vit 7 jours puis il est supprimé ;
+ *   · aucune adresse e-mail n'est demandée ni envoyée ;
+ *   · le plafond est de 3 essais par heure et 10 par jour et par adresse IP.
+ * ───────────────────────────────────────────────────────────────────────────── */
+window.ALBA_POINT_ESSAI =
+  "https://fhrkkjvbzgkbmlnlnxce.supabase.co/functions/v1/demo-express";
+
 /* Applique l'origine aux liens du HTML statique.
  *
  * Les CTA gardent une href écrite en dur dans le HTML : elle reste correcte si

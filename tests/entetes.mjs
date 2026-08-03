@@ -67,7 +67,6 @@ const EXIGES = [
   ["worker-src", "'none'"],
   ["frame-ancestors", "'none'"],
   ["base-uri", "'self'"],
-  ["form-action", "'self'"],
   ["img-src", "'self' data: blob:"],
   ["media-src", "'self'"],
 ];
@@ -88,6 +87,30 @@ ok(/^https:\/\/[a-z0-9]+\.supabase\.co$/.test(connect),
 ok(!connect.includes('*') && !connect.includes("'self'"),
    'sans joker ni \'self\'');
 
+/* form-action : le bouton « Tester en 1 clic » est un <form method="post"> vers
+ * demo-express. Cette directive valait 'self' — le navigateur bloquait donc
+ * l'envoi purement et simplement, sans que rien sur la page ne le laisse voir.
+ *
+ * Elle doit nommer les origines, jamais un joker : form-action est la dernière
+ * barrière contre l'exfiltration par formulaire injecté, et un `https:` ou un
+ * `*` la rendrait décorative. */
+const formAction = directive('form-action') || '';
+console.log(`   form-action ${formAction}`);
+const ORIGINES_FORM = ["'self'", 'https://fhrkkjvbzgkbmlnlnxce.supabase.co', 'https://app.alba-studio.co'];
+const sources = formAction.split(/\s+/).filter(Boolean);
+ok(sources.length === ORIGINES_FORM.length && ORIGINES_FORM.every((o) => sources.includes(o)),
+   'form-action nomme self et les deux origines de l’essai express, et rien d’autre');
+ok(!formAction.includes('*') && !/\bhttps:(?!\/\/)/.test(formAction),
+   'form-action sans joker');
+
+/* L'origine de l'application est admise dans form-action, et LÀ SEULEMENT.
+ * L'ajouter à script-src ou connect-src élargirait la surface sans raison :
+ * la page ne charge rien depuis l'application et ne lui parle pas en fetch. */
+for (const d of ['script-src', 'connect-src', 'style-src', 'img-src']) {
+  ok(!(directive(d) || '').includes('app.alba-studio.co'),
+     `${d} ne mentionne pas l’origine de l’application`);
+}
+
 // LE point de tout l'exercice de transpilation préalable. Ces deux mots-clés
 // rendaient la CSP inopérante contre l'injection de script. Les réintroduire
 // annulerait le gain, et il n'y a plus aucune raison technique de le faire.
@@ -105,7 +128,12 @@ const TIERS_ADMIS = new Set([
   'https://unpkg.com',                              // React, GSAP, Lenis (avec empreintes)
   'https://fonts.googleapis.com',                   // feuille de style des polices
   'https://fonts.gstatic.com',                      // fichiers de polices
-  'https://fhrkkjvbzgkbmlnlnxce.supabase.co',       // point d'entrée du formulaire de contact
+  'https://fhrkkjvbzgkbmlnlnxce.supabase.co',       // formulaire de contact, paiement, essai express
+  // Notre propre application. Elle ne figure QUE dans form-action, et
+  // uniquement parce que l'essai express y aboutit après deux redirections :
+  // les navigateurs ne s'accordent pas sur l'application de form-action aux
+  // redirections. Elle n'a rien à faire dans script-src ni connect-src.
+  'https://app.alba-studio.co',
 ]);
 const tiers = [...new Set((csp || '').match(/https?:\/\/[^\s;]+/g) || [])];
 const inconnus = tiers.filter((t) => !TIERS_ADMIS.has(t));

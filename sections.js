@@ -115,8 +115,7 @@ var Hero = function Hero() {
     delay: 360
   }, /*#__PURE__*/React.createElement("div", {
     className: "hero-actions"
-  }, /*#__PURE__*/React.createElement("a", {
-    href: "#fonctionnalites",
+  }, /*#__PURE__*/React.createElement(BoutonEssai, {
     className: "btn btn-primary"
   }, Txt("accueil.tester-en-1-clic", "Tester en 1 clic", "Try it in one click"), " ", /*#__PURE__*/React.createElement(Icon, {
     name: "arrow-right",
@@ -126,6 +125,10 @@ var Hero = function Hero() {
     href: "#pricing",
     className: "btn btn-ghost"
   }, Txt("accueil.s-abonner", "S'abonner", "Subscribe")))), /*#__PURE__*/React.createElement(Reveal, {
+    delay: 420
+  }, /*#__PURE__*/React.createElement("p", {
+    className: "hero-essai-note"
+  }, Txt("accueil.note-essai", "Un espace d'essai complet, ouvert 7 jours. Sans inscription ni carte bancaire.", "A complete trial workspace, open for 7 days. No sign-up, no credit card."))), /*#__PURE__*/React.createElement(Reveal, {
     delay: 480
   }, /*#__PURE__*/React.createElement("div", {
     className: "hero-meta"

@@ -370,16 +370,13 @@ const initSectionFX = (coarse) => {
  *
  * Il menait a #contact, c'est-a-dire a un formulaire de demande de demo — on
  * demandait a l'architecte son nom et son adresse avant de lui montrer quoi que
- * ce soit. Il mene desormais au carrousel #fonctionnalites, qui EST le
- * simulateur : cinq ecrans reels de l'application (Leo, meteo, materiaux,
- * calendrier, messagerie) sur lesquels on peut cliquer tout de suite, sans
- * compte et sans rendez-vous.
+ * ce soit. Il ouvre desormais un vrai espace d'essai, comme le bouton du hero :
+ * meme libelle, meme geste, meme resultat. Deux boutons qui portent le meme mot
+ * et font deux choses differentes, c'est une facon sure de perdre le visiteur.
  *
- * Consequence sur la regle d'affichage : le bouton se cachait a l'approche du
- * formulaire de contact. Il se cache maintenant quand le carrousel est a
- * l'ecran — proposer d'aller voir ce qu'on est deja en train de regarder n'a
- * aucun sens. Et comme le carrousel arrive tot dans la page, le bouton ne
- * reapparait qu'une fois qu'on l'a depasse.
+ * Il passe par <BoutonEssai/>, donc par un <form method="post"> — voir le long
+ * commentaire dans components.jsx : ce point d'entree cree un compte, un lien y
+ * serait suivi par les robots.
  */
 const FloatingCTA = () => {
   const [show, setShow] = React.useState(false);
@@ -387,22 +384,18 @@ const FloatingCTA = () => {
     const onScroll = () => {
       const vh = window.innerHeight;
       const past = window.scrollY > vh * 1.2;
-      const demo = document.getElementById("fonctionnalites");
-      // Visible a l'ecran, meme partiellement.
-      const r = demo && demo.getBoundingClientRect();
-      const surEcran = r && r.top < vh && r.bottom > 0;
       const contact = document.getElementById("contact");
       const nearContact = contact && contact.getBoundingClientRect().top < vh * 0.9;
-      setShow(past && !surEcran && !nearContact);
+      setShow(past && !nearContact);
     };
     window.addEventListener("scroll", onScroll, { passive: true });
     onScroll();
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
   return (
-    <a href="#fonctionnalites" className={`float-cta ${show ? "show" : ""}`}>
+    <BoutonEssai className={`float-cta ${show ? "show" : ""}`}>
       <span className="fc-dot"/> {L("Tester en 1 clic", "Try it in one click")}
-    </a>
+    </BoutonEssai>
   );
 };
 

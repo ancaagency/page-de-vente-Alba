@@ -64,7 +64,7 @@ var App = function App() {
   }, [tweaks]);
   return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
     key: lang
-  }, /*#__PURE__*/React.createElement(Hero, null), /*#__PURE__*/React.createElement(Logos, null), /*#__PURE__*/React.createElement(Manifesto, null), /*#__PURE__*/React.createElement(Audience, {
+  }, /*#__PURE__*/React.createElement(MessageEssai, null), /*#__PURE__*/React.createElement(Hero, null), /*#__PURE__*/React.createElement(Logos, null), /*#__PURE__*/React.createElement(Manifesto, null), /*#__PURE__*/React.createElement(Audience, {
     variant: tweaks.audienceVariant
   }), /*#__PURE__*/React.createElement(FeatureCarousel, null), /*#__PURE__*/React.createElement(PinnedDevices, null), /*#__PURE__*/React.createElement(Pricing, null), /*#__PURE__*/React.createElement(TrustBand, null), /*#__PURE__*/React.createElement(Testimonials, null), /*#__PURE__*/React.createElement(Founder, null), /*#__PURE__*/React.createElement(Faq, null), /*#__PURE__*/React.createElement(Contact, null), /*#__PURE__*/React.createElement(Footer, null)), /*#__PURE__*/React.createElement(Notifications, {
     lang: lang

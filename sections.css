@@ -113,6 +113,79 @@
   justify-content: center;
   flex-wrap: wrap;
 }
+/* Le bouton « Tester en 1 clic » est enveloppé dans un <form> (il poste, il ne
+   navigue pas — voir components.jsx). `display: contents` efface le formulaire
+   de la mise en page : le <button> redevient enfant direct du conteneur en
+   flex, donc `gap`, `flex-wrap` et la règle mobile `width: 100%` continuent de
+   s'appliquer comme si de rien n'était.
+
+   Le repli `.essai-express > .btn { width: 100% }` sur mobile n'est PAS
+   redondant : si un navigateur ancien ignore `display: contents`, le formulaire
+   redevient un bloc et le bouton doit quand même remplir la largeur. */
+.essai-express { display: contents; }
+
+/* Ce que promet l'essai, dit tout de suite : 7 jours puis suppression, aucune
+   adresse demandée. Le taire ferait découvrir la limite au visiteur au pire
+   moment — quand il a commencé à s'installer dedans. */
+.hero-essai-note {
+  margin: 14px auto 0;
+  max-width: 460px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: rgba(var(--on-bg-rgb), 0.62);
+}
+
+/* Message de retour quand l'essai n'a pas pu s'ouvrir. Bandeau sous la barre de
+   navigation, pas une fenêtre modale : le visiteur vient d'être renvoyé ici, il
+   n'a pas besoin d'un obstacle de plus. */
+.essai-message {
+  position: relative;
+  z-index: 60;
+  max-width: 760px;
+  margin: 96px auto 0;
+  padding: 14px 44px 14px 18px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  border: 1px solid var(--line-strong);
+  border-left: 3px solid var(--accent);
+  border-radius: 12px;
+  background: var(--bg-2);
+  color: var(--on-bg);
+}
+.essai-message > svg { flex-shrink: 0; margin-top: 2px; color: var(--accent); }
+.essai-message p { margin: 0; font-size: 14px; line-height: 1.5; }
+.essai-message-lien {
+  flex-shrink: 0;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  white-space: nowrap;
+}
+.essai-message-fermer {
+  position: absolute;
+  top: 8px; right: 10px;
+  width: 26px; height: 26px;
+  border: 0;
+  background: transparent;
+  color: rgba(var(--on-bg-rgb), 0.55);
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  border-radius: 50%;
+}
+.essai-message-fermer:hover { color: var(--on-bg); background: rgba(var(--on-bg-rgb), 0.07); }
+
+@media (max-width: 720px) {
+  .essai-message {
+    margin: 88px 16px 0;
+    flex-wrap: wrap;
+    padding: 14px 40px 14px 16px;
+  }
+}
+
 .hero-meta {
   margin-top: 28px;
   display: inline-flex;

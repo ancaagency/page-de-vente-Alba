@@ -319,7 +319,15 @@ html.lenis { scroll-behavior: auto !important; }
 }
 
 /* Floating CTA — bottom LEFT */
+/* Ce bouton est passé de <a> à <button> : il poste un formulaire au lieu de
+   naviguer (voir components.jsx). Un <button> arrive avec la bordure, la
+   police et la couleur du navigateur — sans ces quatre lignes, la pastille
+   dorée redevenait un bouton système gris à coins carrés. */
 .float-cta {
+  border: 0;
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
   position: fixed;
   bottom: 28px;
   left: 28px;

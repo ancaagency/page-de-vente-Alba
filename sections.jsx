@@ -59,9 +59,16 @@ const Hero = () => (
                 visiteur autre chose que ce qu'il aurait choisi. Il descend donc
                 à la carte tarifaire, coche ce qu'il veut, et c'est le bouton de
                 la carte qui ouvre le paiement. */}
-          <a href="#fonctionnalites" className="btn btn-primary">{Txt("accueil.tester-en-1-clic", "Tester en 1 clic", "Try it in one click")} <Icon name="arrow-right" size={14} className="btn-arrow"/></a>
+          <BoutonEssai className="btn btn-primary">
+            {Txt("accueil.tester-en-1-clic", "Tester en 1 clic", "Try it in one click")} <Icon name="arrow-right" size={14} className="btn-arrow"/>
+          </BoutonEssai>
           <a href="#pricing" className="btn btn-ghost">{Txt("accueil.s-abonner", "S'abonner", "Subscribe")}</a>
         </div>
+      </Reveal>
+      <Reveal delay={420}>
+        <p className="hero-essai-note">
+          {Txt("accueil.note-essai", "Un espace d'essai complet, ouvert 7 jours. Sans inscription ni carte bancaire.", "A complete trial workspace, open for 7 days. No sign-up, no credit card.")}
+        </p>
       </Reveal>
       <Reveal delay={480}>
         <div className="hero-meta">
