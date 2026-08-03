@@ -16,4 +16,4 @@
 
 // On ne monte que le pied de page : le reste de la page est du HTML statique,
 // qui n'a besoin ni de React ni de Babel pour s'afficher.
-ReactDOM.createRoot(document.getElementById("footer-root")).render(/*#__PURE__*/React.createElement(Footer, null));
+ReactDOM.createRoot(document.getElementById("footer-root")).render(/*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(Footer, null), /*#__PURE__*/React.createElement(BandeauConsentement, null)));

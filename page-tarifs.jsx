@@ -21,6 +21,10 @@ const PricingPage = () => {
       <Faq/>
       <Contact/>
       <Footer/>
+      {/* Un visiteur peut arriver directement ici depuis une annonce : sans ce
+          bandeau, il n'aurait aucun moyen de se prononcer, et la page ne
+          pourrait jamais mesurer quoi que ce soit. */}
+      <BandeauConsentement/>
     </div>
   );
 };

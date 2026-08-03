@@ -1223,7 +1223,7 @@ var Footer = function Footer() {
     href: "".concat(APP_ORIGIN, "/privacy-policy")
   }, Txt("pied.politique-rgpd", "Politique RGPD", "GDPR policy"))), /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("a", {
     href: "#securite"
-  }, Txt("pied.securite", "Sécurité", "Security")))))), /*#__PURE__*/React.createElement("div", {
+  }, Txt("pied.securite", "Sécurité", "Security"))), /*#__PURE__*/React.createElement(LienConsentement, null)))), /*#__PURE__*/React.createElement("div", {
     className: "foot-bot"
   }, /*#__PURE__*/React.createElement("div", null, Txt("pied.2026-alba-studio-tous-droits-reserves", "© 2026 ALBA STUDIO — TOUS DROITS RÉSERVÉS", "© 2026 ALBA STUDIO — ALL RIGHTS RESERVED")), /*#__PURE__*/React.createElement("div", null, Txt("pied.fait-a-lyon-avec-soin", "FAIT À LYON · AVEC SOIN", "MADE IN LYON · WITH CARE"), " ", /*#__PURE__*/React.createElement("span", {
     className: "fr-flag",

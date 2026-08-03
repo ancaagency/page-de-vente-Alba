@@ -43,7 +43,7 @@ var PricingPage = function PricingPage() {
     style: {
       paddingTop: 72
     }
-  }, /*#__PURE__*/React.createElement(Pricing, null), /*#__PURE__*/React.createElement(TrustBand, null), /*#__PURE__*/React.createElement(Faq, null), /*#__PURE__*/React.createElement(Contact, null), /*#__PURE__*/React.createElement(Footer, null));
+  }, /*#__PURE__*/React.createElement(Pricing, null), /*#__PURE__*/React.createElement(TrustBand, null), /*#__PURE__*/React.createElement(Faq, null), /*#__PURE__*/React.createElement(Contact, null), /*#__PURE__*/React.createElement(Footer, null), /*#__PURE__*/React.createElement(BandeauConsentement, null));
 };
 ReactDOM.createRoot(document.getElementById("app")).render(/*#__PURE__*/React.createElement(PricingPage, null));
 document.querySelectorAll("#lang-toggle button").forEach(function (b) {

@@ -76,6 +76,9 @@ const App = () => {
         <Footer/>
       </div>
 
+      {/* Le bandeau de consentement. Il ne rend RIEN tant qu'aucun traceur
+          publicitaire n'est déclaré dans config.js — voir consentement.jsx. */}
+      <BandeauConsentement/>
       <Notifications lang={lang}/>
       <ImmersiveFX signal={`${tweaks.audienceVariant}-${tweaks.density}-${tweaks.theme}-${tweaks.typoHero}-${lang}`}/>
 

@@ -775,6 +775,12 @@ const Footer = () => (
             <li><a href={`${APP_ORIGIN}/terms`}>{Txt("pied.cgu-cgv", "CGU & CGV", "Terms & conditions")}</a></li>
             <li><a href={`${APP_ORIGIN}/privacy-policy`}>{Txt("pied.politique-rgpd", "Politique RGPD", "GDPR policy")}</a></li>
             <li><a href="#securite">{Txt("pied.securite", "Sécurité", "Security")}</a></li>
+            {/* Retirer son consentement doit être aussi simple que le donner —
+                c'est une exigence, pas une courtoisie. Ce lien n'apparaît que
+                s'il y a effectivement un choix à revoir : tant qu'aucun traceur
+                publicitaire n'est déclaré, une entrée « Cookies » qui ouvre un
+                bandeau vide ne ferait qu'inquiéter. */}
+            <LienConsentement/>
           </ul>
         </div>
       </div>

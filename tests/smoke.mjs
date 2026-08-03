@@ -315,6 +315,236 @@ console.log('\n===== l\'essai express ne peut pas être déclenché par un robot
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
+ * La page reste-t-elle dispensée de bandeau de consentement ?
+ *
+ * Il n'y a pas de bandeau, et c'est un CHOIX étayé : la page ne dépose aucun
+ * cookie, et les deux seules choses qu'elle conserve — la langue choisie et le
+ * fait que l'animation d'accueil a été jouée — relèvent des traceurs dispensés
+ * de consentement par l'article 82 de la loi Informatique et Libertés.
+ *
+ * Ce choix ne tient que tant que l'inventaire ne bouge pas. Un jour, quelqu'un
+ * ajoutera une mesure d'audience, un pixel, une carte, une vidéo intégrée — et
+ * personne ne fera le lien avec les mentions légales qui affirment le
+ * contraire. Ce contrôle échoue à ce moment-là, pas six mois plus tard.
+ *
+ * Il liste ce qui est ADMIS. Tout le reste fait échouer, y compris un cookie.
+ * ───────────────────────────────────────────────────────────────────────────── */
+console.log('\n===== inventaire des traceurs : rien de nouveau ? =====');
+{
+  const CLES_ADMISES = {
+    local: ['alba_lang'],          // choix de langue — dispensé (CNIL)
+    session: ['alba_intro_seen'],  // rideau d'intro, durée de l'onglet
+  };
+  const ctx = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+  const page = await ctx.newPage();
+  await page.goto('http://localhost:8790/', { waitUntil: 'load', timeout: 40000 });
+  await page.waitForTimeout(5000);
+  // On exerce la page : c'est en s'en servant qu'on déclenche les écritures.
+  await page.evaluate(() => { const b = document.querySelector('#lang-toggle button[data-lang="en"]'); if (b) b.click(); });
+  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+  await page.waitForTimeout(2500);
+
+  const cookies = await ctx.cookies();
+  console.log(`   ${cookies.length === 0 ? '✅' : '❌'} aucun cookie déposé (${cookies.length}${cookies.length ? ' : ' + cookies.map((c) => c.name).join(', ') : ''})`);
+  if (cookies.length) echecs++;
+
+  const stock = await page.evaluate(() => ({
+    local: Object.keys(localStorage), session: Object.keys(sessionStorage),
+  }));
+  for (const zone of ['local', 'session']) {
+    const inconnues = stock[zone].filter((k) => !CLES_ADMISES[zone].includes(k));
+    console.log(`   ${inconnues.length === 0 ? '✅' : '❌'} ${zone}Storage : ${stock[zone].join(', ') || 'vide'}${inconnues.length ? ` — NON PRÉVU : ${inconnues.join(', ')}` : ''}`);
+    if (inconnues.length) echecs++;
+  }
+
+  /* Et la page légale doit continuer de dire la vérité : si elle n'affirme plus
+     l'absence de cookie, c'est que quelqu'un a modifié l'un sans l'autre. */
+  const legal = await page.goto('http://localhost:8790/mentions-legales.html', { waitUntil: 'load', timeout: 40000 })
+    .then(() => page.evaluate(() => document.body.textContent)).catch(() => '');
+  const affirme = /aucun cookie/i.test(legal);
+  console.log(`   ${affirme ? '✅' : '❌'} les mentions légales l'affirment toujours`);
+  if (!affirme) echecs++;
+  await ctx.close();
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+ * Le pixel publicitaire dort-il vraiment jusqu'au consentement ?
+ *
+ * Le pixel Facebook arrive à la rentrée. Tout est écrit, éteint par un
+ * interrupteur dans config.js. Ce contrôle éprouve les DEUX états, parce que
+ * les deux peuvent se casser indépendamment :
+ *
+ *   éteint  — aucun bandeau (demander un consentement sans objet est trompeur
+ *             et coûte des conversions), et rien vers Facebook ;
+ *   allumé  — un bandeau, et RIEN vers Facebook tant que le visiteur n'a pas
+ *             cliqué « Tout accepter ». Ni au chargement, ni « pour préparer ».
+ *
+ * Le piège que ça garde : un jour, quelqu'un ajoutera un <link preconnect> vers
+ * Facebook « pour accélérer ». La connexion transmet déjà l'adresse IP — le
+ * consentement arriverait après. Ce contrôle compte TOUTE requête sortante vers
+ * facebook, quelle qu'en soit la nature.
+ * ───────────────────────────────────────────────────────────────────────────── */
+console.log('\n===== le pixel publicitaire dort jusqu\'au consentement =====');
+{
+  /** Charge l'accueil en forçant l'identifiant de pixel, et compte ce qui part.
+   *  `cspOuverte` applique l'étape 1 de la « recette pixel » de _headers. */
+  const ouvrir = async (identifiant, cspOuverte = false) => {
+    const ctx = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+    const versFacebook = [];
+    const refusCSP = [];
+    ctx.on('request', (r) => {
+      if (/facebook|fbcdn/i.test(new URL(r.url()).hostname)) versFacebook.push(r.url());
+    });
+    // Rien ne doit réellement sortir, même si un défaut laissait passer.
+    await ctx.route('**://*.facebook.net/**', (r) => r.fulfill({ status: 200, body: '' }));
+    await ctx.route('**://*.facebook.com/**', (r) => r.fulfill({ status: 200, body: '' }));
+    if (identifiant) {
+      await ctx.route('**/config.js', async (r) => {
+        const src = await r.fetch().then((x) => x.text());
+        await r.fulfill({ status: 200, contentType: 'text/javascript',
+          body: src.replace('window.ALBA_PIXEL_FACEBOOK = null;',
+                            `window.ALBA_PIXEL_FACEBOOK = ${JSON.stringify(identifiant)};`) });
+      });
+    }
+    if (cspOuverte) {
+      await ctx.route('http://localhost:8790/', async (r) => {
+        const rep = await r.fetch();
+        const ent = { ...rep.headers() };
+        const cle = Object.keys(ent).find((k) => k.toLowerCase() === 'content-security-policy');
+        if (cle) {
+          ent[cle] = ent[cle]
+            .replace(/script-src ([^;]*)/, "script-src $1 https://connect.facebook.net")
+            .replace(/img-src ([^;]*)/, 'img-src $1 https://www.facebook.com')
+            .replace(/connect-src ([^;]*)/, 'connect-src $1 https://www.facebook.com');
+        }
+        await r.fulfill({ response: rep, headers: ent });
+      });
+    }
+    const page = await ctx.newPage();
+    /* Playwright enregistre une requête MÊME quand la CSP la refuse : le
+       compteur de requêtes ne prouve donc pas que le script a été chargé. Sans
+       cette lecture des refus, le contrôle affichait « le pixel se charge »
+       alors que Chromium répondait « Refused to load the script ». */
+    page.on('console', (m) => {
+      const t = m.text();
+      if (/Content Security Policy|Refused to/i.test(t) && /facebook/i.test(t)) refusCSP.push(t);
+    });
+    await page.goto('http://localhost:8790/', { waitUntil: 'load', timeout: 40000 });
+    await page.waitForTimeout(5000);
+    return { ctx, page, versFacebook, refusCSP };
+  };
+
+  { // ── état livré : éteint ──────────────────────────────────────────────────
+    const { ctx, page, versFacebook } = await ouvrir(null);
+    const bandeau = await page.locator('.consentement').count();
+    console.log(`   ${bandeau === 0 ? '✅' : '❌'} éteint — aucun bandeau de consentement (${bandeau})`);
+    if (bandeau !== 0) echecs++;
+    console.log(`   ${versFacebook.length === 0 ? '✅' : '❌'} éteint — rien vers Facebook (${versFacebook.length})`);
+    if (versFacebook.length) echecs++;
+    const lien = await page.locator('.foot-col a', { hasText: /^Cookies$/ }).count();
+    console.log(`   ${lien === 0 ? '✅' : '❌'} éteint — pas de lien « Cookies » qui n'ouvrirait rien (${lien})`);
+    if (lien !== 0) echecs++;
+    await ctx.close();
+  }
+
+  { // ── allumé, sans réponse ────────────────────────────────────────────────
+    const { ctx, page, versFacebook } = await ouvrir('123456789012345');
+    const bandeau = await page.locator('.consentement').count();
+    console.log(`   ${bandeau === 1 ? '✅' : '❌'} allumé — le bandeau apparaît (${bandeau})`);
+    if (bandeau !== 1) echecs++;
+    console.log(`   ${versFacebook.length === 0 ? '✅' : '❌'} allumé, sans réponse — TOUJOURS rien vers Facebook (${versFacebook.length})`);
+    if (versFacebook.length) echecs++;
+
+    /* Refuser doit être aussi simple qu'accepter : mêmes dimensions, même
+       couleur, même niveau. C'est mesuré, pas relu — une retouche de style
+       suffit à créer un déséquilibre que personne ne remarque. */
+    const boutons = await page.$$eval('.consentement-choix .btn', (els) => els.map((e) => {
+      const r = e.getBoundingClientRect(); const s = getComputedStyle(e);
+      return { texte: e.textContent.trim(), l: Math.round(r.width), h: Math.round(r.height),
+               fond: s.backgroundColor, couleur: s.color, taille: s.fontSize };
+    }));
+    const [refus, accepte] = boutons;
+    const equilibre = boutons.length === 2
+      && Math.abs(refus.l - accepte.l) < 40 && refus.h === accepte.h
+      && refus.fond === accepte.fond && refus.couleur === accepte.couleur
+      && refus.taille === accepte.taille;
+    console.log(`   ${equilibre ? '✅' : '❌'} refuser pèse autant qu'accepter (${boutons.map((b) => `${b.texte} ${b.l}×${b.h}`).join(' | ')})`);
+    if (!equilibre) echecs++;
+    // Et le refus doit venir en premier : on ne cache pas la sortie derrière l'entrée.
+    console.log(`   ${/refuser/i.test(refus.texte) ? '✅' : '❌'} « Tout refuser » est le premier des deux`);
+    if (!/refuser/i.test(refus.texte)) echecs++;
+
+    // ── on refuse ──
+    await page.click('.consentement-choix .btn:nth-child(1)');
+    await page.waitForTimeout(1500);
+    console.log(`   ${versFacebook.length === 0 ? '✅' : '❌'} après un refus — rien vers Facebook (${versFacebook.length})`);
+    if (versFacebook.length) echecs++;
+    const apresRefus = await page.locator('.consentement').count();
+    console.log(`   ${apresRefus === 0 ? '✅' : '❌'} et le bandeau ne revient pas (${apresRefus})`);
+    if (apresRefus !== 0) echecs++;
+    await ctx.close();
+  }
+
+  { // ── allumé, on accepte, CSP telle qu'elle est LIVRÉE ────────────────────
+    /* La CSP de production n'autorise pas encore Facebook, et c'est délibéré :
+       ouvrir une porte pour un pixel qui n'existe pas serait absurde. Ce
+       contrôle constate donc l'état réel — le chargeur fait son travail, et le
+       navigateur refuse. C'est très exactement l'étape 1 de la « recette
+       pixel » de _headers, et la preuve qu'elle n'est pas décorative : sans
+       elle, le pixel serait silencieux sans que rien ne le montre à l'écran. */
+    const { ctx, page, versFacebook, refusCSP } = await ouvrir('123456789012345');
+    await page.click('.consentement-choix .btn:nth-child(2)');
+    await page.waitForTimeout(2500);
+    const tente = versFacebook.some((u) => u.includes('fbevents.js'));
+    console.log(`   ${tente ? '✅' : '❌'} après acceptation — le chargeur tente le pixel (${versFacebook.length} requête(s))`);
+    if (!tente) echecs++;
+    console.log(`   ${refusCSP.length > 0 ? '✅' : '❌'} et la CSP livrée le refuse encore, comme prévu (recette, étape 1)`);
+    if (refusCSP.length === 0) echecs++;
+    await ctx.close();
+  }
+
+  { // ── la recette de _headers fonctionne-t-elle vraiment ? ─────────────────
+    /* On applique l'étape 1 telle qu'elle est écrite dans _headers et on vérifie
+       qu'il ne reste AUCUN refus. Sans ça, la recette ne serait qu'une
+       intention : on la découvrirait fausse le jour de la rentrée, pixel muet
+       et personne pour comprendre pourquoi. */
+    const { ctx, page, versFacebook, refusCSP } = await ouvrir('123456789012345', true);
+    await page.click('.consentement-choix .btn:nth-child(2)');
+    await page.waitForTimeout(2500);
+    const charge = versFacebook.some((u) => u.includes('fbevents.js'));
+    console.log(`   ${charge && refusCSP.length === 0 ? '✅' : '❌'} CSP ouverte selon la recette — le pixel passe (${versFacebook.length} requête(s), ${refusCSP.length} refus)`);
+    if (!(charge && refusCSP.length === 0)) { echecs++; refusCSP.forEach((r) => console.log(`      ${r.slice(0, 110)}`)); }
+    await ctx.close();
+  }
+
+  { // ── persistance et retrait ──────────────────────────────────────────────
+    const { ctx, page } = await ouvrir('123456789012345');
+    await page.click('.consentement-choix .btn:nth-child(2)');
+    await page.waitForTimeout(1200);
+
+    // Le choix doit survivre au rechargement, sinon on redemande à chaque page.
+    await page.reload({ waitUntil: 'load', timeout: 40000 });
+    await page.waitForTimeout(4000);
+    const reste = await page.locator('.consentement').count();
+    console.log(`   ${reste === 0 ? '✅' : '❌'} le choix survit au rechargement (${reste} bandeau)`);
+    if (reste !== 0) echecs++;
+
+    // Et il doit pouvoir être repris : le retrait doit être aussi simple.
+    const lien = await page.locator('.foot-col a', { hasText: /^Cookies$/ }).count();
+    console.log(`   ${lien === 1 ? '✅' : '❌'} le lien « Cookies » du pied de page permet d'y revenir (${lien})`);
+    if (lien !== 1) echecs++;
+    if (lien === 1) {
+      await page.locator('.foot-col a', { hasText: /^Cookies$/ }).click();
+      await page.waitForTimeout(1200);
+      const rouvert = await page.locator('.consentement').count();
+      console.log(`   ${rouvert === 1 ? '✅' : '❌'}    et il rouvre effectivement le choix (${rouvert})`);
+      if (rouvert !== 1) echecs++;
+    }
+    await ctx.close();
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
  * Trois taps ne consomment pas trois essais
  *
  * PANNE RÉELLE. Le serveur crée un compte, un espace, deux chantiers avec leurs

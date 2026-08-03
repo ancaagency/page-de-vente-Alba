@@ -84,6 +84,40 @@ window.ALBA_PAIEMENT_DIRECT = true;
 window.ALBA_POINT_ESSAI =
   "https://fhrkkjvbzgkbmlnlnxce.supabase.co/functions/v1/demo-express";
 
+/* ─────────────────────────────────────────────────────────────────────────────
+ * PIXEL FACEBOOK — interrupteur, éteint
+ *
+ * `null` : aucun pixel. Aucune requête vers Facebook, et AUCUN bandeau de
+ * consentement — parce qu'il n'y aurait rien à consentir. C'est l'état actuel,
+ * et il est délibéré : la page ne dépose aucun cookie, et les deux seules
+ * choses qu'elle conserve (langue choisie, rideau d'intro déjà joué) sont
+ * dispensées de consentement par l'article 82 de la loi Informatique et
+ * Libertés. Demander un consentement sans objet est trompeur, et coûte des
+ * conversions pour rien.
+ *
+ * POUR L'ALLUMER — remplacez null par l'identifiant, entre guillemets :
+ *
+ *     window.ALBA_PIXEL_FACEBOOK = "123456789012345";
+ *
+ * Le bandeau apparaît alors tout seul, le pixel ne se charge que si le visiteur
+ * a cliqué « Tout accepter », et le lien « Cookies » du pied de page lui permet
+ * de revenir sur son choix.
+ *
+ * ⚠️ DEUX CHOSES NE SUIVENT PAS TOUTES SEULES, et le pixel restera muet sans
+ * elles. Les deux sont écrites noir sur blanc dans _headers, section
+ * « Recette pixel » :
+ *   1. la CSP doit autoriser connect.facebook.net et www.facebook.com — sinon
+ *      le navigateur bloque le script sans que rien ne le montre à l'écran ;
+ *   2. la section 6 des mentions légales doit être remplacée par le bloc prévu.
+ *      Un bandeau qui demande le consentement pendant qu'une page légale
+ *      affirme « ce site ne dépose aucun cookie » est pire que pas de bandeau.
+ *
+ * tests/smoke.mjs vérifie les deux états : éteint, rien ne part vers Facebook
+ * et aucun bandeau n'apparaît ; allumé, rien ne part TANT QUE le visiteur n'a
+ * pas accepté.
+ * ───────────────────────────────────────────────────────────────────────────── */
+window.ALBA_PIXEL_FACEBOOK = null;
+
 /* Applique l'origine aux liens du HTML statique.
  *
  * Les CTA gardent une href écrite en dur dans le HTML : elle reste correcte si

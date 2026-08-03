@@ -29,6 +29,8 @@
   <script src="contenu.js"></script>
   <!-- Origine de l'application (SIGNUP_URL et CTA). Point unique de vérité. -->
   <script src="config.js"></script>
+  <script src="consentement.js"></script>
+  <script src="pixel-facebook.js"></script>
 
   <!-- Mise en page propre à cette page. Elle n'emprunte aux styles existants que
        les jetons de design (couleurs, typographies), pour rester d'accord avec la
@@ -244,13 +246,102 @@
     <a href="https://www.cnil.fr" rel="noopener">www.cnil.fr</a>.
   </p>
 
-  <h2>6 · <em>Cookies</em></h2>
+  <h2 id="cookies">6 · Cookies et <em>traceurs</em></h2>
   <p>
-    Ce site de présentation ne dépose aucun cookie publicitaire ni traceur
-    tiers à des fins de ciblage. L'usage des cookies dans l'application est
-    détaillé dans la
+    Ce site ne dépose <b>aucun cookie</b>. Ni publicitaire, ni de mesure
+    d'audience, ni de réseau social. Il n'y a pas de bandeau de consentement
+    parce qu'il n'y a rien à consentir.
+  </p>
+  <p>
+    Deux informations sont conservées par votre navigateur, et elles n'en
+    sortent jamais&nbsp;:
+  </p>
+  <ul>
+    <li>
+      <b>la langue que vous avez choisie</b> (FR ou EN), pour ne pas vous la
+      redemander à chaque page. Conservée jusqu'à ce que vous effaciez les
+      données du site&nbsp;;
+    </li>
+    <li>
+      <b>le fait que l'animation d'accueil a déjà été jouée</b>, pour ne pas la
+      rejouer à chaque page. Effacée dès que vous fermez l'onglet.
+    </li>
+  </ul>
+  <p>
+    Ni l'une ni l'autre ne permet de vous identifier, ni de vous suivre d'un
+    site à l'autre. Elles relèvent des traceurs dispensés de consentement par
+    l'article 82 de la loi Informatique et Libertés&nbsp;: la CNIL cite
+    expressément les traceurs de personnalisation de l'interface, dont le choix
+    de la langue. Vous pouvez les effacer à tout moment depuis les réglages de
+    votre navigateur&nbsp;; le site continuera de fonctionner, il vous
+    reparlera simplement français.
+  </p>
+  <p>
+    Trois services extérieurs sont sollicités par votre navigateur lorsqu'il
+    affiche ces pages, et reçoivent de ce fait votre adresse IP&nbsp;: <b>unpkg</b>
+    (bibliothèques d'affichage), <b>Google&nbsp;Fonts</b> (police de caractères
+    Inter, utilisée uniquement si votre appareil n'en dispose pas déjà — ce
+    n'est le cas ni sur iPhone, ni sur iPad, ni sur Mac) et <b>Supabase</b>
+    (formulaire de contact et ouverture d'un essai, sollicité seulement si vous
+    agissez). Aucun ne dépose de cookie sur ce site.
+  </p>
+  <p>
+    L'usage des cookies dans l'application, qui est un service distinct avec son
+    propre compte, est détaillé dans la
     <a href="https://alba-studio.co/privacy-policy" data-alba-path="/privacy-policy">politique de confidentialité</a>.
   </p>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════
+       BLOC DE REMPLACEMENT — le jour où le pixel Facebook est allumé
+
+       Remplacer TOUTE la section 6 ci-dessus par ce qui suit. Elle affirme
+       aujourd'hui « ce site ne dépose aucun cookie » : ce serait faux dès le
+       premier consentement, et une page légale qui ment vaut moins que pas de
+       page du tout.
+
+       Voir aussi _headers, section « Recette pixel » : c'est la même liste,
+       et cette étape en est le point 4.
+
+  <h2 id="cookies">6 · Cookies et <em>traceurs</em></h2>
+  <p>
+    Ce site utilise deux catégories de traceurs, et une seule vous est
+    demandée.
+  </p>
+  <p>
+    <b>Ce qui ne vous est pas demandé</b>, parce que dispensé de consentement
+    par l'article 82 de la loi Informatique et Libertés — la CNIL cite
+    expressément les traceurs de personnalisation de l'interface&nbsp;: la
+    langue que vous avez choisie (conservée jusqu'à effacement), le fait que
+    l'animation d'accueil a déjà été jouée (effacé à la fermeture de l'onglet),
+    et le choix que vous exprimez ci-dessous (conservé six mois). Aucun ne
+    permet de vous identifier ni de vous suivre d'un site à l'autre.
+  </p>
+  <p>
+    <b>Ce qui vous est demandé</b>&nbsp;: un traceur publicitaire de Meta
+    Platforms Ireland Limited (« pixel Facebook »), destiné à mesurer
+    l'efficacité de nos annonces. Il n'est déposé <b>que</b> si vous cliquez
+    « Tout accepter ». Tant que vous n'avez pas répondu, ou si vous refusez,
+    aucune requête n'est adressée à Facebook et votre adresse IP ne lui est pas
+    transmise. Refuser ne change rien à votre visite&nbsp;; nous ne vous
+    reposerons pas la question avant six mois.
+  </p>
+  <p>
+    Vous pouvez revenir sur votre choix à tout moment&nbsp;: le lien
+    <b>Cookies</b>, en bas de chaque page, rouvre la question.
+  </p>
+  <p>
+    Ce traceur implique un transfert de données vers les États-Unis, encadré
+    par les clauses contractuelles types de la Commission européenne et par le
+    cadre de protection des données UE–États-Unis. Meta agit en responsable
+    conjoint pour cette mesure.
+  </p>
+  <p>
+    L'usage des cookies dans l'application, qui est un service distinct avec
+    son propre compte, est détaillé dans la
+    <a href="https://alba-studio.co/privacy-policy" data-alba-path="/privacy-policy">politique de confidentialité</a>.
+  </p>
+
+       ═══════════════════════════════════════════════════════════════════════ -->
 
   <h2>7 · <em>Responsabilité</em></h2>
   <p>

@@ -69,6 +69,38 @@
   #   sociaux et les messageries. Le gain (fuites inter-origines de type Spectre)
   #   ne vaut pas la perte des aperçus de lien.
   #
+  # ═══ RECETTE PIXEL — à appliquer le jour où l'on allume Facebook ═══
+  #
+  # Rien de ce qui suit n'est actif. C'est volontaire : autoriser Facebook dans
+  # la CSP alors qu'aucun pixel n'est déclaré ouvrirait une porte pour rien.
+  #
+  # Le jour venu, dans l'ORDRE — l'ordre compte, la CSP d'abord :
+  #
+  #   1. Dans la ligne Content-Security-Policy ci-dessus, ajouter :
+  #        script-src  … https://connect.facebook.net
+  #        img-src     … https://www.facebook.com
+  #        connect-src … https://www.facebook.com
+  #      (`img-src` sert au pixel image lui-même ; `connect-src` aux envois
+  #       d'événements que fbevents.js fait en fetch.)
+  #
+  #   2. Dans tests/entetes.mjs, ajouter ces deux origines à TIERS_ADMIS. Le
+  #      contrôle « aucune origine tierce inattendue » échouera sinon — c'est
+  #      exactement son rôle : aucune origine ne doit entrer sans décision.
+  #
+  #   3. Dans config.js, remplacer `window.ALBA_PIXEL_FACEBOOK = null` par
+  #      l'identifiant. C'est la SEULE ligne de code à changer.
+  #
+  #   4. Dans mentions-legales.html, remplacer la section 6 par le bloc qui y
+  #      est préparé en commentaire. Elle affirme aujourd'hui « ce site ne
+  #      dépose aucun cookie » : ce serait faux dès le premier consentement.
+  #
+  # Ce qu'il ne faut PAS faire :
+  #   · ajouter un <link rel="preconnect"> vers Facebook « pour accélérer » —
+  #     la connexion transmet déjà l'adresse IP, avant tout consentement ;
+  #   · coller l'extrait fourni par Facebook, qui est un script EN LIGNE : la
+  #     CSP le refuserait, et le pixel serait silencieux. Le chargeur externe
+  #     pixel-facebook.js fait le même travail sans 'unsafe-inline'.
+  #
   # Et une valeur volontairement NON ajoutée : `preload` sur HSTS. Le préchargement
   # se demande pour le domaine entier, apex compris — or l'apex sert
   # l'application, dont nous ne maîtrisons pas les en-têtes, et l'inscription est
