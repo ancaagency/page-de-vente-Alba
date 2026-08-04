@@ -120,14 +120,24 @@ ok(!(directive('script-src') || '').includes("'unsafe-inline'"), "script-src san
 // Aucune source ne doit pouvoir réintroduire d'assouplissement par une autre
 // directive que script-src, ni par le repli de default-src.
 ok(!(directive('default-src') || '').includes('unsafe'), "default-src sans 'unsafe-*'");
+
+/* Les polices viennent de chez nous. `font-src 'self'` est ce qui rend un
+   retour en arrière impossible en silence : remettre un <link> vers Google
+   sans toucher à la CSP donnerait une police qui ne charge pas. */
+ok(directive('font-src') === "'self'", "font-src 'self' — polices hébergées par nous");
+ok(!(directive('style-src') || '').includes('fonts.googleapis'),
+   'style-src ne va plus chercher de feuille chez Google');
 ok(!(directive('style-src') || '').includes('unsafe-eval'), "style-src sans 'unsafe-eval'");
 
 // Les origines tierces autorisées, énumérées : toute nouvelle doit être un choix
 // explicite, pas un ajout qui passe inaperçu.
 const TIERS_ADMIS = new Set([
   'https://unpkg.com',                              // React, GSAP, Lenis (avec empreintes)
-  'https://fonts.googleapis.com',                   // feuille de style des polices
-  'https://fonts.gstatic.com',                      // fichiers de polices
+  /* Les deux origines Google Fonts ont été RETIRÉES, pas oubliées : Inter est
+     hébergée sur notre domaine. Si elles réapparaissent ici, c'est que
+     quelqu'un a remis un <link> vers Google — et avec lui la transmission de
+     l'adresse IP de chaque visiteur. Ne les rajoutez pas pour faire passer le
+     contrôle : retirez le <link>. */
   'https://fhrkkjvbzgkbmlnlnxce.supabase.co',       // formulaire de contact, paiement, essai express
   // Notre propre application. Elle ne figure QUE dans form-action, et
   // uniquement parce que l'essai express y aboutit après deux redirections :

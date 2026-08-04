@@ -55,8 +55,13 @@
   # style-src garde 'unsafe-inline' : React pose des styles par attribut `style`,
   #   et les pages ont des blocs <style>. Un style injecté ne s'exécute pas ;
   #   le risque n'a rien de comparable à celui d'un script.
+  # style-src et font-src : PLUS AUCUNE origine Google. Les trois pages
+  #   chargeaient Inter depuis fonts.googleapis.com, ce qui transmettait
+  #   l'adresse IP de chaque visiteur à Google avant le moindre clic. La police
+  #   est désormais servie depuis /fonts (voir styles.css) : ces deux directives
+  #   se sont resserrées sur 'self'. Une CSP qui rétrécit est une bonne nouvelle.
   # media-src 'self' sert au son d'apparition de Léo (uploads/*.mp3).
-  Content-Security-Policy: default-src 'self'; script-src 'self' https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; media-src 'self'; connect-src https://fhrkkjvbzgkbmlnlnxce.supabase.co; object-src 'none'; frame-src 'none'; worker-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self' https://fhrkkjvbzgkbmlnlnxce.supabase.co https://app.alba-studio.co; upgrade-insecure-requests
+  Content-Security-Policy: default-src 'self'; script-src 'self' https://unpkg.com; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: blob:; media-src 'self'; connect-src https://fhrkkjvbzgkbmlnlnxce.supabase.co; object-src 'none'; frame-src 'none'; worker-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self' https://fhrkkjvbzgkbmlnlnxce.supabase.co https://app.alba-studio.co; upgrade-insecure-requests
 
   # Deux en-têtes volontairement ABSENTS, pour ne pas confondre durcissement et
   # dégâts :
@@ -124,6 +129,13 @@
 
 /*.js
   Cache-Control: public, max-age=0, must-revalidate
+
+# Les polices ne changent JAMAIS : même fichier, même contenu, pour toujours.
+# Un an, donc. La contrepartie tient en une règle : pour remplacer une police,
+# il faut RENOMMER le fichier — sinon les visiteurs garderont l'ancienne
+# pendant des mois sans qu'on puisse rien y faire.
+/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
 
 # Les médias, eux, ne changent jamais sans changer de nom : cache d'une semaine.
 /images/*

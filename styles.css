@@ -1,4 +1,69 @@
 /* ============================================
+   Inter — hébergée par nous, plus par Google
+   ============================================
+   POURQUOI CES FICHIERS SONT DANS LE DÉPÔT
+
+   Les trois pages chargeaient Inter depuis fonts.googleapis.com, avec deux
+   `preconnect` en prime. Concrètement : l'adresse IP de CHAQUE visiteur était
+   transmise à Google dès l'ouverture de la page, avant le moindre clic, sans
+   consentement et sans que ce soit nécessaire au service. C'est ce que le
+   tribunal de Munich a jugé contraire au RGPD en janvier 2022 (LG München I,
+   3 O 17493/20), et l'analyse de la CNIL est la même.
+
+   Et le comble : sur iPhone, iPad et Mac, Inter n'était JAMAIS affichée. La
+   pile de polices prend `-apple-system` en premier, donc SF. Ces appareils
+   payaient le coût en vie privée d'une police qu'ils ne voyaient pas.
+
+   Les fichiers sont désormais servis depuis notre propre domaine. Rien ne part
+   plus vers Google, la CSP a pu se resserrer, et la typographie ne change nulle
+   part : ce sont exactement les mêmes fichiers, récupérés depuis Google Fonts.
+
+   CE QU'IL FAUT SAVOIR AVANT D'Y TOUCHER
+
+   · Licence SIL Open Font 1.1 — l'auto-hébergement est expressément autorisé,
+     à condition de conserver fonts/OFL.txt. Ne le supprimez pas.
+   · Ce sont des polices VARIABLES : un seul fichier couvre tous les poids de
+     300 à 700. Inutile d'ajouter des fichiers par graisse.
+   · Les `unicode-range` ne sont pas décoratifs : ils sont recopiés tels quels
+     depuis Google. Grâce à eux, un visiteur français ne télécharge que le
+     sous-ensemble `latin` (48 Ko) ; `latin-ext` (85 Ko) n'est cherché que si un
+     caractère d'Europe centrale apparaît réellement à l'écran.
+   · `font-display: swap` : le texte s'affiche immédiatement dans la police
+     système, puis bascule. Jamais de texte invisible pendant le chargement.
+   · Si vous remplacez un fichier, RENOMMEZ-LE : /fonts/* est mis en cache un an
+     dans _headers, un même nom servirait l'ancienne version pendant des mois.
+   ============================================ */
+/* ⚠️ L'ORDRE DE CES DEUX BLOCS EST SIGNIFIANT — latin-ext D'ABORD, latin ENSUITE.
+
+   Les deux plages se RECOUVRENT : `œ` (U+0153) est couvert par les deux. Quand
+   deux @font-face de même famille couvrent un même caractère, le navigateur
+   retient la DERNIÈRE déclarée. Google les sert dans cet ordre exactement pour
+   cette raison, et je les avais inversés.
+
+   Le prix de l'inversion, mesuré : une seule occurrence de « maîtrise d'œuvre »
+   sur la page d'accueil suffisait à faire télécharger latin-ext — 85 Ko, à
+   chaque visiteur, pour une ligature. Remis dans cet ordre, la page d'accueil
+   ne charge plus que latin (48 Ko).
+
+   Si vous ajoutez un sous-ensemble, mettez-le AVANT latin. */
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 300 700;
+  font-display: swap;
+  src: url("fonts/inter-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 300 700;
+  font-display: swap;
+  src: url("fonts/inter-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* ============================================
    ALBA STUDIO — Landing
    Design tokens
    ============================================ */

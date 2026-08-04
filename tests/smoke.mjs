@@ -315,6 +315,73 @@ console.log('\n===== l\'essai express ne peut pas être déclenché par un robot
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
+ * Les polices ne repassent-elles pas par Google ?
+ *
+ * Les trois pages chargeaient Inter depuis fonts.googleapis.com, avec deux
+ * `preconnect` par-dessus : l'adresse IP de chaque visiteur partait chez Google
+ * avant le moindre clic, sans consentement et sans nécessité. Inter est
+ * désormais servie depuis /fonts.
+ *
+ * Deux régressions possibles, et aucune ne se voit à l'œil :
+ *   · quelqu'un remet un <link> vers Google, par copier-coller d'un extrait ;
+ *   · un caractère exotique se glisse dans un texte et fait télécharger le
+ *     sous-ensemble latin-ext (85 Ko) sans que personne ne le remarque. C'est
+ *     déjà arrivé pour un seul « ᵉ » dans « la 3ᵉ fois ».
+ * ───────────────────────────────────────────────────────────────────────────── */
+console.log('\n===== les polices restent chez nous =====');
+{
+  for (const route of ['/', '/tarifs', '/mentions-legales.html']) {
+    const ctx = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+    const google = [], woff = [];
+    ctx.on('request', (r) => {
+      const h = new URL(r.url()).hostname;
+      if (/google|gstatic/i.test(h)) google.push(r.url());
+      if (/\.woff2?($|\?)/i.test(r.url())) woff.push(r.url().split('/').pop());
+    });
+    const page = await ctx.newPage();
+    await page.goto('http://localhost:8790' + route, { waitUntil: 'load', timeout: 40000 });
+    await page.waitForTimeout(5000);
+
+    console.log(`   ${google.length === 0 ? '✅' : '❌'} ${route} — Google jamais contacté${google.length ? ` : ${google[0]}` : ''}`);
+    if (google.length) echecs++;
+
+    /* latin-ext ne doit PAS être téléchargé : le site est en français et en
+       anglais, `latin` suffit. S'il apparaît, c'est qu'un caractère rare est
+       entré dans un texte — le message le nomme pour qu'on le retrouve. */
+    const ext = woff.filter((f) => f.includes('latin-ext'));
+    console.log(`   ${ext.length === 0 ? '✅' : '❌'} ${route} — un seul sous-ensemble (${woff.join(', ') || 'aucun'})`);
+    if (ext.length) {
+      echecs++;
+      const rares = await page.evaluate(() => {
+        /* Les plages de latin-ext, MOINS celles que latin couvre aussi. Un
+           simple « code > 0xFF » désignerait ⌘, ↵ ou ↑ — qui ne déclenchent
+           rien du tout, puisqu'ils n'appartiennent à aucun des deux
+           sous-ensembles et retombent sur une police système. Envoyer
+           quelqu'un chercher de ce côté lui ferait perdre son temps. */
+        const EXT = [[0x100, 0x151], [0x154, 0x2BA], [0x2BD, 0x2C5], [0x2C7, 0x2CC],
+                     [0x2CE, 0x2D7], [0x2DD, 0x2FF], [0x1D00, 0x1DBF], [0x1E00, 0x1E9F],
+                     [0x1EF2, 0x1EFF], [0x2020, 0x2020], [0x20A0, 0x20AB], [0x20AD, 0x20C0],
+                     [0x2113, 0x2113], [0x2C60, 0x2C7F], [0xA720, 0xA7FF]];
+        const trouves = [];
+        const m = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+        let n;
+        while ((n = m.nextNode())) {
+          for (const c of n.textContent) {
+            const o = c.codePointAt(0);
+            if (EXT.some(([a, b]) => o >= a && o <= b)) {
+              trouves.push(`U+${o.toString(16).toUpperCase()} « ${c} » dans « ${n.textContent.trim().slice(0, 44)} »`);
+            }
+          }
+        }
+        return [...new Set(trouves)].slice(0, 5);
+      });
+      rares.forEach((r) => console.log(`      caractère en cause : ${r}`));
+    }
+    await ctx.close();
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
  * La page reste-t-elle dispensée de bandeau de consentement ?
  *
  * Il n'y a pas de bandeau, et c'est un CHOIX étayé : la page ne dépose aucun

@@ -16,15 +16,12 @@
   <!-- /tarifs est l'adresse publique (voir _redirects) ; Tarifs.html est l'implémentation. -->
   <link rel="canonical" href="https://www.alba-studio.co/tarifs">
   <link rel="icon" type="image/png" href="images/logo-alba.png">
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <!-- Inter seulement, et en dernier recours : la pile systeme sert SF Pro sur
-     Mac, iPhone et iPad, ou rien n'est telecharge. Un navigateur ne recupere
-     que les polices qu'il utilise reellement, donc les visiteurs Apple ne
-     telechargeront jamais ce fichier. -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..700&display=swap" rel="stylesheet">
-
+  <!-- Inter est hébergée par nous (voir styles.css, @font-face) : plus aucune
+       requête vers Google, donc plus aucune adresse IP de visiteur transmise.
+       Sur Mac, iPhone et iPad, la pile système sert SF Pro et ce fichier n'est
+       même pas téléchargé — un navigateur ne récupère que les polices qu'il
+       utilise réellement. -->
+  <link rel="preload" href="fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="sections.css">
 

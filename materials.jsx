@@ -348,7 +348,12 @@ const Manifesto = () => {
 
 /* Pain scroll, pinned, one pain at a time, scroll-driven */
 const PAIN_ITEMS_FR = [
-  "Relancer un client pour la 3ᵉ fois sur la même validation.",
+  /* « 3e » et non « 3ᵉ ». Le second est U+1D49, un caractère de compatibilité
+     qui n'appartient qu'au sous-ensemble latin-ext d'Inter : sa seule présence
+     ici faisait télécharger ce sous-ensemble — 85 Ko — à chaque visiteur qui
+     n'a pas de police système Apple. 85 Ko pour un exposant, dans une ligne qui
+     défile. « 3e » est de toute façon la forme courante en français. */
+  "Relancer un client pour la 3e fois sur la même validation.",
   "Retrouver « plan-final-V7-DEF-ok(2).pdf » dans les emails.",
   "Un arbitrage oral contesté un an plus tard.",
   "Ressaisir la même référence matériau à chaque projet.",

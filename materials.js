@@ -802,7 +802,13 @@ var Manifesto = function Manifesto() {
 };
 
 /* Pain scroll, pinned, one pain at a time, scroll-driven */
-var PAIN_ITEMS_FR = ["Relancer un client pour la 3ᵉ fois sur la même validation.", "Retrouver « plan-final-V7-DEF-ok(2).pdf » dans les emails.", "Un arbitrage oral contesté un an plus tard.", "Ressaisir la même référence matériau à chaque projet.", "Des appels à 21h pour savoir où en est le chantier.", "Trois Drive, deux boîtes mail, zéro source de vérité.", "Un BET qui travaille sur une version périmée des plans."];
+var PAIN_ITEMS_FR = [
+/* « 3e » et non « 3ᵉ ». Le second est U+1D49, un caractère de compatibilité
+   qui n'appartient qu'au sous-ensemble latin-ext d'Inter : sa seule présence
+   ici faisait télécharger ce sous-ensemble — 85 Ko — à chaque visiteur qui
+   n'a pas de police système Apple. 85 Ko pour un exposant, dans une ligne qui
+   défile. « 3e » est de toute façon la forme courante en français. */
+"Relancer un client pour la 3e fois sur la même validation.", "Retrouver « plan-final-V7-DEF-ok(2).pdf » dans les emails.", "Un arbitrage oral contesté un an plus tard.", "Ressaisir la même référence matériau à chaque projet.", "Des appels à 21h pour savoir où en est le chantier.", "Trois Drive, deux boîtes mail, zéro source de vérité.", "Un BET qui travaille sur une version périmée des plans."];
 var PAIN_ITEMS_EN = ["Chasing a client for the 3rd time on the same approval.", "Digging “plan-final-V7-DEF-ok(2).pdf” out of your inbox.", "A verbal decision disputed a year later.", "Re-typing the same material reference on every project.", "9pm calls asking where the site is at.", "Three Drives, two inboxes, zero source of truth.", "An engineer working from outdated plans."];
 var PainScroll = function PainScroll() {
   var items = L(PAIN_ITEMS_FR, PAIN_ITEMS_EN);
