@@ -1,0 +1,21 @@
+# Empreintes des bibliothèques hébergées dans /vendor.
+#
+# Elles ne servent PAS au navigateur : ces fichiers viennent de notre propre
+# domaine, et un attaquant capable de les modifier pourrait tout aussi bien
+# retirer l'attribut integrity du HTML. Une empreinte SRI sur une ressource
+# de même origine ne protège de rien — mais elle peut, elle, faire une page
+# blanche si un jour un intermédiaire recompresse le fichier.
+#
+# Elles servent à tests/vendor.mjs, qui vérifie AVANT publication que ces
+# fichiers sont bien ceux d'unpkg, à l'octet près. La garantie est la même,
+# la panne en moins : le contrôle échoue ici plutôt que chez le visiteur.
+#
+# Ces empreintes sont celles qui figuraient dans les balises <script> tant que
+# les fichiers venaient d'unpkg. Elles ont été vérifiées identiques au moment
+# du rapatriement.
+
+gsap-3.12.5.js  sha384-g4NTh/Iv5PPU4xPyhEWqPcwtNXOvdaDI8LLnyYfyNZOjKJeYQyjzQ9X5275eBjpt
+lenis-1.1.18.js  sha384-tKsJDT6PlUI0pSBt9/sBKJluKgA19/a6mBrDsZaXotLB4ZYfMGM6xt6/WgGpYhTm
+react-18.3.1.js  sha384-DGyLxAyjq0f9SPpVevD6IgztCFlnMF6oW/XQGmfe+IsZ8TqEiDrcHkMLKI6fiB/Z
+react-dom-18.3.1.js  sha384-gTGxhz21lVGYNMcdJOyq01Edg0jhn/c22nsx0kyqP0TxaV5WVdsSH1fSDUf5YJj1
+scrolltrigger-3.12.5.js  sha384-Z3REaz79l2IaAZqJsSABtTbhjgOUYyV3p90XNnAPCSHg3EMTz1fouunq9WZRtj3d

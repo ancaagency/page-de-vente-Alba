@@ -15,7 +15,8 @@
 
   # Politique de sécurité du contenu.
   #
-  # script-src 'self' https://unpkg.com — sans 'unsafe-eval' NI 'unsafe-inline'.
+  # script-src 'self' — SEULEMENT 'self'. Ni 'unsafe-eval', ni 'unsafe-inline',
+  # et plus aucune origine tierce.
   #
   # C'est le résultat de la transpilation préalable des .jsx (outils/transpiler.mjs).
   # La page compilait auparavant son JSX dans le navigateur avec Babel standalone,
@@ -25,9 +26,19 @@
   # fichiers, ce qui permet de retirer aussi 'unsafe-inline'. Il ne reste aucun
   # script en ligne dans les trois pages.
   #
-  # Les cinq scripts tiers portent tous une empreinte `integrity` : un unpkg
-  # compromis ne peut pas leur substituer autre chose, le navigateur refuserait.
-  # (GSAP, ScrollTrigger et Lenis n'en avaient aucune jusqu'ici.)
+  # React, GSAP et Lenis venaient d'unpkg, avec une empreinte `integrity` sur
+  # chaque balise. C'était la bonne protection tant que les fichiers venaient de
+  # chez quelqu'un d'autre — mais chaque chargement de page envoyait aussi
+  # l'adresse IP du visiteur à un CDN américain, et l'affichage du site dépendait
+  # d'un service que nous ne maîtrisons pas.
+  #
+  # Ils sont désormais dans /vendor, servis par nous. Vérifié au rapatriement :
+  # les cinq fichiers sont identiques à l'octet près à ceux d'unpkg, empreintes
+  # SRI à l'appui. L'attribut `integrity` a été retiré des balises — sur une
+  # ressource de même origine il ne protège de rien (qui peut modifier le
+  # fichier peut modifier la balise) mais il peut faire une page blanche si un
+  # intermédiaire recompresse. La garantie vit maintenant dans tests/vendor.mjs,
+  # qui refait le calcul avant publication.
   #
   # connect-src : UNE seule destination, celle du formulaire de contact. Cette
   #   directive était à 'none' depuis la transpilation ; le formulaire de démo
@@ -61,7 +72,7 @@
   #   est désormais servie depuis /fonts (voir styles.css) : ces deux directives
   #   se sont resserrées sur 'self'. Une CSP qui rétrécit est une bonne nouvelle.
   # media-src 'self' sert au son d'apparition de Léo (uploads/*.mp3).
-  Content-Security-Policy: default-src 'self'; script-src 'self' https://unpkg.com; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: blob:; media-src 'self'; connect-src https://fhrkkjvbzgkbmlnlnxce.supabase.co; object-src 'none'; frame-src 'none'; worker-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self' https://fhrkkjvbzgkbmlnlnxce.supabase.co https://app.alba-studio.co; upgrade-insecure-requests
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: blob:; media-src 'self'; connect-src https://fhrkkjvbzgkbmlnlnxce.supabase.co; object-src 'none'; frame-src 'none'; worker-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self' https://fhrkkjvbzgkbmlnlnxce.supabase.co https://app.alba-studio.co; upgrade-insecure-requests
 
   # Deux en-têtes volontairement ABSENTS, pour ne pas confondre durcissement et
   # dégâts :

@@ -17,8 +17,8 @@
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="sections.css">
 
-  <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" integrity="sha384-DGyLxAyjq0f9SPpVevD6IgztCFlnMF6oW/XQGmfe+IsZ8TqEiDrcHkMLKI6fiB/Z" crossorigin="anonymous"></script>
-  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" integrity="sha384-gTGxhz21lVGYNMcdJOyq01Edg0jhn/c22nsx0kyqP0TxaV5WVdsSH1fSDUf5YJj1" crossorigin="anonymous"></script>
+  <script src="vendor/react-18.3.1.js"></script>
+  <script src="vendor/react-dom-18.3.1.js"></script>
   <script src="i18n.js"></script>
   <!-- Textes de la page, modifiables sans toucher au code. Chargé après i18n.js,
        qui définit T(). Si ce fichier est absent ou mal formé, la page retombe sur
@@ -276,10 +276,12 @@
   <p>
     Les polices de caractères sont hébergées sur ce site&nbsp;: votre navigateur
     ne contacte pas Google pour les afficher, et votre adresse IP ne lui est pas
-    transmise. Deux services extérieurs restent sollicités&nbsp;: <b>unpkg</b>,
-    qui fournit les bibliothèques d'affichage au chargement de la page, et
-    <b>Supabase</b>, notre hébergeur, uniquement si vous envoyez le formulaire
-    de contact ou ouvrez un essai. Ni l'un ni l'autre ne dépose de cookie.
+    transmise. Les bibliothèques d'affichage sont elles aussi hébergées ici.
+    Afficher ces pages ne sollicite donc <b>aucun service extérieur</b>&nbsp;:
+    tout ce que votre navigateur télécharge vient de ce domaine. Un seul tiers
+    peut être contacté, et seulement si vous agissez&nbsp;: <b>Supabase</b>,
+    notre hébergeur, lorsque vous envoyez le formulaire de contact ou ouvrez un
+    essai. Il ne dépose aucun cookie.
   </p>
   <p>
     L'usage des cookies dans l'application, qui est un service distinct avec son

@@ -116,6 +116,11 @@ for (const d of ['script-src', 'connect-src', 'style-src', 'img-src']) {
 // annulerait le gain, et il n'y a plus aucune raison technique de le faire.
 ok(!(directive('script-src') || '').includes("'unsafe-eval'"), "script-src sans 'unsafe-eval'");
 ok(!(directive('script-src') || '').includes("'unsafe-inline'"), "script-src sans 'unsafe-inline'");
+/* Le point d'arrivée : script-src ne vaut plus QUE 'self'. C'est la directive
+   la plus lourde de conséquences de toute la CSP, et elle ne nomme désormais
+   aucune origine extérieure. Y rajouter un CDN doit être un geste conscient. */
+ok(directive('script-src') === "'self'",
+   "script-src 'self' — aucune origine tierce, les bibliothèques sont chez nous");
 
 // Aucune source ne doit pouvoir réintroduire d'assouplissement par une autre
 // directive que script-src, ni par le repli de default-src.
@@ -132,7 +137,9 @@ ok(!(directive('style-src') || '').includes('unsafe-eval'), "style-src sans 'uns
 // Les origines tierces autorisées, énumérées : toute nouvelle doit être un choix
 // explicite, pas un ajout qui passe inaperçu.
 const TIERS_ADMIS = new Set([
-  'https://unpkg.com',                              // React, GSAP, Lenis (avec empreintes)
+  /* unpkg est PARTI : React, GSAP et Lenis vivent dans /vendor. S'il
+     réapparaît, c'est qu'un <script> distant est revenu — et avec lui la
+     transmission de l'adresse IP du visiteur à chaque chargement. */
   /* Les deux origines Google Fonts ont été RETIRÉES, pas oubliées : Inter est
      hébergée sur notre domaine. Si elles réapparaissent ici, c'est que
      quelqu'un a remis un <link> vers Google — et avec lui la transmission de
