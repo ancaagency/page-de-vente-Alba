@@ -82,8 +82,10 @@ ok(directive('upgrade-insecure-requests') === '', 'upgrade-insecure-requests');
 // formulaire ne soit branche.
 const connect = directive('connect-src') || '';
 console.log(`   connect-src ${connect}`);
-ok(/^https:\/\/[a-z0-9]+\.supabase\.co$/.test(connect),
-   'connect-src nomme exactement l’origine du point d’entree du formulaire');
+const CONNECT_ADMIS = ['https://fhrkkjvbzgkbmlnlnxce.supabase.co', 'https://cloudflareinsights.com'];
+const connectSrc = connect.split(/\s+/).filter(Boolean);
+ok(connectSrc.length === CONNECT_ADMIS.length && CONNECT_ADMIS.every((o) => connectSrc.includes(o)),
+   'connect-src nomme exactement les destinations attendues');
 ok(!connect.includes('*') && !connect.includes("'self'"),
    'sans joker ni \'self\'');
 
@@ -116,11 +118,16 @@ for (const d of ['script-src', 'connect-src', 'style-src', 'img-src']) {
 // annulerait le gain, et il n'y a plus aucune raison technique de le faire.
 ok(!(directive('script-src') || '').includes("'unsafe-eval'"), "script-src sans 'unsafe-eval'");
 ok(!(directive('script-src') || '').includes("'unsafe-inline'"), "script-src sans 'unsafe-inline'");
-/* Le point d'arrivée : script-src ne vaut plus QUE 'self'. C'est la directive
-   la plus lourde de conséquences de toute la CSP, et elle ne nomme désormais
-   aucune origine extérieure. Y rajouter un CDN doit être un geste conscient. */
-ok(directive('script-src') === "'self'",
-   "script-src 'self' — aucune origine tierce, les bibliothèques sont chez nous");
+/* script-src est la directive la plus lourde de conséquences de toute la CSP.
+   Elle est ÉNUMÉRÉE, pas laissée libre : chaque origine qui s'y ajoute doit
+   être un geste conscient, et le contrôle échoue sur toute autre.
+   Cloudflare Web Analytics y figure — c'est l'hébergeur qui sert déjà la
+   totalité du site (voir l'arbitrage détaillé dans _headers). */
+const SCRIPT_ADMIS = ["'self'", 'https://static.cloudflareinsights.com'];
+const scriptSrc = (directive('script-src') || '').split(/\s+/).filter(Boolean);
+ok(scriptSrc.length === SCRIPT_ADMIS.length && SCRIPT_ADMIS.every((o) => scriptSrc.includes(o)),
+   `script-src énumérée et rien de plus (${scriptSrc.join(' ')})`);
+ok(!scriptSrc.some((o) => o.includes('*')), 'script-src sans joker');
 
 // Aucune source ne doit pouvoir réintroduire d'assouplissement par une autre
 // directive que script-src, ni par le repli de default-src.
@@ -151,6 +158,12 @@ const TIERS_ADMIS = new Set([
   // les navigateurs ne s'accordent pas sur l'application de form-action aux
   // redirections. Elle n'a rien à faire dans script-src ni connect-src.
   'https://app.alba-studio.co',
+  // Mesure d'audience sans cookie, dispensée de consentement. Ces deux origines
+  // sont ouvertes avant même que le jeton ne soit posé — voir _headers pour
+  // l'arbitrage, et tests/smoke.mjs qui vérifie qu'il n'en part rien tant que
+  // config.js n'a pas de jeton.
+  'https://static.cloudflareinsights.com',
+  'https://cloudflareinsights.com',
 ]);
 const tiers = [...new Set((csp || '').match(/https?:\/\/[^\s;]+/g) || [])];
 const inconnus = tiers.filter((t) => !TIERS_ADMIS.has(t));

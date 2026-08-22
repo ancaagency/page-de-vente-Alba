@@ -158,6 +158,57 @@ window.ALBA_PIXEL_FACEBOOK = null;
  * ───────────────────────────────────────────────────────────────────────────── */
 window.ALBA_GA4 = null;
 
+/* ─────────────────────────────────────────────────────────────────────────────
+ * MESURE D'AUDIENCE — Cloudflare Web Analytics
+ *
+ * Celle-ci est différente des deux précédentes, et la différence est tout
+ * l'intérêt : elle ne dépose aucun cookie, ne suit personne d'un site à
+ * l'autre, et ne demande donc AUCUN consentement. Pas de bandeau, et elle voit
+ * 100 % des visiteurs — pas seulement ceux qui auraient cliqué « oui ».
+ *
+ * POUR L'ALLUMER — le jeton du tableau de bord Cloudflare, entre guillemets :
+ *
+ *     window.ALBA_ANALYTICS_CF = "0123456789abcdef0123456789abcdef";
+ *
+ * Cloudflare → Analytics & Logs → Web Analytics → Add a site → « Manual
+ * installation » : le jeton est la valeur `token` de l'extrait proposé.
+ * Il n'y a rien d'autre à faire : la CSP autorise déjà ce script.
+ *
+ * ⚠️ N'ACTIVEZ PAS l'injection automatique proposée par Cloudflare Pages.
+ * Elle ajoute le script côté serveur, après notre HTML : le jeton n'est plus
+ * dans le dépôt, personne ne sait plus d'où vient ce script, et le contrôle
+ * tests/smoke.mjs ne peut plus rien vérifier. Le passer par ce fichier garde
+ * une seule source de vérité.
+ *
+ * ─────────────────────────────────────────────────────────────────────────────
+ * POURQUOI CELLE-CI PLUTÔT QU'UNE AUTRE
+ *
+ * Le site est DÉJÀ servi par Cloudflare : chaque requête de chaque visiteur
+ * passe déjà par eux, adresse IP comprise. Leur confier la mesure d'audience ne
+ * transfère donc rien de nouveau à personne — ce qui n'est vrai d'aucun autre
+ * fournisseur. À cela s'ajoute qu'elle est gratuite et sans cookie.
+ *
+ * ⚠️ CE QUE JE N'AI PAS PU VÉRIFIER MOI-MÊME
+ *
+ * L'environnement où ce code a été écrit refuse les connexions vers
+ * static.cloudflareinsights.com : je n'ai pas pu télécharger le script de
+ * Cloudflare ni observer son comportement réel. Les contrôles automatiques
+ * prouvent que NOTRE code ne dépose rien et n'appelle rien tant que le jeton
+ * est absent ; ils ne prouvent pas les affirmations de Cloudflare sur leur
+ * propre script.
+ *
+ * La vérification tient en trente secondes, une fois en ligne :
+ *   ouvrir www.alba-studio.co en navigation privée → F12 → Application →
+ *   Cookies et Local Storage. Il ne doit RIEN y avoir.
+ * Si un cookie apparaît, repassez ce fichier à `null` : la page redevient
+ * instantanément exempte de bandeau, et rien d'autre n'est à défaire.
+ *
+ * Pour la mettre derrière le consentement plutôt que de la retirer, il suffit
+ * d'ajouter la vérification d'état dans analytics-cloudflare.js — le
+ * commentaire de tête y indique où.
+ * ───────────────────────────────────────────────────────────────────────────── */
+window.ALBA_ANALYTICS_CF = null;
+
 /* Applique l'origine aux liens du HTML statique.
  *
  * Les CTA gardent une href écrite en dur dans le HTML : elle reste correcte si

@@ -482,6 +482,93 @@ console.log('\n===== inventaire des traceurs : rien de nouveau ? =====');
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
+ * La mesure d'audience : rien sans jeton, et rien de déposé avec
+ *
+ * Elle est le seul traceur qui ne passe PAS par le consentement, parce qu'elle
+ * n'en a pas besoin : sans cookie, sans suivi d'un site à l'autre, elle relève
+ * des traitements dispensés par l'article 82. C'est justement ce qui la rend
+ * dangereuse à laisser dériver — personne ne verra de bandeau apparaître pour
+ * signaler qu'elle s'est mise à déposer quelque chose.
+ *
+ * ⚠️ CE QUE CE CONTRÔLE NE PROUVE PAS. Le script de Cloudflare est remplacé par
+ * un fichier vide : l'environnement de test refuse les connexions vers
+ * static.cloudflareinsights.com. On prouve donc que NOTRE code n'appelle rien
+ * sans jeton et ne dépose rien ; on ne prouve rien sur le script de Cloudflare.
+ * La vérification de celui-ci se fait en ligne, en navigation privée :
+ * F12 → Application → Cookies et Local Storage doivent rester vides.
+ * ───────────────────────────────────────────────────────────────────────────── */
+console.log('\n===== la mesure d\'audience =====');
+{
+  const ouvrirMesure = async (jeton) => {
+    const ctx = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+    const versCloudflare = [];
+    ctx.on('request', (r) => {
+      if (/cloudflareinsights/i.test(new URL(r.url()).hostname)) versCloudflare.push(r.url());
+    });
+    await ctx.route('**://*.cloudflareinsights.com/**',
+      (r) => r.fulfill({ status: 200, contentType: 'text/javascript', body: '' }));
+    if (jeton) {
+      await ctx.route('**/config.js', async (r) => {
+        const src = await r.fetch().then((x) => x.text());
+        await r.fulfill({ status: 200, contentType: 'text/javascript',
+          body: src.replace('window.ALBA_ANALYTICS_CF = null;',
+                            `window.ALBA_ANALYTICS_CF = ${JSON.stringify(jeton)};`) });
+      });
+    }
+    const page = await ctx.newPage();
+    const refus = [];
+    page.on('console', (m) => {
+      const t = m.text();
+      if (/Content Security Policy|Refused to/i.test(t) && /cloudflareinsights/i.test(t)) refus.push(t);
+    });
+    await page.goto('http://localhost:8790/', { waitUntil: 'load', timeout: 40000 });
+    await page.waitForTimeout(5000);
+    return { ctx, page, versCloudflare, refus };
+  };
+
+  { // ── état livré : aucun jeton ─────────────────────────────────────────────
+    const { ctx, versCloudflare } = await ouvrirMesure(null);
+    verif(versCloudflare.length === 0,
+       `sans jeton — rien vers Cloudflare, alors que la CSP l'autoriserait (${versCloudflare.length})`);
+    await ctx.close();
+  }
+
+  { // ── jeton posé ───────────────────────────────────────────────────────────
+    const JETON = '0123456789abcdef0123456789abcdef';
+    const { ctx, page, versCloudflare, refus } = await ouvrirMesure(JETON);
+
+    const charge = versCloudflare.some((u) => u.includes('beacon.min.js'));
+    verif(charge, `jeton posé — le script de mesure est demandé (${versCloudflare.length} requête(s))`);
+    verif(refus.length === 0, `et la CSP le laisse passer${refus.length ? ` — ${refus[0].slice(0, 90)}` : ''}`);
+
+    /* Le jeton doit voyager en ATTRIBUT, et être exactement celui de config.js.
+       Un jeton tronqué ou mal échappé donne une mesure silencieusement morte :
+       le script se charge, et ne compte rien. */
+    const attribut = await page.$eval('script[data-cf-beacon]', (e) => e.getAttribute('data-cf-beacon')).catch(() => null);
+    let lu = null;
+    try { lu = JSON.parse(attribut).token; } catch (e) { /* attribut absent ou malformé */ }
+    verif(lu === JETON, `le jeton est transmis intact (${lu ? lu.slice(0, 12) + '…' : 'ILLISIBLE'})`);
+
+    /* LE point qui justifie l'absence de bandeau : rien ne doit être déposé.
+       Notre code ne dépose rien — c'est ce qui est vérifié ici. */
+    const cookies = await ctx.cookies();
+    verif(cookies.length === 0, `aucun cookie déposé (${cookies.length})`);
+    const cles = await page.evaluate(() => ({
+      local: Object.keys(localStorage), session: Object.keys(sessionStorage),
+    }));
+    const inattendues = [...cles.local.filter((k) => k !== 'alba_lang'),
+                        ...cles.session.filter((k) => k !== 'alba_intro_seen')];
+    verif(inattendues.length === 0,
+       `aucune clé de stockage nouvelle${inattendues.length ? ` — ${inattendues.join(', ')}` : ''}`);
+
+    // Et surtout : PAS de bandeau. Une mesure dispensée n'en demande pas.
+    const bandeau = await page.locator('.consentement').count();
+    verif(bandeau === 0, `et toujours aucun bandeau de consentement (${bandeau})`);
+    await ctx.close();
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
  * Le pixel publicitaire dort-il vraiment jusqu'au consentement ?
  *
  * Le pixel Facebook arrive à la rentrée. Tout est écrit, éteint par un

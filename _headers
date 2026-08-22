@@ -15,8 +15,27 @@
 
   # Politique de sécurité du contenu.
   #
-  # script-src 'self' — SEULEMENT 'self'. Ni 'unsafe-eval', ni 'unsafe-inline',
-  # et plus aucune origine tierce.
+  # script-src : 'self' + Cloudflare Web Analytics. Ni 'unsafe-eval', ni
+  # 'unsafe-inline'.
+  #
+  # Ces deux origines Cloudflare sont ouvertes DÈS MAINTENANT, alors que le
+  # jeton de mesure est encore à `null` dans config.js — contrairement à la
+  # règle qu'on s'est donnée pour Facebook et Google Analytics, dont les
+  # origines restent fermées jusqu'au jour de leur activation. C'est un écart
+  # assumé, et voici l'arbitrage :
+  #
+  #   · sans elles, poser le jeton dans config.js donnerait une mesure
+  #     SILENCIEUSEMENT bloquée par le navigateur. Rien à l'écran, aucune
+  #     statistique, et aucune raison de soupçonner la CSP ;
+  #   · avec elles, mais sans jeton, il ne part rigoureusement RIEN — c'est
+  #     vérifié par tests/smoke.mjs, qui compte les requêtes vers Cloudflare
+  #     dans l'état livré.
+  #
+  # Ce que ça coûte : un attaquant capable d'injecter du HTML pourrait charger
+  # un script depuis static.cloudflareinsights.com et poster vers
+  # cloudflareinsights.com. Ce sont les domaines de l'hébergeur qui sert déjà
+  # la totalité de ce site. Le risque ajouté est proche de zéro, la panne
+  # évitée est certaine.
   #
   # C'est le résultat de la transpilation préalable des .jsx (outils/transpiler.mjs).
   # La page compilait auparavant son JSX dans le navigateur avec Babel standalone,
@@ -72,7 +91,7 @@
   #   est désormais servie depuis /fonts (voir styles.css) : ces deux directives
   #   se sont resserrées sur 'self'. Une CSP qui rétrécit est une bonne nouvelle.
   # media-src 'self' sert au son d'apparition de Léo (uploads/*.mp3).
-  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: blob:; media-src 'self'; connect-src https://fhrkkjvbzgkbmlnlnxce.supabase.co; object-src 'none'; frame-src 'none'; worker-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self' https://fhrkkjvbzgkbmlnlnxce.supabase.co https://app.alba-studio.co; upgrade-insecure-requests
+  Content-Security-Policy: default-src 'self'; script-src 'self' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: blob:; media-src 'self'; connect-src https://fhrkkjvbzgkbmlnlnxce.supabase.co https://cloudflareinsights.com; object-src 'none'; frame-src 'none'; worker-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self' https://fhrkkjvbzgkbmlnlnxce.supabase.co https://app.alba-studio.co; upgrade-insecure-requests
 
   # Deux en-têtes volontairement ABSENTS, pour ne pas confondre durcissement et
   # dégâts :
