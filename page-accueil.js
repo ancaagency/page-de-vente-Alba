@@ -175,7 +175,12 @@ ReactDOM.createRoot(document.getElementById("app")).render(/*#__PURE__*/React.cr
     document.querySelectorAll("#lang-toggle button").forEach(function (b) {
       b.classList.toggle("is-active", b.dataset.lang === lang);
     });
-    document.title = lang === "en" ? "ALBA Studio — The platform for architects" : "ALBA Studio — La plateforme des architectes";
+    /* Le titre est réécrit ici à chaque changement de langue. Il DOIT rester
+       identique à celui du <title> d'index.html : sinon le titre correct tient
+       jusqu'au premier clic sur FR/EN puis se dégrade, sans que rien ne le
+       signale — le HTML servi aux robots, lui, resterait juste.
+       tests/smoke.mjs compare les deux. */
+    document.title = lang === "en" ? "The Platform for Demanding Architects - Alba Studio" : "La Plateforme des architectes exigeants - Alba Studio";
   };
   document.querySelectorAll("#lang-toggle button").forEach(function (b) {
     b.addEventListener("click", function () {

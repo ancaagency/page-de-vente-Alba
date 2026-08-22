@@ -11,12 +11,19 @@
  * et on vérifie que les sections sont réellement montées dans le DOM.
  */
 import { chromium } from 'playwright-core';
-import { demarrer } from './serveur.mjs';
+import { demarrer, ROOT } from './serveur.mjs';
+import fs from 'node:fs';
+import path from 'node:path';
 
 const server = await demarrer(8790);
 
 const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH || '/opt/pw-browsers/chromium-1194/chrome-linux/chrome' });
 let echecs = 0;
+
+/* Nommé `verif` et non `ok` : une variable locale `ok` existe déjà plus bas
+   dans le bloc de la page d'accueil, et l'ombrage aurait donné une erreur de
+   zone morte temporelle — le genre de panne qui se lit mal. */
+const verif = (bon, texte) => { console.log(`   ${bon ? '✅' : '❌'} ${texte}`); if (!bon) echecs++; };
 
 /**
  * Photos non encore fournies. Retirer une entrée dès que le fichier est déposé
@@ -312,6 +319,46 @@ console.log('\n===== l\'essai express ne peut pas être déclenché par un robot
 
     await page.close();
   }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+ * Le titre affiché est-il celui que Google indexe ?
+ *
+ * Le titre est écrit à DEUX endroits : le <title> d'index.html, que lisent les
+ * robots, et une ligne de JavaScript qui le réécrit à chaque changement de
+ * langue. Corriger l'un sans l'autre ne se voit pas : le HTML servi reste
+ * correct, l'onglet affiche le bon titre… jusqu'au premier clic sur FR/EN, où
+ * il redevient l'ancien. Personne ne fait ce clic en relisant une balise.
+ * ───────────────────────────────────────────────────────────────────────────── */
+console.log('\n===== le titre ne se dégrade pas au changement de langue =====');
+{
+  const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+  await page.goto('http://localhost:8790/', { waitUntil: 'load', timeout: 40000 });
+  await page.waitForTimeout(5000);
+
+  // Ce que voit un robot : le <title> du document servi, avant tout script.
+  const html = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
+  const servi = (html.match(/<title>([^<]*)<\/title>/) || [])[1];
+  const affiche = await page.title();
+  verif(servi === affiche, `au chargement : servi « ${servi} » = affiché « ${affiche} »`);
+
+  // Puis on bascule en anglais et on revient : le titre français doit revenir
+  // à l'identique, au caractère près.
+  await page.evaluate(() => document.querySelector('#lang-toggle button[data-lang="en"]').click());
+  await page.waitForTimeout(1500);
+  const en = await page.title();
+  verif(en !== servi && en.length > 0, `après bascule EN : « ${en} »`);
+
+  await page.evaluate(() => document.querySelector('#lang-toggle button[data-lang="fr"]').click());
+  await page.waitForTimeout(1500);
+  const retour = await page.title();
+  verif(retour === servi,
+     `retour en FR : « ${retour} »${retour === servi ? '' : ` — ATTENDU « ${servi} »`}`);
+
+  // Et l'aperçu partagé sur les réseaux doit annoncer la même chose.
+  const og = (html.match(/<meta property="og:title" content="([^"]*)"/) || [])[1];
+  verif(og === servi, `og:title identique au <title> (« ${og} »)`);
+  await page.close();
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────

@@ -141,6 +141,13 @@
 /*.js
   Cache-Control: public, max-age=0, must-revalidate
 
+# L'icône du site. Cache court, volontairement : c'est un fichier qu'on
+# remplace quand la marque évolue, et son adresse ne peut pas changer — les
+# moteurs et les agrégateurs la cherchent à /favicon.ico, nulle part ailleurs.
+# Un cache long y figerait l'ancien logo pendant des mois.
+/favicon.ico
+  Cache-Control: public, max-age=86400
+
 # Les polices ne changent JAMAIS : même fichier, même contenu, pour toujours.
 # Un an, donc. La contrepartie tient en une règle : pour remplacer une police,
 # il faut RENOMMER le fichier — sinon les visiteurs garderont l'ancienne

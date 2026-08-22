@@ -7,7 +7,21 @@
   <meta name="description" content="Mentions légales du site alba-studio.co, édité par ANCA.">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://www.alba-studio.co/mentions-legales">
-  <link rel="icon" type="image/png" href="images/logo-alba.png">
+  <!-- Icônes du site.
+       Il n'y avait qu'une ligne ici : logo-alba.png, en 256x256. Google
+       affichait un globe gris à la place, et pour deux raisons cumulées :
+         · sa documentation exige un carré MULTIPLE DE 48 px (48, 96, 144...).
+           256 n'en est pas un ;
+         · beaucoup d'outils, et Google en second recours, ne cherchent qu'à
+           /favicon.ico, quelles que soient les balises. Il n'existait pas.
+       Les chemins sont ABSOLUS : une adresse d'icône doit être stable, or
+       « images/... » se résout relativement à la page qui la déclare.
+       Les fichiers sont fabriqués depuis logo-alba.png par outils/favicons.py. -->
+  <link rel="icon" href="/favicon.ico" sizes="32x32">
+  <link rel="icon" type="image/png" sizes="48x48" href="/images/favicon-48.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="/images/favicon-96.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/images/favicon-192.png">
+  <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
   <!-- Inter est hébergée par nous (voir styles.css, @font-face) : plus aucune
        requête vers Google, donc plus aucune adresse IP de visiteur transmise.
        Sur Mac, iPhone et iPad, la pile système sert SF Pro et ce fichier n'est

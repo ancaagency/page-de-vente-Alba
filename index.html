@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ALBA Studio — La plateforme des architectes</title>
+  <title>La Plateforme des architectes exigeants - Alba Studio</title>
   <meta name="description" content="ALBA Studio centralise projets, décisions, documents et messages pour les architectes indépendants et petites agences. Votre premier projet est gratuit.">
-  <meta property="og:title" content="ALBA Studio — La plateforme des architectes">
+  <meta property="og:title" content="La Plateforme des architectes exigeants - Alba Studio">
   <meta property="og:description" content="Centralisez vos projets. Simplifiez vos échanges clients. La plateforme tout-en-un des architectes.">
   <meta property="og:type" content="website">
   <!-- URLs absolues : la vitrine est servie par www.alba-studio.co (Cloudflare Pages).
@@ -16,7 +16,21 @@
   <meta property="og:locale" content="fr_FR">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="canonical" href="https://www.alba-studio.co/">
-  <link rel="icon" type="image/png" href="images/logo-alba.png">
+  <!-- Icônes du site.
+       Il n'y avait qu'une ligne ici : logo-alba.png, en 256x256. Google
+       affichait un globe gris à la place, et pour deux raisons cumulées :
+         · sa documentation exige un carré MULTIPLE DE 48 px (48, 96, 144...).
+           256 n'en est pas un ;
+         · beaucoup d'outils, et Google en second recours, ne cherchent qu'à
+           /favicon.ico, quelles que soient les balises. Il n'existait pas.
+       Les chemins sont ABSOLUS : une adresse d'icône doit être stable, or
+       « images/... » se résout relativement à la page qui la déclare.
+       Les fichiers sont fabriqués depuis logo-alba.png par outils/favicons.py. -->
+  <link rel="icon" href="/favicon.ico" sizes="32x32">
+  <link rel="icon" type="image/png" sizes="48x48" href="/images/favicon-48.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="/images/favicon-96.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/images/favicon-192.png">
+  <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
   <link rel="preload" as="image" href="images/app-cockpit-web.jpg">
   <!-- Inter est hébergée par nous (voir styles.css, @font-face) : plus aucune
        requête vers Google, donc plus aucune adresse IP de visiteur transmise.
