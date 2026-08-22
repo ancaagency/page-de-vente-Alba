@@ -74,10 +74,29 @@ var CLE_CONSENTEMENT = "alba_consentement";
    délai, le consentement n'est plus « éclairé », il est simplement ancien. */
 var DUREE_CONSENTEMENT = 182 * 24 * 60 * 60 * 1000;
 
-/** Le pixel est-il déclaré ? Sans identifiant, il n'y a rien à consentir. */
-var pixelDeclare = function pixelDeclare() {
-  var id = typeof window !== "undefined" ? window.ALBA_PIXEL_FACEBOOK : null;
+/** Lit un identifiant d'interrupteur. Vide, nul ou non textuel = éteint. */
+var lireInterrupteur = function lireInterrupteur(nom) {
+  var id = typeof window !== "undefined" ? window[nom] : null;
   return typeof id === "string" && id.trim() !== "" ? id.trim() : null;
+};
+var pixelDeclare = function pixelDeclare() {
+  return lireInterrupteur("ALBA_PIXEL_FACEBOOK");
+};
+var ga4Declare = function ga4Declare() {
+  return lireInterrupteur("ALBA_GA4");
+};
+
+/* Y a-t-il quelque chose à consentir ? Le bandeau ne dépend PAS d'un traceur en
+   particulier : il apparaît dès qu'au moins un traceur non dispensé est
+   déclaré, et disparaît quand il n'y en a plus. C'est ce qui permet d'allumer
+   la mesure d'audience et le pixel indépendamment, sans jamais se retrouver
+   avec un traceur actif et aucun bandeau — ni l'inverse, un bandeau qui
+   demanderait un consentement sans objet. */
+var traceursDeclares = function traceursDeclares() {
+  var l = [];
+  if (ga4Declare()) l.push("mesure");
+  if (pixelDeclare()) l.push("publicite");
+  return l;
 };
 
 /** Le choix enregistré, ou null s'il n'y en a pas / s'il a expiré. */
@@ -112,6 +131,8 @@ if (typeof window !== "undefined") {
   window.albaConsentement = {
     etat: lireConsentement,
     pixel: pixelDeclare,
+    ga4: ga4Declare,
+    traceurs: traceursDeclares,
     /* Rouvre le choix. Utilisé par le lien « Cookies » du pied de page — le
        retrait doit être aussi simple que le consentement. */
     rouvrir: function rouvrir() {
@@ -146,7 +167,13 @@ var BandeauConsentement = function BandeauConsentement() {
   };
 
   // Rien de non dispensé à déclarer, ou choix déjà fait : aucun bandeau.
-  if (!pixelDeclare() || choix !== null) return null;
+  var declares = traceursDeclares();
+  if (declares.length === 0 || choix !== null) return null;
+
+  /* Le bandeau NOMME ce qu'il demande. Un texte générique qui parlerait de
+     « cookies » alors qu'un seul traceur est en jeu — ou l'inverse — n'est pas
+     un consentement éclairé. On décrit donc ce qui est réellement déclaré. */
+  var objet = declares.length === 2 ? L("un traceur publicitaire et une mesure d'audience", "an advertising tracker and audience measurement") : declares[0] === "mesure" ? L("une mesure d'audience", "audience measurement") : L("un traceur publicitaire", "an advertising tracker");
   return /*#__PURE__*/React.createElement("div", {
     className: "consentement",
     role: "dialog",
@@ -154,7 +181,7 @@ var BandeauConsentement = function BandeauConsentement() {
     "aria-label": L("Choix concernant les traceurs", "Tracker choices")
   }, /*#__PURE__*/React.createElement("div", {
     className: "consentement-texte"
-  }, /*#__PURE__*/React.createElement("p", null, L("Nous aimerions déposer un traceur publicitaire pour mesurer l'efficacité de nos annonces. Il n'est pas nécessaire au fonctionnement du site, et le refuser ne change rien à votre visite.", "We'd like to set an advertising tracker to measure how well our ads perform. It isn't needed for the site to work, and refusing changes nothing about your visit.")), /*#__PURE__*/React.createElement("a", {
+  }, /*#__PURE__*/React.createElement("p", null, L("Nous aimerions d\xE9poser ".concat(objet, ". Ce n'est pas n\xE9cessaire au fonctionnement du site, et refuser ne change rien \xE0 votre visite."), "We'd like to set ".concat(objet, ". It isn't needed for the site to work, and refusing changes nothing about your visit."))), /*#__PURE__*/React.createElement("a", {
     href: "mentions-legales.html#cookies"
   }, L("En savoir plus", "Learn more"))), /*#__PURE__*/React.createElement("div", {
     className: "consentement-choix"
@@ -177,7 +204,7 @@ var BandeauConsentement = function BandeauConsentement() {
    publicitaire est déclaré : sans cela, elle ouvrirait un bandeau vide et
    ferait croire à un choix qui n'existe pas. */
 var LienConsentement = function LienConsentement() {
-  if (!pixelDeclare()) return null;
+  if (traceursDeclares().length === 0) return null;
   return /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("a", {
     href: "#",
     onClick: function onClick(ev) {

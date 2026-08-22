@@ -85,26 +85,43 @@
   #   sociaux et les messageries. Le gain (fuites inter-origines de type Spectre)
   #   ne vaut pas la perte des aperçus de lien.
   #
-  # ═══ RECETTE PIXEL — à appliquer le jour où l'on allume Facebook ═══
+  # ═══ RECETTE TRACEURS — Facebook et/ou Google Analytics ═══
   #
   # Rien de ce qui suit n'est actif. C'est volontaire : autoriser Facebook dans
   # la CSP alors qu'aucun pixel n'est déclaré ouvrirait une porte pour rien.
   #
   # Le jour venu, dans l'ORDRE — l'ordre compte, la CSP d'abord :
   #
-  #   1. Dans la ligne Content-Security-Policy ci-dessus, ajouter :
+  #   1. Dans la ligne Content-Security-Policy ci-dessus, ajouter ce qui
+  #      correspond au traceur qu'on allume — et RIEN DE PLUS. Allumer la mesure
+  #      d'audience n'est pas une raison d'ouvrir aussi Facebook.
+  #
+  #      Pixel Facebook :
   #        script-src  … https://connect.facebook.net
   #        img-src     … https://www.facebook.com
   #        connect-src … https://www.facebook.com
   #      (`img-src` sert au pixel image lui-même ; `connect-src` aux envois
   #       d'événements que fbevents.js fait en fetch.)
   #
+  #      Google Analytics 4 :
+  #        script-src  … https://www.googletagmanager.com
+  #        img-src     … https://www.google-analytics.com
+  #        connect-src … https://www.google-analytics.com
+  #                      https://*.google-analytics.com
+  #                      https://*.analytics.google.com
+  #      (les deux jokers sont ceux de Google : GA4 répartit ses envois sur des
+  #       sous-domaines régionaux — region1.google-analytics.com et compagnie.
+  #       Sans eux, la collecte part puis se fait refuser à moitié, ce qui est
+  #       pire qu'un refus franc : les statistiques existent mais mentent.)
+  #
   #   2. Dans tests/entetes.mjs, ajouter ces deux origines à TIERS_ADMIS. Le
   #      contrôle « aucune origine tierce inattendue » échouera sinon — c'est
   #      exactement son rôle : aucune origine ne doit entrer sans décision.
   #
-  #   3. Dans config.js, remplacer `window.ALBA_PIXEL_FACEBOOK = null` par
-  #      l'identifiant. C'est la SEULE ligne de code à changer.
+  #   3. Dans config.js, remplacer par l'identifiant la ligne qui convient :
+  #      `window.ALBA_PIXEL_FACEBOOK = null` ou `window.ALBA_GA4 = null`.
+  #      C'est la SEULE ligne de code à changer. Le bandeau de consentement
+  #      apparaît alors tout seul, et il nomme ce qu'il demande.
   #
   #   4. Dans mentions-legales.html, remplacer la section 6 par le bloc qui y
   #      est préparé en commentaire. Elle affirme aujourd'hui « ce site ne

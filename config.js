@@ -118,6 +118,46 @@ window.ALBA_POINT_ESSAI =
  * ───────────────────────────────────────────────────────────────────────────── */
 window.ALBA_PIXEL_FACEBOOK = null;
 
+/* ─────────────────────────────────────────────────────────────────────────────
+ * GOOGLE ANALYTICS (GA4) — interrupteur, éteint
+ *
+ * Même mécanique que le pixel : `null` = rien du tout, ni bandeau ni requête.
+ * Pour l'allumer, l'identifiant de flux entre guillemets :
+ *
+ *     window.ALBA_GA4 = "G-XXXXXXXXXX";
+ *
+ * ⚠️ CE QU'IL FAUT SAVOIR AVANT DE L'ALLUMER — ce n'est pas un détail juridique,
+ * ça change ce que vous mesurerez réellement.
+ *
+ * Google Analytics N'EST PAS dispensé de consentement. La CNIL tient une liste
+ * de solutions de mesure d'audience exemptées, qui peuvent tourner sans aucun
+ * bandeau ; Google Analytics n'y figure pas, et n'y a jamais figuré. L'allumer
+ * fait donc apparaître le bandeau de consentement sur la page — dès
+ * maintenant, pas à la rentrée.
+ *
+ * Conséquence concrète, et elle est double :
+ *   · le bandeau coûte des conversions sur une page de vente ;
+ *   · vous ne mesurerez QUE les visiteurs qui acceptent. Les autres sont
+ *     invisibles. Les taux de refus observés sur ce type de bandeau se situent
+ *     couramment entre un tiers et la moitié des visiteurs : vos statistiques
+ *     ne décriront pas votre trafic, elles décriront la moitié qui a cliqué
+ *     « oui ». Pour comparer deux campagnes, c'est un biais qui se déplace.
+ *
+ * L'alternative, si le but est de savoir COMBIEN de gens viennent et d'où : une
+ * mesure d'audience dispensée de consentement (la CNIL en certifie plusieurs).
+ * Elle voit 100 % des visiteurs, sans bandeau. Elle ne fait pas de suivi
+ * publicitaire — mais ce n'est pas ce qu'on lui demande.
+ *
+ * Si le pixel Facebook arrive de toute façon à la rentrée, le bandeau viendra
+ * avec lui : allumer les deux le même jour ne coûte alors qu'une seule fois.
+ *
+ * ⚠️ ET COMME POUR LE PIXEL, deux choses ne suivent pas toutes seules — voir
+ * _headers, section « Recette pixel », qui vaut aussi pour GA4 :
+ *   1. la CSP doit autoriser googletagmanager.com et google-analytics.com ;
+ *   2. la section 6 des mentions légales doit être remplacée.
+ * ───────────────────────────────────────────────────────────────────────────── */
+window.ALBA_GA4 = null;
+
 /* Applique l'origine aux liens du HTML statique.
  *
  * Les CTA gardent une href écrite en dur dans le HTML : elle reste correcte si

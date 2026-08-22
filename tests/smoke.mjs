@@ -502,22 +502,26 @@ console.log('\n===== le pixel publicitaire dort jusqu\'au consentement =====');
 {
   /** Charge l'accueil en forçant l'identifiant de pixel, et compte ce qui part.
    *  `cspOuverte` applique l'étape 1 de la « recette pixel » de _headers. */
-  const ouvrir = async (identifiant, cspOuverte = false) => {
+  const ouvrir = async (identifiant, cspOuverte = false, quoi = 'ALBA_PIXEL_FACEBOOK') => {
     const ctx = await browser.newContext({ viewport: { width: 1280, height: 900 } });
     const versFacebook = [];
     const refusCSP = [];
     ctx.on('request', (r) => {
-      if (/facebook|fbcdn/i.test(new URL(r.url()).hostname)) versFacebook.push(r.url());
+      const h = new URL(r.url()).hostname;
+      if (/facebook|fbcdn|googletagmanager|google-analytics|analytics\.google/i.test(h)) versFacebook.push(r.url());
     });
     // Rien ne doit réellement sortir, même si un défaut laissait passer.
-    await ctx.route('**://*.facebook.net/**', (r) => r.fulfill({ status: 200, body: '' }));
-    await ctx.route('**://*.facebook.com/**', (r) => r.fulfill({ status: 200, body: '' }));
+    for (const motif of ['**://*.facebook.net/**', '**://*.facebook.com/**',
+                         '**://*.googletagmanager.com/**', '**://*.google-analytics.com/**',
+                         '**://*.analytics.google.com/**']) {
+      await ctx.route(motif, (r) => r.fulfill({ status: 200, contentType: 'text/javascript', body: '' }));
+    }
     if (identifiant) {
       await ctx.route('**/config.js', async (r) => {
         const src = await r.fetch().then((x) => x.text());
         await r.fulfill({ status: 200, contentType: 'text/javascript',
-          body: src.replace('window.ALBA_PIXEL_FACEBOOK = null;',
-                            `window.ALBA_PIXEL_FACEBOOK = ${JSON.stringify(identifiant)};`) });
+          body: src.replace(`window.${quoi} = null;`,
+                            `window.${quoi} = ${JSON.stringify(identifiant)};`) });
       });
     }
     if (cspOuverte) {
@@ -526,10 +530,14 @@ console.log('\n===== le pixel publicitaire dort jusqu\'au consentement =====');
         const ent = { ...rep.headers() };
         const cle = Object.keys(ent).find((k) => k.toLowerCase() === 'content-security-policy');
         if (cle) {
+          const ajouts = quoi === 'ALBA_GA4'
+            ? ['https://www.googletagmanager.com', 'https://www.google-analytics.com',
+               'https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com']
+            : ['https://connect.facebook.net', 'https://www.facebook.com', 'https://www.facebook.com'];
           ent[cle] = ent[cle]
-            .replace(/script-src ([^;]*)/, "script-src $1 https://connect.facebook.net")
-            .replace(/img-src ([^;]*)/, 'img-src $1 https://www.facebook.com')
-            .replace(/connect-src ([^;]*)/, 'connect-src $1 https://www.facebook.com');
+            .replace(/script-src ([^;]*)/, `script-src $1 ${ajouts[0]}`)
+            .replace(/img-src ([^;]*)/, `img-src $1 ${ajouts[1]}`)
+            .replace(/connect-src ([^;]*)/, `connect-src $1 ${ajouts[2]}`);
         }
         await r.fulfill({ response: rep, headers: ent });
       });
@@ -541,7 +549,7 @@ console.log('\n===== le pixel publicitaire dort jusqu\'au consentement =====');
        alors que Chromium répondait « Refused to load the script ». */
     page.on('console', (m) => {
       const t = m.text();
-      if (/Content Security Policy|Refused to/i.test(t) && /facebook/i.test(t)) refusCSP.push(t);
+      if (/Content Security Policy|Refused to/i.test(t) && /facebook|googletagmanager|google-analytics/i.test(t)) refusCSP.push(t);
     });
     await page.goto('http://localhost:8790/', { waitUntil: 'load', timeout: 40000 });
     await page.waitForTimeout(5000);
@@ -628,6 +636,54 @@ console.log('\n===== le pixel publicitaire dort jusqu\'au consentement =====');
     const charge = versFacebook.some((u) => u.includes('fbevents.js'));
     console.log(`   ${charge && refusCSP.length === 0 ? '✅' : '❌'} CSP ouverte selon la recette — le pixel passe (${versFacebook.length} requête(s), ${refusCSP.length} refus)`);
     if (!(charge && refusCSP.length === 0)) { echecs++; refusCSP.forEach((r) => console.log(`      ${r.slice(0, 110)}`)); }
+    await ctx.close();
+  }
+
+  { // ── GA4 : même règle, aucun privilège ───────────────────────────────────
+    /* Google Analytics n'est PAS dispensé de consentement — il ne figure pas
+       sur la liste des solutions de mesure d'audience que la CNIL exempte. Il
+       passe donc par le même bandeau que le pixel, sans traitement de faveur.
+       On éprouve les trois états, et le premier est le plus important : une
+       mesure d'audience qui part « juste pour compter la visite » avant la
+       réponse du visiteur est exactement l'infraction qu'on veut éviter. */
+    const { ctx, page, versFacebook } = await ouvrir('G-TEST12345', false, 'ALBA_GA4');
+    const bandeau = await page.locator('.consentement').count();
+    verif(bandeau === 1, `GA4 allumé — le bandeau apparaît (${bandeau})`);
+    verif(versFacebook.length === 0, `GA4 allumé, sans réponse — rien vers Google (${versFacebook.length})`);
+
+    // Le bandeau doit NOMMER ce qu'il demande : « mesure d'audience », pas
+    // « traceur publicitaire ». Un texte qui décrit autre chose que ce qui est
+    // réellement déposé n'est pas un consentement éclairé.
+    const texte = await page.$eval('.consentement-texte p', (e) => e.textContent).catch(() => '');
+    verif(/mesure d'audience/i.test(texte) && !/publicitaire/i.test(texte),
+       `et il nomme la mesure d'audience, pas la publicité (« ${texte.slice(0, 58)}… »)`);
+
+    await page.click('.consentement-choix .btn:nth-child(1)');   // refus
+    await page.waitForTimeout(1500);
+    verif(versFacebook.length === 0, `après un refus — rien vers Google (${versFacebook.length})`);
+    await ctx.close();
+  }
+
+  { // ── GA4 accepté, avec la recette CSP appliquée ──────────────────────────
+    const { ctx, page, versFacebook, refusCSP } = await ouvrir('G-TEST12345', true, 'ALBA_GA4');
+    await page.click('.consentement-choix .btn:nth-child(2)');   // acceptation
+    await page.waitForTimeout(2500);
+    const charge = versFacebook.some((u) => u.includes('googletagmanager.com/gtag/js'));
+    verif(charge && refusCSP.length === 0,
+       `CSP ouverte selon la recette — gtag.js passe (${versFacebook.length} requête(s), ${refusCSP.length} refus)`);
+    if (!(charge && refusCSP.length === 0)) refusCSP.forEach((r) => console.log(`      ${r.slice(0, 110)}`));
+
+    /* Et l'usage publicitaire des données doit rester coupé : la page demande
+       à GA de COMPTER, pas d'alimenter du ciblage. C'est ce qui distingue les
+       deux traceurs, et ce qui est écrit dans les mentions légales. */
+    const reglages = await page.evaluate(() => {
+      const d = window.dataLayer || [];
+      const conf = [...d].find((a) => a && a[0] === 'config');
+      return conf ? conf[2] : null;
+    });
+    verif(reglages && reglages.allow_google_signals === false
+          && reglages.allow_ad_personalization_signals === false,
+       `les signaux publicitaires sont coupés (${JSON.stringify(reglages)})`);
     await ctx.close();
   }
 
