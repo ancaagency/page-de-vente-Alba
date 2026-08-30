@@ -113,11 +113,20 @@ console.log('\n===== le double-clic ne consomme pas deux tentatives =====');
 }
 
 console.log('\n===== chaque erreur du contrat dit quelque chose =====');
+/* Les SEPT codes du contrat. Trois d'entre eux — paiement_indisponible,
+   methode_non_autorisee, erreur_interne — existaient côté serveur depuis le
+   début sans être listés ici : ils tombaient dans le message générique, et le
+   visiteur lisait « Réessayez » là où réessayer ne servait à rien. C'est le
+   genre d'écart qu'aucun essai manuel ne trouve, parce qu'il faut provoquer
+   chaque code pour le voir. */
 const CAS = [
-  [429, 'trop_de_tentatives', /trop de tentatives/i],
-  [503, 'tarif_indisponible', /momentanément indisponible/i],
-  [503, 'cgu_non_configurees', /momentanément indisponible/i],
-  [400, 'palier_inconnu', /r[ée]essayez/i],
+  [429, 'trop_de_tentatives',    /trop de tentatives/i],
+  [503, 'tarif_indisponible',    /momentanément indisponible/i],
+  [503, 'cgu_non_configurees',   /momentanément indisponible/i],
+  [503, 'paiement_indisponible', /momentanément indisponible/i],
+  [500, 'erreur_interne',        /écrivez-nous/i],
+  [405, 'methode_non_autorisee', /écrivez-nous/i],
+  [400, 'palier_inconnu',        /r[ée]essayez/i],
 ];
 for (const [status, code, attendu] of CAS) {
   const { page } = await ouvrir({ status, corps: { error: code } });

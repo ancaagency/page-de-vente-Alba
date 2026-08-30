@@ -343,10 +343,31 @@ const Pricing = () => {
 
   const indisponible = L("Le paiement est momentanément indisponible. Réessayez dans quelques minutes.",
                          "Payment is temporarily unavailable. Please try again in a few minutes.");
+  /* Les codes que la fonction peut rendre. La liste vient du contrat, pas de ce
+     qu'on a vu passer : trois d'entre eux — paiement_indisponible,
+     methode_non_autorisee, erreur_interne — tombaient dans le message
+     générique parce que je ne les avais jamais listés. Le visiteur lisait
+     « Réessayez » là où réessayer ne servait à rien.
+
+     Deux familles, et elles ne se disent pas pareil :
+       · ce qui vient du visiteur ou d'un incident passager → on invite à
+         réessayer, c'est vrai et c'est suffisant ;
+       · ce qui vient de NOUS → on n'envoie pas quelqu'un s'acharner sur un
+         bouton cassé : on l'invite à écrire, ce qui marche toujours. */
+  const ecrivezNous = L("Le paiement n'a pas pu s'ouvrir. Ce n'est pas de votre fait : écrivez-nous et on vous ouvre l'accès.",
+                        "Checkout could not open. It's not your doing: write to us and we'll open access for you.");
   const MESSAGES = {
     trop_de_tentatives: L("Trop de tentatives. Réessayez dans un moment.", "Too many attempts. Please try again shortly."),
     tarif_indisponible: indisponible,
     cgu_non_configurees: indisponible,
+    // 503 — Stripe injoignable, ou clé absente côté serveur. Passager du point
+    // de vue du visiteur, même s'il ne l'est pas toujours pour nous.
+    paiement_indisponible: indisponible,
+    // 500 — filet de sécurité du serveur. Réessayer ne répare rien.
+    erreur_interne: ecrivezNous,
+    // 405 — la page a envoyé autre chose qu'un POST. C'est un défaut d'ICI,
+    // jamais du visiteur : il ne doit pas en faire les frais.
+    methode_non_autorisee: ecrivezNous,
   };
 
   const abonner = async (ev) => {
@@ -372,10 +393,15 @@ const Pricing = () => {
       });
       const donnees = await reponse.json().catch(() => null);
       if (reponse.ok && donnees && donnees.url) { window.location.href = donnees.url; return; }
-      /* « palier_inconnu » n'est pas une erreur du visiteur mais un défaut de
-         cette page : le journal doit le dire, l'écran ne doit pas l'étaler. */
-      if (donnees && donnees.error === "palier_inconnu") {
-        console.error("[paiement] palier refusé par le serveur :", t.go);
+      /* Ces deux codes ne sont pas des erreurs du visiteur mais des défauts de
+         CETTE page : le journal doit les nommer, l'écran ne doit pas les
+         étaler. Un architecte n'a pas à lire nos bogues.
+           · palier_inconnu — la page a envoyé un palier que le serveur refuse ;
+           · methode_non_autorisee — elle a envoyé autre chose qu'un POST. */
+      const notre = { palier_inconnu: `palier refusé par le serveur : ${t.go}`,
+                      methode_non_autorisee: "le serveur a reçu autre chose qu'un POST" };
+      if (donnees && notre[donnees.error]) {
+        console.error(`[paiement] défaut de la page — ${notre[donnees.error]}`);
       }
       setErreurPaiement((donnees && MESSAGES[donnees.error]) ||
         L("Le paiement n'a pas pu s'ouvrir. Réessayez.", "Checkout could not open. Please try again."));
