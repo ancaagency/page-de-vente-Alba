@@ -382,9 +382,32 @@ const Pricing = () => {
       setPaiement("erreur");
       ouvertureEnCours.current = false;   // relâché sur échec seulement : un succès quitte la page
     } catch (e) {
-      console.error("[paiement] appel impossible", e);
-      setErreurPaiement(L("Le paiement n'a pas pu s'ouvrir. Vérifiez votre connexion.",
-                          "Checkout could not open. Check your connection."));
+      /* Un `fetch` qui LÈVE, c'est une requête qui n'a jamais abouti : elle a
+         été refusée avant d'atteindre le serveur. Trois causes possibles, et
+         JavaScript ne permet pas de les distinguer — le navigateur renvoie le
+         même « Failed to fetch » pour toutes, par principe, pour ne pas
+         renseigner une page hostile sur ce qui l'a bloquée :
+           · la CSP (connect-src) a refusé la destination ;
+           · le contrôle d'origine du serveur a refusé cette page ;
+           · la connexion est réellement coupée.
+
+         Le message annonçait « Vérifiez votre connexion ». C'était faux dans
+         deux cas sur trois, et ça a envoyé Anthony regarder son wifi pendant
+         qu'une origine manquait dans une liste. On ne prétend donc plus
+         savoir : on ne l'affirme QUE si le navigateur confirme être hors
+         ligne, et sinon on invite à écrire — ce qui, lui, marche toujours.
+
+         Le détail technique va dans la console, là où il sert à quelqu'un qui
+         peut agir, pas dans un encart devant un architecte. */
+      const horsLigne = typeof navigator !== "undefined" && navigator.onLine === false;
+      console.error("[paiement] la requête n'a pas abouti —",
+                    horsLigne ? "navigateur hors ligne" :
+                    "refus avant le serveur : CSP (connect-src), contrôle d'origine, ou réseau", e);
+      setErreurPaiement(horsLigne
+        ? L("Vous semblez hors ligne. Le paiement s'ouvrira dès que la connexion revient.",
+            "You appear to be offline. Checkout will open as soon as you're back online.")
+        : L("Le paiement n'a pas pu s'ouvrir. Ce n'est pas de votre fait : écrivez-nous et on vous ouvre l'accès.",
+            "Checkout could not open. It's not your doing: write to us and we'll open access for you."));
       setPaiement("erreur");
       ouvertureEnCours.current = false;
     }

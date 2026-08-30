@@ -135,6 +135,42 @@ for (const [status, code, attendu] of CAS) {
   await page.close();
 }
 
+/* ─────────────────────────────────────────────────────────────────────────────
+ * Une requête refusée AVANT le serveur ne doit pas accuser la connexion
+ *
+ * PANNE RÉELLE. Le bouton affichait « Vérifiez votre connexion » alors que la
+ * connexion était parfaite : la requête avait été refusée avant d'atteindre le
+ * serveur — CSP, contrôle d'origine, on ne peut pas savoir depuis JavaScript,
+ * le navigateur renvoie le même « Failed to fetch » pour tout.
+ *
+ * Le message a envoyé Anthony regarder son wifi. On ne l'affirme donc plus que
+ * si le navigateur confirme être hors ligne.
+ * ───────────────────────────────────────────────────────────────────────────── */
+console.log('\n===== une requête bloquée n\'accuse pas le wifi =====');
+for (const [horsLigne, attendu, interdit] of [
+  [false, /écrivez-nous/i, /v[ée]rifiez votre connexion/i],
+  [true,  /hors ligne/i,   /écrivez-nous/i],
+]) {
+  const page = await navigateur.newPage({ viewport: { width: 1280, height: 900 } });
+  // La destination échoue au niveau réseau : c'est ce que produisent aussi un
+  // refus de CSP et un refus d'origine, du point de vue du code.
+  await page.route(POINT, (r) => r.abort('failed'));
+  await page.route('https://app.alba-studio.co/**', (r) =>
+    r.fulfill({ status: 200, contentType: 'text/html', body: '<p>inscription</p>' }));
+  await page.goto('http://localhost:8942/tarifs', { waitUntil: 'load', timeout: 40000 });
+  await page.waitForTimeout(4000);
+  await page.evaluate((h) => {
+    window.ALBA_PAIEMENT_DIRECT = true;
+    Object.defineProperty(window.navigator, 'onLine', { get: () => !h, configurable: true });
+  }, horsLigne);
+  await page.click('.pricing-cta');
+  await page.waitForTimeout(1200);
+  const texte = await page.$eval('.pricing-erreur', (e) => e.textContent).catch(() => null);
+  ok(texte !== null && attendu.test(texte) && !interdit.test(texte),
+     `${horsLigne ? 'hors ligne  ' : 'blocage     '} → « ${texte ? texte.slice(0, 62) : 'AUCUN MESSAGE'} »`);
+  await page.close();
+}
+
 console.log('\n===== la seconde porte reste ouverte =====');
 {
   const { page } = await ouvrir({ status: 200, corps: { url: 'https://checkout.stripe.com/c/pay/cs_test' } });
