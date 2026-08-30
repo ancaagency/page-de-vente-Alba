@@ -731,6 +731,27 @@ const Contact = () => {
 };
 
 /* FOOTER */
+
+/* Le pied de page est monté sur les TROIS pages, avec le même code. Ses ancres
+   internes (#faq, #contact, #securite…) étaient donc mortes partout sauf sur
+   l'accueil : sur /tarifs et sur les mentions légales, on cliquait « Sécurité »
+   et il ne se passait rien, sans le moindre signal.
+ *
+ * Ce n'est pas un oubli qu'on répare une fois : le même piège reviendra au
+ * prochain lien ajouté au pied de page. D'où cette fonction plutôt que trois
+ * corrections — toute ancre du pied de page passe par elle.
+ *
+ * Sur l'accueil elle rend le fragment nu, ce qui préserve le défilement doux ;
+ * ailleurs elle préfixe index.html, ce qui provoque une vraie navigation puis
+ * un saut à l'ancre. C'est évalué au rendu, donc le HTML prérendu de chaque
+ * page porte déjà la bonne forme. */
+const versAccueil = (fragment) => {
+  if (typeof window === "undefined") return `index.html${fragment}`;
+  const chemin = window.location.pathname;
+  const surAccueil = chemin === "/" || /\/index\.html$/.test(chemin);
+  return surAccueil ? fragment : `index.html${fragment}`;
+};
+
 const Footer = () => (
   <footer className="foot">
     <div className="container">
@@ -747,19 +768,23 @@ const Footer = () => (
         <div className="foot-col">
           <h5>{Txt("pied.produit", "Produit", "Product")}</h5>
           <ul>
-            <li><a href="index.html#features">{Txt("pied.fonctionnalites", "Fonctionnalités", "Features")}</a></li>
-            <li><a href="index.html#fonctionnalites">{Txt("pied.la-plateforme", "La plateforme", "The platform")}</a></li>
+            <li><a href={versAccueil("#fonctionnalites")}>{Txt("pied.fonctionnalites", "Fonctionnalités", "Features")}</a></li>
+            <li><a href={versAccueil("#devices")}>{Txt("pied.la-plateforme", "La plateforme", "The platform")}</a></li>
             <li><a href="Tarifs.html">{Txt("pied.tarifs", "Tarifs", "Pricing")}</a></li>
-            <li><a href="#faq">FAQ</a></li>
+            <li><a href={versAccueil("#faq")}>FAQ</a></li>
           </ul>
         </div>
         <div className="foot-col">
           <h5>{Txt("pied.agence", "Agence", "Company")}</h5>
           <ul>
-            <li><a href="#">{Txt("pied.a-propos", "À propos", "About")}</a></li>
-            <li><a href="#">{Txt("pied.manifeste", "Manifeste", "Manifesto")}</a></li>
-            <li><a href="#">{Txt("pied.carrieres", "Carrières", "Careers")}</a></li>
-            <li><a href="#contact">Contact</a></li>
+            {/* Ces trois entrées portaient href="#" : un fragment vide ne mène nulle
+                part, et le gestionnaire d'ancres l'ignore — on cliquait, rien ne
+                se passait. « À propos » et « Manifeste » ont chacun une section
+                réelle sur l'accueil ; « Carrières » n'en a aucune, et lui
+                inventer une destination serait pire que de la retirer. */}
+            <li><a href={versAccueil("#fondateur")}>{Txt("pied.a-propos", "À propos", "About")}</a></li>
+            <li><a href={versAccueil("#manifeste")}>{Txt("pied.manifeste", "Manifeste", "Manifesto")}</a></li>
+            <li><a href={versAccueil("#contact")}>Contact</a></li>
           </ul>
         </div>
         <div className="foot-col">
@@ -774,7 +799,7 @@ const Footer = () => (
             <li><a href="mentions-legales.html">{Txt("pied.mentions-legales", "Mentions légales", "Legal notice")}</a></li>
             <li><a href={`${APP_ORIGIN}/terms`}>{Txt("pied.cgu-cgv", "CGU & CGV", "Terms & conditions")}</a></li>
             <li><a href={`${APP_ORIGIN}/privacy-policy`}>{Txt("pied.politique-rgpd", "Politique RGPD", "GDPR policy")}</a></li>
-            <li><a href="#securite">{Txt("pied.securite", "Sécurité", "Security")}</a></li>
+            <li><a href={versAccueil("#securite")}>{Txt("pied.securite", "Sécurité", "Security")}</a></li>
             {/* Retirer son consentement doit être aussi simple que le donner —
                 c'est une exigence, pas une courtoisie. Ce lien n'apparaît que
                 s'il y a effectivement un choix à revoir : tant qu'aucun traceur

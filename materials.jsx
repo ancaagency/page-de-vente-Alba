@@ -328,7 +328,7 @@ const Manifesto = () => {
   ];
 
   return (
-    <section className="manifesto">
+    <section className="manifesto" id="manifeste">
       <div className="container">
         <div className="manifesto-eyebrow"><span className="eyebrow">{L("Notre conviction", "What we believe")}</span></div>
         <p className="manifesto-text" ref={ref}>

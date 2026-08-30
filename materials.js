@@ -780,7 +780,8 @@ var Manifesto = function Manifesto() {
     gold: true
   }];
   return /*#__PURE__*/React.createElement("section", {
-    className: "manifesto"
+    className: "manifesto",
+    id: "manifeste"
   }, /*#__PURE__*/React.createElement("div", {
     className: "container"
   }, /*#__PURE__*/React.createElement("div", {

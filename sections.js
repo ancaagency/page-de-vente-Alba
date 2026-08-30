@@ -1176,6 +1176,26 @@ var Contact = function Contact() {
 };
 
 /* FOOTER */
+
+/* Le pied de page est monté sur les TROIS pages, avec le même code. Ses ancres
+   internes (#faq, #contact, #securite…) étaient donc mortes partout sauf sur
+   l'accueil : sur /tarifs et sur les mentions légales, on cliquait « Sécurité »
+   et il ne se passait rien, sans le moindre signal.
+ *
+ * Ce n'est pas un oubli qu'on répare une fois : le même piège reviendra au
+ * prochain lien ajouté au pied de page. D'où cette fonction plutôt que trois
+ * corrections — toute ancre du pied de page passe par elle.
+ *
+ * Sur l'accueil elle rend le fragment nu, ce qui préserve le défilement doux ;
+ * ailleurs elle préfixe index.html, ce qui provoque une vraie navigation puis
+ * un saut à l'ancre. C'est évalué au rendu, donc le HTML prérendu de chaque
+ * page porte déjà la bonne forme. */
+var versAccueil = function versAccueil(fragment) {
+  if (typeof window === "undefined") return "index.html".concat(fragment);
+  var chemin = window.location.pathname;
+  var surAccueil = chemin === "/" || /\/index\.html$/.test(chemin);
+  return surAccueil ? fragment : "index.html".concat(fragment);
+};
 var Footer = function Footer() {
   return /*#__PURE__*/React.createElement("footer", {
     className: "foot"
@@ -1196,23 +1216,21 @@ var Footer = function Footer() {
   }))), /*#__PURE__*/React.createElement("div", {
     className: "foot-col"
   }, /*#__PURE__*/React.createElement("h5", null, Txt("pied.produit", "Produit", "Product")), /*#__PURE__*/React.createElement("ul", null, /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("a", {
-    href: "index.html#features"
+    href: versAccueil("#fonctionnalites")
   }, Txt("pied.fonctionnalites", "Fonctionnalités", "Features"))), /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("a", {
-    href: "index.html#fonctionnalites"
+    href: versAccueil("#devices")
   }, Txt("pied.la-plateforme", "La plateforme", "The platform"))), /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("a", {
     href: "Tarifs.html"
   }, Txt("pied.tarifs", "Tarifs", "Pricing"))), /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("a", {
-    href: "#faq"
+    href: versAccueil("#faq")
   }, "FAQ")))), /*#__PURE__*/React.createElement("div", {
     className: "foot-col"
   }, /*#__PURE__*/React.createElement("h5", null, Txt("pied.agence", "Agence", "Company")), /*#__PURE__*/React.createElement("ul", null, /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("a", {
-    href: "#"
+    href: versAccueil("#fondateur")
   }, Txt("pied.a-propos", "À propos", "About"))), /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("a", {
-    href: "#"
+    href: versAccueil("#manifeste")
   }, Txt("pied.manifeste", "Manifeste", "Manifesto"))), /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("a", {
-    href: "#"
-  }, Txt("pied.carrieres", "Carrières", "Careers"))), /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("a", {
-    href: "#contact"
+    href: versAccueil("#contact")
   }, "Contact")))), /*#__PURE__*/React.createElement("div", {
     className: "foot-col"
   }, /*#__PURE__*/React.createElement("h5", null, Txt("pied.legal", "Légal", "Legal")), /*#__PURE__*/React.createElement("ul", null, /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("a", {
@@ -1222,7 +1240,7 @@ var Footer = function Footer() {
   }, Txt("pied.cgu-cgv", "CGU & CGV", "Terms & conditions"))), /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("a", {
     href: "".concat(APP_ORIGIN, "/privacy-policy")
   }, Txt("pied.politique-rgpd", "Politique RGPD", "GDPR policy"))), /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("a", {
-    href: "#securite"
+    href: versAccueil("#securite")
   }, Txt("pied.securite", "Sécurité", "Security"))), /*#__PURE__*/React.createElement(LienConsentement, null)))), /*#__PURE__*/React.createElement("div", {
     className: "foot-bot"
   }, /*#__PURE__*/React.createElement("div", null, Txt("pied.2026-alba-studio-tous-droits-reserves", "© 2026 ALBA STUDIO — TOUS DROITS RÉSERVÉS", "© 2026 ALBA STUDIO — ALL RIGHTS RESERVED")), /*#__PURE__*/React.createElement("div", null, Txt("pied.fait-a-lyon-avec-soin", "FAIT À LYON · AVEC SOIN", "MADE IN LYON · WITH CARE"), " ", /*#__PURE__*/React.createElement("span", {

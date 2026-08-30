@@ -121,13 +121,24 @@ const PhotoPlaceholder = ({ label = "ARCHITECTURE", tone = "stone", ratio = "16/
 };
 
 /* Badges App Store / Google Play */
+/* Les deux badges pointent vers #contact, la section « parlons-en » de
+   l'accueil. Ils sont aussi montés dans le pied de page des mentions légales,
+   qui n'a pas de section #contact : on y cliquait sans que rien ne se passe.
+   Le fragment nu est conservé sur l'accueil — c'est lui qui déclenche le
+   défilement doux ; ailleurs il devient une vraie navigation. */
+const versContact = () => {
+  if (typeof window === "undefined") return "index.html#contact";
+  const p = window.location.pathname;
+  return (p === "/" || /\/index\.html$/.test(p)) ? "#contact" : "index.html#contact";
+};
+
 const StoreBadges = ({ className = "", theme = "dark" }) => (
   <div className={`store-badges ${theme} ${className}`}>
-    <a href="#contact" className="store-badge" aria-label="App Store">
+    <a href={versContact()} className="store-badge" aria-label="App Store">
       <svg viewBox="0 0 24 24" width="19" height="19" fill="currentColor" aria-hidden="true"><path d="M16.4 12.7c0-2.2 1.8-3.3 1.9-3.4-1-1.5-2.6-1.7-3.2-1.7-1.4-.1-2.7.8-3.3.8-.7 0-1.7-.8-2.8-.8-1.5 0-2.8.8-3.6 2.1-1.5 2.6-.4 6.5 1.1 8.6.7 1 1.6 2.2 2.7 2.2 1.1 0 1.5-.7 2.8-.7 1.3 0 1.6.7 2.8.7 1.2 0 1.9-1.1 2.6-2.1.8-1.2 1.2-2.4 1.2-2.4s-2.2-.9-2.2-3.3zM14.3 5.5c.6-.7 1-1.7.9-2.7-.9 0-2 .6-2.6 1.3-.6.6-1.1 1.7-.9 2.6 1 .1 2-.5 2.6-1.2z"/></svg>
       <span><i>{L("Télécharger sur", "Download on the")}</i><b>App Store</b></span>
     </a>
-    <a href="#contact" className="store-badge" aria-label="Google Play">
+    <a href={versContact()} className="store-badge" aria-label="Google Play">
       <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="#34A853" d="M4.3 21.2c-.2-.2-.3-.5-.3-.9l8.3-8.3 2.6 2.6-9.8 5.6c-.3.2-.6.2-.8 0z"/><path fill="#EA4335" d="M14.9 14.6 12.3 12l2.6-2.6 3.3 1.9c.7.4.7 1.4 0 1.8l-3.3 1.5z"/><path fill="#FBBC04" d="M4.3 2.8c.2-.2.5-.2.8 0l9.8 5.6-2.6 2.6L4 3.7c0-.4.1-.7.3-.9z"/><path fill="#4285F4" d="M4 3.7 12.3 12 4 20.3c-.1-.2-.2-.5-.2-.8V4.5c0-.3.1-.6.2-.8z"/></svg>
       <span><i>{L("Disponible sur", "Get it on")}</i><b>Google Play</b></span>
     </a>

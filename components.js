@@ -401,6 +401,16 @@ var PhotoPlaceholder = function PhotoPlaceholder(_ref2) {
 };
 
 /* Badges App Store / Google Play */
+/* Les deux badges pointent vers #contact, la section « parlons-en » de
+   l'accueil. Ils sont aussi montés dans le pied de page des mentions légales,
+   qui n'a pas de section #contact : on y cliquait sans que rien ne se passe.
+   Le fragment nu est conservé sur l'accueil — c'est lui qui déclenche le
+   défilement doux ; ailleurs il devient une vraie navigation. */
+var versContact = function versContact() {
+  if (typeof window === "undefined") return "index.html#contact";
+  var p = window.location.pathname;
+  return p === "/" || /\/index\.html$/.test(p) ? "#contact" : "index.html#contact";
+};
 var StoreBadges = function StoreBadges(_ref3) {
   var _ref3$className = _ref3.className,
     className = _ref3$className === void 0 ? "" : _ref3$className,
@@ -409,7 +419,7 @@ var StoreBadges = function StoreBadges(_ref3) {
   return /*#__PURE__*/React.createElement("div", {
     className: "store-badges ".concat(theme, " ").concat(className)
   }, /*#__PURE__*/React.createElement("a", {
-    href: "#contact",
+    href: versContact(),
     className: "store-badge",
     "aria-label": "App Store"
   }, /*#__PURE__*/React.createElement("svg", {
@@ -421,7 +431,7 @@ var StoreBadges = function StoreBadges(_ref3) {
   }, /*#__PURE__*/React.createElement("path", {
     d: "M16.4 12.7c0-2.2 1.8-3.3 1.9-3.4-1-1.5-2.6-1.7-3.2-1.7-1.4-.1-2.7.8-3.3.8-.7 0-1.7-.8-2.8-.8-1.5 0-2.8.8-3.6 2.1-1.5 2.6-.4 6.5 1.1 8.6.7 1 1.6 2.2 2.7 2.2 1.1 0 1.5-.7 2.8-.7 1.3 0 1.6.7 2.8.7 1.2 0 1.9-1.1 2.6-2.1.8-1.2 1.2-2.4 1.2-2.4s-2.2-.9-2.2-3.3zM14.3 5.5c.6-.7 1-1.7.9-2.7-.9 0-2 .6-2.6 1.3-.6.6-1.1 1.7-.9 2.6 1 .1 2-.5 2.6-1.2z"
   })), /*#__PURE__*/React.createElement("span", null, /*#__PURE__*/React.createElement("i", null, L("Télécharger sur", "Download on the")), /*#__PURE__*/React.createElement("b", null, "App Store"))), /*#__PURE__*/React.createElement("a", {
-    href: "#contact",
+    href: versContact(),
     className: "store-badge",
     "aria-label": "Google Play"
   }, /*#__PURE__*/React.createElement("svg", {

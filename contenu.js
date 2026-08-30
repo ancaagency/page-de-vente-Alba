@@ -974,10 +974,10 @@ window.ALBA_CONTENU = {
     fr: "Manifeste",
     en: "Manifesto",
   },
-  "pied.carrieres": {
-    fr: "Carrières",
-    en: "Careers",
-  },
+  /* « Carrières » a été retirée du pied de page : elle portait href="#", donc
+     elle ne menait nulle part, et il n'existe aucune page carrières à laquelle
+     la rattacher. Sa clé part avec elle — tests/contenu.mjs échoue sur une
+     entrée que personne n'appelle. */
   "pied.legal": {
     fr: "Légal",
     en: "Legal",
