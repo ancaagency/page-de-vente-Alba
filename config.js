@@ -46,31 +46,35 @@ window.ALBA_APP_ORIGIN = "https://app.alba-studio.co";
  *
  * OUVERT le 31 juillet 2026, /bienvenue confirmée en ligne.
  *
- * ⚠️ REFERMÉ le 30 août 2026 — et voici précisément pourquoi, pour que celui
- * qui le rouvre sache ce qu'il doit vérifier d'abord.
+ * ─────────────────────────────────────────────────────────────────────────────
+ * INCIDENT DU 30 AOÛT 2026 — fermé puis rouvert le même jour
  *
- * `creer-paiement-public` ne démarrait plus. Interrogée directement, la
- * fonction répondait :
+ * `creer-paiement-public` ne démarrait plus. Interrogée directement, elle
+ * répondait BOOT_ERROR : déployée, mais arrêtée avant d'exécuter la moindre
+ * ligne. Elle ne traitait donc jamais la requête préliminaire, ne posait aucun
+ * en-tête CORS, et le navigateur refusait sa réponse au visiteur. Côté page,
+ * `fetch` levait — ce qui ressemblait à une panne réseau alors que le serveur
+ * répondait très bien.
  *
- *     {"code":"BOOT_ERROR","message":"Function failed to start (check logs)"}
+ * Cause, trouvée par la conversation qui tient l'application : un suffixe
+ * `?target=deno` sur l'import de Stripe. L'import map de leurs fonctions
+ * déclare la clé EXACTE `https://esm.sh/stripe@14.21.0` ; un import map ne
+ * résout que par clé exacte, donc le suffixe faisait perdre la correspondance
+ * et le module partait chercher esm.sh sur le réseau à l'évaluation. Il
+ * mourait là. Onze caractères.
  *
- * Elle est déployée, mais elle s'arrête avant d'exécuter la moindre ligne : ni
- * réponse à la requête préliminaire, ni en-tête CORS. Le navigateur refusait
- * donc la réponse au visiteur, `fetch` levait, et l'écran affichait une erreur
- * qui ressemblait à une panne réseau alors que le serveur répondait très bien.
+ * CE QUE CET INTERRUPTEUR A SERVI À FAIRE, et pourquoi il faut le garder :
+ * pendant les heures de panne, le bouton est retombé sur /inscription, qui
+ * fonctionne. Un parcours plus long, mais aucun visiteur devant un mur.
  *
- * Le bouton « S'abonner » menait donc à un mur. Avec l'interrupteur fermé il
- * retombe sur /inscription, qui fonctionne : un parcours plus long vaut mieux
- * qu'un parcours mort.
- *
- * POUR LE ROUVRIR : ouvrir dans un navigateur
+ * ROUVERT après vérification — la seule qui compte, et elle ne se délègue pas :
  *   https://fhrkkjvbzgkbmlnlnxce.supabase.co/functions/v1/creer-paiement-public
- * Tant que BOOT_ERROR s'affiche, ne touchez pas à cette ligne — le bouton
- * échouerait à nouveau. Elle doit répondre comme contact-vitrine le fait,
- * c'est-à-dire par SA propre erreur (une méthode non autorisée sur un GET),
- * ce qui prouve qu'elle a démarré.
+ * répond `{"error":"methode_non_autorisee"}`, c'est-à-dire SA propre erreur sur
+ * un GET. Une fonction qui refuse proprement une méthode est une fonction qui a
+ * démarré. Tant qu'on lit BOOT_ERROR à cette adresse, cette ligne reste à
+ * `false` : le bouton échouerait à nouveau, et en silence.
  * ───────────────────────────────────────────────────────────────────────────── */
-window.ALBA_PAIEMENT_DIRECT = false;
+window.ALBA_PAIEMENT_DIRECT = true;
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * ESSAI EXPRESS — le point d'entrée de « Tester en 1 clic »
