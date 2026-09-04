@@ -10,6 +10,7 @@ construit à partir du programme `programme_formation_IA_architecte.pdf`.
 | `formation-ia-architectes.pptx` | Le deck, éditable. À projeter et à adapter (nom, coordonnées). |
 | `formation-ia-architectes.pdf`  | Version figée, à envoyer aux participants après la session. |
 | `generateur-slides.js`          | Script de génération, pour régénérer le deck après modification. |
+| `grammaire-video-seedance.html` | Annexe vidéo : 12 fiches de plan Seedance et le vocabulaire de plateau. |
 
 ## Structure — 31 slides
 
@@ -23,6 +24,18 @@ construit à partir du programme `programme_formation_IA_architecte.pdf`.
 - **23–26** : créer son agent — ChatGPT contre Claude, anatomie en cinq blocs
 - **27–29** : passage à l'échelle — budget, plan 30 jours, clôture
 - **30–31** : antisèche animateur et bibliothèque de prompts (annexes)
+
+## L'annexe vidéo
+
+Le deck ne reprend que les quatre plans les plus sûrs (01 ouverture, 02 façade,
+06 révélation, 11 insertion urbaine). Les huit autres — orbite, grue, tilt,
+traversée intérieure, panoramique intérieur, détail de matière, balayage de site,
+passage du temps — sont dans `grammaire-video-seedance.html`, avec leur découpage
+technique, ce à quoi ils servent et ce qui les casse.
+
+Point à retenir pour toute modification : le terme de mouvement s'écrit en anglais
+(`dolly in`, `tracking shot`, `tilt up`, `orbit`), le reste du prompt en français.
+Le modèle a été entraîné sur le vocabulaire de plateau anglophone.
 
 ## Éviter les doublons en modifiant
 

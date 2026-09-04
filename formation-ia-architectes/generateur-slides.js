@@ -773,7 +773,7 @@ const notes = t => pres.slides[pres.slides.length - 1].addNotes(t);
     x: M + 0.3, y: 5.36, w: CW - 0.6, h: 0.66, isTextBox: true, margin: 0, valign: "middle",
     fontFace: BODY, fontSize: 12, color: "D8DEE1" });
   tip(s, "Pour un premier essai, prenez le travelling avant lent : c'est celui qui réussit le plus souvent, et il donne tout de suite un résultat montrable.");
-  notes("4 minutes. Idéalement, avoir un exemple généré de chacun des quatre mouvements. Si vous n'en avez que deux, prenez le travelling avant et le survol.\n\nUtiliser leur vocabulaire de cinéma, pas les termes anglais des interfaces — ils comprennent mieux et retiennent mieux.");
+  notes("4 minutes. Idéalement, avoir un exemple généré de chacun des quatre mouvements. Si vous n'en avez que deux, prenez le travelling avant et le survol.\n\nUtiliser leur vocabulaire de cinéma pour expliquer, mais écrire le terme de mouvement en anglais dans le prompt : le modèle a été entraîné sur dolly in, tracking shot, tilt up, orbit.\n\nLes douze plans complets, avec leur découpage technique et ce qui les casse, sont dans la Grammaire vidéo Seedance remise avec le support. Quatre d'entre eux sont repris en annexe du deck.");
 }
 
 /* ============ 21. ATELIER VIDÉO ============ */
@@ -1081,20 +1081,23 @@ const notes = t => pres.slides[pres.slides.length - 1].addNotes(t);
 /* ============ 30. ANNEXE — BIBLIOTHÈQUE DE PROMPTS ============ */
 {
   const s = light("Annexe · à distribuer", "Bibliothèque de prompts, à copier telle quelle", null);
-  const cw = (CW - 0.5) / 3, h = 2.14;
-  const P = [
-    ["Image · insertion paysagère", "Image 1 = mon projet. Géométrie et\nmatériaux : à conserver strictement.\nImage 2 = la photo du site réel.\nContexte, végétation, relief et lumière :\nà conserver strictement.\n\nInsère le projet dans le site en respectant\nl'échelle du bâti voisin et l'orientation\ndes ombres. Ne redessine ni l'un ni l'autre."],
-    ["Image · esquisse → maquette blanche", "Voici un croquis à main levée.\nRespecte strictement la géométrie,\nles proportions et l'implantation.\n\nProduis-en une maquette blanche :\nvolumes en plâtre mat, socle neutre,\nlumière rasante de trois quarts,\nfond gris clair. Aucun matériau,\naucune couleur, aucun décor."],
-    ["Image · les trois itérations", "MATIÈRE\nGarde tout identique. Change\nuniquement le bardage en [matériau].\n\nLUMIÈRE\nMême image, même cadrage. Passe en\n[ambiance] et ajuste les ombres.\n\nDÉTAIL\nConserve l'ensemble. Supprime [élément]."],
-    ["Vidéo · travelling avant", "Photographie d'architecture d'une\n[typologie] en [matériau], en fin\nd'après-midi.\n\nLa caméra avance lentement et\nrégulièrement vers l'entrée, hauteur\nconstante, sans à-coups.\n\nLe feuillage bouge légèrement au vent.\n\nAucun son. Un plan, six secondes."],
-    ["Vidéo · panoramique de façade", "Façade sud d'un [typologie] en\n[matériau], ciel couvert uniforme.\n\nPanoramique lent et régulier de\ngauche à droite, caméra fixe,\nvitesse constante.\n\nAucun mouvement en dehors de la\nvégétation.\n\nAucun son. Un plan, huit secondes."],
-    ["Vidéo · révélation", "Vue d'un [typologie] partiellement masqué\npar un premier plan de végétation.\n\nLa caméra se décale doucement vers la\ndroite et découvre le bâtiment.\nMouvement lent, continu, régulier.\n\nLe feuillage du premier plan bouge.\nAmbiance sonore : vent léger.\nUn seul plan, six secondes."]];
-  P.forEach((p, i) => {
-    const col = i % 3, row = Math.floor(i / 3);
-    promptBox(s, M + col * (cw + 0.25), 1.52 + row * (h + 0.22), cw, h, p[0], p[1], 9);
-  });
-  tip(s, "Les crochets sont volontaires : remplissez-les avec votre propre vocabulaire. Un prompt entièrement pré-écrit ne devient jamais le vôtre — et c'est le vôtre qui vous fera gagner du temps.");
-  notes("Annexe à envoyer en PDF après la session, et à copier dans leur fichier de prompts pendant la session.\n\nLes trois prompts vidéo respectent la règle d'or : caméra et sujet dans des phrases séparées. Leur faire remarquer la longueur — entre 50 et 70 mots, la zone où le modèle est le plus fiable.\n\nLe prompt « esquisse vers maquette blanche » est celui qui surprend le plus favorablement les architectes : il correspond à un geste qu'ils connaissent déjà et qu'ils font à la main.\n\nLe survol précise « aucun personnage en mouvement » : c'est le garde-fou contre le piège du staffage animé.");
+  // Rangée image — 3 colonnes
+  const cwI = (CW - 0.5) / 3;
+  [["Image · insertion paysagère", "Image 1 = mon projet. Géométrie et\nmatériaux : à conserver strictement.\nImage 2 = la photo du site réel.\nContexte, végétation, relief et lumière :\nà conserver strictement.\n\nInsère le projet dans le site en respectant\nl'échelle du bâti voisin et l'orientation\ndes ombres. Ne redessine ni l'un ni l'autre."],
+   ["Image · esquisse → maquette blanche", "Voici un croquis à main levée.\nRespecte strictement la géométrie,\nles proportions et l'implantation.\n\nProduis-en une maquette blanche :\nvolumes en plâtre mat, socle neutre,\nlumière rasante de trois quarts,\nfond gris clair. Aucun matériau,\naucune couleur, aucun décor."],
+   ["Image · les trois itérations", "MATIÈRE\nGarde tout identique. Change\nuniquement le bardage en [matériau].\n\nLUMIÈRE\nMême image, même cadrage. Passe en\n[ambiance] et ajuste les ombres.\n\nDÉTAIL\nConserve l'ensemble. Supprime [élément]."]
+  ].forEach((p, i) => promptBox(s, M + i * (cwI + 0.25), 1.52, cwI, 2.08, p[0], p[1], 9));
+
+  // Rangée vidéo — les quatre plans les plus sûrs, 4 colonnes
+  const cwV = (CW - 0.75) / 4;
+  [["Plan 01 · Ouverture", "Photographie d'architecture d'un\n[typologie] en [matériau], fin\nd'après-midi, ombres longues.\n\nCaméra : slow dolly in. Elle avance\nlentement vers l'entrée, hauteur\nconstante, sans à-coups.\n\nLe feuillage bouge légèrement.\n\nUn plan, six secondes. Aucun son."],
+   ["Plan 02 · Façade", "Façade sud d'un [typologie] en\n[matériau], ciel couvert uniforme.\n\nCaméra : slow lateral tracking\nshot. Elle se déplace de gauche à\ndroite parallèlement à la façade,\ndistance constante.\n\nRien ne bouge, hors la végétation.\n\nUn plan, huit secondes. Aucun son."],
+   ["Plan 06 · Révélation", "Un [typologie] partiellement\nmasqué par un premier plan de\nvégétation, fin d'après-midi.\n\nCaméra : slow reveal. Elle se\ndécale doucement vers la droite et\ndégage le bâtiment.\n\nLe feuillage du premier plan bouge.\n\nUn plan, six secondes. Vent léger."],
+   ["Plan 11 · Insertion", "Un [typologie] vu depuis le\ntrottoir opposé, hauteur d'œil\n1,60 m, fin d'après-midi.\n\nCaméra : slow steadicam tracking.\nElle longe le trottoir à vitesse de\nmarche, distance constante.\n\nLes passants restent immobiles.\n\nUn plan, huit secondes. Rue calme."]
+  ].forEach((p, i) => promptBox(s, M + i * (cwV + 0.25), 3.74, cwV, 2.28, p[0], p[1], 8));
+
+  tip(s, "Les quatre plans vidéo retenus sont ceux qui réussissent le plus souvent. Les huit autres — orbite, grue, tilt, traversée intérieure, détail de matière, passage du temps — sont dans la Grammaire vidéo Seedance, remise avec le support.");
+  notes("Annexe à envoyer en PDF après la session, et à copier dans leur fichier de prompts pendant la session.\n\nLes quatre prompts vidéo sont volontairement les plus sûrs : travelling avant, travelling latéral, révélation, accompagnement steadicam. Ce sont ceux qui passent en atelier sans mauvaise surprise.\n\nLes crochets sont volontaires : ce sont les emplacements qu'ils remplissent avec leur propre vocabulaire. Un prompt entièrement pré-écrit ne s'approprie pas.\n\nRemarquer avec eux que le terme de mouvement est en anglais et le reste en français : le modèle a été entraîné sur le vocabulaire de plateau anglophone, dolly in et tracking shot portent mieux que leurs traductions.\n\nLe prompt esquisse vers maquette blanche est celui qui surprend le plus favorablement les architectes : il correspond à un geste qu'ils font déjà à la main.")
 }
 
 pres.writeFile({ fileName: "formation-ia-architectes.pptx" })

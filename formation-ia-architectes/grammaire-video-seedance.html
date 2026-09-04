@@ -1,0 +1,832 @@
+<title>Grammaire vidéo Seedance</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;500;700&display=swap">
+
+<style>
+:root{
+  --ground:#F1F4F5;
+  --surface:#FFFFFF;
+  --surface-2:#E6ECEE;
+  --ink:#0F1518;
+  --ink-2:#31434A;
+  --muted:#63767D;
+  --line:#C9D4D7;
+  --line-soft:#DEE6E8;
+  --accent:#14567D;
+  --accent-2:#0E3D5B;
+  --accent-soft:#DBE7F0;
+  --warn:#8A3822;
+  --warn-soft:#F3E3DD;
+  --code-bg:#101A20;
+  --code-ink:#DCE6EA;
+  --code-dim:#7E959E;
+
+  --sans:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --serif:"Source Serif 4",Georgia,"Times New Roman",serif;
+  --mono:"JetBrains Mono","SFMono-Regular",Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --ground:#0B1013;
+    --surface:#121A1E;
+    --surface-2:#1A252A;
+    --ink:#E9EFF1;
+    --ink-2:#BAC8CD;
+    --muted:#82959B;
+    --line:#26343A;
+    --line-soft:#1C282D;
+    --accent:#74AED8;
+    --accent-2:#A5CBE6;
+    --accent-soft:#15303F;
+    --warn:#DD9077;
+    --warn-soft:#38231B;
+    --code-bg:#080D10;
+    --code-ink:#D3DFE4;
+    --code-dim:#6D858E;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0B1013;
+  --surface:#121A1E;
+  --surface-2:#1A252A;
+  --ink:#E9EFF1;
+  --ink-2:#BAC8CD;
+  --muted:#82959B;
+  --line:#26343A;
+  --line-soft:#1C282D;
+  --accent:#74AED8;
+  --accent-2:#A5CBE6;
+  --accent-soft:#15303F;
+  --warn:#DD9077;
+  --warn-soft:#38231B;
+  --code-bg:#080D10;
+  --code-ink:#D3DFE4;
+  --code-dim:#6D858E;
+}
+
+*{box-sizing:border-box}
+body{
+  background:var(--ground);
+  color:var(--ink);
+  font-family:var(--serif);
+  font-size:17px;
+  line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:920px;margin:0 auto;padding:0 24px}
+
+/* ---------- masthead ---------- */
+.masthead{
+  border-bottom:1px solid var(--line);
+  background:var(--surface);
+}
+.masthead .wrap{padding-top:44px;padding-bottom:34px}
+.eyebrow{
+  font-family:var(--mono);font-size:11.5px;font-weight:500;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--accent);
+  margin:0 0 18px;
+}
+h1{
+  font-family:var(--sans);font-weight:700;font-size:clamp(34px,5.4vw,52px);
+  line-height:1.04;letter-spacing:-.022em;margin:0;text-wrap:balance;
+}
+.standfirst{
+  font-size:19px;line-height:1.55;color:var(--ink-2);
+  max-width:62ch;margin:18px 0 0;
+}
+.meta{
+  display:flex;flex-wrap:wrap;gap:10px 28px;margin:26px 0 0;
+  font-family:var(--mono);font-size:12px;color:var(--muted);
+  letter-spacing:.02em;
+}
+.meta b{color:var(--ink-2);font-weight:500}
+
+/* ---------- sticky nav ---------- */
+nav.toc{
+  position:sticky;top:0;z-index:20;
+  background:var(--surface);
+  border-bottom:1px solid var(--line);
+}
+nav.toc .wrap{
+  display:flex;gap:4px;overflow-x:auto;padding-top:0;padding-bottom:0;
+  scrollbar-width:thin;
+}
+nav.toc a{
+  flex:0 0 auto;
+  font-family:var(--mono);font-size:12px;letter-spacing:.04em;
+  text-transform:uppercase;text-decoration:none;color:var(--muted);
+  padding:13px 12px;border-bottom:2px solid transparent;white-space:nowrap;
+}
+nav.toc a:hover{color:var(--ink);border-bottom-color:var(--line)}
+nav.toc a:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+
+/* ---------- sections ---------- */
+section{padding:52px 0 8px}
+section + section{border-top:1px solid var(--line-soft)}
+.sec-num{
+  font-family:var(--mono);font-size:11.5px;font-weight:500;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--accent);margin:0 0 10px;
+}
+h2{
+  font-family:var(--sans);font-weight:600;font-size:29px;line-height:1.14;
+  letter-spacing:-.015em;margin:0 0 14px;text-wrap:balance;
+}
+h3{
+  font-family:var(--sans);font-weight:600;font-size:18px;line-height:1.3;
+  letter-spacing:-.005em;margin:34px 0 10px;
+}
+p{margin:0 0 16px;max-width:68ch}
+.lede{font-size:18px;color:var(--ink-2);max-width:64ch}
+strong{font-weight:600}
+em{font-style:italic}
+a{color:var(--accent)}
+
+/* ---------- rule blocks ---------- */
+.rules{
+  list-style:none;padding:0;margin:22px 0 8px;
+  display:grid;gap:1px;background:var(--line-soft);
+  border:1px solid var(--line-soft);
+}
+.rules li{
+  background:var(--surface);padding:16px 20px;
+  display:grid;grid-template-columns:34px 1fr;gap:16px;align-items:baseline;
+}
+.rules .n{
+  font-family:var(--mono);font-size:13px;font-weight:700;color:var(--accent);
+}
+.rules p{margin:0;font-size:16px;max-width:none}
+
+/* ---------- tables ---------- */
+.tablewrap{overflow-x:auto;margin:20px 0 8px;border:1px solid var(--line-soft)}
+table{border-collapse:collapse;width:100%;min-width:640px;background:var(--surface)}
+th,td{text-align:left;padding:11px 16px;border-bottom:1px solid var(--line-soft);vertical-align:top}
+thead th{
+  font-family:var(--mono);font-size:10.5px;font-weight:500;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--muted);
+  background:var(--surface-2);border-bottom:1px solid var(--line);
+}
+tbody tr:last-child td{border-bottom:0}
+td.term{font-family:var(--sans);font-weight:600;font-size:15px;white-space:nowrap}
+td.en{font-family:var(--mono);font-size:12.5px;color:var(--accent);white-space:nowrap}
+td.txt{font-size:15px;line-height:1.5;color:var(--ink-2)}
+
+/* ---------- callout ---------- */
+.callout{
+  background:var(--accent-soft);
+  border:1px solid var(--line);
+  padding:22px 24px;margin:26px 0 8px;
+}
+.callout h3{margin:0 0 12px;font-size:16px;color:var(--accent-2)}
+.callout p{max-width:none;font-size:16px;margin-bottom:12px;color:var(--ink-2)}
+.callout p:last-child{margin-bottom:0}
+.callout .k{font-family:var(--sans);font-weight:600;color:var(--ink)}
+
+/* ---------- shot sheet ---------- */
+.sheet{
+  border:1px solid var(--line);
+  background:var(--surface);
+  margin:0 0 22px;
+}
+.sheet-head{
+  display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;
+  padding:15px 20px;border-bottom:1px solid var(--line);
+}
+.sheet-no{
+  font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.08em;
+  color:var(--surface);background:var(--accent);padding:3px 8px;
+}
+.sheet-name{font-family:var(--sans);font-weight:600;font-size:19px;letter-spacing:-.01em}
+.spec{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:1px;background:var(--line-soft);border-bottom:1px solid var(--line);
+}
+.spec div{background:var(--surface);padding:11px 20px}
+.spec dt{
+  font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);margin:0 0 3px;
+}
+.spec dd{
+  margin:0;font-family:var(--sans);font-weight:500;font-size:14px;color:var(--ink);
+  font-variant-numeric:tabular-nums;
+}
+.spec dd .en{font-family:var(--mono);font-size:12px;color:var(--accent);display:block;margin-top:2px}
+
+.promptbox{position:relative;background:var(--code-bg)}
+.promptbox pre{
+  margin:0;padding:20px 20px 20px;overflow-x:auto;
+  font-family:var(--mono);font-size:13px;line-height:1.62;color:var(--code-ink);
+  white-space:pre;
+}
+.copy{
+  position:absolute;top:12px;right:12px;
+  font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--code-dim);background:transparent;
+  border:1px solid #2A3A42;padding:5px 11px;cursor:pointer;
+}
+.copy:hover{color:var(--code-ink);border-color:#41545E}
+.copy:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.copy.is-copied{color:#8FD6A8;border-color:#2F5B3E}
+
+.notes{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line-soft)}
+.notes > div{background:var(--surface);padding:15px 20px}
+.notes dt{
+  font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+  margin:0 0 5px;
+}
+.notes .use dt{color:var(--accent)}
+.notes .break dt{color:var(--warn)}
+.notes dd{margin:0;font-size:15px;line-height:1.48;color:var(--ink-2)}
+.notes .break{background:var(--warn-soft)}
+.notes .break dd{color:var(--warn)}
+
+@media (max-width:640px){
+  .notes{grid-template-columns:1fr}
+  body{font-size:16px}
+}
+
+/* ---------- template ---------- */
+.template{
+  border:1px dashed var(--line);background:var(--surface);
+  padding:22px 24px;margin:22px 0 8px;
+}
+.template pre{
+  margin:0;font-family:var(--mono);font-size:13px;line-height:1.75;
+  color:var(--ink-2);white-space:pre-wrap;
+}
+
+footer{
+  border-top:1px solid var(--line);margin-top:56px;background:var(--surface);
+}
+footer .wrap{padding-top:28px;padding-bottom:40px}
+footer p{
+  font-family:var(--mono);font-size:12px;color:var(--muted);margin:0;max-width:none;
+  line-height:1.7;
+}
+
+@media print{
+  nav.toc{display:none}
+  body{background:#fff;font-size:11pt}
+  .sheet{break-inside:avoid}
+  section{padding-top:26px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+}
+</style>
+
+<header class="masthead">
+  <div class="wrap">
+    <p class="eyebrow">Seedance 2.0 · Image vers vidéo · Architecture</p>
+    <h1>Grammaire vidéo Seedance</h1>
+    <p class="standfirst">Douze plans prêts à l'emploi pour animer un rendu d'architecture, et le vocabulaire de plateau qui permet de les décrire au modèle. Un prompt vidéo ne décrit pas un état : il décrit un mouvement dans le temps.</p>
+    <div class="meta">
+      <span><b>12</b> fiches de plan</span>
+      <span><b>4 à 8 s</b> par plan</span>
+      <span><b>≈ 0,05 $</b> la seconde générée</span>
+      <span>ANCA Agency · Anthony</span>
+    </div>
+  </div>
+</header>
+
+<nav class="toc">
+  <div class="wrap">
+    <a href="#regle">La règle</a>
+    <a href="#valeurs">Valeurs de plan</a>
+    <a href="#mouvements">Mouvements</a>
+    <a href="#angles">Angles &amp; rythme</a>
+    <a href="#biblio">Les 12 plans</a>
+    <a href="#fiche">Fiche vierge</a>
+  </div>
+</nav>
+
+<main class="wrap">
+
+<section id="regle">
+  <p class="sec-num">01 — Le principe</p>
+  <h2>Six blocs, un seul mouvement</h2>
+  <p class="lede">En image, vous décrivez un état : des matériaux, une lumière, un cadrage. En vidéo, vous décrivez ce qui se passe entre la première et la dernière image. Tout le reste découle de ça.</p>
+
+  <ol class="rules">
+    <li><span class="n">01</span><p><strong>Six blocs, dans cet ordre :</strong> sujet · action · caméra · environnement · son · rythme. Les douze fiches ci-dessous suivent toutes cette structure.</p></li>
+    <li><span class="n">02</span><p><strong>Un seul mouvement de caméra par plan.</strong> Un travelling qui devient un panoramique produit un tremblement et des artefacts. Si vous voulez deux mouvements, faites deux plans.</p></li>
+    <li><span class="n">03</span><p><strong>Le mouvement de la caméra et le mouvement du sujet vont dans deux phrases séparées.</strong> « La caméra avance lentement. Le feuillage bouge au vent. » Jamais dans la même phrase : le modèle ne sait plus ce qui bouge.</p></li>
+    <li><span class="n">04</span><p><strong>Le terme technique en anglais, le reste en français.</strong> Le modèle a été entraîné sur le vocabulaire de plateau anglophone : <em>dolly in</em>, <em>tracking shot</em>, <em>tilt up</em>, <em>orbit</em> portent beaucoup mieux que leurs traductions. Gardez le français pour la description.</p></li>
+    <li><span class="n">05</span><p><strong>« Lentement », jamais « rapide ».</strong> <em>Fast</em> est le mot qui dégrade le plus la qualité. Un travelling lent réussit neuf fois sur dix ; le même travelling rapide, une fois sur cinq.</p></li>
+    <li><span class="n">06</span><p><strong>Entre 60 et 100 mots.</strong> En dessous, le modèle improvise. Au-dessus, il se contredit. C'est l'inverse du prompt image, où la précision paie toujours.</p></li>
+  </ol>
+
+  <div class="callout">
+    <h3>Le budget se compte en essais, pas en clips</h3>
+    <p>Comptez deux générations jetées pour une gardée. À 0,05 $ la seconde, un clip de six secondes utilisable revient à moins d'un euro tout compris — mais générez systématiquement deux versions du même plan d'un coup : la seconde est souvent la bonne, et relancer plus tard coûte surtout du temps.</p>
+  </div>
+</section>
+
+<section id="valeurs">
+  <p class="sec-num">02 — Vocabulaire</p>
+  <h2>Les valeurs de plan</h2>
+  <p class="lede">La valeur de plan décrit ce qui entre dans le cadre. C'est la première décision : elle détermine ce que le spectateur peut lire, et ce que le modèle aura à inventer.</p>
+
+  <div class="tablewrap">
+    <table>
+      <thead>
+        <tr><th>Terme</th><th>Sur le plateau</th><th>Ce que ça cadre</th><th>En architecture</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="term">Plan d'ensemble</td><td class="en">establishing shot</td><td class="txt">Le bâtiment et tout son contexte</td><td class="txt">Situer dans le site, ouvrir une présentation</td></tr>
+        <tr><td class="term">Plan large</td><td class="en">wide shot</td><td class="txt">Le bâtiment entier, bord à bord</td><td class="txt">La volumétrie, la silhouette, une façade</td></tr>
+        <tr><td class="term">Plan moyen</td><td class="en">medium shot</td><td class="txt">Une partie de la façade, un angle</td><td class="txt">Une entrée, un décroché, un assemblage</td></tr>
+        <tr><td class="term">Plan rapproché</td><td class="en">medium close-up</td><td class="txt">Un élément isolé</td><td class="txt">Une baie, un garde-corps, un seuil</td></tr>
+        <tr><td class="term">Gros plan</td><td class="en">close-up</td><td class="txt">La matière seule, sans contexte</td><td class="txt">Texture, calepinage, joint creux</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 id="mouvements">Les mouvements de caméra</h3>
+  <p>Deux familles à ne jamais confondre : la caméra <strong>se déplace</strong> (travelling, grue, orbite) ou elle <strong>pivote sur place</strong> (panoramique, tilt). Le résultat n'a rien à voir.</p>
+
+  <div class="tablewrap">
+    <table>
+      <thead>
+        <tr><th>Terme</th><th>Sur le plateau</th><th>Ce que fait la caméra</th><th>Ce que ça produit</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="term">Travelling avant</td><td class="en">dolly in</td><td class="txt">Elle avance physiquement vers le sujet</td><td class="txt">La perspective évolue : on entre dans l'espace</td></tr>
+        <tr><td class="term">Travelling arrière</td><td class="en">dolly out</td><td class="txt">Elle recule</td><td class="txt">Le contexte se découvre autour du bâtiment</td></tr>
+        <tr><td class="term">Travelling latéral</td><td class="en">tracking shot</td><td class="txt">Elle longe le sujet, distance constante</td><td class="txt">Le seul mouvement qui laisse lire un linéaire</td></tr>
+        <tr><td class="term">Panoramique</td><td class="en">pan</td><td class="txt">Elle pivote horizontalement, sans bouger</td><td class="txt">Un balayage depuis un point de vue fixe</td></tr>
+        <tr><td class="term">Panoramique vertical</td><td class="en">tilt up / tilt down</td><td class="txt">Elle pivote verticalement</td><td class="txt">Révèle une hauteur, du socle à l'acrotère</td></tr>
+        <tr><td class="term">Mouvement orbital</td><td class="en">orbit / arc shot</td><td class="txt">Elle décrit un arc autour du sujet</td><td class="txt">Le volume et les décrochés se comprennent</td></tr>
+        <tr><td class="term">Grue</td><td class="en">crane up / crane down</td><td class="txt">Elle s'élève ou descend en arc</td><td class="txt">Passe de l'échelle du piéton à celle du site</td></tr>
+        <tr><td class="term">Élévation drone</td><td class="en">drone rise</td><td class="txt">Elle monte à la verticale</td><td class="txt">Découvre l'implantation et le plan-masse</td></tr>
+        <tr><td class="term">Steadicam</td><td class="en">steadicam</td><td class="txt">Elle marche, stabilisée</td><td class="txt">La traversée d'un espace, fluide et habitée</td></tr>
+        <tr><td class="term">Caméra portée</td><td class="en">handheld</td><td class="txt">Elle tremble volontairement</td><td class="txt">À éviter : illisible sur de l'architecture</td></tr>
+        <tr><td class="term">Plan fixe</td><td class="en">locked-off shot</td><td class="txt">Elle ne bouge pas du tout</td><td class="txt">Seule la lumière ou la scène évolue</td></tr>
+        <tr><td class="term">Zoom</td><td class="en">zoom in / zoom out</td><td class="txt">La focale change, la caméra reste immobile</td><td class="txt">Écrase la perspective — rarement souhaitable</td></tr>
+        <tr><td class="term">Travelling compensé</td><td class="en">dolly zoom</td><td class="txt">Zoom et travelling en sens inverse</td><td class="txt">Déforme le bâtiment. À proscrire en archi</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout">
+    <h3>Les deux confusions qui coûtent le plus cher</h3>
+    <p><span class="k">Zoom n'est pas travelling avant.</span> Le zoom change la focale : le bâtiment grossit, mais la perspective reste identique et l'image s'aplatit. Le travelling avant déplace la caméra : les lignes de fuite évoluent, et le spectateur éprouve la profondeur. En architecture, c'est presque toujours le travelling qu'on veut — écrivez <em>dolly in</em>, jamais <em>zoom in</em>.</p>
+    <p><span class="k">Panoramique n'est pas travelling latéral.</span> Le panoramique pivote depuis un point fixe : les extrémités de la façade s'éloignent et se déforment, les travées ne sont plus comparables entre elles. Le travelling latéral garde la façade parallèle au capteur — c'est le seul mouvement qui permet de lire honnêtement un linéaire ou un rythme de percements.</p>
+  </div>
+</section>
+
+<section id="angles">
+  <p class="sec-num">03 — Vocabulaire</p>
+  <h2>Les angles et le rythme</h2>
+
+  <div class="tablewrap">
+    <table>
+      <thead>
+        <tr><th>Terme</th><th>Sur le plateau</th><th>Position</th><th>Effet</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="term">Hauteur d'œil</td><td class="en">eye level</td><td class="txt">1,60 m du sol</td><td class="txt">La lecture honnête, celle du visiteur</td></tr>
+        <tr><td class="term">Contre-plongée</td><td class="en">low angle</td><td class="txt">Sous le niveau de l'œil</td><td class="txt">Monumentalise, mais fait fuir les verticales</td></tr>
+        <tr><td class="term">Plongée</td><td class="en">high angle</td><td class="txt">Au-dessus du sujet</td><td class="txt">Donne à lire l'implantation et les toitures</td></tr>
+        <tr><td class="term">Vue zénithale</td><td class="en">top-down / bird's eye</td><td class="txt">À la verticale</td><td class="txt">Le plan-masse habité</td></tr>
+        <tr><td class="term">Plan-séquence</td><td class="en">one continuous shot</td><td class="txt">Sans coupe</td><td class="txt">Le format sûr entre 4 et 6 secondes</td></tr>
+        <tr><td class="term">Raccord</td><td class="en">cut</td><td class="txt">Passage d'un plan à l'autre</td><td class="txt">Au-delà de 8 s, il faut annoncer chaque plan</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>Sur un rendu fixe, restez en plan-séquence. Le multi-plan ne se justifie qu'au-delà de huit secondes, et il faut alors écrire explicitement <em>« Plan 1… Plan 2… »</em> dans le prompt, sinon le modèle coupe où bon lui semble.</p>
+</section>
+
+<section id="biblio">
+  <p class="sec-num">04 — La bibliothèque</p>
+  <h2>Douze plans, prêts à coller</h2>
+  <p class="lede">Chaque fiche donne le découpage technique, le prompt complet, ce à quoi le plan sert, et ce qui le casse. Les crochets sont à remplir avec votre vocabulaire : typologie, matériau, espace. Un prompt entièrement pré-écrit ne devient jamais le vôtre.</p>
+
+  <!-- 01 -->
+  <article class="sheet">
+    <div class="sheet-head"><span class="sheet-no">PLAN 01</span><span class="sheet-name">L'ouverture</span></div>
+    <dl class="spec">
+      <div><dt>Valeur</dt><dd>Plan large</dd></div>
+      <div><dt>Mouvement</dt><dd>Travelling avant<span class="en">slow dolly in</span></dd></div>
+      <div><dt>Focale</dt><dd>24 mm</dd></div>
+      <div><dt>Durée</dt><dd>6 s</dd></div>
+      <div><dt>Son</dt><dd>Aucun</dd></div>
+    </dl>
+    <div class="promptbox">
+      <button class="copy" type="button">Copier</button>
+      <pre>Photographie d'architecture d'un [typologie] en [matériau],
+fin d'après-midi, ombres longues portées vers l'est.
+
+Mouvement de caméra : slow dolly in. La caméra avance
+lentement et régulièrement vers l'entrée principale,
+hauteur constante, sans à-coups.
+
+Dans la scène : le feuillage bouge légèrement au vent,
+les nuages se déplacent doucement.
+
+Un seul plan continu, six secondes. Aucun son.</pre>
+    </div>
+    <dl class="notes">
+      <div class="use"><dt>À quoi ça sert</dt><dd>Ouvrir une présentation client, un en-tête de page projet. C'est le plan qui réussit le plus souvent : à prendre pour un premier essai.</dd></div>
+      <div class="break"><dt>Ce qui casse</dt><dd>Un cadrage de départ trop serré : l'entrée sort du cadre à mi-course. Partez plus large que ce qui vous paraît juste.</dd></div>
+    </dl>
+  </article>
+
+  <!-- 02 -->
+  <article class="sheet">
+    <div class="sheet-head"><span class="sheet-no">PLAN 02</span><span class="sheet-name">La lecture de façade</span></div>
+    <dl class="spec">
+      <div><dt>Valeur</dt><dd>Plan large</dd></div>
+      <div><dt>Mouvement</dt><dd>Travelling latéral<span class="en">lateral tracking shot</span></dd></div>
+      <div><dt>Focale</dt><dd>35 mm</dd></div>
+      <div><dt>Durée</dt><dd>8 s</dd></div>
+      <div><dt>Son</dt><dd>Aucun</dd></div>
+    </dl>
+    <div class="promptbox">
+      <button class="copy" type="button">Copier</button>
+      <pre>Façade sud d'un [typologie] en [matériau], ciel couvert
+uniforme, lumière diffuse, aucune ombre portée.
+
+Mouvement de caméra : slow lateral tracking shot. La caméra
+se déplace de gauche à droite parallèlement à la façade,
+distance constante, vitesse régulière.
+
+Dans la scène : rien ne bouge, hors un léger frémissement
+de la végétation.
+
+Un seul plan, huit secondes. Aucun son.</pre>
+    </div>
+    <dl class="notes">
+      <div class="use"><dt>À quoi ça sert</dt><dd>Montrer un linéaire, un rythme de travées, un calepinage. Le plan le plus utile pour une MOA : il ne flatte pas, il donne à lire.</dd></div>
+      <div class="break"><dt>Ce qui casse</dt><dd>Écrire « panoramique » au lieu de <em>tracking</em>. La façade se déformerait aux extrémités et les travées ne seraient plus comparables.</dd></div>
+    </dl>
+  </article>
+
+  <!-- 03 -->
+  <article class="sheet">
+    <div class="sheet-head"><span class="sheet-no">PLAN 03</span><span class="sheet-name">Le balayage de site</span></div>
+    <dl class="spec">
+      <div><dt>Valeur</dt><dd>Plan d'ensemble</dd></div>
+      <div><dt>Mouvement</dt><dd>Panoramique<span class="en">slow pan</span></dd></div>
+      <div><dt>Focale</dt><dd>24 mm</dd></div>
+      <div><dt>Durée</dt><dd>8 s</dd></div>
+      <div><dt>Son</dt><dd>Aucun</dd></div>
+    </dl>
+    <div class="promptbox">
+      <button class="copy" type="button">Copier</button>
+      <pre>Vue d'ensemble d'un [typologie] dans son site, milieu de
+matinée, ombres franches.
+
+Mouvement de caméra : slow pan from left to right. La caméra
+pivote lentement sur son axe depuis une position fixe,
+vitesse constante.
+
+Dans la scène : la végétation bouge légèrement. Aucun
+véhicule, aucun personnage en mouvement.
+
+Un seul plan, huit secondes. Aucun son.</pre>
+    </div>
+    <dl class="notes">
+      <div class="use"><dt>À quoi ça sert</dt><dd>Situer le projet dans son contexte, ou montrer ce qu'on voit depuis le site. Utile en phase concours pour poser le paysage.</dd></div>
+      <div class="break"><dt>Ce qui casse</dt><dd>Un panoramique trop rapide fait saccader les lignes verticales. Toujours <em>slow</em>, et restez sous 45° de balayage.</dd></div>
+    </dl>
+  </article>
+
+  <!-- 04 -->
+  <article class="sheet">
+    <div class="sheet-head"><span class="sheet-no">PLAN 04</span><span class="sheet-name">L'orbite</span></div>
+    <dl class="spec">
+      <div><dt>Valeur</dt><dd>Plan large</dd></div>
+      <div><dt>Mouvement</dt><dd>Mouvement orbital<span class="en">slow orbit</span></dd></div>
+      <div><dt>Focale</dt><dd>35 mm</dd></div>
+      <div><dt>Durée</dt><dd>8 s</dd></div>
+      <div><dt>Son</dt><dd>Aucun</dd></div>
+    </dl>
+    <div class="promptbox">
+      <button class="copy" type="button">Copier</button>
+      <pre>Vue trois quarts d'un [typologie] dans son contexte,
+milieu de matinée, ciel dégagé.
+
+Mouvement de caméra : slow orbit around the building.
+La caméra décrit un arc régulier autour du bâtiment,
+altitude et distance constantes.
+
+Dans la scène : la végétation environnante bouge
+légèrement. Aucun personnage en mouvement.
+
+Un seul plan, huit secondes. Aucun son.</pre>
+    </div>
+    <dl class="notes">
+      <div class="use"><dt>À quoi ça sert</dt><dd>Faire comprendre un volume, une implantation, un jeu de décrochés — ce qu'une image fixe ne montre jamais complètement.</dd></div>
+      <div class="break"><dt>Ce qui casse</dt><dd>Au-delà d'un quart de tour, le modèle invente les façades qu'il n'a jamais vues. Restez sous 90° : il n'extrapole pas, il improvise.</dd></div>
+    </dl>
+  </article>
+
+  <!-- 05 -->
+  <article class="sheet">
+    <div class="sheet-head"><span class="sheet-no">PLAN 05</span><span class="sheet-name">L'élévation</span></div>
+    <dl class="spec">
+      <div><dt>Valeur</dt><dd>Large → ensemble</dd></div>
+      <div><dt>Mouvement</dt><dd>Grue<span class="en">slow crane up</span></dd></div>
+      <div><dt>Focale</dt><dd>24 mm</dd></div>
+      <div><dt>Durée</dt><dd>8 s</dd></div>
+      <div><dt>Son</dt><dd>Aucun</dd></div>
+    </dl>
+    <div class="promptbox">
+      <button class="copy" type="button">Copier</button>
+      <pre>Vue d'un [typologie] depuis le niveau du sol, fin de
+journée, lumière rasante.
+
+Mouvement de caméra : slow crane up. La caméra s'élève
+verticalement et régulièrement, le bâtiment reste centré,
+le contexte se découvre progressivement.
+
+Dans la scène : la végétation bouge légèrement, les nuages
+se déplacent doucement.
+
+Un seul plan, huit secondes. Aucun son.</pre>
+    </div>
+    <dl class="notes">
+      <div class="use"><dt>À quoi ça sert</dt><dd>Passer de l'échelle du piéton à l'échelle urbaine en un seul plan. Très efficace en clôture de présentation.</dd></div>
+      <div class="break"><dt>Ce qui casse</dt><dd>Une image de départ déjà aérienne : il ne reste plus rien à découvrir. Partez d'une vue au sol, sinon le mouvement ne raconte rien.</dd></div>
+    </dl>
+  </article>
+
+  <!-- 06 -->
+  <article class="sheet">
+    <div class="sheet-head"><span class="sheet-no">PLAN 06</span><span class="sheet-name">La révélation</span></div>
+    <dl class="spec">
+      <div><dt>Valeur</dt><dd>Moyen → large</dd></div>
+      <div><dt>Mouvement</dt><dd>Dégagement latéral<span class="en">slow reveal</span></dd></div>
+      <div><dt>Focale</dt><dd>35 mm</dd></div>
+      <div><dt>Durée</dt><dd>6 s</dd></div>
+      <div><dt>Son</dt><dd>Vent léger</dd></div>
+    </dl>
+    <div class="promptbox">
+      <button class="copy" type="button">Copier</button>
+      <pre>Un [typologie] partiellement masqué par un premier plan
+de végétation, fin d'après-midi.
+
+Mouvement de caméra : slow reveal. La caméra se décale
+doucement vers la droite et dégage progressivement le
+bâtiment resté derrière le feuillage.
+
+Dans la scène : le feuillage du premier plan bouge
+légèrement au vent.
+
+Un seul plan, six secondes. Ambiance sonore : vent léger.</pre>
+    </div>
+    <dl class="notes">
+      <div class="use"><dt>À quoi ça sert</dt><dd>Effet d'annonce, ouverture de publication, teaser de concours gagné. C'est le plan des réseaux sociaux.</dd></div>
+      <div class="break"><dt>Ce qui casse</dt><dd>L'absence de premier plan dans l'image de départ. Sans obstacle réel à dégager, il n'y a rien à révéler et le plan devient un travelling banal.</dd></div>
+    </dl>
+  </article>
+
+  <!-- 07 -->
+  <article class="sheet">
+    <div class="sheet-head"><span class="sheet-no">PLAN 07</span><span class="sheet-name">La contre-plongée</span></div>
+    <dl class="spec">
+      <div><dt>Valeur</dt><dd>Plan moyen</dd></div>
+      <div><dt>Mouvement</dt><dd>Panoramique vertical<span class="en">slow tilt up</span></dd></div>
+      <div><dt>Focale</dt><dd>24 mm</dd></div>
+      <div><dt>Durée</dt><dd>6 s</dd></div>
+      <div><dt>Son</dt><dd>Aucun</dd></div>
+    </dl>
+    <div class="promptbox">
+      <button class="copy" type="button">Copier</button>
+      <pre>Vue en contre-plongée d'un [typologie] depuis le trottoir,
+ciel couvert uniforme.
+
+Mouvement de caméra : slow tilt up. La caméra pivote
+lentement vers le haut, du socle jusqu'à l'acrotère,
+position fixe, verticales conservées.
+
+Dans la scène : rien ne bouge, hors les nuages qui se
+déplacent lentement.
+
+Un seul plan, six secondes. Aucun son.</pre>
+    </div>
+    <dl class="notes">
+      <div class="use"><dt>À quoi ça sert</dt><dd>Donner l'échelle d'un immeuble, montrer une hauteur, un traitement d'attique. Le plan de l'urbain dense.</dd></div>
+      <div class="break"><dt>Ce qui casse</dt><dd>Le tilt fait fuir les verticales par construction. Précisez « verticales conservées » et acceptez de corriger : c'est le plan le plus infidèle au modèle.</dd></div>
+    </dl>
+  </article>
+
+  <!-- 08 -->
+  <article class="sheet">
+    <div class="sheet-head"><span class="sheet-no">PLAN 08</span><span class="sheet-name">La traversée intérieure</span></div>
+    <dl class="spec">
+      <div><dt>Valeur</dt><dd>Large intérieur</dd></div>
+      <div><dt>Mouvement</dt><dd>Travelling stabilisé<span class="en">steadicam dolly in</span></dd></div>
+      <div><dt>Focale</dt><dd>24 mm</dd></div>
+      <div><dt>Durée</dt><dd>8 s</dd></div>
+      <div><dt>Son</dt><dd>Discret</dd></div>
+    </dl>
+    <div class="promptbox">
+      <button class="copy" type="button">Copier</button>
+      <pre>Intérieur d'un [espace] en [matériau], lumière naturelle
+latérale, fin de matinée.
+
+Mouvement de caméra : slow steadicam dolly in. La caméra
+avance à hauteur d'œil à travers l'espace, mouvement fluide
+et régulier, sans à-coups.
+
+Dans la scène : la lumière varie doucement sur les murs,
+les rideaux bougent légèrement.
+
+Un seul plan, huit secondes. Ambiance sonore discrète.</pre>
+    </div>
+    <dl class="notes">
+      <div class="use"><dt>À quoi ça sert</dt><dd>Faire éprouver une enfilade, une hauteur sous plafond, une percée visuelle. Ce que ni le plan ni la coupe ne transmettent.</dd></div>
+      <div class="break"><dt>Ce qui casse</dt><dd>Longer un mur : les menuiseries et le mobilier se déforment quand on passe à côté. Restez dans l'axe de l'espace.</dd></div>
+    </dl>
+  </article>
+
+  <!-- 09 -->
+  <article class="sheet">
+    <div class="sheet-head"><span class="sheet-no">PLAN 09</span><span class="sheet-name">Le panoramique intérieur</span></div>
+    <dl class="spec">
+      <div><dt>Valeur</dt><dd>Large intérieur</dd></div>
+      <div><dt>Mouvement</dt><dd>Panoramique<span class="en">slow pan</span></dd></div>
+      <div><dt>Focale</dt><dd>24 mm</dd></div>
+      <div><dt>Durée</dt><dd>6 s</dd></div>
+      <div><dt>Son</dt><dd>Aucun</dd></div>
+    </dl>
+    <div class="promptbox">
+      <button class="copy" type="button">Copier</button>
+      <pre>Intérieur d'un [espace], lumière naturelle diffuse,
+ciel couvert.
+
+Mouvement de caméra : slow pan. La caméra pivote lentement
+de gauche à droite depuis un point fixe, vitesse constante,
+amplitude réduite.
+
+Dans la scène : rien ne bouge, hors une variation douce
+de la lumière.
+
+Un seul plan, six secondes. Aucun son.</pre>
+    </div>
+    <dl class="notes">
+      <div class="use"><dt>À quoi ça sert</dt><dd>Montrer un volume intérieur sans se déplacer. Nettement plus sûr que la traversée : à prendre quand le plan 08 échoue.</dd></div>
+      <div class="break"><dt>Ce qui casse</dt><dd>Un balayage trop ample : en intérieur, le pan déforme les angles de murs. Restez sous 45°, et n'attendez jamais un tour complet.</dd></div>
+    </dl>
+  </article>
+
+  <!-- 10 -->
+  <article class="sheet">
+    <div class="sheet-head"><span class="sheet-no">PLAN 10</span><span class="sheet-name">Le détail de matière</span></div>
+    <dl class="spec">
+      <div><dt>Valeur</dt><dd>Gros plan</dd></div>
+      <div><dt>Mouvement</dt><dd>Travelling très lent<span class="en">very slow push in</span></dd></div>
+      <div><dt>Focale</dt><dd>50 mm</dd></div>
+      <div><dt>Durée</dt><dd>5 s</dd></div>
+      <div><dt>Son</dt><dd>Aucun</dd></div>
+    </dl>
+    <div class="promptbox">
+      <button class="copy" type="button">Copier</button>
+      <pre>Gros plan sur [matériau] : [finition et calepinage],
+lumière rasante de fin d'après-midi.
+
+Mouvement de caméra : very slow push in. La caméra
+s'approche très lentement de la surface, cadrage serré,
+faible profondeur de champ.
+
+Dans la scène : la lumière glisse doucement sur la
+matière.
+
+Un seul plan, cinq secondes. Aucun son.</pre>
+    </div>
+    <dl class="notes">
+      <div class="use"><dt>À quoi ça sert</dt><dd>S'intercaler entre deux plans larges et faire respirer un montage. Montre une mise en œuvre, un joint, une texture.</dd></div>
+      <div class="break"><dt>Ce qui casse</dt><dd>Le gros plan révèle impitoyablement le manque de matière d'un rendu de synthèse. À réserver aux images très définies.</dd></div>
+    </dl>
+  </article>
+
+  <!-- 11 -->
+  <article class="sheet">
+    <div class="sheet-head"><span class="sheet-no">PLAN 11</span><span class="sheet-name">L'insertion urbaine</span></div>
+    <dl class="spec">
+      <div><dt>Valeur</dt><dd>Plan moyen</dd></div>
+      <div><dt>Mouvement</dt><dd>Accompagnement<span class="en">steadicam tracking</span></dd></div>
+      <div><dt>Focale</dt><dd>35 mm</dd></div>
+      <div><dt>Durée</dt><dd>8 s</dd></div>
+      <div><dt>Son</dt><dd>Rue calme</dd></div>
+    </dl>
+    <div class="promptbox">
+      <button class="copy" type="button">Copier</button>
+      <pre>Vue d'un [typologie] depuis le trottoir opposé, hauteur
+d'œil 1,60 m, fin d'après-midi.
+
+Mouvement de caméra : slow steadicam tracking. La caméra
+longe le trottoir à vitesse de marche, distance constante
+au bâtiment.
+
+Dans la scène : les feuillages bougent légèrement. Les
+passants restent immobiles et lointains.
+
+Un seul plan, huit secondes. Ambiance sonore : rue calme.</pre>
+    </div>
+    <dl class="notes">
+      <div class="use"><dt>À quoi ça sert</dt><dd>Montrer le rapport à la rue et l'échelle urbaine. Le plan qui répond à la question « qu'est-ce que ça fait, en passant devant ? ».</dd></div>
+      <div class="break"><dt>Ce qui casse</dt><dd>Les passants animés se déforment aux jambes et aux mains. Demandez explicitement qu'ils restent immobiles ou au loin.</dd></div>
+    </dl>
+  </article>
+
+  <!-- 12 -->
+  <article class="sheet">
+    <div class="sheet-head"><span class="sheet-no">PLAN 12</span><span class="sheet-name">Le passage du temps</span></div>
+    <dl class="spec">
+      <div><dt>Valeur</dt><dd>Plan large</dd></div>
+      <div><dt>Mouvement</dt><dd>Caméra fixe<span class="en">locked-off shot</span></dd></div>
+      <div><dt>Focale</dt><dd>24 mm</dd></div>
+      <div><dt>Durée</dt><dd>8 s</dd></div>
+      <div><dt>Son</dt><dd>Aucun</dd></div>
+    </dl>
+    <div class="promptbox">
+      <button class="copy" type="button">Copier</button>
+      <pre>Plan fixe d'un [typologie] depuis un point de vue unique,
+en fin de journée.
+
+Mouvement de caméra : locked-off shot. La caméra ne bouge
+pas du tout, cadrage strictement identique du début à la
+fin.
+
+Dans la scène : la lumière passe progressivement du soleil
+rasant au crépuscule, les ombres s'allongent, les éclairages
+intérieurs s'allument un à un.
+
+Un seul plan, huit secondes. Aucun son.</pre>
+    </div>
+    <dl class="notes">
+      <div class="use"><dt>À quoi ça sert</dt><dd>Montrer une ambiance nocturne sans perdre la lecture diurne. Excellent plan de clôture, et le seul qui fasse travailler la lumière plutôt que la caméra.</dd></div>
+      <div class="break"><dt>Ce qui casse</dt><dd>C'est le plan le plus difficile de la liste. Si la transition rate, descendez à cinq secondes et ne demandez qu'une seule variation — la lumière ou les éclairages, pas les deux.</dd></div>
+    </dl>
+  </article>
+</section>
+
+<section id="fiche">
+  <p class="sec-num">05 — Méthode</p>
+  <h2>La fiche de plan vierge</h2>
+  <p class="lede">Avant d'écrire quoi que ce soit, remplissez ces cinq lignes. Si l'une reste vide, le prompt n'est pas prêt — et c'est presque toujours la ligne « mouvement » qui manque.</p>
+
+  <div class="template">
+<pre>VALEUR      ________________________  (ce qui entre dans le cadre)
+MOUVEMENT   ________________________  (un seul, terme anglais)
+FOCALE      ________________________  (24 · 35 · 50 mm)
+DURÉE       ________________________  (4 à 6 s = un plan sûr)
+CE QUI BOUGE ________________________ (dans la scène, pas la caméra)</pre>
+  </div>
+
+  <div class="callout">
+    <h3>Et si le plan rate</h3>
+    <p>Ne réécrivez pas tout. Changez <span class="k">une seule chose</span> et relancez, exactement comme pour l'itération d'une image : d'abord la durée (descendez à cinq secondes), puis l'amplitude du mouvement, puis ce qui bouge dans la scène. Le prompt n'est presque jamais en cause en entier — c'est un paramètre qui est trop ambitieux.</p>
+    <p>Si le plan rate deux fois de suite avec le même mouvement, changez de mouvement plutôt que d'insister. Un travelling avant réussit là où une orbite échoue, et raconte souvent la même chose.</p>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>Grammaire vidéo Seedance — annexe de la formation « L'IA au service du projet architectural »<br>
+    ANCA Agency · Anthony · anthony@anca-agency.com<br>
+    Les durées, coûts et comportements décrits valent pour Seedance 2.0. La logique de prompt est identique sur les versions suivantes.</p>
+  </div>
+</footer>
+
+<script>
+document.querySelectorAll(".copy").forEach(function(btn){
+  btn.addEventListener("click", function(){
+    var pre = btn.parentNode.querySelector("pre");
+    if(!pre) return;
+    var text = pre.textContent;
+    var done = function(){
+      btn.textContent = "Copié";
+      btn.classList.add("is-copied");
+      setTimeout(function(){
+        btn.textContent = "Copier";
+        btn.classList.remove("is-copied");
+      }, 1600);
+    };
+    var fallback = function(){
+      var ta = document.createElement("textarea");
+      ta.value = text;
+      ta.setAttribute("readonly", "");
+      ta.style.position = "fixed";
+      ta.style.top = "-1000px";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand("copy"); } catch(e){}
+      ta.remove();
+      done();
+    };
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(done).catch(fallback);
+    } else {
+      fallback();
+    }
+  });
+});
+</script>
