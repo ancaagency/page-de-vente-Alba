@@ -81,12 +81,26 @@
 /admin/*              https://app.alba-studio.co/admin/:splat         301
 
 # Les mentions légales, elles, n'existent nulle part ailleurs : c'est la vitrine
-# qui les héberge.
-/mentions-legales /mentions-legales.html   200
+# qui les héberge — et Cloudflare les sert nativement à /mentions-legales.
+# La réécriture qui figurait ici visait le fichier ; voir plus bas pourquoi
+# c'est exactement ce qu'il ne faut pas faire.
 
 ## --- Pages de fond, liées depuis le pied de page ---------------------------
-# Réécritures (200) et non redirections : l'adresse affichée reste propre, et
-# c'est elle qui figure en canonique dans chaque page.
-/co-traitants     /co-traitants.html       200
-/valeur-probante  /valeur-probante.html    200
-/legal-notice     /mentions-legales.html   200
+# IL N'Y A RIEN À ÉCRIRE ICI, ET C'ÉTAIT LE PROBLÈME.
+#
+# Ces trois adresses portaient une réécriture vers le fichier .html :
+#     /co-traitants     /co-traitants.html   200
+# Cloudflare Pages expose déjà chaque fichier à son adresse sans extension, et
+# renvoie /co-traitants.html vers /co-traitants. Ce renvoi retombait sur la
+# règle ci-dessus, qui repointait vers le fichier. Le visiteur recevait une
+# erreur, sur une page pourtant bien déployée.
+#
+# Une règle qui recopie ce que l'hébergeur fait déjà n'est pas neutre : elle
+# s'interpose. Les liens du pied de page visent maintenant /co-traitants
+# directement — l'adresse canonique, celle du sitemap — et aucune règle ne se
+# trouve sur leur chemin.
+#
+# Reste le seul alias qui ne se déduit d'aucun nom de fichier. Une 301 vers
+# l'adresse propre, jamais une réécriture vers le fichier : une redirection ne
+# peut pas retomber sur elle-même.
+/legal-notice     /mentions-legales        301

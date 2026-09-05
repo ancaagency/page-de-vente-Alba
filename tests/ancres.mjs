@@ -24,7 +24,7 @@
  * ne regarde pas qui casse.
  */
 import { chromium } from 'playwright-core';
-import { demarrer } from './serveur.mjs';
+import { demarrer, ROOT } from './serveur.mjs';
 import { ROUTES } from '../outils/pages.mjs';
 
 let echecs = 0;
@@ -231,6 +231,106 @@ console.log("\n===== le pied de page reçoit vraiment les appuis =====");
   });
   ok(bloques.length === 0, `aucun lien du pied de page recouvert${bloques.length ? ` — ${bloques.join(' ; ')}` : ''}`);
   await page.close();
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+ * ET CHAQUE LIEN DE PAGE DOIT ÊTRE SERVI
+ *
+ * La panne qui a coûté le plus cher n'était pas une ancre : c'était un lien
+ * ordinaire vers une page qui existe. Le pied de page visait
+ * « co-traitants.html ». Le fichier était bien là, bien déployé — et le
+ * visiteur recevait une erreur.
+ *
+ * Cloudflare Pages n'expose pas un fichier à son nom. Il le sert à son adresse
+ * sans extension et renvoie /co-traitants.html vers /co-traitants. Ce renvoi
+ * retombait sur la réécriture de _redirects (/co-traitants → /co-traitants.html)
+ * qui repointait vers le fichier, lequel renvoyait de nouveau vers l'adresse
+ * propre : une boucle. Les règles fautives étaient exactement celles dont la
+ * source est l'adresse propre de leur propre cible.
+ *
+ * Rien de tout cela ne se voyait ici, parce que le serveur de test servait le
+ * fichier tel quel. Il imite maintenant Pages (voir serveur.mjs), et ce
+ * contrôle demande simplement : chaque lien interne répond-il ?
+ *
+ * C'est le contrôle le moins spectaculaire du dossier et le seul qui aurait
+ * évité deux jours de liens morts en ligne.
+ * ───────────────────────────────────────────────────────────────────────────── */
+console.log("\n===== chaque lien interne est servi =====");
+{
+  const vus = new Set();
+  for (const route of ROUTES) {
+    const page = await navigateur.newPage({ viewport: { width: 1280, height: 900 } });
+    await page.goto('http://localhost:8949' + route, { waitUntil: 'load', timeout: 40000 });
+    await page.waitForTimeout(4000);
+    const liens = await page.evaluate(() =>
+      [...document.querySelectorAll('a[href]')]
+        .map((a) => a.getAttribute('href'))
+        .filter((h) => h && !h.startsWith('#') && !/^(https?:|mailto:|tel:)/.test(h)));
+    await page.close();
+
+    for (const href of liens) {
+      /* Résolu depuis la page courante, comme le navigateur le ferait : c'est
+         la résolution relative qui décide de l'adresse réellement demandée. */
+      const url = new URL(href, 'http://localhost:8949' + route);
+      const cle = url.pathname;
+      if (vus.has(cle)) continue;
+      vus.add(cle);
+      const r = await fetch(url.origin + url.pathname, { redirect: 'manual' });
+      ok(r.status === 200, `${cle.padEnd(26)} → ${r.status}${r.status === 200 ? '' : ' — NON SERVI'}`);
+    }
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+ * AUCUNE RÈGLE DE _redirects NE DOIT BOUCLER SUR ELLE-MÊME
+ *
+ * Le contrôle précédent vérifie qu'un fichier est là et servi. Il ne rejoue pas
+ * _redirects — aucun test local ne le peut — et n'aurait donc pas vu la panne.
+ * Celui-ci la voit, en lisant la règle plutôt que son effet.
+ *
+ * La forme fautive est reconnaissable à l'œil nu une fois qu'on la connaît :
+ *
+ *     /co-traitants     /co-traitants.html     200
+ *
+ * Cloudflare Pages sert un fichier à son adresse SANS extension et renvoie
+ * l'adresse AVEC extension vers celle-là. Une règle dont la source est
+ * exactement l'adresse propre de sa propre cible se remet donc en jeu à chaque
+ * tour : /co-traitants → /co-traitants.html → /co-traitants → … Le fichier est
+ * déployé, la page est juste, et le visiteur reçoit une erreur.
+ *
+ * La règle des tarifs a la même forme et ne boucle pas — /tarifs → /Tarifs.html,
+ * la casse diffère, la source n'est pas l'adresse propre de la cible. C'est
+ * pourquoi /Tarifs s'ouvrait pendant que /co-traitants échouait, et c'est ce
+ * que cette comparaison doit distinguer.
+ * ───────────────────────────────────────────────────────────────────────────── */
+console.log("\n===== _redirects : aucune règle ne boucle =====");
+{
+  const fs = await import('node:fs');
+  const path = await import('node:path');
+  const brut = fs.readFileSync(path.join(ROOT, '_redirects'), 'utf8');
+  const regles = brut.split('\n')
+    .map((l) => l.trim())
+    .filter((l) => l && !l.startsWith('#'))
+    .map((l) => l.split(/\s+/))
+    .filter((c) => c.length >= 2);
+
+  /* L'adresse à laquelle Cloudflare sert réellement une cible locale. */
+  const adressePropre = (dest) => {
+    if (!dest.startsWith('/') || !dest.endsWith('.html')) return null;
+    return /\/index\.html$/.test(dest) ? dest.replace(/index\.html$/, '') : dest.slice(0, -5);
+  };
+
+  const boucles = regles.filter(([src, dest]) => adressePropre(dest) === src);
+  ok(boucles.length === 0,
+     `aucune règle dont la source est l'adresse propre de sa cible${boucles.length ? ` — ${boucles.map((r) => r.join(' ')).join(' ; ')}` : ''}`);
+
+  /* Et toute cible locale doit exister : une règle vers un fichier absent est
+     un lien mort qu'aucune page ne montre, donc que personne ne signale. */
+  const absentes = regles
+    .map(([, dest]) => dest)
+    .filter((d) => d.startsWith('/') && d.endsWith('.html'))
+    .filter((d) => !fs.existsSync(path.join(ROOT, d)));
+  ok(absentes.length === 0, `toute cible locale existe${absentes.length ? ` — ${absentes.join(', ')}` : ''}`);
 }
 
 await navigateur.close();

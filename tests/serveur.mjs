@@ -44,7 +44,18 @@ export async function demarrer(port, remplacements = {}) {
   const server = http.createServer((req, res) => {
     const p = decodeURIComponent(req.url.split('?')[0]);
 
-    const rel = p === '/' ? '/index.html' : p === '/tarifs' ? '/Tarifs.html' : p;
+    /* ADRESSES PROPRES, COMME CLOUDFLARE PAGES.
+       Pages n'expose pas un fichier à son nom : « co-traitants.html » est servi
+       à /co-traitants, et /co-traitants.html est renvoyé vers l'adresse sans
+       extension. Ce serveur servait le fichier tel quel — aucun hébergeur ne
+       fait ça, et c'est ce qui a rendu la panne invisible : les liens du pied
+       de page visaient « co-traitants.html », vert en local, erreur en ligne.
+       Un serveur de test qui est plus permissif que la production ne teste
+       rien : il invente un hébergeur qui n'existe pas. */
+    let rel = p === '/' ? '/index.html' : p === '/tarifs' ? '/Tarifs.html' : p;
+    if (!path.extname(rel) && fs.existsSync(path.join(ROOT, rel + '.html'))) {
+      rel += '.html';
+    }
     const f = path.join(ROOT, rel);
     if (!f.startsWith(ROOT) || !fs.existsSync(f) || fs.statSync(f).isDirectory()) {
       res.writeHead(404); return res.end('not found');

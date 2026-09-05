@@ -830,9 +830,20 @@ const Footer = () => (
                 part, et le gestionnaire d'ancres l'ignore — on cliquait, rien ne
                 se passait. « À propos » et « Manifeste » ont chacun une section
                 réelle sur l'accueil ; « Carrières » n'en a aucune, et lui
-                inventer une destination serait pire que de la retirer. */}
-            <li><a href="valeur-probante.html">{Txt("pied.valeur-probante", "Valeur probante", "Evidential value")}</a></li>
-            <li><a href="co-traitants.html">{Txt("pied.co-traitants", "Co-traitants & BET", "Consultants & engineers")}</a></li>
+                inventer une destination serait pire que de la retirer.
+
+                LES LIENS DE PAGE VISENT L'ADRESSE PROPRE, PAS LE FICHIER.
+                Ils valaient « co-traitants.html ». Cloudflare Pages ne sert pas
+                un fichier à son nom : il l'expose à son adresse sans extension
+                et renvoie /co-traitants.html vers /co-traitants. Ce renvoi
+                retombait sur la règle de réécriture de _redirects, qui repointait
+                vers le fichier — et le visiteur recevait une erreur. En local
+                rien n'y paraissait : le serveur de test servait le fichier tel
+                quel, ce qu'aucun hébergeur ne fait.
+                L'adresse propre est de toute façon la seule vraie : c'est elle
+                qui figure en canonique dans chaque page et dans sitemap.xml. */}
+            <li><a href="/valeur-probante">{Txt("pied.valeur-probante", "Valeur probante", "Evidential value")}</a></li>
+            <li><a href="/co-traitants">{Txt("pied.co-traitants", "Co-traitants & BET", "Consultants & engineers")}</a></li>
             <li><a href={versAccueil("#fondateur")}>{Txt("pied.a-propos", "À propos", "About")}</a></li>
             <li><a href={versAccueil("#manifeste")}>{Txt("pied.manifeste", "Manifeste", "Manifesto")}</a></li>
             <li><a href={versAccueil("#contact")}>Contact</a></li>
@@ -847,7 +858,7 @@ const Footer = () => (
                 côté app) : les dupliquer ici créerait deux textes juridiques
                 divergents. Les mentions légales, elles, n'existent nulle part
                 ailleurs — c'est la vitrine qui les héberge. */}
-            <li><a href="mentions-legales.html">{Txt("pied.mentions-legales", "Mentions légales", "Legal notice")}</a></li>
+            <li><a href="/mentions-legales">{Txt("pied.mentions-legales", "Mentions légales", "Legal notice")}</a></li>
             <li><a href={`${APP_ORIGIN}/terms`}>{Txt("pied.cgu-cgv", "CGU & CGV", "Terms & conditions")}</a></li>
             <li><a href={`${APP_ORIGIN}/privacy-policy`}>{Txt("pied.politique-rgpd", "Politique RGPD", "GDPR policy")}</a></li>
             <li><a href={versAccueil("#securite")}>{Txt("pied.securite", "Sécurité", "Security")}</a></li>
