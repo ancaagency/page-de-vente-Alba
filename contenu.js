@@ -250,21 +250,26 @@ window.ALBA_CONTENU = {
     fr: "Voir la démo libéral",
     en: "See the solo demo",
   },
+  /* ⚠️ D'ACCORD AVEC LA CARTE TARIFAIRE : 4 collaborateurs par espace, et
+     300 Go ≈ 30 projets. Ces quatre libellés annonçaient « 5 à 20 » et
+     « 5 à 50 » — au-delà de ce que l'abonnement autorise. Ils avaient été
+     corrigés dans audience.jsx sans l'être ici, et contenu.js REMPLACE le
+     code : l'écran continuait d'afficher les anciens chiffres. */
   "pour-qui.agences-de-taille-moyenne": {
-    fr: "Agences de taille moyenne",
-    en: "Mid-size practices",
+    fr: "Petites agences",
+    en: "Small practices",
   },
   "pour-qui.5-a-20-collaborateurs": {
-    fr: "5 à 20 collaborateurs",
-    en: "5 to 20 people",
+    fr: "2 à 4 collaborateurs",
+    en: "2 to 4 people",
   },
   "pour-qui.vue-agence-multi-projets-droits-par": {
     fr: "Vue agence, multi-projets, droits par profil, orchestrer une équipe sans tout micro-manager, en gardant vos process.",
     en: "Practice view, multi-project, per-role permissions, run a team without micro-managing, keeping your processes.",
   },
   "pour-qui.5-20-pers": {
-    fr: "5–20 pers.",
-    en: "5–20 people",
+    fr: "2–4 pers.",
+    en: "2–4 people",
   },
   "pour-qui.multi-projets": {
     fr: "Multi-projets",
@@ -275,8 +280,8 @@ window.ALBA_CONTENU = {
     en: "Practices",
   },
   "pour-qui.5-a-50-projets": {
-    fr: "5 à 50 projets",
-    en: "5 to 50 projects",
+    fr: "jusqu'à 30 projets",
+    en: "up to 30 projects",
   },
   "pour-qui.voir-la-demo-agence": {
     fr: "Voir la démo agence",
@@ -402,10 +407,9 @@ window.ALBA_CONTENU = {
     fr: "ALBA s'adresse aux professionnels de la maîtrise d'œuvre qui pilotent des projets à plusieurs voix, et qui ne peuvent plus se permettre de perdre du temps en coordination.",
     en: "ALBA is for design and engineering professionals who run projects with many voices, and can no longer afford to lose time on coordination.",
   },
-  "pour-qui.en-savoir": {
-    fr: "EN SAVOIR +",
-    en: "LEARN MORE +",
-  },
+  /* « EN SAVOIR + » était le même libellé sur les cinq cartes. Chacune porte
+     désormais le sien — « Voir la démo libéral », « Découvrir »… — écrit depuis
+     le début dans audience.jsx et jamais affiché. La clé générique part avec. */
 
   /* ——— Bénéfices chiffrés ——— */
   "benefices.du-temps-repris": {
@@ -965,6 +969,14 @@ window.ALBA_CONTENU = {
   "pied.agence": {
     fr: "Agence",
     en: "Company",
+  },
+  "pied.valeur-probante": {
+    fr: "Valeur probante",
+    en: "Evidential value",
+  },
+  "pied.co-traitants": {
+    fr: "Co-traitants & BET",
+    en: "Consultants & engineers",
   },
   "pied.a-propos": {
     fr: "À propos",

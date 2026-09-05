@@ -44,7 +44,12 @@
   grid-template-columns: repeat(5, 1fr);
   gap: 16px;
 }
+/* La carte est passée de <div> à <a> : sans ces trois lignes elle hériterait
+   du bleu de lien et d'un soulignement sur tout son contenu. */
 .aud-A-card {
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
   background: var(--surface);
   border: 1px solid var(--line-dark);
   border-radius: 16px;
@@ -56,6 +61,15 @@
 .aud-A-card:hover {
   transform: translateY(-6px);
   border-color: var(--accent-line);
+}
+/* Au clavier, le soulèvement seul ne suffit pas à dire où l'on se trouve. */
+.aud-A-card:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .aud-A-card, .aud-A-photo .photo-ph svg, .aud-A-foot svg { transition: none; }
+  .aud-A-card:hover { transform: none; }
 }
 .aud-A-photo {
   height: 240px;

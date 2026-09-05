@@ -11,6 +11,7 @@
    ne suivaient pas. */
 import http from 'node:http'; import fs from 'node:fs'; import path from 'node:path';
 import { chromium } from 'playwright-core';
+import { ROUTES } from '../outils/pages.mjs';
 const ROOT = path.resolve(new URL('.', import.meta.url).pathname, '..');
 const NOUVELLE = 'https://essai-de-bascule.example';
 const T = {'.html':'text/html','.css':'text/css','.js':'text/javascript','.jsx':'text/babel',
@@ -30,7 +31,7 @@ await new Promise(r=>srv.listen(8788,r));
 const b = await chromium.launch({executablePath: process.env.CHROMIUM_PATH || '/opt/pw-browsers/chromium-1194/chrome-linux/chrome'});
 const page = await b.newPage();
 let ko = 0;
-for (const route of ['/','/tarifs','/mentions-legales.html']) {
+for (const route of ROUTES) {
   await page.goto('http://localhost:8788'+route,{waitUntil:'load',timeout:30000});
   await page.waitForTimeout(400);
   const liens = await page.$$eval('a[href*="alba-studio.co"]', as => as.map(a=>a.getAttribute('href')));

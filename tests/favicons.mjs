@@ -22,6 +22,7 @@ import { chromium } from 'playwright-core';
 import fs from 'node:fs';
 import path from 'node:path';
 import { demarrer, ROOT } from './serveur.mjs';
+import { FICHIERS } from '../outils/pages.mjs';
 
 let echecs = 0;
 const ok = (bon, texte) => { console.log(`   ${bon ? '✅' : '❌'} ${texte}`); if (!bon) echecs++; };
@@ -125,7 +126,7 @@ const ATTENDUS = [
   '/images/favicon-192.png',
   '/images/apple-touch-icon.png',
 ];
-for (const f of ['index.html', 'Tarifs.html', 'mentions-legales.html']) {
+for (const f of FICHIERS) {
   const html = fs.readFileSync(path.join(ROOT, f), 'utf8');
   const declares = [...html.matchAll(/<link[^>]+rel="(?:icon|apple-touch-icon)"[^>]*>/g)].map((m) => m[0]);
   const href = (b) => (b.match(/href="([^"]+)"/) || [])[1];

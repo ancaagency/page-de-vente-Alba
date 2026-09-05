@@ -831,6 +831,8 @@ const Footer = () => (
                 se passait. « À propos » et « Manifeste » ont chacun une section
                 réelle sur l'accueil ; « Carrières » n'en a aucune, et lui
                 inventer une destination serait pire que de la retirer. */}
+            <li><a href="valeur-probante.html">{Txt("pied.valeur-probante", "Valeur probante", "Evidential value")}</a></li>
+            <li><a href="co-traitants.html">{Txt("pied.co-traitants", "Co-traitants & BET", "Consultants & engineers")}</a></li>
             <li><a href={versAccueil("#fondateur")}>{Txt("pied.a-propos", "À propos", "About")}</a></li>
             <li><a href={versAccueil("#manifeste")}>{Txt("pied.manifeste", "Manifeste", "Manifesto")}</a></li>
             <li><a href={versAccueil("#contact")}>Contact</a></li>

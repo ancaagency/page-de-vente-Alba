@@ -1268,6 +1268,10 @@ var Footer = function Footer() {
   }, "FAQ")))), /*#__PURE__*/React.createElement("div", {
     className: "foot-col"
   }, /*#__PURE__*/React.createElement("h5", null, Txt("pied.agence", "Agence", "Company")), /*#__PURE__*/React.createElement("ul", null, /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("a", {
+    href: "valeur-probante.html"
+  }, Txt("pied.valeur-probante", "Valeur probante", "Evidential value"))), /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("a", {
+    href: "co-traitants.html"
+  }, Txt("pied.co-traitants", "Co-traitants & BET", "Consultants & engineers"))), /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("a", {
     href: versAccueil("#fondateur")
   }, Txt("pied.a-propos", "À propos", "About"))), /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("a", {
     href: versAccueil("#manifeste")

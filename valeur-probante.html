@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>La valeur probante de vos décisions — ALBA Studio</title>
+  <meta name="description" content="Décisions horodatées, signées et archivées : ce qu'ALBA conserve, ce que ça vaut en cas de litige, et ce que ça ne couvre pas.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://www.alba-studio.co/valeur-probante">
+  <!-- Icônes du site.
+       Il n'y avait qu'une ligne ici : logo-alba.png, en 256x256. Google
+       affichait un globe gris à la place, et pour deux raisons cumulées :
+         · sa documentation exige un carré MULTIPLE DE 48 px (48, 96, 144...).
+           256 n'en est pas un ;
+         · beaucoup d'outils, et Google en second recours, ne cherchent qu'à
+           /favicon.ico, quelles que soient les balises. Il n'existait pas.
+       Les chemins sont ABSOLUS : une adresse d'icône doit être stable, or
+       « images/... » se résout relativement à la page qui la déclare.
+       Les fichiers sont fabriqués depuis logo-alba.png par outils/favicons.py. -->
+  <link rel="icon" href="/favicon.ico" sizes="32x32">
+  <link rel="icon" type="image/png" sizes="48x48" href="/images/favicon-48.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="/images/favicon-96.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/images/favicon-192.png">
+  <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+  <!-- Inter est hébergée par nous (voir styles.css, @font-face) : plus aucune
+       requête vers Google, donc plus aucune adresse IP de visiteur transmise.
+       Sur Mac, iPhone et iPad, la pile système sert SF Pro et ce fichier n'est
+       même pas téléchargé — un navigateur ne récupère que les polices qu'il
+       utilise réellement. -->
+  <link rel="preload" href="fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="sections.css">
+  <link rel="stylesheet" href="pages-editos.css">
+
+  <script src="vendor/react-18.3.1.js"></script>
+  <script src="vendor/react-dom-18.3.1.js"></script>
+  <script src="i18n.js"></script>
+  <!-- Textes de la page, modifiables sans toucher au code. Chargé après i18n.js,
+       qui définit T(). Si ce fichier est absent ou mal formé, la page retombe sur
+       les textes inscrits dans le code : aucune panne possible de ce côté. -->
+  <script src="contenu.js"></script>
+  <!-- Origine de l'application (SIGNUP_URL et CTA). Point unique de vérité. -->
+  <script src="config.js"></script>
+  <script src="consentement.js"></script>
+  <script src="pixel-facebook.js"></script>
+  <script src="analytics-google.js"></script>
+  <script src="analytics-cloudflare.js"></script>
+
+  <!-- FAQ-JSONLD:DEBUT — dérivé de contenu.js, ne pas modifier à la main -->
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Que comprend le projet gratuit ?","acceptedAnswer":{"@type":"Answer","text":"Un projet complet pour commencer : cockpit, décisions signées, messagerie, documents, matériauthèque, accès maître d'ouvrage et co-traitants. Aucune carte bleue demandée. Vous passez au tarif Studio quand vous créez votre deuxième projet, et tout ce que vous avez construit reste en place."}},{"@type":"Question","name":"Comment ALBA s'intègre à ma méthode actuelle ?","acceptedAnswer":{"@type":"Answer","text":"ALBA s'adapte à votre process, pas l'inverse. Vous configurez les phases (esquisse, APS, APD, permis, DCE, chantier), nous gérons les rappels, les jalons et la mémoire du projet. Aucune formation longue : la plupart des architectes sont opérationnels en moins d'une heure."}},{"@type":"Question","name":"Mes clients doivent-ils télécharger une application ?","acceptedAnswer":{"@type":"Answer","text":"Non. ALBA fonctionne entièrement dans le navigateur, sur ordinateur comme sur téléphone. Un lien, un mot de passe, vos maîtres d'ouvrage accèdent à leur cockpit en 30 secondes."}},{"@type":"Question","name":"Que se passe-t-il pour mes données si j'arrête ?","acceptedAnswer":{"@type":"Answer","text":"Elles sont à vous. À tout moment, vous exportez l'intégralité de vos projets (PDF, ZIP, CSV) en un clic. Vos archives papier-numérique restent lisibles 10 ans après."}},{"@type":"Question","name":"Les décisions sont-elles juridiquement valables ?","acceptedAnswer":{"@type":"Answer","text":"Chaque décision est horodatée, archivée et signée électroniquement (eIDAS, niveau simple) : l'auteur, la date et l'horodatage serveur sont conservés à titre de preuve. Pour un acte qui exige une signature avancée ou qualifiée, passez par votre voie habituelle."}},{"@type":"Question","name":"Puis-je inviter mon BET et mes co-traitants ?","acceptedAnswer":{"@type":"Answer","text":"Bien sûr. Les co-traitants accèdent gratuitement aux projets sur lesquels vous les invitez, avec le niveau de droits que vous définissez (lecture, commentaire, dépôt de pièces)."}},{"@type":"Question","name":"Combien de collaborateurs de mon agence sont inclus ?","acceptedAnswer":{"@type":"Answer","text":"Le tarif Studio inclut 1 collaborateur. Vous pouvez en ajouter jusqu'à 3 autres (4 par espace au maximum), à 15 €/mois HT chacun, ajustable à tout moment. Vos clients et co-traitants, eux, sont illimités et gratuits."}},{"@type":"Question","name":"Et pendant le chantier ?","acceptedAnswer":{"@type":"Answer","text":"ALBA vous suit sur site : comptes-rendus de visite, réserves photographiées et assignées par lot, diffusion automatique aux entreprises et au maître d'ouvrage. Chaque CR est signé et archivé, comme une décision."}},{"@type":"Question","name":"Quels formats de fichiers puis-je partager ?","acceptedAnswer":{"@type":"Answer","text":"Tous — PDF, DWG, IFC, images, vidéos, jusqu'à 100 Mo par fichier. Les plans PDF et les images s'ouvrent directement dans le navigateur : vos clients n'ont besoin d'aucun logiciel."}},{"@type":"Question","name":"Où sont hébergées mes données ?","acceptedAnswer":{"@type":"Answer","text":"En France, chez un hébergeur certifié ISO 27001. Chiffrement AES-256 au repos, TLS en transit, sauvegardes quotidiennes. Conformité RGPD native."}},{"@type":"Question","name":"Les prix affichés sont-ils hors taxes ?","acceptedAnswer":{"@type":"Answer","text":"Oui, tous les montants de cette page sont hors taxes. La TVA applicable est calculée au moment du paiement, selon votre pays et votre statut : 20 % pour une agence assujettie en France. Si vous disposez d'un numéro de TVA intracommunautaire, il vous sera demandé lors de la souscription. Votre facture est émise automatiquement après chaque prélèvement."}},{"@type":"Question","name":"Quel est le délai pour démarrer ?","acceptedAnswer":{"@type":"Answer","text":"Si vous voulez, vous démarrez aujourd'hui. La création de compte prend 3 minutes ; importer vos projets en cours prend en moyenne une demi-journée. On vous accompagne sur l'onboarding sans frais."}}]}</script>
+  <!-- FAQ-JSONLD:FIN -->
+</head>
+<body data-density="standard" data-theme="light" data-palette="studio" data-typo="sans">
+
+<div class="liseret-top"></div>
+
+<nav class="nav scrolled" id="nav">
+  <div class="container nav-inner">
+    <a href="index.html" class="brand">
+      <span class="brand-mark"><img src="images/logo-alba.png" alt="ALBA Studio"></span>
+      <span>ALBA <em style="font-style:italic; opacity:0.6;">Studio</em></span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html#fonctionnalites">Fonctionnalités</a>
+      <a href="index.html#pour-qui">Pour qui ?</a>
+      <a href="index.html#fondateur">Notre vision</a>
+      <a href="Tarifs.html">Tarif</a>
+    </div>
+    <div style="display:flex; align-items:center; gap:14px;">
+      <a href="https://app.alba-studio.co/auth" data-alba-login class="nav-login" id="nav-login">Se connecter</a>
+      <a href="https://app.alba-studio.co/inscription" data-alba-auth class="btn btn-primary" style="padding:9px 16px; font-size:13px;">Essayer gratuitement</a>
+    </div>
+  </div>
+</nav>
+
+<main>
+  <div class="edito">
+    <div class="edito-eyebrow">Pour les architectes</div>
+    <h1>Un arbitrage oral,<br><em>contesté un an plus tard.</em></h1>
+    <p class="edito-chapo">
+      Vous avez validé une teinte au téléphone, un décalage de cloison sur le
+      chantier, une substitution de matériau par SMS. Douze mois passent, une
+      réserve tombe, et personne ne se souvient de la même chose. Cette page
+      explique ce qu'ALBA conserve, ce que ça vaut — et ce que ça ne vaut pas.
+    </p>
+  </div>
+
+  <div class="edito-corps">
+
+    <section id="ce-qui-est-conserve">
+      <h2>Ce qui est conservé, à chaque décision</h2>
+      <p>
+        Une décision dans ALBA n'est pas un message dans un fil. C'est un objet
+        daté, qui porte avec lui de quoi être relu bien après.
+      </p>
+      <ul class="edito-liste">
+        <li><b>L'auteur</b> — qui a validé, avec son rôle sur le projet à ce moment-là.</li>
+        <li><b>L'horodatage serveur</b> — la date et l'heure enregistrées par nos serveurs, pas celles de l'appareil de l'auteur, qui se règlent à la main.</li>
+        <li><b>Le contenu exact</b> de ce qui a été soumis, tel qu'il a été soumis.</li>
+        <li><b>Les pièces jointes</b> versionnées&nbsp;: le plan validé reste attaché à la validation, et non à la dernière version du plan.</li>
+        <li><b>Le fil qui a précédé</b> — les questions, les réserves, les allers-retours qui ont mené à l'arbitrage.</li>
+      </ul>
+      <p>
+        Ce dernier point est celui qu'on sous-estime. Une validation isolée
+        prouve peu de choses&nbsp;; une validation accompagnée de la question à
+        laquelle elle répond raconte une décision.
+      </p>
+    </section>
+
+    <section id="signature">
+      <h2>La signature électronique, et ses limites</h2>
+      <p>
+        Les décisions sont signées électroniquement au sens du règlement
+        européen eIDAS, <b>au niveau simple</b>. Concrètement&nbsp;: l'identité
+        du signataire, la date et l'intégrité du contenu sont établies et
+        conservées à titre de preuve.
+      </p>
+      <div class="edito-encart">
+        <h3>Ce qu'ALBA ne fait pas, et il vaut mieux le savoir avant</h3>
+        <p>
+          Une signature <b>avancée</b> ou <b>qualifiée</b> — celle qu'exigent
+          certains actes, notamment devant notaire ou pour des marchés publics
+          formalisés — suppose un dispositif de certification que nous ne
+          fournissons pas. Pour ces actes-là, passez par votre voie habituelle.
+        </p>
+        <p>
+          ALBA couvre la matière quotidienne&nbsp;: les arbitrages de conception,
+          les validations client, les visas, les comptes rendus de chantier.
+          C'est-à-dire, très exactement, ce qui se perd aujourd'hui.
+        </p>
+      </div>
+      <p>
+        Nous préférons le dire ici plutôt que de vous le laisser découvrir le
+        jour où ça compte. Un outil qui promettrait la valeur d'un acte
+        authentique vous exposerait davantage qu'il ne vous protège.
+      </p>
+    </section>
+
+    <section id="devant-un-tiers">
+      <h2>Ce que ça change en cas de litige</h2>
+      <p>
+        En droit français, la preuve d'un fait juridique est libre&nbsp;: un
+        juge apprécie les éléments qu'on lui présente. Ce qui fait la différence
+        n'est donc pas un tampon, c'est la <b>cohérence et l'antériorité</b> de
+        ce que vous produisez.
+      </p>
+      <p>
+        Un fil de messages exporté d'un téléphone se conteste facilement&nbsp;:
+        rien n'y empêche une suppression, une modification, une date d'appareil
+        décalée. Un enregistrement horodaté par un tiers, inscrit dans une suite
+        continue et exportable dans son ensemble, se conteste beaucoup moins.
+      </p>
+      <div class="edito-encart">
+        <p>
+          Nous ne vous dirons pas qu'ALBA «&nbsp;gagne un procès&nbsp;». Nous
+          vous disons que la plupart des litiges de maîtrise d'œuvre ne vont
+          jamais jusque-là&nbsp;: ils s'éteignent le jour où quelqu'un rouvre la
+          décision datée, signée, avec le plan qui l'accompagnait. C'est la
+          discussion qui n'a pas lieu qui vous fait gagner du temps.
+        </p>
+      </div>
+    </section>
+
+    <section id="dix-ans">
+      <h2>Dix ans, c'est la vraie échéance</h2>
+      <p>
+        La garantie décennale ne se soucie pas de votre abonnement. Vos archives
+        doivent rester lisibles longtemps après la fin du chantier, et
+        éventuellement après ALBA.
+      </p>
+      <ul class="edito-liste">
+        <li><b>Export intégral</b>, à tout moment, en un clic&nbsp;: PDF, ZIP, CSV.</li>
+        <li>Les formats sont ouverts et lisibles sans nous&nbsp;: un PDF s'ouvre encore dans dix ans, un fil de messagerie propriétaire non.</li>
+        <li>L'export contient les décisions <b>avec</b> leurs pièces et leurs horodatages, pas seulement une liste.</li>
+        <li>Vos données restent les vôtres, y compris si vous partez&nbsp;: c'est écrit dans les conditions, pas seulement sur cette page.</li>
+      </ul>
+    </section>
+
+    <section id="au-quotidien">
+      <h2>Sans rien changer à votre façon de travailler</h2>
+      <p>
+        La traçabilité ne vaut que si elle ne coûte rien à produire. Personne ne
+        remplit un registre le soir. Dans ALBA, l'archive est le
+        sous-produit&nbsp;: vous demandez une validation parce que vous en avez
+        besoin, et la preuve se constitue toute seule.
+      </p>
+      <p>
+        Vos co-traitants et vos maîtres d'ouvrage participent gratuitement — ils
+        n'ont ni abonnement à prendre ni logiciel à installer, ce qui est la
+        condition pour qu'ils jouent le jeu.
+        <a href="co-traitants.html">Voir la page qui leur est destinée</a>.
+      </p>
+    </section>
+
+    <section class="edito-fin">
+      <p>Un espace d'essai complet, ouvert 7 jours, sans inscription ni carte bancaire.</p>
+      <a href="index.html#pricing" class="btn btn-primary" style="padding:11px 20px; font-size:14px;">Voir les tarifs</a>
+    </section>
+
+  </div>
+</main>
+
+
+<div id="footer-root">
+<!-- PRERENDU:DEBUT — produit par outils/prerendre.mjs, ne pas modifier -->
+<footer class="foot"><div class="container"><div class="foot-top"><div><div class="foot-brand">ALBA Studio</div><div class="foot-tag">La plateforme tout-en-un des architectes indépendants. Conçue à Lyon, pensée pour vous.</div><span class="liseret-under"></span><div class="foot-apps"><h5>L'app mobile &amp; tablette</h5><div class="store-badges dark "><a href="index.html#contact" class="store-badge" aria-label="App Store"><svg viewBox="0 0 24 24" width="19" height="19" fill="currentColor" aria-hidden="true"><path d="M16.4 12.7c0-2.2 1.8-3.3 1.9-3.4-1-1.5-2.6-1.7-3.2-1.7-1.4-.1-2.7.8-3.3.8-.7 0-1.7-.8-2.8-.8-1.5 0-2.8.8-3.6 2.1-1.5 2.6-.4 6.5 1.1 8.6.7 1 1.6 2.2 2.7 2.2 1.1 0 1.5-.7 2.8-.7 1.3 0 1.6.7 2.8.7 1.2 0 1.9-1.1 2.6-2.1.8-1.2 1.2-2.4 1.2-2.4s-2.2-.9-2.2-3.3zM14.3 5.5c.6-.7 1-1.7.9-2.7-.9 0-2 .6-2.6 1.3-.6.6-1.1 1.7-.9 2.6 1 .1 2-.5 2.6-1.2z"></path></svg><span><i>Télécharger sur</i><b>App Store</b></span></a><a href="index.html#contact" class="store-badge" aria-label="Google Play"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="#34A853" d="M4.3 21.2c-.2-.2-.3-.5-.3-.9l8.3-8.3 2.6 2.6-9.8 5.6c-.3.2-.6.2-.8 0z"></path><path fill="#EA4335" d="M14.9 14.6 12.3 12l2.6-2.6 3.3 1.9c.7.4.7 1.4 0 1.8l-3.3 1.5z"></path><path fill="#FBBC04" d="M4.3 2.8c.2-.2.5-.2.8 0l9.8 5.6-2.6 2.6L4 3.7c0-.4.1-.7.3-.9z"></path><path fill="#4285F4" d="M4 3.7 12.3 12 4 20.3c-.1-.2-.2-.5-.2-.8V4.5c0-.3.1-.6.2-.8z"></path></svg><span><i>Disponible sur</i><b>Google Play</b></span></a><p class="store-note">L'application accompagne votre compte. La souscription et la gestion de l'abonnement se font depuis le web.</p></div></div></div><div class="foot-col"><h5>Produit</h5><ul><li><a href="index.html#fonctionnalites">Fonctionnalités</a></li><li><a href="index.html#devices">La plateforme</a></li><li><a href="Tarifs.html">Tarifs</a></li><li><a href="index.html#faq">FAQ</a></li></ul></div><div class="foot-col"><h5>Agence</h5><ul><li><a href="valeur-probante.html">Valeur probante</a></li><li><a href="co-traitants.html">Co-traitants &amp; BET</a></li><li><a href="index.html#fondateur">À propos</a></li><li><a href="index.html#manifeste">Manifeste</a></li><li><a href="index.html#contact">Contact</a></li></ul></div><div class="foot-col"><h5>Légal</h5><ul><li><a href="mentions-legales.html">Mentions légales</a></li><li><a href="https://app.alba-studio.co/terms">CGU &amp; CGV</a></li><li><a href="https://app.alba-studio.co/privacy-policy">Politique RGPD</a></li><li><a href="index.html#securite">Sécurité</a></li></ul></div></div><div class="foot-bot"><div>© 2026 ALBA STUDIO — TOUS DROITS RÉSERVÉS</div><div>FAIT À LYON · AVEC SOIN <span class="fr-flag" title="Made in France"></span></div></div></div></footer>
+<!-- PRERENDU:FIN -->
+
+</div>
+
+<script src="components.js"></script>
+<script src="sections.js"></script>
+<script src="page-pied.js"></script>
+</body>
+</html>

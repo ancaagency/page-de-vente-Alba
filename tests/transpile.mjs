@@ -18,9 +18,10 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { listerSources, attendu } from '../outils/transpiler.mjs';
+import { FICHIERS } from '../outils/pages.mjs';
 
 const ROOT = path.resolve(new URL('.', import.meta.url).pathname, '..');
-const PAGES = ['index.html', 'Tarifs.html', 'mentions-legales.html'];
+const PAGES = FICHIERS;
 
 let echecs = 0;
 const ok = (bon, texte) => { console.log(`   ${bon ? '✅' : '❌'} ${texte}`); if (!bon) echecs++; };

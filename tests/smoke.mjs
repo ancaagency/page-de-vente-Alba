@@ -14,6 +14,7 @@ import { chromium } from 'playwright-core';
 import { demarrer, ROOT } from './serveur.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
+import { ROUTES } from '../outils/pages.mjs';
 
 const server = await demarrer(8790);
 
@@ -58,6 +59,8 @@ for (const [route, attendus] of [
   ['/tarifs', [['.pricing-card', 'carte tarifaire'], ['#securite', 'bloc Sécurité'], ['footer', 'pied de page']]],
   // Cette page monte son pied de page via React : sans lui, les liens
   // légaux et le contact disparaissent sans que rien ne le signale.
+  ['/co-traitants.html', [['.edito', 'en-tête'], ['#qui-paie', 'tableau qui paie quoi'], ['footer', 'pied de page'], ['.foot-col', 'colonnes du pied']]],
+  ['/valeur-probante.html', [['.edito', 'en-tête'], ['#signature', 'section signature'], ['footer', 'pied de page'], ['.foot-col', 'colonnes du pied']]],
   ['/mentions-legales.html', [['.legal-wrap', 'corps des mentions'], ['footer', 'pied de page'], ['.foot-col', 'colonnes du pied']]],
 ]) {
   const page = await browser.newPage();
@@ -196,7 +199,7 @@ console.log('\n===== la barre rend-elle pareil sur toutes les pages ? =====');
   })()`;
 
   const releves = {};
-  for (const route of ['/', '/tarifs', '/mentions-legales.html']) {
+  for (const route of ROUTES) {
     const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
     await page.goto('http://localhost:8790' + route, { waitUntil: 'load', timeout: 40000 });
     await page.waitForTimeout(3500);
@@ -210,7 +213,12 @@ console.log('\n===== la barre rend-elle pareil sur toutes les pages ? =====');
     valeurs.forEach((v, i) => {
       // La page des mentions légales n'a pas de bascule de langue : son absence
       // y est normale, et seule une DIVERGENCE de style compte.
-      const absentPartout = v.includes('ABSENT') && route === '/mentions-legales.html' && v.startsWith('.lang-toggle');
+      /* La bascule de langue ne figure que sur l'accueil et /tarifs. Son
+         absence est normale sur les pages au corps statique — l'exception
+         visait nommément les mentions légales, elle valait donc pour une page
+         et pas pour les deux qui ont suivi. */
+      const sansBascule = route !== '/' && route !== '/tarifs';
+      const absentPartout = v.includes('ABSENT') && sansBascule && v.startsWith('.lang-toggle');
       const identique = v === reference[i] || absentPartout;
       console.log(`   ${identique ? '✅' : '❌'} ${route} — ${v.slice(0, 96)}`);
       if (!identique) {
@@ -298,7 +306,7 @@ console.log('\n===== « Tester en 1 clic » atteint-il le simulateur ? =====');
  * ───────────────────────────────────────────────────────────────────────────── */
 console.log('\n===== l\'essai express ne peut pas être déclenché par un robot =====');
 {
-  for (const route of ['/', '/tarifs', '/mentions-legales.html']) {
+  for (const route of ROUTES) {
     const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
     await page.goto('http://localhost:8790' + route, { waitUntil: 'load', timeout: 40000 });
     await page.waitForTimeout(4000);
@@ -317,6 +325,79 @@ console.log('\n===== l\'essai express ne peut pas être déclenché par un robot
     console.log(`   ${tousEnPost ? '✅' : '❌'} ${route} — ${formes.length} formulaire(s) d'essai, tous en POST`);
     if (!tousEnPost) echecs++;
 
+    await page.close();
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+ * Du texte de la couleur de son fond
+ *
+ * PANNE RÉELLE, sur /co-traitants et /valeur-probante. Le bouton final portait
+ * bien son libellé — « Nous écrire » était dans le DOM, à la bonne taille, à la
+ * bonne place — et il était doré sur fond doré. Invisible.
+ *
+ * Cause : `.edito-corps a` vaut 0,1,1 en spécificité et battait `.btn-primary`
+ * qui vaut 0,1,0. Une règle de page repeignait le texte d'un composant.
+ *
+ * Ça ne se voit dans aucun contrôle de structure : l'élément existe, son texte
+ * est correct, sa position est correcte. Il faut COMPARER la couleur du texte à
+ * celle de la surface derrière lui — ce que fait ce contrôle, sur tout ce qui
+ * porte du texte, sur toutes les pages.
+ * ───────────────────────────────────────────────────────────────────────────── */
+console.log('\n===== aucun texte de la couleur de son fond =====');
+{
+  for (const route of ROUTES) {
+    const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+    await page.goto('http://localhost:8790' + route, { waitUntil: 'load', timeout: 40000 });
+    await page.waitForTimeout(5000);
+    const invisibles = await page.evaluate(() => {
+      const nombres = (c) => (c.match(/[\d.]+/g) || []).map(Number);
+      /* Le fond réellement vu derrière un texte, alpha COMPOSÉ.
+         Première version : on prenait le premier ancêtre coloré et on ignorait
+         son alpha. Une pastille dorée à 10 % sur fond clair était donc lue
+         comme du doré plein, et six libellés parfaitement lisibles étaient
+         signalés invisibles. Un contrôle qui crie au loup finit ignoré : il
+         faut composer les couches, comme le fait le navigateur. */
+      const fondEffectif = (el) => {
+        const couches = [];
+        for (let n = el; n && n !== document.documentElement; n = n.parentElement) {
+          const [r, g, b, a = 1] = nombres(getComputedStyle(n).backgroundColor);
+          if (a === 0) continue;
+          couches.push([r, g, b, a]);
+          if (a === 1) break;
+        }
+        const [br, bg, bb] = nombres(getComputedStyle(document.body).backgroundColor);
+        let fond = couches.length && couches[couches.length - 1][3] === 1
+          ? couches.pop().slice(0, 3) : [br, bg, bb];
+        // De la plus profonde vers la plus proche du texte.
+        for (let i = couches.length - 1; i >= 0; i--) {
+          const [r, g, b, a] = couches[i];
+          fond = [0, 1, 2].map((k) => Math.round([r, g, b][k] * a + fond[k] * (1 - a)));
+        }
+        return fond;
+      };
+      const trouves = [];
+      for (const el of document.querySelectorAll('a, button, p, h1, h2, h3, li, td, th, span')) {
+        const t = (el.textContent || '').trim();
+        if (!t || el.children.length) continue;          // que les feuilles de texte
+        const st = getComputedStyle(el);
+        if (st.display === 'none' || st.visibility === 'hidden' || st.opacity === '0') continue;
+        const r = el.getBoundingClientRect();
+        if (r.width < 2 || r.height < 2) continue;
+        const [tr, tg, tb] = nombres(st.color);
+        const [fr, fg, fb] = fondEffectif(el);
+        // Écart total sur les trois canaux. En dessous de 24, l'œil ne
+        // distingue plus rien : c'est du texte perdu, pas du texte discret.
+        const ecart = Math.abs(tr - fr) + Math.abs(tg - fg) + Math.abs(tb - fb);
+        if (ecart < 24) {
+          trouves.push(`« ${t.slice(0, 32)} » ${st.color} sur rgb(${fondEffectif(el).join(', ')})`);
+        }
+      }
+      return [...new Set(trouves)].slice(0, 6);
+    });
+    verif(invisibles.length === 0,
+       `${route.padEnd(24)} ${invisibles.length === 0 ? 'tout est lisible' : 'TEXTE INVISIBLE'}`);
+    invisibles.forEach((t) => console.log(`      ${t}`));
     await page.close();
   }
 }
@@ -377,7 +458,7 @@ console.log('\n===== le titre ne se dégrade pas au changement de langue =====')
  * ───────────────────────────────────────────────────────────────────────────── */
 console.log('\n===== les polices restent chez nous =====');
 {
-  for (const route of ['/', '/tarifs', '/mentions-legales.html']) {
+  for (const route of ROUTES) {
     const ctx = await browser.newContext({ viewport: { width: 1280, height: 900 } });
     const google = [], woff = [];
     ctx.on('request', (r) => {

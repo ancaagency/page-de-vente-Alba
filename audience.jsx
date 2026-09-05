@@ -1,5 +1,14 @@
 /* Audience — 3 variants A / B / C, switchable via Tweak, bilingual */
 
+/* ⚠️ CES LIBELLÉS DOIVENT RESTER D'ACCORD AVEC LA CARTE TARIFAIRE.
+   La carte « agences » annonçait « 5 à 20 collaborateurs » et « 5 à 50 projets »
+   alors que l'abonnement plafonne à 4 collaborateurs par espace et que le plus
+   gros palier (300 Go) tient environ 30 projets. Une agence de douze personnes
+   lisait ça, s'abonnait, découvrait le mur. C'est le genre d'écart qui finit en
+   remboursement — et qui ne se voit pas, parce que les deux textes vivent dans
+   deux fichiers différents.
+   Les chiffres viennent de <Pricing/> (sections.jsx) : 1 collaborateur inclus,
+   4 maximum, et projectsFor(go) = go / 10. */
 const getAudienceData = () => [
   {
     num: "01",
@@ -11,17 +20,19 @@ const getAudienceData = () => [
     tone: "stone",
     meta: [Txt("pour-qui.independants", "Indépendants", "Independents"), Txt("pour-qui.1-a-3-projets", "1 à 3 projets", "1 to 3 projects")],
     cta: Txt("pour-qui.voir-la-demo-liberal", "Voir la démo libéral", "See the solo demo"),
+    lien: "#pricing",
   },
   {
     num: "02",
     icon: "users",
-    h: Txt("pour-qui.agences-de-taille-moyenne", "Agences de taille moyenne", "Mid-size practices"),
-    sub: Txt("pour-qui.5-a-20-collaborateurs", "5 à 20 collaborateurs", "5 to 20 people"),
+    h: Txt("pour-qui.agences-de-taille-moyenne", "Petites agences", "Small practices"),
+    sub: Txt("pour-qui.5-a-20-collaborateurs", "2 à 4 collaborateurs", "2 to 4 people"),
     p: Txt("pour-qui.vue-agence-multi-projets-droits-par", "Vue agence, multi-projets, droits par profil, orchestrer une équipe sans tout micro-manager, en gardant vos process.", "Practice view, multi-project, per-role permissions, run a team without micro-managing, keeping your processes."),
-    tags: [Txt("pour-qui.5-20-pers", "5–20 pers.", "5–20 people"), Txt("pour-qui.multi-projets", "Multi-projets", "Multi-project")],
+    tags: [Txt("pour-qui.5-20-pers", "2–4 pers.", "2–4 people"), Txt("pour-qui.multi-projets", "Multi-projets", "Multi-project")],
     tone: "sand",
-    meta: [Txt("pour-qui.agences", "Agences", "Practices"), Txt("pour-qui.5-a-50-projets", "5 à 50 projets", "5 to 50 projects")],
+    meta: [Txt("pour-qui.agences", "Agences", "Practices"), Txt("pour-qui.5-a-50-projets", "jusqu'à 30 projets", "up to 30 projects")],
     cta: Txt("pour-qui.voir-la-demo-agence", "Voir la démo agence", "See the practice demo"),
+    lien: "#pricing",
   },
   {
     num: "03",
@@ -33,6 +44,7 @@ const getAudienceData = () => [
     tone: "night",
     meta: [Txt("pour-qui.moe-generaliste", "MOE généraliste", "General PM"), Txt("pour-qui.pluri-disciplines", "Pluri-disciplines", "Multi-discipline")],
     cta: Txt("pour-qui.decouvrir", "Découvrir", "Learn more"),
+    lien: "valeur-probante.html",
   },
   {
     num: "04",
@@ -44,6 +56,7 @@ const getAudienceData = () => [
     tone: "forest",
     meta: [Txt("pour-qui.bet-str", "BET STR", "Structural"), Txt("pour-qui.plans-exe", "Plans EXE", "Shop drawings")],
     cta: Txt("pour-qui.decouvrir-2", "Découvrir", "Learn more"),
+    lien: "co-traitants.html",
   },
   {
     num: "05",
@@ -55,6 +68,7 @@ const getAudienceData = () => [
     tone: "terracotta",
     meta: [Txt("pour-qui.bet-fluides-2", "BET fluides", "MEP"), Txt("pour-qui.multi-lots", "Multi-lots", "Multi-trade")],
     cta: Txt("pour-qui.decouvrir-3", "Découvrir", "Learn more"),
+    lien: "co-traitants.html",
   },
 ];
 
@@ -71,7 +85,14 @@ const AudienceHead = () => (
 const AudienceA = () => (
   <Reveal className="aud-A">
     {getAudienceData().map((c, i) => (
-      <div key={i} className="aud-A-card">
+      /* La carte est un LIEN, pas un <div>. Elle en avait déjà toute
+         l'apparence — « EN SAVOIR + », une flèche dans un rond, un
+         soulèvement au survol — sans mener nulle part. Cinq fausses
+         affordances, ce qui est pire qu'un lien mort : le visiteur s'y
+         reprend à deux fois avant de conclure que le site est cassé.
+         Le libellé vient de `c.cta`, écrit depuis le début et jamais
+         affiché : « Voir la démo libéral », « Découvrir »… */
+      <a key={i} className="aud-A-card" href={c.lien}>
         <div className="aud-A-photo">
           <PhotoPlaceholder tone={c.tone} ratio="4/3" label=""/>
           <span className="aud-A-num">{c.num} — {c.sub.split(" · ")[0].toUpperCase()}</span>
@@ -83,11 +104,11 @@ const AudienceA = () => (
             {c.tags.map((t, j) => <span key={j}>{t}</span>)}
           </div>
           <div className="aud-A-foot">
-            <span>{Txt("pour-qui.en-savoir", "EN SAVOIR +", "LEARN MORE +")}</span>
+            <span>{c.cta}</span>
             <Icon name="arrow-up-right" size={14}/>
           </div>
         </div>
-      </div>
+      </a>
     ))}
   </Reveal>
 );

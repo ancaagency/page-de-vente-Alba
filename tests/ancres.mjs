@@ -25,6 +25,7 @@
  */
 import { chromium } from 'playwright-core';
 import { demarrer } from './serveur.mjs';
+import { ROUTES } from '../outils/pages.mjs';
 
 let echecs = 0;
 const ok = (bon, texte) => { console.log(`   ${bon ? '✅' : '❌'} ${texte}`); if (!bon) echecs++; };
@@ -45,7 +46,7 @@ const ancresAccueil = new Set(await page0.evaluate(() =>
 await page0.close();
 console.log(`\n===== ancres de l'accueil : ${ancresAccueil.size} =====`);
 
-for (const route of ['/', '/tarifs', '/mentions-legales.html']) {
+for (const route of ROUTES) {
   const page = await navigateur.newPage({ viewport: { width: 1280, height: 900 } });
   await page.goto('http://localhost:8949' + route, { waitUntil: 'load', timeout: 40000 });
   await page.waitForTimeout(6000);

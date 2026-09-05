@@ -83,4 +83,10 @@
 # Les mentions légales, elles, n'existent nulle part ailleurs : c'est la vitrine
 # qui les héberge.
 /mentions-legales /mentions-legales.html   200
+
+## --- Pages de fond, liées depuis le pied de page ---------------------------
+# Réécritures (200) et non redirections : l'adresse affichée reste propre, et
+# c'est elle qui figure en canonique dans chaque page.
+/co-traitants     /co-traitants.html       200
+/valeur-probante  /valeur-probante.html    200
 /legal-notice     /mentions-legales.html   200

@@ -62,15 +62,14 @@ try {
   process.exit(2);
 }
 
+import { PAGES } from './pages.mjs';
+
 const DEBUT = '<!-- PRERENDU:DEBUT — produit par outils/prerendre.mjs, ne pas modifier -->';
 const FIN = '<!-- PRERENDU:FIN -->';
 
-/** page → route servie, et identifiant du conteneur à instantanéiser. */
-export const PAGES = [
-  { fichier: 'index.html', route: '/', racine: 'app' },
-  { fichier: 'Tarifs.html', route: '/tarifs', racine: 'app' },
-  { fichier: 'mentions-legales.html', route: '/mentions-legales.html', racine: 'footer-root' },
-];
+/* La liste vit dans outils/pages.mjs, sans dépendance, pour que les contrôles
+   qui ne pilotent aucun navigateur puissent l'importer eux aussi. */
+export { PAGES };
 
 /** Retire un instantané existant, pour que l'opération soit idempotente. */
 export function sansPrerendu(html) {

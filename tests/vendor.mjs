@@ -35,6 +35,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
+import { FICHIERS } from '../outils/pages.mjs';
 
 const ROOT = path.resolve(new URL('.', import.meta.url).pathname, '..');
 const DIR = path.join(ROOT, 'vendor');
@@ -82,7 +83,7 @@ for (const [nom, attendue] of attendues) {
  * qui redésignerait unpkg remettrait l'adresse IP du visiteur en circulation,
  * et le contrôle d'empreinte ci-dessus continuerait de passer sans rien voir. */
 console.log('\n===== les pages ne rappellent plus de CDN =====');
-for (const page of ['index.html', 'Tarifs.html', 'mentions-legales.html']) {
+for (const page of FICHIERS) {
   const html = fs.readFileSync(path.join(ROOT, page), 'utf8');
   const cdn = [...html.matchAll(/<script[^>]+src="(https?:\/\/[^"]+)"/g)].map((m) => m[1]);
   ok(cdn.length === 0, `${page.padEnd(22)} aucun script distant${cdn.length ? ` — ${cdn.join(', ')}` : ''}`);
