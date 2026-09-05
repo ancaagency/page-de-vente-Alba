@@ -139,6 +139,100 @@ console.log('\n===== la barre de navigation et le menu mobile =====');
   await page.close();
 }
 
+/* ─────────────────────────────────────────────────────────────────────────────
+ * ARRIVER SUR L'ANCRE, PAS SEULEMENT CLIQUER DESSUS
+ *
+ * Le contrôle ci-dessus vérifie que la cible existe, et qu'un CLIC depuis
+ * l'accueil atterrit bien. Il ne disait rien du cas qui a réellement cassé :
+ * l'ARRIVÉE par l'adresse. « À propos » dans le pied de page de /tarifs, des
+ * mentions légales ou des deux pages de fond vaut `index.html#fondateur` — une
+ * vraie navigation, suivie d'un saut au fragment.
+ *
+ * Mesuré avant correction, à 390 px : arrivée sur index.html#fondateur à
+ * 2 293 px, section à 15 671 px. Treize mille pixels. Sur index.html#faq,
+ * treize mille huit cents. Sur index.html#securite, on restait à zéro.
+ *
+ * La cause est le calendrier, pas l'ancre : le navigateur saute dès l'analyse
+ * du HTML prérendu, puis React monte, les images arrivent et GSAP épingle —
+ * la page triple de hauteur et la cible s'en va. Le correctif vit en fin de
+ * page-accueil.jsx : il reprend la cible tant qu'elle bouge.
+ *
+ * Ce contrôle-ci est celui qui a manqué. Il ouvre chaque fragment du pied de
+ * page comme un visiteur le ferait, aux deux largeurs, et exige que la section
+ * visée soit à l'écran.
+ * ───────────────────────────────────────────────────────────────────────────── */
+console.log("\n===== arriver directement sur index.html#ancre =====");
+{
+  const FRAGMENTS = ['fonctionnalites', 'devices', 'faq', 'fondateur', 'manifeste', 'contact', 'securite'];
+  for (const vue of [{ w: 390, h: 844, mobile: true }, { w: 1280, h: 900, mobile: false }]) {
+    for (const frag of FRAGMENTS) {
+      const page = await navigateur.newPage({
+        viewport: { width: vue.w, height: vue.h },
+        isMobile: vue.mobile, hasTouch: vue.mobile,
+      });
+      await page.goto(`http://localhost:8949/index.html#${frag}`, { waitUntil: 'load', timeout: 40000 });
+      /* Le rideau d'intro dure ~2,4 s, la correction s'arrête au plus tard à
+         6 s : on laisse la page finir de se poser avant de juger. */
+      await page.waitForTimeout(8000);
+      const r = await page.evaluate((f) => {
+        const el = document.getElementById(f);
+        if (!el) return null;
+        const b = el.getBoundingClientRect();
+        return { haut: Math.round(b.top), bas: Math.round(b.bottom), ecran: window.innerHeight };
+      }, frag);
+      if (!r) { ok(false, `${vue.w}px  #${frag} : section absente`); await page.close(); continue; }
+      /* « À l'écran » se juge sur le haut de la section : elle doit être posée
+         juste sous la barre fixe, pas seulement quelque part dans le champ. */
+      const bon = r.haut >= -4 && r.haut < 220;
+      ok(bon, `${String(vue.w).padStart(4)}px  #${frag.padEnd(16)} haut de section à ${String(r.haut).padStart(6)} px de l'écran`);
+      await page.close();
+    }
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+ * ET AUCUN LIEN DU PIED DE PAGE NE DOIT ÊTRE RECOUVERT
+ *
+ * Deuxième moitié de la même panne. Sur téléphone, la pile de notifications
+ * barre l'écran sur toute sa largeur, de 70 à 274 px du haut. En bas de
+ * l'accueil, trois liens du pied de page passaient dessous : on appuie, on
+ * touche la notification, il ne se passe rien — et la notification étant en
+ * haut de l'écran, on ne fait pas le rapprochement.
+ *
+ * `elementFromPoint` dit ce qui reçoit réellement l'appui. C'est la seule
+ * mesure qui vaille : le lien est bien dans le document, bien visible, et
+ * pourtant hors d'atteinte.
+ * ───────────────────────────────────────────────────────────────────────────── */
+console.log("\n===== le pied de page reçoit vraiment les appuis =====");
+{
+  const page = await navigateur.newPage({
+    viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true,
+  });
+  await page.goto('http://localhost:8949/', { waitUntil: 'load', timeout: 40000 });
+  /* On descend comme un doigt le ferait : c'est le passage devant #pricing qui
+     déclenche la notification contextuelle. Un scrollTo direct ne la lèverait
+     pas, et le test serait vert sans rien prouver. */
+  for (let i = 0; i < 40; i++) { await page.mouse.wheel(0, 900); await page.waitForTimeout(120); }
+  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+  await page.waitForTimeout(1500);
+
+  const bloques = await page.evaluate(() => {
+    const out = [];
+    for (const a of document.querySelectorAll('.foot a')) {
+      const r = a.getBoundingClientRect();
+      if (!r.width || !r.height) continue;
+      const y = r.top + r.height / 2;
+      if (y <= 0 || y >= window.innerHeight) continue;   // hors écran : rien à dire
+      const dessus = document.elementFromPoint(r.left + r.width / 2, y);
+      if (dessus && (dessus === a || a.contains(dessus) || dessus.contains(a))) continue;
+      out.push(`« ${a.textContent.trim()} » recouvert par <${dessus ? dessus.tagName.toLowerCase() : '?'}${dessus && dessus.className ? '.' + String(dessus.className).split(' ')[0] : ''}>`);
+    }
+    return out;
+  });
+  ok(bloques.length === 0, `aucun lien du pied de page recouvert${bloques.length ? ` — ${bloques.join(' ; ')}` : ''}`);
+  await page.close();
+}
+
 await navigateur.close();
 srv.close();
 console.log(`\n${echecs ? `❌ ${echecs} problème(s)` : '✅ tout est vert'}`);

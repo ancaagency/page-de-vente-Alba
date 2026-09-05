@@ -31,6 +31,11 @@
 }
 .notif.leaving {
   animation: notif-out .45s cubic-bezier(.5,0,.75,0) both;
+  /* L'animation se termine à opacité 0 et le remplissage `both` l'y maintient :
+     pendant les 450 ms qui séparent la disparition du retrait effectif du
+     document, la notification est invisible ET cliquable. Elle avale alors les
+     appuis destinés à ce qu'il y a dessous, sans que rien ne l'explique. */
+  pointer-events: none;
 }
 @keyframes notif-in {
   from { opacity: 0; transform: translateX(60px) scale(0.94); }

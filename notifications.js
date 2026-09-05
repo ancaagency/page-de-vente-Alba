@@ -53,9 +53,15 @@ var Notifications = function Notifications(_ref) {
       });
     }, 450);
   };
+
+  /* Vrai dès que le pied de page est à l'écran. Voir le commentaire de l'effet
+     plus bas : une notification qui recouvre le pied de page rend ses liens
+     inatteignables. */
+  var piedVisibleRef = React.useRef(false);
   var notify = React.useCallback(function (key, title, body) {
     var opts = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
     if (shownRef.current[key]) return;
+    if (piedVisibleRef.current) return;
     shownRef.current[key] = true;
     var id = ++idRef.current;
     setToasts(function (t) {
@@ -116,6 +122,49 @@ var Notifications = function Notifications(_ref) {
       });
     };
   }, [notify, lang]);
+
+  /* ==========================================================================
+     LE PIED DE PAGE CHASSE LES NOTIFICATIONS
+     ==========================================================================
+     Sur téléphone, la pile de notifications occupe `calc(100vw - 32px)` : elle
+     barre l'écran sur toute sa largeur, de 70 px à 274 px du haut, pendant six
+     secondes et demie. Mesuré à 390 px de large, en bas de l'accueil, trois
+     liens du pied de page étaient recouverts — « Fonctionnalités », « Tarifs »
+     et « FAQ ». On appuie dessus, on touche la notification, il ne se passe
+     rien. Et comme la notification est en haut de l'écran alors que le doigt
+     est au milieu, on ne fait pas le rapprochement : on croit le lien mort.
+      La notification est un ornement, les liens du pied de page ne le sont pas.
+     Dès que le pied de page entre à l'écran, on renonce à celles qui n'ont pas
+     encore été montrées et on retire celles qui sont en cours.
+     ========================================================================== */
+  React.useEffect(function () {
+    var pied = document.querySelector(".foot");
+    if (!pied) return;
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        piedVisibleRef.current = e.isIntersecting;
+        if (!e.isIntersecting) return;
+        /* Marquer `leaving` ne suffit PAS : l'animation finit à opacité 0 mais
+           l'élément reste dans le document, et il continue d'intercepter les
+           appuis. Un bloqueur invisible est pire qu'un bloqueur visible. On
+           programme donc la vraie sortie du document, comme `dismiss`. */
+        setToasts(function (t) {
+          return t.map(function (x) {
+            return _objectSpread(_objectSpread({}, x), {}, {
+              leaving: true
+            });
+          });
+        });
+        setTimeout(function () {
+          return setToasts([]);
+        }, 450);
+      });
+    });
+    io.observe(pied);
+    return function () {
+      return io.disconnect();
+    };
+  }, []);
   return /*#__PURE__*/React.createElement("div", {
     className: "notif-stack",
     "aria-live": "polite"

@@ -211,3 +211,80 @@ ReactDOM.createRoot(document.getElementById("app")).render(<App/>);
     if (e.target.closest("a")) close();
   });
 })();
+
+/* ============================================================================
+   ARRIVER SUR UNE ANCRE, ET Y RESTER
+   ============================================================================
+   Le clic sur une ancre de la même page était traité (immersive.jsx, via
+   Lenis). L'ARRIVÉE sur une ancre ne l'était pas — et c'est le cas qui compte
+   pour le pied de page, puisque « À propos », « Manifeste » et « Contact »
+   pointent vers `index.html#…` dès qu'on les clique depuis /tarifs, les
+   mentions légales ou l'une des deux pages de fond.
+
+   Ce qui se passait, mesuré : arrivée sur index.html#fondateur, on atterrissait
+   à 2 293 px alors que la section est à 15 671 px. Treize mille pixels d'écart.
+   Pour le visiteur, le lien « ne fait rien » : la page s'ouvre quelque part au
+   milieu, sans rapport avec le libellé cliqué.
+
+   La cause n'est pas l'ancre, elle est le CALENDRIER. Le navigateur saute au
+   fragment dès l'analyse du HTML, sur le document prérendu. Ensuite React monte
+   les sections, les images se chargent, GSAP épingle six blocs : la page passe
+   de quelques milliers de pixels à plus de vingt mille, et la cible part sous
+   nos pieds. Personne ne revenait la chercher.
+
+   On la reprend donc, tant qu'elle bouge : on recalcule la position visée, on
+   s'y remet, et on s'arrête dès qu'elle est stable — ou dès que le visiteur
+   touche quoi que ce soit, parce que se battre avec le doigt de quelqu'un est
+   pire que de mal atterrir.
+
+   Le décalage de 70 px est celui du gestionnaire de clic : la barre est en
+   position fixe, sans réserve elle recouvre le titre visé.
+   ============================================================================ */
+(() => {
+  const DECALAGE = 70;      // même valeur que le gestionnaire de clic
+  const PATIENCE = 6000;    // au-delà, la page ne se stabilisera plus
+  const STABLE = 700;       // durée sans mouvement au bout de laquelle on lâche
+  const PAS = 120;
+
+  const cible = () => {
+    const h = window.location.hash;
+    if (!h || h.length < 2) return null;
+    try { return document.querySelector(h); } catch (e) { return null; }
+  };
+  if (!cible()) return;
+
+  let abandonne = false;
+  /* Le saut natif du navigateur n'est pas un geste. On n'écoute donc pas
+     `scroll` — qui se déclencherait sur notre propre correction — mais
+     seulement ce qui vient d'une main. */
+  for (const ev of ["wheel", "touchstart", "pointerdown", "keydown"]) {
+    window.addEventListener(ev, () => { abandonne = true; }, { passive: true, once: true });
+  }
+
+  const viser = () => {
+    const el = cible();
+    if (!el) return null;
+    const y = Math.max(0, el.getBoundingClientRect().top + window.scrollY - DECALAGE);
+    if (Math.abs(y - window.scrollY) >= 2) {
+      /* Lenis tient sa propre position et la réimpose à chaque image : un
+         window.scrollTo seul serait effacé à la frame suivante. */
+      if (window.__lenis) window.__lenis.scrollTo(y, { immediate: true, force: true });
+      else window.scrollTo(0, y);
+    }
+    return y;
+  };
+
+  const debut = Date.now();
+  let derniere = -1;
+  let immobile = 0;
+  const boucle = () => {
+    if (abandonne) return;
+    const y = viser();
+    if (y === null) return;
+    if (Math.abs(y - derniere) < 2) immobile += PAS;
+    else { immobile = 0; derniere = y; }
+    if (immobile >= STABLE || Date.now() - debut > PATIENCE) return;
+    setTimeout(boucle, PAS);
+  };
+  boucle();
+})();
