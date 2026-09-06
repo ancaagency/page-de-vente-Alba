@@ -924,9 +924,13 @@ window.ALBA_CONTENU = {
     fr: "Ce qui vous coince aujourd'hui, ce que vous cherchez à régler…",
     en: "What's blocking you today, what you're trying to solve…",
   },
-  "contact.en-envoyant-vous-acceptez-d-etre": {
-    fr: "En envoyant, vous acceptez d'être recontacté·e une fois pour planifier la démo. RGPD-compliant.",
-    en: "By sending, you agree to be contacted once to schedule the demo. GDPR-compliant.",
+  "contact.mention-collecte": {
+    fr: "Vos coordonnées sont traitées par ANCA dans le seul but de vous rappeler pour cette démonstration, et conservées 12 mois. Vous pouvez y accéder, les corriger ou les supprimer en écrivant à support@alba-studio.co.",
+    en: "Your details are processed by ANCA for the sole purpose of calling you back about this demo, and kept for 12 months. You can access, correct or delete them by writing to support@alba-studio.co.",
+  },
+  "contact.mention-collecte-lien": {
+    fr: "Mentions légales",
+    en: "Legal notice",
   },
   "contact.envoi-en-cours": {
     fr: "Envoi…",

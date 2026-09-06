@@ -14,6 +14,7 @@ import { chromium } from 'playwright-core';
 import { demarrer, ROOT } from './serveur.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
+import crypto from 'node:crypto';
 import { ROUTES } from '../outils/pages.mjs';
 
 const server = await demarrer(8790);
@@ -564,6 +565,67 @@ console.log('\n===== inventaire des traceurs : rien de nouveau ? =====');
     const inconnues = stock[zone].filter((k) => !CLES_ADMISES[zone].includes(k));
     console.log(`   ${inconnues.length === 0 ? '✅' : '❌'} ${zone}Storage : ${stock[zone].join(', ') || 'vide'}${inconnues.length ? ` — NON PRÉVU : ${inconnues.join(', ')}` : ''}`);
     if (inconnues.length) echecs++;
+  }
+
+  /* ── LA PAGE LÉGALE DÉCRIT-ELLE CE QUI SE PASSE VRAIMENT ? ────────────────
+     Elle affirmait qu'« une mesure d'audience compte les visites de ce site »,
+     fournie par Cloudflare. Elle n'était pas activée : window.ALBA_ANALYTICS_CF
+     valait null, faute de jeton. La page décrivait donc un traitement qui
+     n'avait pas lieu.
+     Le sens de la faute importe peu : une page légale qui annonce un traitement
+     inexistant est fausse au même titre qu'une page qui en cache un. Ce qui
+     compte est qu'elle DÉCRIVE LE SITE, et c'est vérifiable — config.js dit ce
+     qui tourne, la page dit ce qu'on en déclare. On compare les deux.
+     Le jour où le jeton arrive, ce contrôle échoue tant que la page n'a pas été
+     reprise. C'est exactement ce qu'on lui demande. */
+  {
+    const configJs = fs.readFileSync(path.join(ROOT, 'config.js'), 'utf8');
+    const mesureActive = !/window\.ALBA_ANALYTICS_CF\s*=\s*null/.test(configJs);
+    for (const fichier of ['mentions-legales.html', 'traductions/mentions-legales.en.html']) {
+      const texte = fs.readFileSync(path.join(ROOT, fichier), 'utf8')
+        .replace(/<!--[\s\S]*?-->/g, ' ');   // les blocs en attente sont commentés
+      const annonce = /mesure d'audience<\/b> compte|analytics measure<\/b> counts/i.test(texte);
+      const nie = /Aucune mesure d'audience|No analytics<\/b> are in service/i.test(texte);
+      const juste = mesureActive ? annonce && !nie : nie && !annonce;
+      console.log(`   ${juste ? '✅' : '❌'} ${fichier.padEnd(42)} ${mesureActive ? 'jeton posé → doit ANNONCER la mesure' : 'aucun jeton → doit dire qu\'il n\'y en a pas'}${juste ? '' : ' — LA PAGE NE DÉCRIT PAS LE SITE'}`);
+      if (!juste) echecs++;
+    }
+  }
+
+  /* ── LA DATE DE MISE À JOUR SUIT-ELLE LE TEXTE ? ──────────────────────────
+     Elle annonçait « 30 juillet 2026 » alors que la page venait de recevoir un
+     hébergeur, un téléphone et une section 6 réécrite. C'est cette date qui dit
+     au lecteur — et à un régulateur — quelle version il consulte : une date
+     figée sur un texte qui bouge est un faux, même involontaire.
+     C'est une dérive silencieuse par nature : personne ne relit une date.
+     On compare donc une EMPREINTE du texte (date exclue) à celle enregistrée
+     dans empreinte-legale.json. Si le texte a changé sans la date, échec.
+     Après une modification volontaire :  node tests/smoke.mjs --maj-legal  */
+  {
+    const refChemin = path.join(ROOT, 'tests', 'empreinte-legale.json');
+    const ref = fs.existsSync(refChemin) ? JSON.parse(fs.readFileSync(refChemin, 'utf8')) : {};
+    const maj = process.argv.includes('--maj-legal');
+    const neuf = {};
+    for (const fichier of ['mentions-legales.html', 'traductions/mentions-legales.en.html']) {
+      const brut = fs.readFileSync(path.join(ROOT, fichier), 'utf8');
+      /* Le prérendu est retiré : il est réengendré à chaque passage et n'est pas
+         du texte légal. La ligne de date l'est aussi — c'est elle qu'on éprouve. */
+      const iP = brut.indexOf('<!-- PRERENDU:DEBUT');
+      const sansP = iP === -1 ? brut : brut.slice(0, iP) + brut.slice(brut.indexOf('<!-- PRERENDU:FIN -->'));
+      const date = (sansP.match(/class="legal-updated">([^<]*)</) || [])[1] || '';
+      const corps = sansP.replace(/class="legal-updated">[^<]*</, 'class="legal-updated">DATE<');
+      const empreinte = crypto.createHash('sha256').update(corps).digest('hex').slice(0, 16);
+      neuf[fichier] = { empreinte, date };
+      if (maj) continue;
+      const avant = ref[fichier];
+      const juste = !avant || avant.empreinte === empreinte || avant.date !== date;
+      console.log(`   ${juste ? '✅' : '❌'} ${fichier.padEnd(42)} ${juste ? `« ${date} »` : `TEXTE MODIFIÉ, DATE INCHANGÉE — « ${date} »`}`);
+      if (!juste) echecs++;
+    }
+    if (maj) {
+      fs.writeFileSync(refChemin, JSON.stringify(neuf, null, 2) + '\n');
+      console.log('   · empreinte-legale.json mis à jour');
+    }
   }
 
   /* Et la page légale doit continuer de dire la vérité : si elle n'affirme plus

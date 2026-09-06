@@ -1206,7 +1206,9 @@ var Contact = function Contact() {
     className: "form-foot"
   }, /*#__PURE__*/React.createElement("p", {
     className: "form-note"
-  }, Txt("contact.en-envoyant-vous-acceptez-d-etre", "En envoyant, vous acceptez d'être recontacté·e une fois pour planifier la démo. RGPD-compliant.", "By sending, you agree to be contacted once to schedule the demo. GDPR-compliant.")), /*#__PURE__*/React.createElement("button", {
+  }, Txt("contact.mention-collecte", "Vos coordonnées sont traitées par ANCA dans le seul but de vous rappeler pour cette démonstration, et conservées 12 mois. Vous pouvez y accéder, les corriger ou les supprimer en écrivant à support@alba-studio.co.", "Your details are processed by ANCA for the sole purpose of calling you back about this demo, and kept for 12 months. You can access, correct or delete them by writing to support@alba-studio.co."), " ", /*#__PURE__*/React.createElement("a", {
+    href: lienInterne("/mentions-legales")
+  }, Txt("contact.mention-collecte-lien", "Mentions légales", "Legal notice"))), /*#__PURE__*/React.createElement("button", {
     type: "submit",
     className: "btn btn-primary",
     disabled: envoi === "envoi"

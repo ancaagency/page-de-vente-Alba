@@ -157,7 +157,7 @@
 <main class="legal-wrap">
   <div class="legal-eyebrow">Informations légales</div>
   <h1>Mentions légales</h1>
-  <div class="legal-updated">DERNIÈRE MISE À JOUR : 30 JUILLET 2026</div>
+  <div class="legal-updated">DERNIÈRE MISE À JOUR : 6 SEPTEMBRE 2026</div>
 
   <h2>1 · Éditeur du <em>site</em></h2>
   <div class="legal-id">
@@ -193,6 +193,11 @@
       <dt>Code APE / NAF</dt>
       <dd>6201Z — Programmation informatique</dd>
 
+      <!-- Le téléphone est EXIGÉ par la LCEN (art. 6 III-1) pour un éditeur
+           professionnel, au même titre que le siège et le RCS. Il manquait. -->
+      <dt>Téléphone</dt>
+      <dd><a href="tel:+33673957797">06 73 95 77 97</a></dd>
+
       <dt>Contact</dt>
       <dd><a href="mailto:contact@alba-studio.co">contact@alba-studio.co</a></dd>
     </dl>
@@ -219,6 +224,10 @@
       <dt>Adresse</dt>
       <dd>101 Townsend Street, San Francisco, CA 94107, États-Unis</dd>
 
+      <!-- Exigé par la LCEN au même titre que le nom et l'adresse. -->
+      <dt>Téléphone</dt>
+      <dd>+1 650 319 8930</dd>
+
       <dt>Site</dt>
       <dd><a href="https://www.cloudflare.com" rel="noopener">www.cloudflare.com</a></dd>
     </dl>
@@ -242,9 +251,26 @@
        (vérifié dans src/pages/PrivacyPolicy.tsx du dépôt de l'application).
        Le renvoi redeviendra exact quand elle aura sa section
        « sous-traitants ». -->
-  <p>
-    <span class="todo">À COMPLÉTER : hébergeur du front-end de l'application (app.alba-studio.co)</span>
-  </p>
+  <p>L'interface de l'application est publiée par&nbsp;:</p>
+  <div class="legal-id">
+    <dl>
+      <dt>Hébergeur</dt>
+      <dd>Lovable</dd>
+
+      <!-- Raison sociale exacte, adresse et téléphone à reprendre TELS QUELS
+           depuis les mentions légales de Lovable (lovable.dev). Ils ne sont pas
+           écrits ici de mémoire : sur une page légale, une adresse approximative
+           est pire qu'une case vide, parce qu'elle ne se signale pas. -->
+      <dt>Raison sociale</dt>
+      <dd><span class="todo">À COMPLÉTER : entité juridique exacte de Lovable</span></dd>
+
+      <dt>Adresse</dt>
+      <dd><span class="todo">À COMPLÉTER : siège de Lovable</span></dd>
+
+      <dt>Site</dt>
+      <dd><a href="https://lovable.dev" rel="noopener">lovable.dev</a></dd>
+    </dl>
+  </div>
 
   <h2>4 · Propriété <em>intellectuelle</em></h2>
   <p>
@@ -314,6 +340,21 @@
     votre navigateur&nbsp;; le site continuera de fonctionner, il vous
     reparlera simplement français.
   </p>
+  <!-- ⚠️ CE PARAGRAPHE SUIT config.js, ET UN TEST LE VÉRIFIE.
+       Il décrivait une mesure d'audience Cloudflare « qui compte les visites de
+       ce site ». Elle n'était pas activée : window.ALBA_ANALYTICS_CF valait
+       null, faute de jeton. Une page légale qui décrit un traitement inexistant
+       est fausse, et une page légale fausse vaut moins qu'une page absente.
+       Le jour où le jeton est posé dans config.js, REMPLACER ce paragraphe par
+       celui qui suit en commentaire. tests/smoke.mjs compare les deux et
+       échoue si l'un bouge sans l'autre. -->
+  <p>
+    <b>Aucune mesure d'audience</b> n'est en service sur ce site. Nous ne
+    comptons pas les visites, nous ne savons pas d'où vous venez, et aucune
+    statistique n'est produite sur votre passage.
+  </p>
+  <!-- À POSER LE JOUR OÙ window.ALBA_ANALYTICS_CF PORTE UN JETON :
+
   <p>
     <b>Une mesure d'audience</b> compte les visites de ce site&nbsp;: pages
     consultées, provenance, pays, type d'appareil. Elle est fournie par
@@ -323,6 +364,8 @@
     des statistiques agrégées. C'est ce qui la range parmi les traitements
     dispensés de consentement, et c'est pourquoi ce site ne vous demande rien.
   </p>
+
+  -->
   <p>
     Les polices de caractères sont hébergées sur ce site&nbsp;: votre navigateur
     ne contacte pas Google pour les afficher, et votre adresse IP ne lui est pas

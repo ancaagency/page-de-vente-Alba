@@ -769,7 +769,14 @@ const Contact = () => {
               </div>
             </div>
             <div className="form-foot">
-              <p className="form-note">{Txt("contact.en-envoyant-vous-acceptez-d-etre", "En envoyant, vous acceptez d'être recontacté·e une fois pour planifier la démo. RGPD-compliant.", "By sending, you agree to be contacted once to schedule the demo. GDPR-compliant.")}</p>
+              {/* MENTION D'INFORMATION AU POINT DE COLLECTE — art. 13 du RGPD.
+                  Elle disait « RGPD-compliant », ce qui n'est pas une mention
+                  d'information : c'est une auto-proclamation, et elle ne vaut
+                  rien juridiquement. Le règlement veut, AU MOMENT où l'on
+                  saisit ses données, quatre choses lisibles : qui est
+                  responsable, pour quoi faire, combien de temps, et où lire le
+                  reste. C'est court à écrire et ça ne se devine pas. */}
+              <p className="form-note">{Txt("contact.mention-collecte", "Vos coordonnées sont traitées par ANCA dans le seul but de vous rappeler pour cette démonstration, et conservées 12 mois. Vous pouvez y accéder, les corriger ou les supprimer en écrivant à support@alba-studio.co.", "Your details are processed by ANCA for the sole purpose of calling you back about this demo, and kept for 12 months. You can access, correct or delete them by writing to support@alba-studio.co.")} <a href={lienInterne("/mentions-legales")}>{Txt("contact.mention-collecte-lien", "Mentions légales", "Legal notice")}</a></p>
               <button type="submit" className="btn btn-primary" disabled={envoi === "envoi"}>{envoi === "envoi" ? Txt("contact.envoi-en-cours", "Envoi…", "Sending…") : Txt("contact.demander-une-demo-2", "Demander une démo", "Request a demo")} <Icon name="arrow-right" size={14} className="btn-arrow"/></button>
             </div>
           </form>
