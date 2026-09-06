@@ -14,8 +14,8 @@ import { chromium } from 'playwright-core';
 import { demarrer, ROOT } from './serveur.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
-import crypto from 'node:crypto';
 import { ROUTES } from '../outils/pages.mjs';
+import { verifier as verifierEmpreinteLegale } from './empreinte-legale.mjs';
 
 const server = await demarrer(8790);
 
@@ -593,39 +593,14 @@ console.log('\n===== inventaire des traceurs : rien de nouveau ? =====');
   }
 
   /* ── LA DATE DE MISE À JOUR SUIT-ELLE LE TEXTE ? ──────────────────────────
-     Elle annonçait « 30 juillet 2026 » alors que la page venait de recevoir un
-     hébergeur, un téléphone et une section 6 réécrite. C'est cette date qui dit
-     au lecteur — et à un régulateur — quelle version il consulte : une date
-     figée sur un texte qui bouge est un faux, même involontaire.
-     C'est une dérive silencieuse par nature : personne ne relit une date.
-     On compare donc une EMPREINTE du texte (date exclue) à celle enregistrée
-     dans empreinte-legale.json. Si le texte a changé sans la date, échec.
-     Après une modification volontaire :  node tests/smoke.mjs --maj-legal  */
-  {
-    const refChemin = path.join(ROOT, 'tests', 'empreinte-legale.json');
-    const ref = fs.existsSync(refChemin) ? JSON.parse(fs.readFileSync(refChemin, 'utf8')) : {};
-    const maj = process.argv.includes('--maj-legal');
-    const neuf = {};
-    for (const fichier of ['mentions-legales.html', 'traductions/mentions-legales.en.html']) {
-      const brut = fs.readFileSync(path.join(ROOT, fichier), 'utf8');
-      /* Le prérendu est retiré : il est réengendré à chaque passage et n'est pas
-         du texte légal. La ligne de date l'est aussi — c'est elle qu'on éprouve. */
-      const iP = brut.indexOf('<!-- PRERENDU:DEBUT');
-      const sansP = iP === -1 ? brut : brut.slice(0, iP) + brut.slice(brut.indexOf('<!-- PRERENDU:FIN -->'));
-      const date = (sansP.match(/class="legal-updated">([^<]*)</) || [])[1] || '';
-      const corps = sansP.replace(/class="legal-updated">[^<]*</, 'class="legal-updated">DATE<');
-      const empreinte = crypto.createHash('sha256').update(corps).digest('hex').slice(0, 16);
-      neuf[fichier] = { empreinte, date };
-      if (maj) continue;
-      const avant = ref[fichier];
-      const juste = !avant || avant.empreinte === empreinte || avant.date !== date;
-      console.log(`   ${juste ? '✅' : '❌'} ${fichier.padEnd(42)} ${juste ? `« ${date} »` : `TEXTE MODIFIÉ, DATE INCHANGÉE — « ${date} »`}`);
-      if (!juste) echecs++;
-    }
-    if (maj) {
-      fs.writeFileSync(refChemin, JSON.stringify(neuf, null, 2) + '\n');
-      console.log('   · empreinte-legale.json mis à jour');
-    }
+     Le calcul vit dans tests/empreinte-legale.mjs, qui ne lit que des fichiers
+     et s'exécute en quelques millisecondes. Il était ici, derrière un drapeau
+     `--maj-legal` : rafraîchir deux lignes de JSON demandait alors de relancer
+     tout ce contrôle — serveur, navigateur, dix pages, plusieurs minutes. Un
+     garde-fou qu'on rechigne à mettre à jour finit contourné, puis retiré. */
+  for (const { fichier, juste, date } of verifierEmpreinteLegale()) {
+    console.log(`   ${juste ? '✅' : '❌'} ${fichier.padEnd(42)} ${juste ? `« ${date} »` : `TEXTE MODIFIÉ, DATE INCHANGÉE — reprenez la date, puis node tests/empreinte-legale.mjs --maj`}`);
+    if (!juste) echecs++;
   }
 
   /* Et la page légale doit continuer de dire la vérité : si elle n'affirme plus
