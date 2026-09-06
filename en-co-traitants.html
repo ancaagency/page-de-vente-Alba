@@ -1,25 +1,28 @@
 <!DOCTYPE html>
-<html lang="fr">
+<!-- ENGENDRÉ PAR outils/anglais.mjs À PARTIR DE co-traitants.html — NE PAS MODIFIER À LA MAIN.
+     Toute correction se fait dans la page française, puis :
+       node outils/anglais.mjs && node outils/prerendre.mjs -->
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Invité sur ALBA — co-traitants et maîtres d'ouvrage</title>
-  <meta name="description" content="Un architecte vous a invité sur ALBA : ce que vous pouvez y faire, ce que ça coûte (rien), et ce que deviennent les documents que vous déposez.">
+  <title>Consultants & clients — ALBA Studio</title>
+  <meta name="description" content="An architect invited you to a project on ALBA. No account to create, no subscription, nothing to install. What you can do, and what becomes of what you upload.">
   <meta name="robots" content="index, follow">
   <!-- Aperçu au partage. Ces pages n'en avaient aucun : envoyées par
        courriel ou par messagerie, elles s'affichaient en lien nu, sans
        titre ni image. Or celle des co-traitants est FAITE pour être
        envoyée à un bureau d'études — c'est écrit dans son propre texte.
        Un aperçu absent est une page qu'on n'ouvre pas. -->
-  <meta property="og:title" content="Un architecte vous a invité. Ça ne vous coûte rien.">
-  <meta property="og:description" content="Les invités sont gratuits et illimités sur ALBA Studio. Voici exactement ce que ça veut dire.">
+  <meta property="og:title" content="An architect invited you. It costs you nothing.">
+  <meta property="og:description" content="Guests are free and unlimited on ALBA Studio. Here is exactly what that means.">
   <meta property="og:type" content="article">
   <meta property="og:image" content="https://www.alba-studio.co/images/app-cockpit-web.jpg">
-  <meta property="og:url" content="https://www.alba-studio.co/co-traitants">
+  <meta property="og:url" content="https://www.alba-studio.co/en-co-traitants">
   <meta property="og:site_name" content="ALBA Studio">
-  <meta property="og:locale" content="fr_FR">
+  <meta property="og:locale" content="en_GB">
   <meta name="twitter:card" content="summary_large_image">
-  <link rel="canonical" href="https://www.alba-studio.co/co-traitants">
+  <link rel="canonical" href="https://www.alba-studio.co/en-co-traitants">
 <!-- ANGLAIS:DEBUT — produit par outils/anglais.mjs, ne pas modifier -->
   <!-- Les deux langues se déclarent mutuellement. La réciprocité n'est pas
        une politesse : une page qui déclare une alternative sans que celle-ci
@@ -77,181 +80,191 @@
 
 <nav class="nav scrolled" id="nav">
   <div class="container nav-inner">
-    <a href="index.html" class="brand">
+    <a href="/en" class="brand">
       <span class="brand-mark"><img src="images/logo-alba.png" alt="ALBA Studio"></span>
       <span>ALBA <em style="font-style:italic; opacity:0.6;">Studio</em></span>
     </a>
     <div class="nav-links">
-      <a href="index.html#fonctionnalites">Fonctionnalités</a>
-      <a href="index.html#pour-qui">Pour qui ?</a>
-      <a href="index.html#fondateur">Notre vision</a>
-      <a href="Tarifs.html">Tarif</a>
+      <a href="/en#fonctionnalites">Features</a>
+      <a href="/en#pour-qui">Who it is for</a>
+      <a href="/en#fondateur">Our vision</a>
+      <a href="/en-tarifs">Pricing</a>
     </div>
     <div style="display:flex; align-items:center; gap:14px;">
       <div class="lang-toggle" id="lang-toggle">
-        <button data-lang="fr" class="is-active">FR</button>
-        <button data-lang="en">EN</button>
+        <button data-lang="fr">FR</button>
+        <button data-lang="en" class="is-active">EN</button>
       </div>
-      <a href="https://app.alba-studio.co/auth" data-alba-login class="nav-login" id="nav-login">Se connecter</a>
-      <a href="https://app.alba-studio.co/inscription" data-alba-auth class="btn btn-primary" style="padding:9px 16px; font-size:13px;">Essayer gratuitement</a>
+      <a href="https://app.alba-studio.co/auth" data-alba-login class="nav-login" id="nav-login">Log in</a>
+      <a href="https://app.alba-studio.co/inscription" data-alba-auth class="btn btn-primary" style="padding:9px 16px; font-size:13px;">Try for free</a>
     </div>
   </div>
 </nav>
 
+<!--
+  Corps anglais de /co-traitants — inséré dans en-co-traitants.html par
+  outils/anglais.mjs, à la place du <main> français.
+
+  Ce fichier ne contient QUE le <main>. La barre de navigation, le pied de page
+  et les scripts sont déduits de la page française : la structure des deux
+  versions ne peut donc pas diverger, seule la prose est tenue à la main.
+
+  Les identifiants de section (id="qui-paie"…) sont ceux du français, à dessein :
+  une ancre partagée depuis l'une des deux versions doit fonctionner sur l'autre.
+-->
 <main>
   <div class="edito">
-    <div class="edito-eyebrow">Co-traitants &amp; maîtres d'ouvrage</div>
-    <h1>Un architecte vous a invité.<br><em>Ça ne vous coûte rien.</em></h1>
+    <div class="edito-eyebrow">Consultants &amp; clients</div>
+    <h1>An architect invited you.<br><em>It costs you nothing.</em></h1>
     <p class="edito-chapo">
-      Vous avez reçu un lien vers un projet sur ALBA. Vous n'avez ni compte à
-      créer, ni abonnement à prendre, ni logiciel à installer. Cette page vous
-      dit exactement ce que vous pouvez y faire, et ce qu'il advient de ce que
-      vous y déposez.
+      You have received a link to a project on ALBA. There is no account to
+      create, no subscription to take out, no software to install. This page
+      tells you exactly what you can do there, and what becomes of what you
+      upload.
     </p>
   </div>
 
   <div class="edito-corps">
 
     <section id="qui-paie">
-      <h2>Qui paie quoi</h2>
+      <h2>Who pays for what</h2>
       <p>
-        C'est la question qui revient le plus souvent, et elle mérite une
-        réponse en un coup d'œil. ALBA distingue deux rôles, et un seul est
-        facturé.
+        This is the question we are asked most often, and it deserves an answer
+        at a glance. ALBA distinguishes two roles, and only one of them is
+        billed.
       </p>
       <div class="edito-cadre">
         <table class="edito-table">
           <thead>
             <tr>
-              <th scope="col">Rôle</th>
-              <th scope="col">Qui</th>
-              <th scope="col">Prix</th>
-              <th scope="col">Nombre</th>
+              <th scope="col">Role</th>
+              <th scope="col">Who</th>
+              <th scope="col">Price</th>
+              <th scope="col">How many</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <th scope="row">Collaborateur</th>
-              <td>Quelqu'un de l'agence qui a souscrit</td>
-              <td>15 €/mois HT, payés par l'agence</td>
-              <td>4 par espace</td>
+              <th scope="row">Collaborator</th>
+              <td>Someone at the practice that holds the subscription</td>
+              <td>€15/month excl. VAT, paid by the practice</td>
+              <td>4 per workspace</td>
             </tr>
             <tr>
-              <th scope="row">Invité</th>
-              <td>Bureau d'études, co-traitant, entreprise, maître d'ouvrage</td>
-              <td class="oui">Gratuit</td>
-              <td class="oui">Illimité</td>
+              <th scope="row">Guest</th>
+              <td>Engineering consultant, sub-consultant, contractor, client</td>
+              <td class="oui">Free</td>
+              <td class="oui">Unlimited</td>
             </tr>
           </tbody>
         </table>
       </div>
       <p>
-        <b>Si vous avez reçu une invitation, vous êtes dans la seconde ligne.</b>
-        Aucune carte bancaire ne vous sera demandée, ni maintenant ni plus tard.
-        L'architecte qui vous invite ne paie rien non plus pour vous&nbsp;: le
-        nombre d'invités n'entre pas dans son abonnement.
+        <b>If you received an invitation, you are on the second row.</b>
+        No payment card will be asked of you, now or later. Nor does the
+        architect who invites you pay anything for you: the number of guests
+        does not count towards their subscription.
       </p>
     </section>
 
     <section id="ce-que-vous-faites">
-      <h2>Ce que vous pouvez faire</h2>
+      <h2>What you can do</h2>
       <p>
-        C'est l'architecte qui fixe vos droits, projet par projet. Selon ce
-        qu'il a choisi, vous pouvez&nbsp;:
+        The architect sets your permissions, project by project. Depending on
+        what they have chosen, you can:
       </p>
       <ul class="edito-liste">
-        <li>consulter les plans et les documents du projet, dans votre navigateur, sans rien télécharger&nbsp;;</li>
-        <li>déposer vos propres pièces — notes de calcul, plans EXE, fiches techniques — sans passer par un envoi de fichiers qui expire&nbsp;;</li>
-        <li>commenter, poser une question, répondre à une demande de visa&nbsp;;</li>
-        <li>suivre les arbitrages qui vous concernent, avec leur date et leur auteur.</li>
+        <li>view the project's drawings and documents in your browser, without downloading anything;</li>
+        <li>upload your own items — calculation notes, construction drawings, technical sheets — without a file transfer that expires;</li>
+        <li>comment, ask a question, answer a request for approval;</li>
+        <li>follow the decisions that concern you, with their date and their author.</li>
       </ul>
       <p>
-        Vous ne voyez que les projets sur lesquels vous êtes invité, et rien
-        d'autre. Les autres affaires de l'agence ne vous sont pas visibles.
+        You only see the projects you have been invited to, and nothing else.
+        The practice's other work is not visible to you.
       </p>
     </section>
 
     <section id="vos-donnees">
-      <h2>Ce que deviennent vos documents</h2>
+      <h2>What becomes of your documents</h2>
       <p>
-        Une note de calcul déposée sur ALBA reste la vôtre. Elle est
-        <b>hébergée en France</b>, chez un hébergeur certifié ISO&nbsp;27001,
-        chiffrée au repos et en transit. Elle n'est ni revendue, ni analysée, ni
-        utilisée pour entraîner quoi que ce soit.
+        A calculation note uploaded to ALBA remains yours. It is
+        <b>hosted in France</b>, with an ISO&nbsp;27001-certified provider,
+        encrypted at rest and in transit. It is not resold, not analysed, and
+        not used to train anything.
       </p>
       <p>
-        Elle est visible par les personnes que l'architecte a invitées sur ce
-        projet — c'est bien l'intérêt de la chose. Elle ne l'est par personne
-        d'autre.
+        It is visible to the people the architect has invited to that project —
+        which is rather the point. It is visible to no one else.
       </p>
       <div class="edito-encart">
-        <h3>Le point auquel on ne pense qu'après</h3>
+        <h3>The part you only think about afterwards</h3>
         <p>
-          Votre dépôt reste consultable tant que le projet vit, et il est
-          horodaté. Six mois plus tard, quand il faudra savoir qui a transmis
-          quelle version et quand, la réponse est encore là — pour vous aussi,
-          pas seulement pour l'architecte.
+          What you upload stays available for as long as the project lives, and
+          it is time-stamped. Six months later, when someone needs to know who
+          sent which version and when, the answer is still there — for you too,
+          not only for the architect.
         </p>
       </div>
     </section>
 
     <section id="comment">
-      <h2>Concrètement</h2>
+      <h2>In practice</h2>
       <ul class="edito-liste">
-        <li>Vous recevez un lien par e-mail. Vous cliquez, vous choisissez un mot de passe, vous êtes dedans.</li>
-        <li>Tout se passe dans le navigateur, sur ordinateur comme sur téléphone. <b>Rien à installer.</b></li>
-        <li>Il existe une application mobile, mais elle est facultative&nbsp;: elle accompagne un compte, elle ne le remplace pas.</li>
-        <li>Si vous ne voulez plus y accéder, dites-le à l'architecte&nbsp;: il retire votre accès en un clic.</li>
+        <li>You receive a link by email. You click, you choose a password, you are in.</li>
+        <li>Everything happens in the browser, on a computer as on a phone. <b>Nothing to install.</b></li>
+        <li>There is a mobile app, but it is optional: it accompanies an account, it does not replace one.</li>
+        <li>If you no longer want access, tell the architect: they remove it in one click.</li>
       </ul>
     </section>
 
     <section id="architectes">
-      <h2>Si vous êtes l'architecte qui lit cette page</h2>
+      <h2>If you are the architect reading this page</h2>
       <p>
-        Inviter ne vous coûte rien, et c'est délibéré. Un outil de coordination
-        qui facturerait chaque intervenant serait un outil que personne
-        n'invite&nbsp;: vous finiriez par renvoyer les plans par e-mail «&nbsp;pour
-        ne pas faire compliquer&nbsp;», et l'outil ne servirait plus à rien.
+        Inviting people costs you nothing, and that is deliberate. A
+        coordination tool that billed for every participant would be a tool
+        nobody invites anyone to: you would end up sending drawings by email
+        again "to keep things simple", and the tool would serve no purpose.
       </p>
       <p>
-        Seuls comptent les <b>collaborateurs de votre agence</b> — ceux qui
-        travaillent dans ALBA au quotidien. Le premier est inclus, les suivants
-        sont à 15&nbsp;€ HT par mois, jusqu'à quatre par espace.
-        <a href="Tarifs.html">Voir le détail des tarifs</a>.
+        Only <b>your practice's collaborators</b> count — the people working in
+        ALBA day to day. The first is included; the next ones are €15 excl. VAT
+        per month, up to four per workspace.
+        <a href="/en-tarifs">See the full pricing</a>.
       </p>
       <p>
-        Vous pouvez envoyer cette page à un bureau d'études qui hésite&nbsp;:
-        elle est écrite pour lui, et elle répond aux trois questions qu'il vous
-        posera de toute façon.
+        You can send this page to an engineering consultant who is hesitating:
+        it is written for them, and it answers the three questions they will
+        ask you anyway.
       </p>
     </section>
 
     <section id="questions">
-      <h2>Trois questions qu'on nous pose</h2>
-      <h3>Devrai-je payer un jour&nbsp;?</h3>
+      <h2>Three questions we get asked</h2>
+      <h3>Will I have to pay one day?</h3>
       <p>
-        Non, pas pour accéder aux projets où l'on vous invite. Un abonnement ne
-        devient utile que si vous voulez <b>piloter vos propres affaires</b>
-        dans ALBA, avec vos projets et vos clients à vous. C'est un autre usage,
-        et il reste facultatif.
+        No — not to access the projects you are invited to. A subscription only
+        becomes useful if you want to <b>run your own work</b> in ALBA, with
+        your own projects and your own clients. That is a different use, and it
+        stays optional.
       </p>
-      <h3>Est-ce que l'architecte voit ce que je fais&nbsp;?</h3>
+      <h3>Can the architect see what I do?</h3>
       <p>
-        Il voit ce que vous déposez et ce que vous écrivez sur le projet, avec
-        la date — c'est le principe d'un espace partagé. Il ne voit rien
-        d'autre&nbsp;: ni votre activité ailleurs, ni vos autres projets.
+        They see what you upload and what you write on the project, with the
+        date — that is what a shared workspace is. They see nothing else:
+        neither your activity elsewhere, nor your other projects.
       </p>
-      <h3>Et si le projet se termine&nbsp;?</h3>
+      <h3>And when the project ends?</h3>
       <p>
-        L'architecte conserve son projet et ses archives. Si vous avez besoin
-        d'une copie de ce que vous avez déposé, demandez-la-lui&nbsp;: l'export
-        est intégral et se fait en un clic.
+        The architect keeps their project and its archives. If you need a copy
+        of what you uploaded, ask them: the export is complete and takes one
+        click.
       </p>
     </section>
 
     <section class="edito-fin">
-      <p>Une question à laquelle cette page ne répond pas&nbsp;?</p>
-      <a href="index.html#contact" class="btn btn-primary" style="padding:11px 20px; font-size:14px;">Nous écrire</a>
+      <p>A question this page does not answer?</p>
+      <a href="/en#contact" class="btn btn-primary" style="padding:11px 20px; font-size:14px;">Write to us</a>
     </section>
 
   </div>
@@ -260,7 +273,7 @@
 
 <div id="footer-root">
 <!-- PRERENDU:DEBUT — produit par outils/prerendre.mjs, ne pas modifier -->
-<footer class="foot"><div class="container"><div class="foot-top"><div><div class="foot-brand">ALBA Studio</div><div class="foot-tag">La plateforme tout-en-un des architectes indépendants. Conçue à Lyon, pensée pour vous.</div><span class="liseret-under"></span><div class="foot-apps"><h5>L'app mobile &amp; tablette</h5><div class="store-badges dark "><a href="index.html#contact" class="store-badge" aria-label="App Store"><svg viewBox="0 0 24 24" width="19" height="19" fill="currentColor" aria-hidden="true"><path d="M16.4 12.7c0-2.2 1.8-3.3 1.9-3.4-1-1.5-2.6-1.7-3.2-1.7-1.4-.1-2.7.8-3.3.8-.7 0-1.7-.8-2.8-.8-1.5 0-2.8.8-3.6 2.1-1.5 2.6-.4 6.5 1.1 8.6.7 1 1.6 2.2 2.7 2.2 1.1 0 1.5-.7 2.8-.7 1.3 0 1.6.7 2.8.7 1.2 0 1.9-1.1 2.6-2.1.8-1.2 1.2-2.4 1.2-2.4s-2.2-.9-2.2-3.3zM14.3 5.5c.6-.7 1-1.7.9-2.7-.9 0-2 .6-2.6 1.3-.6.6-1.1 1.7-.9 2.6 1 .1 2-.5 2.6-1.2z"></path></svg><span><i>Télécharger sur</i><b>App Store</b></span></a><a href="index.html#contact" class="store-badge" aria-label="Google Play"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="#34A853" d="M4.3 21.2c-.2-.2-.3-.5-.3-.9l8.3-8.3 2.6 2.6-9.8 5.6c-.3.2-.6.2-.8 0z"></path><path fill="#EA4335" d="M14.9 14.6 12.3 12l2.6-2.6 3.3 1.9c.7.4.7 1.4 0 1.8l-3.3 1.5z"></path><path fill="#FBBC04" d="M4.3 2.8c.2-.2.5-.2.8 0l9.8 5.6-2.6 2.6L4 3.7c0-.4.1-.7.3-.9z"></path><path fill="#4285F4" d="M4 3.7 12.3 12 4 20.3c-.1-.2-.2-.5-.2-.8V4.5c0-.3.1-.6.2-.8z"></path></svg><span><i>Disponible sur</i><b>Google Play</b></span></a><p class="store-note">L'application accompagne votre compte. La souscription et la gestion de l'abonnement se font depuis le web.</p></div></div></div><div class="foot-col"><h5>Produit</h5><ul><li><a href="index.html#fonctionnalites">Fonctionnalités</a></li><li><a href="index.html#devices">La plateforme</a></li><li><a href="/tarifs">Tarifs</a></li><li><a href="index.html#faq">FAQ</a></li></ul></div><div class="foot-col"><h5>Agence</h5><ul><li><a href="/valeur-probante">Valeur probante</a></li><li><a href="/co-traitants">Co-traitants &amp; BET</a></li><li><a href="index.html#fondateur">À propos</a></li><li><a href="index.html#manifeste">Manifeste</a></li><li><a href="index.html#contact">Contact</a></li></ul></div><div class="foot-col"><h5>Légal</h5><ul><li><a href="/mentions-legales">Mentions légales</a></li><li><a href="https://app.alba-studio.co/terms">CGU &amp; CGV</a></li><li><a href="https://app.alba-studio.co/privacy-policy">Politique RGPD</a></li><li><a href="index.html#securite">Sécurité</a></li></ul></div></div><div class="foot-bot"><div>© 2026 ALBA STUDIO — TOUS DROITS RÉSERVÉS</div><div>FAIT À LYON · AVEC SOIN <span class="fr-flag" title="Made in France"></span></div></div></div></footer>
+<footer class="foot"><div class="container"><div class="foot-top"><div><div class="foot-brand">ALBA Studio</div><div class="foot-tag">The all-in-one platform for independent architects. Made in Lyon, designed for you.</div><span class="liseret-under"></span><div class="foot-apps"><h5>The mobile &amp; tablet app</h5><div class="store-badges dark "><a href="/en#contact" class="store-badge" aria-label="App Store"><svg viewBox="0 0 24 24" width="19" height="19" fill="currentColor" aria-hidden="true"><path d="M16.4 12.7c0-2.2 1.8-3.3 1.9-3.4-1-1.5-2.6-1.7-3.2-1.7-1.4-.1-2.7.8-3.3.8-.7 0-1.7-.8-2.8-.8-1.5 0-2.8.8-3.6 2.1-1.5 2.6-.4 6.5 1.1 8.6.7 1 1.6 2.2 2.7 2.2 1.1 0 1.5-.7 2.8-.7 1.3 0 1.6.7 2.8.7 1.2 0 1.9-1.1 2.6-2.1.8-1.2 1.2-2.4 1.2-2.4s-2.2-.9-2.2-3.3zM14.3 5.5c.6-.7 1-1.7.9-2.7-.9 0-2 .6-2.6 1.3-.6.6-1.1 1.7-.9 2.6 1 .1 2-.5 2.6-1.2z"></path></svg><span><i>Download on the</i><b>App Store</b></span></a><a href="/en#contact" class="store-badge" aria-label="Google Play"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="#34A853" d="M4.3 21.2c-.2-.2-.3-.5-.3-.9l8.3-8.3 2.6 2.6-9.8 5.6c-.3.2-.6.2-.8 0z"></path><path fill="#EA4335" d="M14.9 14.6 12.3 12l2.6-2.6 3.3 1.9c.7.4.7 1.4 0 1.8l-3.3 1.5z"></path><path fill="#FBBC04" d="M4.3 2.8c.2-.2.5-.2.8 0l9.8 5.6-2.6 2.6L4 3.7c0-.4.1-.7.3-.9z"></path><path fill="#4285F4" d="M4 3.7 12.3 12 4 20.3c-.1-.2-.2-.5-.2-.8V4.5c0-.3.1-.6.2-.8z"></path></svg><span><i>Get it on</i><b>Google Play</b></span></a><p class="store-note">The app companions your account. Subscription and billing are managed on the web.</p></div></div></div><div class="foot-col"><h5>Product</h5><ul><li><a href="/en#fonctionnalites">Features</a></li><li><a href="/en#devices">The platform</a></li><li><a href="/en-tarifs">Pricing</a></li><li><a href="/en#faq">FAQ</a></li></ul></div><div class="foot-col"><h5>Company</h5><ul><li><a href="/valeur-probante">Evidential value</a></li><li><a href="/co-traitants">Consultants &amp; engineers</a></li><li><a href="/en#fondateur">About</a></li><li><a href="/en#manifeste">Manifesto</a></li><li><a href="/en#contact">Contact</a></li></ul></div><div class="foot-col"><h5>Legal</h5><ul><li><a href="/mentions-legales">Legal notice</a></li><li><a href="https://app.alba-studio.co/terms">Terms &amp; conditions</a></li><li><a href="https://app.alba-studio.co/privacy-policy">GDPR policy</a></li><li><a href="/en#securite">Security</a></li></ul></div></div><div class="foot-bot"><div>© 2026 ALBA STUDIO — ALL RIGHTS RESERVED</div><div>MADE IN LYON · WITH CARE <span class="fr-flag" title="Made in France"></span></div></div></div></footer>
 <!-- PRERENDU:FIN -->
 
 </div>

@@ -129,7 +129,11 @@ const PhotoPlaceholder = ({ label = "ARCHITECTURE", tone = "stone", ratio = "16/
 const versContact = () => {
   if (typeof window === "undefined") return "index.html#contact";
   const p = window.location.pathname;
-  return (p === "/" || /\/index\.html$/.test(p)) ? "#contact" : "index.html#contact";
+  /* /en est un accueil au même titre que / : le fragment nu y déclenche le
+     défilement doux, et ne doit pas renvoyer vers la version française. */
+  if (p === "/" || /\/index\.html$/.test(p) || p === "/en" || p === "/en.html") return "#contact";
+  const accueil = (typeof window !== "undefined" && window.__albaLien) ? window.__albaLien("/") : "/";
+  return `${accueil === "/" ? "index.html" : accueil}#contact`;
 };
 
 const StoreBadges = ({ className = "", theme = "dark" }) => (

@@ -411,7 +411,11 @@ var PhotoPlaceholder = function PhotoPlaceholder(_ref2) {
 var versContact = function versContact() {
   if (typeof window === "undefined") return "index.html#contact";
   var p = window.location.pathname;
-  return p === "/" || /\/index\.html$/.test(p) ? "#contact" : "index.html#contact";
+  /* /en est un accueil au même titre que / : le fragment nu y déclenche le
+     défilement doux, et ne doit pas renvoyer vers la version française. */
+  if (p === "/" || /\/index\.html$/.test(p) || p === "/en" || p === "/en.html") return "#contact";
+  var accueil = typeof window !== "undefined" && window.__albaLien ? window.__albaLien("/") : "/";
+  return "".concat(accueil === "/" ? "index.html" : accueil, "#contact");
 };
 var StoreBadges = function StoreBadges(_ref3) {
   var _ref3$className = _ref3.className,

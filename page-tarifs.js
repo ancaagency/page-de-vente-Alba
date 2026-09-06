@@ -46,8 +46,7 @@ var PricingPage = function PricingPage() {
   }, /*#__PURE__*/React.createElement(Pricing, null), /*#__PURE__*/React.createElement(TrustBand, null), /*#__PURE__*/React.createElement(Faq, null), /*#__PURE__*/React.createElement(Contact, null), /*#__PURE__*/React.createElement(Footer, null), /*#__PURE__*/React.createElement(BandeauConsentement, null));
 };
 ReactDOM.createRoot(document.getElementById("app")).render(/*#__PURE__*/React.createElement(PricingPage, null));
-document.querySelectorAll("#lang-toggle button").forEach(function (b) {
-  b.addEventListener("click", function () {
-    if (window.__setLang) window.__setLang(b.dataset.lang);
-  });
-});
+
+/* Le câblage de la bascule FR/EN vit dans i18n.js, chargé par TOUTES les
+   pages. Il était ici, et sur les tarifs : les trois pages éditoriales
+   n'avaient donc aucun moyen de changer de langue. */

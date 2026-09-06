@@ -1,25 +1,28 @@
 <!DOCTYPE html>
-<html lang="fr">
+<!-- ENGENDRÉ PAR outils/anglais.mjs À PARTIR DE valeur-probante.html — NE PAS MODIFIER À LA MAIN.
+     Toute correction se fait dans la page française, puis :
+       node outils/anglais.mjs && node outils/prerendre.mjs -->
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>La valeur probante de vos décisions — ALBA Studio</title>
-  <meta name="description" content="Décisions horodatées, signées et archivées : ce qu'ALBA conserve, ce que ça vaut en cas de litige, et ce que ça ne couvre pas.">
+  <title>Evidential value — ALBA Studio</title>
+  <meta name="description" content="What ALBA keeps with every decision, what an eIDAS simple signature is worth, what it is not worth, and why ten years is the real horizon.">
   <meta name="robots" content="index, follow">
   <!-- Aperçu au partage. Ces pages n'en avaient aucun : envoyées par
        courriel ou par messagerie, elles s'affichaient en lien nu, sans
        titre ni image. Or celle des co-traitants est FAITE pour être
        envoyée à un bureau d'études — c'est écrit dans son propre texte.
        Un aperçu absent est une page qu'on n'ouvre pas. -->
-  <meta property="og:title" content="Un arbitrage oral, contesté un an plus tard.">
-  <meta property="og:description" content="Ce qu'ALBA Studio conserve, ce que ça vaut — et ce que ça ne vaut pas.">
+  <meta property="og:title" content="A decision made by phone, disputed a year later.">
+  <meta property="og:description" content="What ALBA Studio keeps, what it is worth — and what it is not worth.">
   <meta property="og:type" content="article">
   <meta property="og:image" content="https://www.alba-studio.co/images/app-cockpit-web.jpg">
-  <meta property="og:url" content="https://www.alba-studio.co/valeur-probante">
+  <meta property="og:url" content="https://www.alba-studio.co/en-valeur-probante">
   <meta property="og:site_name" content="ALBA Studio">
-  <meta property="og:locale" content="fr_FR">
+  <meta property="og:locale" content="en_GB">
   <meta name="twitter:card" content="summary_large_image">
-  <link rel="canonical" href="https://www.alba-studio.co/valeur-probante">
+  <link rel="canonical" href="https://www.alba-studio.co/en-valeur-probante">
 <!-- ANGLAIS:DEBUT — produit par outils/anglais.mjs, ne pas modifier -->
   <!-- Les deux langues se déclarent mutuellement. La réciprocité n'est pas
        une politesse : une page qui déclare une alternative sans que celle-ci
@@ -77,149 +80,161 @@
 
 <nav class="nav scrolled" id="nav">
   <div class="container nav-inner">
-    <a href="index.html" class="brand">
+    <a href="/en" class="brand">
       <span class="brand-mark"><img src="images/logo-alba.png" alt="ALBA Studio"></span>
       <span>ALBA <em style="font-style:italic; opacity:0.6;">Studio</em></span>
     </a>
     <div class="nav-links">
-      <a href="index.html#fonctionnalites">Fonctionnalités</a>
-      <a href="index.html#pour-qui">Pour qui ?</a>
-      <a href="index.html#fondateur">Notre vision</a>
-      <a href="Tarifs.html">Tarif</a>
+      <a href="/en#fonctionnalites">Features</a>
+      <a href="/en#pour-qui">Who it is for</a>
+      <a href="/en#fondateur">Our vision</a>
+      <a href="/en-tarifs">Pricing</a>
     </div>
     <div style="display:flex; align-items:center; gap:14px;">
       <div class="lang-toggle" id="lang-toggle">
-        <button data-lang="fr" class="is-active">FR</button>
-        <button data-lang="en">EN</button>
+        <button data-lang="fr">FR</button>
+        <button data-lang="en" class="is-active">EN</button>
       </div>
-      <a href="https://app.alba-studio.co/auth" data-alba-login class="nav-login" id="nav-login">Se connecter</a>
-      <a href="https://app.alba-studio.co/inscription" data-alba-auth class="btn btn-primary" style="padding:9px 16px; font-size:13px;">Essayer gratuitement</a>
+      <a href="https://app.alba-studio.co/auth" data-alba-login class="nav-login" id="nav-login">Log in</a>
+      <a href="https://app.alba-studio.co/inscription" data-alba-auth class="btn btn-primary" style="padding:9px 16px; font-size:13px;">Try for free</a>
     </div>
   </div>
 </nav>
 
+<!--
+  Corps anglais de /valeur-probante — inséré dans en-valeur-probante.html par
+  outils/anglais.mjs, à la place du <main> français.
+
+  ⚠️ Cette page parle de droit FRANÇAIS : preuve libre, garantie décennale,
+  eIDAS. Ces notions ne sont pas transposées vers un autre droit — elles sont
+  nommées pour ce qu'elles sont, avec le terme français entre parenthèses quand
+  il n'a pas d'équivalent exact. Un lecteur anglophone d'un projet en France
+  doit reconnaître ce dont on parle ; le traduire en concepts de common law
+  serait faux.
+-->
 <main>
   <div class="edito">
-    <div class="edito-eyebrow">Pour les architectes</div>
-    <h1>Un arbitrage oral,<br><em>contesté un an plus tard.</em></h1>
+    <div class="edito-eyebrow">For architects</div>
+    <h1>A decision made by phone,<br><em>disputed a year later.</em></h1>
     <p class="edito-chapo">
-      Vous avez validé une teinte au téléphone, un décalage de cloison sur le
-      chantier, une substitution de matériau par SMS. Douze mois passent, une
-      réserve tombe, et personne ne se souvient de la même chose. Cette page
-      explique ce qu'ALBA conserve, ce que ça vaut — et ce que ça ne vaut pas.
+      You approved a colour over the phone, a partition moved on site, a
+      material substituted by text message. Twelve months pass, a defect is
+      raised, and nobody remembers the same thing. This page explains what ALBA
+      keeps, what it is worth — and what it is not worth.
     </p>
   </div>
 
   <div class="edito-corps">
 
     <section id="ce-qui-est-conserve">
-      <h2>Ce qui est conservé, à chaque décision</h2>
+      <h2>What is kept, with every decision</h2>
       <p>
-        Une décision dans ALBA n'est pas un message dans un fil. C'est un objet
-        daté, qui porte avec lui de quoi être relu bien après.
+        A decision in ALBA is not a message in a thread. It is a dated object
+        that carries with it what is needed to be read again long afterwards.
       </p>
       <ul class="edito-liste">
-        <li><b>L'auteur</b> — qui a validé, avec son rôle sur le projet à ce moment-là.</li>
-        <li><b>L'horodatage serveur</b> — la date et l'heure enregistrées par nos serveurs, pas celles de l'appareil de l'auteur, qui se règlent à la main.</li>
-        <li><b>Le contenu exact</b> de ce qui a été soumis, tel qu'il a été soumis.</li>
-        <li><b>Les pièces jointes</b> versionnées&nbsp;: le plan validé reste attaché à la validation, et non à la dernière version du plan.</li>
-        <li><b>Le fil qui a précédé</b> — les questions, les réserves, les allers-retours qui ont mené à l'arbitrage.</li>
+        <li><b>The author</b> — who approved it, with their role on the project at that moment.</li>
+        <li><b>The server time-stamp</b> — the date and time recorded by our servers, not those of the author's device, which can be set by hand.</li>
+        <li><b>The exact content</b> of what was submitted, as it was submitted.</li>
+        <li><b>The attachments</b>, versioned: the approved drawing stays attached to the approval, not to the latest version of the drawing.</li>
+        <li><b>The thread that preceded it</b> — the questions, the reservations, the back-and-forth that led to the decision.</li>
       </ul>
       <p>
-        Ce dernier point est celui qu'on sous-estime. Une validation isolée
-        prouve peu de choses&nbsp;; une validation accompagnée de la question à
-        laquelle elle répond raconte une décision.
+        That last point is the one people underestimate. An isolated approval
+        proves little; an approval accompanied by the question it answers tells
+        the story of a decision.
       </p>
     </section>
 
     <section id="signature">
-      <h2>La signature électronique, et ses limites</h2>
+      <h2>Electronic signature, and its limits</h2>
       <p>
-        Les décisions sont signées électroniquement au sens du règlement
-        européen eIDAS, <b>au niveau simple</b>. Concrètement&nbsp;: l'identité
-        du signataire, la date et l'intégrité du contenu sont établies et
-        conservées à titre de preuve.
+        Decisions are signed electronically within the meaning of the European
+        eIDAS Regulation, <b>at the simple level</b>. In practice: the
+        signatory's identity, the date and the integrity of the content are
+        established and retained as evidence.
       </p>
       <div class="edito-encart">
-        <h3>Ce qu'ALBA ne fait pas, et il vaut mieux le savoir avant</h3>
+        <h3>What ALBA does not do, and you had better know beforehand</h3>
         <p>
-          Une signature <b>avancée</b> ou <b>qualifiée</b> — celle qu'exigent
-          certains actes, notamment devant notaire ou pour des marchés publics
-          formalisés — suppose un dispositif de certification que nous ne
-          fournissons pas. Pour ces actes-là, passez par votre voie habituelle.
+          An <b>advanced</b> or <b>qualified</b> signature — the kind required
+          for certain instruments, notably before a notary or for formal public
+          procurement — requires a certification arrangement that we do not
+          provide. For those, use your usual route.
         </p>
         <p>
-          ALBA couvre la matière quotidienne&nbsp;: les arbitrages de conception,
-          les validations client, les visas, les comptes rendus de chantier.
-          C'est-à-dire, très exactement, ce qui se perd aujourd'hui.
+          ALBA covers the everyday material: design decisions, client
+          approvals, drawing approvals, site reports. Which is to say, precisely
+          what gets lost today.
         </p>
       </div>
       <p>
-        Nous préférons le dire ici plutôt que de vous le laisser découvrir le
-        jour où ça compte. Un outil qui promettrait la valeur d'un acte
-        authentique vous exposerait davantage qu'il ne vous protège.
+        We would rather say so here than let you find out on the day it
+        matters. A tool that promised the force of a notarised instrument would
+        expose you more than it protects you.
       </p>
     </section>
 
     <section id="devant-un-tiers">
-      <h2>Ce que ça change en cas de litige</h2>
+      <h2>What it changes in a dispute</h2>
       <p>
-        En droit français, la preuve d'un fait juridique est libre&nbsp;: un
-        juge apprécie les éléments qu'on lui présente. Ce qui fait la différence
-        n'est donc pas un tampon, c'est la <b>cohérence et l'antériorité</b> de
-        ce que vous produisez.
+        Under French law, a matter of fact may be proved by any means
+        (<i lang="fr">preuve libre</i>): a judge weighs whatever is put before
+        them. What makes the difference is therefore not a stamp — it is the
+        <b>consistency and the anteriority</b> of what you produce.
       </p>
       <p>
-        Un fil de messages exporté d'un téléphone se conteste facilement&nbsp;:
-        rien n'y empêche une suppression, une modification, une date d'appareil
-        décalée. Un enregistrement horodaté par un tiers, inscrit dans une suite
-        continue et exportable dans son ensemble, se conteste beaucoup moins.
+        A message thread exported from a phone is easily contested: nothing in
+        it prevents a deletion, an edit, a device clock set wrong. A record
+        time-stamped by a third party, held in a continuous sequence and
+        exportable as a whole, is far harder to contest.
       </p>
       <div class="edito-encart">
         <p>
-          Nous ne vous dirons pas qu'ALBA «&nbsp;gagne un procès&nbsp;». Nous
-          vous disons que la plupart des litiges de maîtrise d'œuvre ne vont
-          jamais jusque-là&nbsp;: ils s'éteignent le jour où quelqu'un rouvre la
-          décision datée, signée, avec le plan qui l'accompagnait. C'est la
-          discussion qui n'a pas lieu qui vous fait gagner du temps.
+          We will not tell you that ALBA "wins a case". We will tell you that
+          most disputes in architectural practice never get that far: they die
+          the day someone reopens the dated, signed decision with the drawing
+          that came with it. It is the argument that does not happen that saves
+          you time.
         </p>
       </div>
     </section>
 
     <section id="dix-ans">
-      <h2>Dix ans, c'est la vraie échéance</h2>
+      <h2>Ten years is the real horizon</h2>
       <p>
-        La garantie décennale ne se soucie pas de votre abonnement. Vos archives
-        doivent rester lisibles longtemps après la fin du chantier, et
-        éventuellement après ALBA.
+        France's ten-year structural warranty
+        (<i lang="fr">garantie décennale</i>) does not care about your
+        subscription. Your archives have to stay readable long after the site
+        closes, and possibly after ALBA.
       </p>
       <ul class="edito-liste">
-        <li><b>Export intégral</b>, à tout moment, en un clic&nbsp;: PDF, ZIP, CSV.</li>
-        <li>Les formats sont ouverts et lisibles sans nous&nbsp;: un PDF s'ouvre encore dans dix ans, un fil de messagerie propriétaire non.</li>
-        <li>L'export contient les décisions <b>avec</b> leurs pièces et leurs horodatages, pas seulement une liste.</li>
-        <li>Vos données restent les vôtres, y compris si vous partez&nbsp;: c'est écrit dans les conditions, pas seulement sur cette page.</li>
+        <li><b>Complete export</b>, at any time, in one click: PDF, ZIP, CSV.</li>
+        <li>The formats are open and readable without us: a PDF still opens in ten years, a proprietary message thread does not.</li>
+        <li>The export contains the decisions <b>with</b> their attachments and their time-stamps, not merely a list.</li>
+        <li>Your data stays yours, including if you leave: it is written into the terms, not only on this page.</li>
       </ul>
     </section>
 
     <section id="au-quotidien">
-      <h2>Sans rien changer à votre façon de travailler</h2>
+      <h2>Without changing the way you work</h2>
       <p>
-        La traçabilité ne vaut que si elle ne coûte rien à produire. Personne ne
-        remplit un registre le soir. Dans ALBA, l'archive est le
-        sous-produit&nbsp;: vous demandez une validation parce que vous en avez
-        besoin, et la preuve se constitue toute seule.
+        Traceability is only worth anything if it costs nothing to produce.
+        Nobody fills in a register in the evening. In ALBA the archive is the
+        by-product: you request an approval because you need it, and the
+        evidence builds itself.
       </p>
       <p>
-        Vos co-traitants et vos maîtres d'ouvrage participent gratuitement — ils
-        n'ont ni abonnement à prendre ni logiciel à installer, ce qui est la
-        condition pour qu'ils jouent le jeu.
-        <a href="co-traitants.html">Voir la page qui leur est destinée</a>.
+        Your consultants and your clients take part free of charge — no
+        subscription to take out, no software to install, which is the
+        condition for them to play along.
+        <a href="/en-co-traitants">See the page written for them</a>.
       </p>
     </section>
 
     <section class="edito-fin">
-      <p>Un espace d'essai complet, ouvert 7 jours, sans inscription ni carte bancaire.</p>
-      <a href="index.html#pricing" class="btn btn-primary" style="padding:11px 20px; font-size:14px;">Voir les tarifs</a>
+      <p>A full trial workspace, open for 7 days, with no sign-up and no payment card.</p>
+      <a href="/en#pricing" class="btn btn-primary" style="padding:11px 20px; font-size:14px;">See pricing</a>
     </section>
 
   </div>
@@ -228,7 +243,7 @@
 
 <div id="footer-root">
 <!-- PRERENDU:DEBUT — produit par outils/prerendre.mjs, ne pas modifier -->
-<footer class="foot"><div class="container"><div class="foot-top"><div><div class="foot-brand">ALBA Studio</div><div class="foot-tag">La plateforme tout-en-un des architectes indépendants. Conçue à Lyon, pensée pour vous.</div><span class="liseret-under"></span><div class="foot-apps"><h5>L'app mobile &amp; tablette</h5><div class="store-badges dark "><a href="index.html#contact" class="store-badge" aria-label="App Store"><svg viewBox="0 0 24 24" width="19" height="19" fill="currentColor" aria-hidden="true"><path d="M16.4 12.7c0-2.2 1.8-3.3 1.9-3.4-1-1.5-2.6-1.7-3.2-1.7-1.4-.1-2.7.8-3.3.8-.7 0-1.7-.8-2.8-.8-1.5 0-2.8.8-3.6 2.1-1.5 2.6-.4 6.5 1.1 8.6.7 1 1.6 2.2 2.7 2.2 1.1 0 1.5-.7 2.8-.7 1.3 0 1.6.7 2.8.7 1.2 0 1.9-1.1 2.6-2.1.8-1.2 1.2-2.4 1.2-2.4s-2.2-.9-2.2-3.3zM14.3 5.5c.6-.7 1-1.7.9-2.7-.9 0-2 .6-2.6 1.3-.6.6-1.1 1.7-.9 2.6 1 .1 2-.5 2.6-1.2z"></path></svg><span><i>Télécharger sur</i><b>App Store</b></span></a><a href="index.html#contact" class="store-badge" aria-label="Google Play"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="#34A853" d="M4.3 21.2c-.2-.2-.3-.5-.3-.9l8.3-8.3 2.6 2.6-9.8 5.6c-.3.2-.6.2-.8 0z"></path><path fill="#EA4335" d="M14.9 14.6 12.3 12l2.6-2.6 3.3 1.9c.7.4.7 1.4 0 1.8l-3.3 1.5z"></path><path fill="#FBBC04" d="M4.3 2.8c.2-.2.5-.2.8 0l9.8 5.6-2.6 2.6L4 3.7c0-.4.1-.7.3-.9z"></path><path fill="#4285F4" d="M4 3.7 12.3 12 4 20.3c-.1-.2-.2-.5-.2-.8V4.5c0-.3.1-.6.2-.8z"></path></svg><span><i>Disponible sur</i><b>Google Play</b></span></a><p class="store-note">L'application accompagne votre compte. La souscription et la gestion de l'abonnement se font depuis le web.</p></div></div></div><div class="foot-col"><h5>Produit</h5><ul><li><a href="index.html#fonctionnalites">Fonctionnalités</a></li><li><a href="index.html#devices">La plateforme</a></li><li><a href="/tarifs">Tarifs</a></li><li><a href="index.html#faq">FAQ</a></li></ul></div><div class="foot-col"><h5>Agence</h5><ul><li><a href="/valeur-probante">Valeur probante</a></li><li><a href="/co-traitants">Co-traitants &amp; BET</a></li><li><a href="index.html#fondateur">À propos</a></li><li><a href="index.html#manifeste">Manifeste</a></li><li><a href="index.html#contact">Contact</a></li></ul></div><div class="foot-col"><h5>Légal</h5><ul><li><a href="/mentions-legales">Mentions légales</a></li><li><a href="https://app.alba-studio.co/terms">CGU &amp; CGV</a></li><li><a href="https://app.alba-studio.co/privacy-policy">Politique RGPD</a></li><li><a href="index.html#securite">Sécurité</a></li></ul></div></div><div class="foot-bot"><div>© 2026 ALBA STUDIO — TOUS DROITS RÉSERVÉS</div><div>FAIT À LYON · AVEC SOIN <span class="fr-flag" title="Made in France"></span></div></div></div></footer>
+<footer class="foot"><div class="container"><div class="foot-top"><div><div class="foot-brand">ALBA Studio</div><div class="foot-tag">The all-in-one platform for independent architects. Made in Lyon, designed for you.</div><span class="liseret-under"></span><div class="foot-apps"><h5>The mobile &amp; tablet app</h5><div class="store-badges dark "><a href="/en#contact" class="store-badge" aria-label="App Store"><svg viewBox="0 0 24 24" width="19" height="19" fill="currentColor" aria-hidden="true"><path d="M16.4 12.7c0-2.2 1.8-3.3 1.9-3.4-1-1.5-2.6-1.7-3.2-1.7-1.4-.1-2.7.8-3.3.8-.7 0-1.7-.8-2.8-.8-1.5 0-2.8.8-3.6 2.1-1.5 2.6-.4 6.5 1.1 8.6.7 1 1.6 2.2 2.7 2.2 1.1 0 1.5-.7 2.8-.7 1.3 0 1.6.7 2.8.7 1.2 0 1.9-1.1 2.6-2.1.8-1.2 1.2-2.4 1.2-2.4s-2.2-.9-2.2-3.3zM14.3 5.5c.6-.7 1-1.7.9-2.7-.9 0-2 .6-2.6 1.3-.6.6-1.1 1.7-.9 2.6 1 .1 2-.5 2.6-1.2z"></path></svg><span><i>Download on the</i><b>App Store</b></span></a><a href="/en#contact" class="store-badge" aria-label="Google Play"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="#34A853" d="M4.3 21.2c-.2-.2-.3-.5-.3-.9l8.3-8.3 2.6 2.6-9.8 5.6c-.3.2-.6.2-.8 0z"></path><path fill="#EA4335" d="M14.9 14.6 12.3 12l2.6-2.6 3.3 1.9c.7.4.7 1.4 0 1.8l-3.3 1.5z"></path><path fill="#FBBC04" d="M4.3 2.8c.2-.2.5-.2.8 0l9.8 5.6-2.6 2.6L4 3.7c0-.4.1-.7.3-.9z"></path><path fill="#4285F4" d="M4 3.7 12.3 12 4 20.3c-.1-.2-.2-.5-.2-.8V4.5c0-.3.1-.6.2-.8z"></path></svg><span><i>Get it on</i><b>Google Play</b></span></a><p class="store-note">The app companions your account. Subscription and billing are managed on the web.</p></div></div></div><div class="foot-col"><h5>Product</h5><ul><li><a href="/en#fonctionnalites">Features</a></li><li><a href="/en#devices">The platform</a></li><li><a href="/en-tarifs">Pricing</a></li><li><a href="/en#faq">FAQ</a></li></ul></div><div class="foot-col"><h5>Company</h5><ul><li><a href="/valeur-probante">Evidential value</a></li><li><a href="/co-traitants">Consultants &amp; engineers</a></li><li><a href="/en#fondateur">About</a></li><li><a href="/en#manifeste">Manifesto</a></li><li><a href="/en#contact">Contact</a></li></ul></div><div class="foot-col"><h5>Legal</h5><ul><li><a href="/mentions-legales">Legal notice</a></li><li><a href="https://app.alba-studio.co/terms">Terms &amp; conditions</a></li><li><a href="https://app.alba-studio.co/privacy-policy">GDPR policy</a></li><li><a href="/en#securite">Security</a></li></ul></div></div><div class="foot-bot"><div>© 2026 ALBA STUDIO — ALL RIGHTS RESERVED</div><div>MADE IN LYON · WITH CARE <span class="fr-flag" title="Made in France"></span></div></div></div></footer>
 <!-- PRERENDU:FIN -->
 
 </div>

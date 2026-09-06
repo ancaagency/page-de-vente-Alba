@@ -797,9 +797,24 @@ const Contact = () => {
 const versAccueil = (fragment) => {
   if (typeof window === "undefined") return `index.html${fragment}`;
   const chemin = window.location.pathname;
-  const surAccueil = chemin === "/" || /\/index\.html$/.test(chemin);
-  return surAccueil ? fragment : `index.html${fragment}`;
+  /* L'accueil anglais est un accueil : depuis /en, une ancre du pied de page
+     doit défiler dans la page, pas renvoyer vers l'accueil français. Sans ce
+     cas, un anglophone qui clique « About » se retrouvait en français. */
+  const surAccueilEn = chemin === "/en" || chemin === "/en.html";
+  const surAccueil = chemin === "/" || /\/index\.html$/.test(chemin) || surAccueilEn;
+  if (surAccueil) return fragment;
+  /* Depuis une page anglaise qui n'est pas l'accueil, on renvoie vers
+     l'accueil ANGLAIS. `__albaLien` connaît les jumelles ; il rend l'adresse
+     française si la page n'en a pas, ce qui vaut mieux qu'un 404. */
+  const accueil = (typeof window !== "undefined" && window.__albaLien)
+    ? window.__albaLien("/")
+    : "/";
+  return `${accueil === "/" ? "index.html" : accueil}${fragment}`;
 };
+
+/** Adresse d'une page interne, dans la langue courante. */
+const lienInterne = (cheminFr) =>
+  (typeof window !== "undefined" && window.__albaLien) ? window.__albaLien(cheminFr) : cheminFr;
 
 const Footer = () => (
   <footer className="foot">
@@ -819,7 +834,7 @@ const Footer = () => (
           <ul>
             <li><a href={versAccueil("#fonctionnalites")}>{Txt("pied.fonctionnalites", "Fonctionnalités", "Features")}</a></li>
             <li><a href={versAccueil("#devices")}>{Txt("pied.la-plateforme", "La plateforme", "The platform")}</a></li>
-            <li><a href="Tarifs.html">{Txt("pied.tarifs", "Tarifs", "Pricing")}</a></li>
+            <li><a href={lienInterne("/tarifs")}>{Txt("pied.tarifs", "Tarifs", "Pricing")}</a></li>
             <li><a href={versAccueil("#faq")}>FAQ</a></li>
           </ul>
         </div>

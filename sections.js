@@ -1235,8 +1235,22 @@ var Contact = function Contact() {
 var versAccueil = function versAccueil(fragment) {
   if (typeof window === "undefined") return "index.html".concat(fragment);
   var chemin = window.location.pathname;
-  var surAccueil = chemin === "/" || /\/index\.html$/.test(chemin);
-  return surAccueil ? fragment : "index.html".concat(fragment);
+  /* L'accueil anglais est un accueil : depuis /en, une ancre du pied de page
+     doit défiler dans la page, pas renvoyer vers l'accueil français. Sans ce
+     cas, un anglophone qui clique « About » se retrouvait en français. */
+  var surAccueilEn = chemin === "/en" || chemin === "/en.html";
+  var surAccueil = chemin === "/" || /\/index\.html$/.test(chemin) || surAccueilEn;
+  if (surAccueil) return fragment;
+  /* Depuis une page anglaise qui n'est pas l'accueil, on renvoie vers
+     l'accueil ANGLAIS. `__albaLien` connaît les jumelles ; il rend l'adresse
+     française si la page n'en a pas, ce qui vaut mieux qu'un 404. */
+  var accueil = typeof window !== "undefined" && window.__albaLien ? window.__albaLien("/") : "/";
+  return "".concat(accueil === "/" ? "index.html" : accueil).concat(fragment);
+};
+
+/** Adresse d'une page interne, dans la langue courante. */
+var lienInterne = function lienInterne(cheminFr) {
+  return typeof window !== "undefined" && window.__albaLien ? window.__albaLien(cheminFr) : cheminFr;
 };
 var Footer = function Footer() {
   return /*#__PURE__*/React.createElement("footer", {
@@ -1262,7 +1276,7 @@ var Footer = function Footer() {
   }, Txt("pied.fonctionnalites", "Fonctionnalités", "Features"))), /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("a", {
     href: versAccueil("#devices")
   }, Txt("pied.la-plateforme", "La plateforme", "The platform"))), /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("a", {
-    href: "Tarifs.html"
+    href: lienInterne("/tarifs")
   }, Txt("pied.tarifs", "Tarifs", "Pricing"))), /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("a", {
     href: versAccueil("#faq")
   }, "FAQ")))), /*#__PURE__*/React.createElement("div", {

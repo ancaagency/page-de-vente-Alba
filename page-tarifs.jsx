@@ -31,6 +31,6 @@ const PricingPage = () => {
 
 ReactDOM.createRoot(document.getElementById("app")).render(<PricingPage/>);
 
-document.querySelectorAll("#lang-toggle button").forEach((b) => {
-  b.addEventListener("click", () => { if (window.__setLang) window.__setLang(b.dataset.lang); });
-});
+/* Le câblage de la bascule FR/EN vit dans i18n.js, chargé par TOUTES les
+   pages. Il était ici, et sur les tarifs : les trois pages éditoriales
+   n'avaient donc aucun moyen de changer de langue. */

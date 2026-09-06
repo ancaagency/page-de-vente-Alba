@@ -535,7 +535,21 @@ console.log('\n===== inventaire des traceurs : rien de nouveau ? =====');
   await page.goto('http://localhost:8790/', { waitUntil: 'load', timeout: 40000 });
   await page.waitForTimeout(5000);
   // On exerce la page : c'est en s'en servant qu'on déclenche les écritures.
-  await page.evaluate(() => { const b = document.querySelector('#lang-toggle button[data-lang="en"]'); if (b) b.click(); });
+  //
+  // La bascule FR/EN NAVIGUE désormais vers /en — chaque langue a son adresse,
+  // sans quoi l'anglais n'existe pour aucun moteur de recherche. Ce clic
+  // détruisait donc le contexte d'exécution, et l'appel suivant levait
+  // « Execution context was destroyed ». On attend l'arrivée.
+  //
+  // Le contrôle n'y perd rien, au contraire : il éprouve maintenant une vraie
+  // navigation, et le stockage est relu sur la page d'arrivée — même origine,
+  // donc même localStorage. C'est exactement le parcours d'un visiteur qui
+  // choisit l'anglais.
+  await Promise.all([
+    page.waitForNavigation({ waitUntil: 'load', timeout: 20000 }).catch(() => {}),
+    page.evaluate(() => { const b = document.querySelector('#lang-toggle button[data-lang="en"]'); if (b) b.click(); }),
+  ]);
+  await page.waitForTimeout(1500);
   await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
   await page.waitForTimeout(2500);
 

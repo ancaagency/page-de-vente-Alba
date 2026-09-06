@@ -45,6 +45,27 @@ export const PAGES = [
   { fichier: 'co-traitants.html', route: '/co-traitants.html', racine: 'footer-root' },
   { fichier: 'valeur-probante.html', route: '/valeur-probante.html', racine: 'footer-root' },
   { fichier: 'mentions-legales.html', route: '/mentions-legales.html', racine: 'footer-root' },
+
+  /* Les deux pages anglaises. Elles sont ENGENDRÉES par outils/anglais.mjs à
+     partir de leurs jumelles françaises : on ne les modifie jamais à la main.
+     Elles figurent ici parce que tout le reste doit les regarder — le prérendu
+     (qui doit les instantanéiser EN ANGLAIS, d'où leur route), les ancres, les
+     icônes, les traceurs, le poids des images.
+
+     Leur adresse est plate — /en et non /en/ — et c'est délibéré : toutes les
+     adresses du site sont relatives, y compris celles que le script construit
+     à l'exécution. Depuis un sous-dossier elles se résoudraient en /en/images/…
+     et la page arriverait sans feuille de style ni image. Le détail est
+     développé en tête de outils/anglais.mjs.
+
+     Les trois pages éditoriales ont maintenant leur jumelle, dont le corps est
+     une VRAIE traduction (traductions/*.en.html) : leur texte est de la prose,
+     qu'aucun outil ne traduit sans la trahir. Seule leur entête est déduite. */
+  { fichier: 'en.html', route: '/en', racine: 'app' },
+  { fichier: 'en-tarifs.html', route: '/en-tarifs', racine: 'app' },
+  { fichier: 'en-co-traitants.html', route: '/en-co-traitants', racine: 'footer-root' },
+  { fichier: 'en-valeur-probante.html', route: '/en-valeur-probante', racine: 'footer-root' },
+  { fichier: 'en-mentions-legales.html', route: '/en-mentions-legales', racine: 'footer-root' },
 ];
 
 /** Les routes servies, dans l'ordre. Pour les contrôles qui parcourent le site. */

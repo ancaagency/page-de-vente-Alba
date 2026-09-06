@@ -6,7 +6,28 @@
   <title>Mentions légales — ALBA Studio</title>
   <meta name="description" content="Mentions légales du site alba-studio.co, édité par ANCA.">
   <meta name="robots" content="index, follow">
+  <!-- Aperçu au partage. Ces pages n'en avaient aucun : envoyées par
+       courriel ou par messagerie, elles s'affichaient en lien nu, sans
+       titre ni image. Or celle des co-traitants est FAITE pour être
+       envoyée à un bureau d'études — c'est écrit dans son propre texte.
+       Un aperçu absent est une page qu'on n'ouvre pas. -->
+  <meta property="og:title" content="Mentions légales — ALBA Studio">
+  <meta property="og:description" content="Éditeur, hébergement, données personnelles et cookies.">
+  <meta property="og:type" content="article">
+  <meta property="og:image" content="https://www.alba-studio.co/images/app-cockpit-web.jpg">
+  <meta property="og:url" content="https://www.alba-studio.co/mentions-legales">
+  <meta property="og:site_name" content="ALBA Studio">
+  <meta property="og:locale" content="fr_FR">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="canonical" href="https://www.alba-studio.co/mentions-legales">
+<!-- ANGLAIS:DEBUT — produit par outils/anglais.mjs, ne pas modifier -->
+  <!-- Les deux langues se déclarent mutuellement. La réciprocité n'est pas
+       une politesse : une page qui déclare une alternative sans que celle-ci
+       lui rende la pareille est purement ignorée. -->
+  <link rel="alternate" hreflang="fr" href="https://www.alba-studio.co/mentions-legales">
+  <link rel="alternate" hreflang="en" href="https://www.alba-studio.co/en-mentions-legales">
+  <link rel="alternate" hreflang="x-default" href="https://www.alba-studio.co/mentions-legales">
+  <!-- ANGLAIS:FIN -->
   <!-- Icônes du site.
        Il n'y avait qu'une ligne ici : logo-alba.png, en 256x256. Google
        affichait un globe gris à la place, et pour deux raisons cumulées :
@@ -123,6 +144,10 @@
       <a href="Tarifs.html">Tarif</a>
     </div>
     <div style="display:flex; align-items:center; gap:14px;">
+      <div class="lang-toggle" id="lang-toggle">
+        <button data-lang="fr" class="is-active">FR</button>
+        <button data-lang="en">EN</button>
+      </div>
       <a href="https://app.alba-studio.co/auth" data-alba-login class="nav-login" id="nav-login">Se connecter</a>
       <a href="https://app.alba-studio.co/inscription" data-alba-auth class="btn btn-primary" style="padding:9px 16px; font-size:13px;">Essayer gratuitement</a>
     </div>
@@ -402,7 +427,7 @@
 
 <div id="footer-root">
 <!-- PRERENDU:DEBUT — produit par outils/prerendre.mjs, ne pas modifier -->
-<footer class="foot"><div class="container"><div class="foot-top"><div><div class="foot-brand">ALBA Studio</div><div class="foot-tag">La plateforme tout-en-un des architectes indépendants. Conçue à Lyon, pensée pour vous.</div><span class="liseret-under"></span><div class="foot-apps"><h5>L'app mobile &amp; tablette</h5><div class="store-badges dark "><a href="index.html#contact" class="store-badge" aria-label="App Store"><svg viewBox="0 0 24 24" width="19" height="19" fill="currentColor" aria-hidden="true"><path d="M16.4 12.7c0-2.2 1.8-3.3 1.9-3.4-1-1.5-2.6-1.7-3.2-1.7-1.4-.1-2.7.8-3.3.8-.7 0-1.7-.8-2.8-.8-1.5 0-2.8.8-3.6 2.1-1.5 2.6-.4 6.5 1.1 8.6.7 1 1.6 2.2 2.7 2.2 1.1 0 1.5-.7 2.8-.7 1.3 0 1.6.7 2.8.7 1.2 0 1.9-1.1 2.6-2.1.8-1.2 1.2-2.4 1.2-2.4s-2.2-.9-2.2-3.3zM14.3 5.5c.6-.7 1-1.7.9-2.7-.9 0-2 .6-2.6 1.3-.6.6-1.1 1.7-.9 2.6 1 .1 2-.5 2.6-1.2z"></path></svg><span><i>Télécharger sur</i><b>App Store</b></span></a><a href="index.html#contact" class="store-badge" aria-label="Google Play"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="#34A853" d="M4.3 21.2c-.2-.2-.3-.5-.3-.9l8.3-8.3 2.6 2.6-9.8 5.6c-.3.2-.6.2-.8 0z"></path><path fill="#EA4335" d="M14.9 14.6 12.3 12l2.6-2.6 3.3 1.9c.7.4.7 1.4 0 1.8l-3.3 1.5z"></path><path fill="#FBBC04" d="M4.3 2.8c.2-.2.5-.2.8 0l9.8 5.6-2.6 2.6L4 3.7c0-.4.1-.7.3-.9z"></path><path fill="#4285F4" d="M4 3.7 12.3 12 4 20.3c-.1-.2-.2-.5-.2-.8V4.5c0-.3.1-.6.2-.8z"></path></svg><span><i>Disponible sur</i><b>Google Play</b></span></a><p class="store-note">L'application accompagne votre compte. La souscription et la gestion de l'abonnement se font depuis le web.</p></div></div></div><div class="foot-col"><h5>Produit</h5><ul><li><a href="index.html#fonctionnalites">Fonctionnalités</a></li><li><a href="index.html#devices">La plateforme</a></li><li><a href="Tarifs.html">Tarifs</a></li><li><a href="index.html#faq">FAQ</a></li></ul></div><div class="foot-col"><h5>Agence</h5><ul><li><a href="/valeur-probante">Valeur probante</a></li><li><a href="/co-traitants">Co-traitants &amp; BET</a></li><li><a href="index.html#fondateur">À propos</a></li><li><a href="index.html#manifeste">Manifeste</a></li><li><a href="index.html#contact">Contact</a></li></ul></div><div class="foot-col"><h5>Légal</h5><ul><li><a href="/mentions-legales">Mentions légales</a></li><li><a href="https://app.alba-studio.co/terms">CGU &amp; CGV</a></li><li><a href="https://app.alba-studio.co/privacy-policy">Politique RGPD</a></li><li><a href="index.html#securite">Sécurité</a></li></ul></div></div><div class="foot-bot"><div>© 2026 ALBA STUDIO — TOUS DROITS RÉSERVÉS</div><div>FAIT À LYON · AVEC SOIN <span class="fr-flag" title="Made in France"></span></div></div></div></footer>
+<footer class="foot"><div class="container"><div class="foot-top"><div><div class="foot-brand">ALBA Studio</div><div class="foot-tag">La plateforme tout-en-un des architectes indépendants. Conçue à Lyon, pensée pour vous.</div><span class="liseret-under"></span><div class="foot-apps"><h5>L'app mobile &amp; tablette</h5><div class="store-badges dark "><a href="index.html#contact" class="store-badge" aria-label="App Store"><svg viewBox="0 0 24 24" width="19" height="19" fill="currentColor" aria-hidden="true"><path d="M16.4 12.7c0-2.2 1.8-3.3 1.9-3.4-1-1.5-2.6-1.7-3.2-1.7-1.4-.1-2.7.8-3.3.8-.7 0-1.7-.8-2.8-.8-1.5 0-2.8.8-3.6 2.1-1.5 2.6-.4 6.5 1.1 8.6.7 1 1.6 2.2 2.7 2.2 1.1 0 1.5-.7 2.8-.7 1.3 0 1.6.7 2.8.7 1.2 0 1.9-1.1 2.6-2.1.8-1.2 1.2-2.4 1.2-2.4s-2.2-.9-2.2-3.3zM14.3 5.5c.6-.7 1-1.7.9-2.7-.9 0-2 .6-2.6 1.3-.6.6-1.1 1.7-.9 2.6 1 .1 2-.5 2.6-1.2z"></path></svg><span><i>Télécharger sur</i><b>App Store</b></span></a><a href="index.html#contact" class="store-badge" aria-label="Google Play"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="#34A853" d="M4.3 21.2c-.2-.2-.3-.5-.3-.9l8.3-8.3 2.6 2.6-9.8 5.6c-.3.2-.6.2-.8 0z"></path><path fill="#EA4335" d="M14.9 14.6 12.3 12l2.6-2.6 3.3 1.9c.7.4.7 1.4 0 1.8l-3.3 1.5z"></path><path fill="#FBBC04" d="M4.3 2.8c.2-.2.5-.2.8 0l9.8 5.6-2.6 2.6L4 3.7c0-.4.1-.7.3-.9z"></path><path fill="#4285F4" d="M4 3.7 12.3 12 4 20.3c-.1-.2-.2-.5-.2-.8V4.5c0-.3.1-.6.2-.8z"></path></svg><span><i>Disponible sur</i><b>Google Play</b></span></a><p class="store-note">L'application accompagne votre compte. La souscription et la gestion de l'abonnement se font depuis le web.</p></div></div></div><div class="foot-col"><h5>Produit</h5><ul><li><a href="index.html#fonctionnalites">Fonctionnalités</a></li><li><a href="index.html#devices">La plateforme</a></li><li><a href="/tarifs">Tarifs</a></li><li><a href="index.html#faq">FAQ</a></li></ul></div><div class="foot-col"><h5>Agence</h5><ul><li><a href="/valeur-probante">Valeur probante</a></li><li><a href="/co-traitants">Co-traitants &amp; BET</a></li><li><a href="index.html#fondateur">À propos</a></li><li><a href="index.html#manifeste">Manifeste</a></li><li><a href="index.html#contact">Contact</a></li></ul></div><div class="foot-col"><h5>Légal</h5><ul><li><a href="/mentions-legales">Mentions légales</a></li><li><a href="https://app.alba-studio.co/terms">CGU &amp; CGV</a></li><li><a href="https://app.alba-studio.co/privacy-policy">Politique RGPD</a></li><li><a href="index.html#securite">Sécurité</a></li></ul></div></div><div class="foot-bot"><div>© 2026 ALBA STUDIO — TOUS DROITS RÉSERVÉS</div><div>FAIT À LYON · AVEC SOIN <span class="fr-flag" title="Made in France"></span></div></div></div></footer>
 <!-- PRERENDU:FIN -->
 
 </div>

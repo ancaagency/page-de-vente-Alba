@@ -9,25 +9,25 @@
    qui compte : un jour où il faudra changer de domaine, une seule ligne suffira.
    Un premier passage avait justement révélé que les liens des mentions légales
    ne suivaient pas. */
-import http from 'node:http'; import fs from 'node:fs'; import path from 'node:path';
 import { chromium } from 'playwright-core';
 import { ROUTES } from '../outils/pages.mjs';
-const ROOT = path.resolve(new URL('.', import.meta.url).pathname, '..');
+import { demarrer } from './serveur.mjs';
 const NOUVELLE = 'https://essai-de-bascule.example';
-const T = {'.html':'text/html','.css':'text/css','.js':'text/javascript','.jsx':'text/babel',
-           '.png':'image/png','.jpg':'image/jpeg','.mp3':'audio/mpeg'};
-const srv = http.createServer((req,res)=>{
-  let p = decodeURIComponent(req.url.split('?')[0]);
-  if (p==='/') p='/index.html'; if (p==='/tarifs') p='/Tarifs.html';
-  const f = path.join(ROOT,p);
-  if(!fs.existsSync(f)||fs.statSync(f).isDirectory()){res.writeHead(404);return res.end();}
-  let body = fs.readFileSync(f);
+
+/* Ce contrôle avait SON PROPRE serveur HTTP, recopié de serveur.mjs.
+   Il a divergé au premier changement, comme toute copie : serveur.mjs a appris
+   à servir les adresses propres — /en pour en.html, comme le fait Cloudflare —
+   et la copie ne l'a pas appris. Les deux pages anglaises tombaient donc en 404
+   ici, sur un site où elles fonctionnent.
+
+   C'est exactement la duplication que outils/pages.mjs avait supprimée pour la
+   liste des pages, et elle était revenue par la porte du serveur. Le paramètre
+   `remplacements` de demarrer() existait déjà pour ce besoin : réécrire un
+   fichier servi sans toucher au dépôt. On l'utilise, et la copie disparaît. */
+const srv = await demarrer(8788, {
   // Le seul changement du jour J : la valeur dans config.js.
-  if (p==='/config.js') body = Buffer.from(String(body).replace('https://app.alba-studio.co', NOUVELLE));
-  res.writeHead(200,{'Content-Type':T[path.extname(f)]||'application/octet-stream'});
-  res.end(body);
+  '/config.js': (corps) => corps.replace('https://app.alba-studio.co', NOUVELLE),
 });
-await new Promise(r=>srv.listen(8788,r));
 const b = await chromium.launch({executablePath: process.env.CHROMIUM_PATH || '/opt/pw-browsers/chromium-1194/chrome-linux/chrome'});
 const page = await b.newPage();
 let ko = 0;

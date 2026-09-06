@@ -181,11 +181,9 @@ ReactDOM.createRoot(document.getElementById("app")).render(<App/>);
        tests/smoke.mjs compare les deux. */
     document.title = lang === "en" ? "The Platform for Demanding Architects - Alba Studio" : "La Plateforme des architectes exigeants - Alba Studio";
   };
-  document.querySelectorAll("#lang-toggle button").forEach((b) => {
-    b.addEventListener("click", () => {
-      if (window.__setLang) window.__setLang(b.dataset.lang);
-    });
-  });
+  /* Le câblage de la bascule FR/EN vit dans i18n.js, chargé par TOUTES les
+     pages. Il était ici, et sur les tarifs : les trois pages éditoriales
+     n'avaient donc aucun moyen de changer de langue. */
   window.__applyNavLang(window.__albaLang || "fr");
 })();
 
