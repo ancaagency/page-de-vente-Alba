@@ -763,6 +763,16 @@ section {
   box-shadow: 0 0 0 4px var(--accent-soft);
 }
 
+/* <picture> ne doit rien peser dans la mise en page.
+   <Photo> enveloppe chaque image d'un <picture> pour proposer l'AVIF puis le
+   WebP. Sans cette règle, c'est le <picture> — et non l'image — qui devient
+   l'élément flexible ou la cellule de grille de son parent, et les mises en
+   page qui comptaient sur l'image se décalent. `display: contents` le fait
+   disparaître de l'arbre des boîtes en laissant l'image à sa place exacte.
+   Il ne le retire pas de l'arbre du document : les sélecteurs CSS et le
+   script continuent de le voir. */
+picture { display: contents; }
+
 /* utility */
 .row { display: flex; align-items: center; gap: 16px; }
 .col { display: flex; flex-direction: column; }

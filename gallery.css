@@ -58,14 +58,21 @@
   cursor: pointer;
 }
 .gtile .photo-ph { height: 100%; border-radius: 0; }
-.gtile > img {
+/* `.gtile img` et non `.gtile > img` : l'image est désormais enveloppée dans
+   un <picture> (voir <Photo> dans components.jsx), et un combinateur d'enfant
+   direct ne traverse pas cette enveloppe. La règle aurait cessé de s'appliquer
+   en silence : plus d'`object-fit`, plus de `height: 100%` — l'image serait
+   sortie de sa tuile, sans erreur nulle part.
+   `display: contents` plus bas retire le <picture> de la mise en page, pas de
+   l'arbre du document : la sélection reste affaire de DOM. */
+.gtile img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
   transition: transform 1.4s cubic-bezier(.2,.8,.2,1);
 }
-.gtile:hover > img { transform: scale(1.05); }
+.gtile:hover img { transform: scale(1.05); }
 .gtile .photo-ph svg { transition: transform 1.4s cubic-bezier(.2,.8,.2,1); }
 .gtile:hover .photo-ph svg { transform: scale(1.05); }
 

@@ -33,6 +33,10 @@
       background: var(--accent-soft, rgba(201,168,106,0.12));
     }
     :host([shape="circle"]) { border-radius: 50%; }
+    /* La règle globale de styles.css ne franchit pas la frontière du shadow
+       DOM : elle doit être répétée ici, sinon c'est le <picture> qui prend la
+       place de l'image dans la mise en page et le portrait perd son cadrage. */
+    picture { display: contents; }
     img {
       width: 100%; height: 100%;
       object-fit: cover;
@@ -81,6 +85,10 @@
       const alt = this.getAttribute('alt') || '';
       // Sans texte fourni, on n'affiche rien plutôt qu'un mot inventé.
       const placeholder = this.getAttribute('placeholder') || '';
+      /* Largeur d'affichage annoncée au navigateur, pour qu'il choisisse la
+         bonne dérivée. Facultative : la valeur par défaut couvre le portrait
+         du fondateur, seul emplacement en service. */
+      const sizes = this.getAttribute('sizes');
 
       /* Construction par API DOM, et non par innerHTML.
          Cette méthode assemblait une chaîne HTML en échappant ses variables à la
@@ -125,7 +133,32 @@
         }
       }, { once: true });
 
-      racine.appendChild(img);
+      /* MÊME NÉGOCIATION DE FORMAT QUE <Photo>, EN IMPÉRATIF.
+         Cet emplacement construit son image en script, dans un shadow DOM : il
+         ne peut pas réutiliser le composant React. Il enveloppe donc lui-même
+         l'image d'un <picture>, à partir du même manifeste engendré
+         (window.ALBA_PHOTOS, voir outils/images.py). Sans entrée au manifeste,
+         l'image est ajoutée telle quelle — le portrait s'affiche de toute
+         façon, simplement sans dérivée.
+         Le repli sur erreur reste posé sur l'<img> : c'est elle qui échoue, et
+         le navigateur retombe sur `src` si aucune source ne convient. */
+      const largeurs = (window.ALBA_PHOTOS || {})[src];
+      if (!largeurs) {
+        racine.appendChild(img);
+        return;
+      }
+      const base = src.replace(/^.*\//, '').replace(/\.[^.]+$/, '');
+      const picture = document.createElement('picture');
+      for (const ext of ['avif', 'webp']) {
+        const source = document.createElement('source');
+        source.type = 'image/' + ext;
+        source.srcset = largeurs.map((l) => 'images/derivees/' + base + '-' + l + '.' + ext + ' ' + l + 'w').join(', ');
+        source.sizes = sizes || '(max-width: 760px) 92vw, 560px';
+        picture.appendChild(source);
+      }
+      img.sizes = sizes || '(max-width: 760px) 92vw, 560px';
+      picture.appendChild(img);
+      racine.appendChild(picture);
     }
   }
 

@@ -98,10 +98,10 @@ var PinnedDevices = function PinnedDevices() {
   React.createElement("div", {
     className: "dev-shot laptop-shot",
     key: "ordinateur"
-  }, /*#__PURE__*/React.createElement("img", {
+  }, /*#__PURE__*/React.createElement(Photo, {
     src: "uploads/ordinateur-crop.png",
     alt: L("ALBA Studio sur ordinateur — budget de projet", "ALBA Studio on desktop — project budget"),
-    loading: "lazy"
+    sizes: "(max-width: 760px) 92vw, 640px"
   })),
   /*#__PURE__*/
   /* TERRAIN — tablette + mobile, captures réelles */
@@ -110,16 +110,16 @@ var PinnedDevices = function PinnedDevices() {
     key: "terrain"
   }, /*#__PURE__*/React.createElement("div", {
     className: "dev-shot tablet-shot"
-  }, /*#__PURE__*/React.createElement("img", {
+  }, /*#__PURE__*/React.createElement(Photo, {
     src: "uploads/tablette-crop.png",
     alt: L("ALBA Studio sur tablette — maîtres d'ouvrage & intervenants", "ALBA Studio on tablet — clients & partners"),
-    loading: "lazy"
+    sizes: "(max-width: 760px) 70vw, 530px"
   })), /*#__PURE__*/React.createElement("div", {
     className: "dev-shot phone-shot"
-  }, /*#__PURE__*/React.createElement("img", {
+  }, /*#__PURE__*/React.createElement(Photo, {
     src: "uploads/mobile-crop.png",
     alt: L("ALBA Studio sur mobile — projet Grange Lissieu", "ALBA Studio on mobile — Grange Lissieu project"),
-    loading: "lazy"
+    sizes: "(max-width: 760px) 32vw, 230px"
   })))];
 
   /* ---------- Mobile: simple stacked blocks, no pinning ---------- */

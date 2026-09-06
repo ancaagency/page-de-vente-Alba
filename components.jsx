@@ -608,7 +608,13 @@ const RealShot = ({ src, title = "alba-studio.co", alt = "Interface ALBA Studio"
       </div>
       <div style={{width:46}}/>
     </div>
-    <img src={src} alt={alt} style={{display:"block", width:"100%", height:"auto"}}/>
+    {/* `loading="eager"` et `fetchPriority="high"` : c'est l'image du héros,
+        celle que mesure le Largest Contentful Paint. La différer la ferait
+        arriver après le reste, et dégraderait la seule mesure de vitesse que
+        Google regarde vraiment. index.html la précharge en plus. */}
+    <Photo src={src} alt={alt} loading="eager" fetchPriority="high"
+           sizes="(max-width: 760px) 92vw, 1020px"
+           style={{display:"block", width:"100%", height:"auto"}}/>
   </div>
 );
 
@@ -780,6 +786,59 @@ const MessageEssai = () => {
   );
 };
 
+/* ============================================================================
+   <Photo> — une image servie à la taille où elle est vraiment affichée
+   ============================================================================
+   Le parcours mobile de l'accueil pesait 1,8 Mo d'images. Pas parce qu'il y en
+   a beaucoup — dix — mais parce que chacune partait dans sa taille d'origine.
+   `villa-interieur.jpg` fait 1600 px de large pour 382 Ko, et s'affiche dans
+   350 px sur un téléphone : vingt fois les pixels nécessaires, envoyés à un
+   architecte en 4G sur un chantier, c'est-à-dire à la cible.
+
+   Ce composant rend un <picture> : l'AVIF d'abord, le WebP ensuite, et la
+   balise <img> d'origine en dernier recours. Le navigateur prend le premier
+   format qu'il comprend, puis choisit la largeur d'après `sizes` et la densité
+   de son écran. Aucun script n'intervient — c'est la négociation native.
+
+   LES LARGEURS NE SONT PAS ÉCRITES ICI. Elles viennent de window.ALBA_PHOTOS,
+   engendré par outils/images.py en même temps que les fichiers. Une liste
+   recopiée à la main des deux côtés diverge tôt ou tard, et cette
+   divergence-là est muette : le navigateur demande une dérivée absente,
+   reçoit un 404 et affiche le recours sans que rien ne le signale.
+
+   Sans entrée dans le manifeste, <Photo> rend une <img> ordinaire. C'est un
+   choix : une image nouvelle doit s'afficher correctement AVANT qu'on ait
+   pensé à lancer le générateur, sinon on décourage l'ajout d'images.
+   ============================================================================ */
+const Photo = ({ src, alt, sizes, className, loading = "lazy", fetchPriority, ...reste }) => {
+  const largeurs = (typeof window !== "undefined" && window.ALBA_PHOTOS && window.ALBA_PHOTOS[src]) || null;
+  const img = (
+    <img
+      src={src}
+      alt={alt}
+      loading={loading}
+      decoding="async"
+      fetchpriority={fetchPriority}
+      className={className}
+      sizes={largeurs ? sizes : undefined}
+      {...reste}
+    />
+  );
+  if (!largeurs) return img;
+
+  /* images/villa-interieur.jpg → villa-interieur, le nom que porte la dérivée. */
+  const base = src.replace(/^.*\//, "").replace(/\.[^.]+$/, "");
+  const jeu = (ext) => largeurs.map((l) => `images/derivees/${base}-${l}.${ext} ${l}w`).join(", ");
+
+  return (
+    <picture>
+      <source type="image/avif" srcSet={jeu("avif")} sizes={sizes}/>
+      <source type="image/webp" srcSet={jeu("webp")} sizes={sizes}/>
+      {img}
+    </picture>
+  );
+};
+
 window.Icon = Icon;
 window.BoutonEssai = BoutonEssai;
 window.MessageEssai = MessageEssai;
@@ -787,3 +846,4 @@ window.StoreBadges = StoreBadges;
 window.PhotoPlaceholder = PhotoPlaceholder;
 window.AppMockup = AppMockup;
 window.RealShot = RealShot;
+window.Photo = Photo;

@@ -12,7 +12,9 @@
    transpilation, c'est du JavaScript ordinaire.
    ═══════════════════════════════════════════════════════════════════════════ */
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
-var _excluded = ["name", "size", "stroke"];
+var _excluded = ["name", "size", "stroke"],
+  _excluded2 = ["src", "alt", "sizes", "className", "loading", "fetchPriority"];
+function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
@@ -1720,9 +1722,12 @@ var RealShot = function RealShot(_ref7) {
     style: {
       width: 46
     }
-  })), /*#__PURE__*/React.createElement("img", {
+  })), /*#__PURE__*/React.createElement(Photo, {
     src: src,
     alt: alt,
+    loading: "eager",
+    fetchPriority: "high",
+    sizes: "(max-width: 760px) 92vw, 1020px",
     style: {
       display: "block",
       width: "100%",
@@ -1916,6 +1921,69 @@ var MessageEssai = function MessageEssai() {
     "aria-label": L("Fermer", "Close")
   }, "\xD7"));
 };
+
+/* ============================================================================
+   <Photo> — une image servie à la taille où elle est vraiment affichée
+   ============================================================================
+   Le parcours mobile de l'accueil pesait 1,8 Mo d'images. Pas parce qu'il y en
+   a beaucoup — dix — mais parce que chacune partait dans sa taille d'origine.
+   `villa-interieur.jpg` fait 1600 px de large pour 382 Ko, et s'affiche dans
+   350 px sur un téléphone : vingt fois les pixels nécessaires, envoyés à un
+   architecte en 4G sur un chantier, c'est-à-dire à la cible.
+
+   Ce composant rend un <picture> : l'AVIF d'abord, le WebP ensuite, et la
+   balise <img> d'origine en dernier recours. Le navigateur prend le premier
+   format qu'il comprend, puis choisit la largeur d'après `sizes` et la densité
+   de son écran. Aucun script n'intervient — c'est la négociation native.
+
+   LES LARGEURS NE SONT PAS ÉCRITES ICI. Elles viennent de window.ALBA_PHOTOS,
+   engendré par outils/images.py en même temps que les fichiers. Une liste
+   recopiée à la main des deux côtés diverge tôt ou tard, et cette
+   divergence-là est muette : le navigateur demande une dérivée absente,
+   reçoit un 404 et affiche le recours sans que rien ne le signale.
+
+   Sans entrée dans le manifeste, <Photo> rend une <img> ordinaire. C'est un
+   choix : une image nouvelle doit s'afficher correctement AVANT qu'on ait
+   pensé à lancer le générateur, sinon on décourage l'ajout d'images.
+   ============================================================================ */
+var Photo = function Photo(_ref9) {
+  var src = _ref9.src,
+    alt = _ref9.alt,
+    sizes = _ref9.sizes,
+    className = _ref9.className,
+    _ref9$loading = _ref9.loading,
+    loading = _ref9$loading === void 0 ? "lazy" : _ref9$loading,
+    fetchPriority = _ref9.fetchPriority,
+    reste = _objectWithoutProperties(_ref9, _excluded2);
+  var largeurs = typeof window !== "undefined" && window.ALBA_PHOTOS && window.ALBA_PHOTOS[src] || null;
+  var img = /*#__PURE__*/React.createElement("img", _extends({
+    src: src,
+    alt: alt,
+    loading: loading,
+    decoding: "async",
+    fetchpriority: fetchPriority,
+    className: className,
+    sizes: largeurs ? sizes : undefined
+  }, reste));
+  if (!largeurs) return img;
+
+  /* images/villa-interieur.jpg → villa-interieur, le nom que porte la dérivée. */
+  var base = src.replace(/^.*\//, "").replace(/\.[^.]+$/, "");
+  var jeu = function jeu(ext) {
+    return largeurs.map(function (l) {
+      return "images/derivees/".concat(base, "-").concat(l, ".").concat(ext, " ").concat(l, "w");
+    }).join(", ");
+  };
+  return /*#__PURE__*/React.createElement("picture", null, /*#__PURE__*/React.createElement("source", {
+    type: "image/avif",
+    srcSet: jeu("avif"),
+    sizes: sizes
+  }), /*#__PURE__*/React.createElement("source", {
+    type: "image/webp",
+    srcSet: jeu("webp"),
+    sizes: sizes
+  }), img);
+};
 window.Icon = Icon;
 window.BoutonEssai = BoutonEssai;
 window.MessageEssai = MessageEssai;
@@ -1923,3 +1991,4 @@ window.StoreBadges = StoreBadges;
 window.PhotoPlaceholder = PhotoPlaceholder;
 window.AppMockup = AppMockup;
 window.RealShot = RealShot;
+window.Photo = Photo;
