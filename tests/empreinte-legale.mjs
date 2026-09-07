@@ -44,12 +44,24 @@ export const PAGES_LEGALES = [
 /** Empreinte du texte légal et date affichée, pour un fichier. */
 export function relever(fichier) {
   const brut = fs.readFileSync(path.join(ROOT, fichier), 'utf8');
-  /* Le prérendu est réengendré à chaque passage et n'est pas du texte légal :
-     l'inclure ferait varier l'empreinte sans qu'un mot ait bougé. */
+  /* ── ON NE MESURE QUE CE QUI EST ÉCRIT À LA MAIN ──────────────────────────
+     Deux blocs de cette page sont ENGENDRÉS, et aucun n'est du texte légal :
+
+       · le prérendu, réinjecté à chaque passage ;
+       · les données structurées de la FAQ, dérivées de contenu.js par
+         outils/faq-jsonld.mjs et posées dans TOUTES les pages, y compris
+         celle-ci.
+
+     Le second a fait échouer ce contrôle sur une page dont pas un mot légal
+     n'avait bougé : une correction de la réponse « Où sont hébergées mes
+     données ? » sur l'accueil suffisait à réclamer une nouvelle date pour les
+     mentions légales. Un garde-fou qui accuse à tort est pire qu'un garde-fou
+     absent : on apprend à ignorer sa couleur, puis on le retire. */
   const i = brut.indexOf('<!-- PRERENDU:DEBUT');
-  const sansPrerendu = i === -1
+  const sansPrerendu = (i === -1
     ? brut
-    : brut.slice(0, i) + brut.slice(brut.indexOf('<!-- PRERENDU:FIN -->'));
+    : brut.slice(0, i) + brut.slice(brut.indexOf('<!-- PRERENDU:FIN -->'))
+  ).replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>/g, '');
   const date = (sansPrerendu.match(/class="legal-updated">([^<]*)</) || [])[1] || '';
   /* La date est neutralisée AVANT le calcul : c'est elle qu'on éprouve, elle ne
      peut pas faire partie de ce qu'on mesure. */

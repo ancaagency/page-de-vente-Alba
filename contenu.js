@@ -697,16 +697,16 @@ window.ALBA_CONTENU = {
     en: "Hosted in France",
   },
   "securite.vos-donnees-sont-stockees-en-france": {
-    fr: "Vos données sont stockées en France, chez un hébergeur certifié ISO 27001. Conformité RGPD native.",
-    en: "Your data is stored in France with an ISO 27001-certified host. GDPR-compliant by design.",
+    fr: "Vos données sont hébergées en France, chez un hébergeur certifié ISO 27001. Les sauvegardes chiffrées restent dans l'Union européenne.",
+    en: "Your data is hosted in France with an ISO 27001-certified host. Encrypted backups stay within the European Union.",
   },
   "securite.chiffre-sauvegarde": {
     fr: "Chiffré, sauvegardé",
     en: "Encrypted, backed up",
   },
   "securite.chiffrement-aes-256-au-repos-tls": {
-    fr: "Chiffrement AES-256 au repos, TLS en transit. Sauvegardes automatiques quotidiennes.",
-    en: "AES-256 encryption at rest, TLS in transit. Automatic daily backups.",
+    fr: "Chiffrement au repos et en transit. Sauvegardes automatiques, conservées dans l'Union européenne.",
+    en: "Encrypted at rest and in transit. Automatic backups, kept within the European Union.",
   },
   "securite.vos-donnees-vous-appartiennent": {
     fr: "Vos données vous appartiennent",
@@ -807,8 +807,8 @@ window.ALBA_CONTENU = {
     en: "Where is my data hosted?",
   },
   "faq.en-france-chez-un-hebergeur-certifie": {
-    fr: "En France, chez un hébergeur certifié ISO 27001. Chiffrement AES-256 au repos, TLS en transit, sauvegardes quotidiennes. Conformité RGPD native.",
-    en: "In France, with an ISO 27001-certified host. AES-256 encryption at rest, TLS in transit, daily backups. GDPR-compliant by design.",
+    fr: "En France, chez un hébergeur certifié ISO 27001 : base de données, fichiers et comptes. Chiffrement au repos et en transit. Les sauvegardes chiffrées sont conservées dans l'Union européenne.",
+    en: "In France, with an ISO 27001-certified host: database, files and accounts. Encrypted at rest and in transit. Encrypted backups are kept within the European Union.",
   },
   "faq.les-prix-affiches-sont-ils-hors": {
     fr: "Les prix affichés sont-ils hors taxes ?",

@@ -824,11 +824,11 @@ var TrustBand = function TrustBand() {
   var items = [{
     icon: "globe",
     t: Txt("securite.heberge-en-france", "Hébergé en France", "Hosted in France"),
-    d: Txt("securite.vos-donnees-sont-stockees-en-france", "Vos données sont stockées en France, chez un hébergeur certifié ISO 27001. Conformité RGPD native.", "Your data is stored in France with an ISO 27001-certified host. GDPR-compliant by design.")
+    d: Txt("securite.vos-donnees-sont-stockees-en-france", "Vos données sont hébergées en France, chez un hébergeur certifié ISO 27001. Les sauvegardes chiffrées restent dans l'Union européenne.", "Your data is hosted in France with an ISO 27001-certified host. Encrypted backups stay within the European Union.")
   }, {
     icon: "lock",
     t: Txt("securite.chiffre-sauvegarde", "Chiffré, sauvegardé", "Encrypted, backed up"),
-    d: Txt("securite.chiffrement-aes-256-au-repos-tls", "Chiffrement AES-256 au repos, TLS en transit. Sauvegardes automatiques quotidiennes.", "AES-256 encryption at rest, TLS in transit. Automatic daily backups.")
+    d: Txt("securite.chiffrement-aes-256-au-repos-tls", "Chiffrement au repos et en transit. Sauvegardes automatiques, conservées dans l'Union européenne.", "Encrypted at rest and in transit. Automatic backups, kept within the European Union.")
   }, {
     icon: "doc",
     t: Txt("securite.vos-donnees-vous-appartiennent", "Vos données vous appartiennent", "Your data stays yours"),
@@ -892,7 +892,7 @@ var Faq = function Faq() {
     a: Txt("faq.tous-pdf-dwg-ifc-images-videos", "Tous — PDF, DWG, IFC, images, vidéos, jusqu'à 100 Mo par fichier. Les plans PDF et les images s'ouvrent directement dans le navigateur : vos clients n'ont besoin d'aucun logiciel.", "All of them — PDF, DWG, IFC, images, videos, up to 100 MB per file. PDF plans and images open right in the browser: your clients don't need any software.")
   }, {
     q: Txt("faq.ou-sont-hebergees-mes-donnees", "Où sont hébergées mes données ?", "Where is my data hosted?"),
-    a: Txt("faq.en-france-chez-un-hebergeur-certifie", "En France, chez un hébergeur certifié ISO 27001. Chiffrement AES-256 au repos, TLS en transit, sauvegardes quotidiennes. Conformité RGPD native.", "In France, with an ISO 27001-certified host. AES-256 encryption at rest, TLS in transit, daily backups. GDPR-compliant by design.")
+    a: Txt("faq.en-france-chez-un-hebergeur-certifie", "En France, chez un hébergeur certifié ISO 27001 : base de données, fichiers et comptes. Chiffrement au repos et en transit. Les sauvegardes chiffrées sont conservées dans l'Union européenne.", "In France, with an ISO 27001-certified host: database, files and accounts. Encrypted at rest and in transit. Encrypted backups are kept within the European Union.")
   }, {
     q: Txt("faq.les-prix-affiches-sont-ils-hors", "Les prix affichés sont-ils hors taxes ?", "Are the prices shown excluding tax?"),
     a: Txt("faq.oui-tous-les-montants-de-cette", "Oui, tous les montants de cette page sont hors taxes. La TVA applicable est calculée au moment du paiement, selon votre pays et votre statut : 20 % pour une agence assujettie en France. Si vous disposez d'un numéro de TVA intracommunautaire, il vous sera demandé lors de la souscription. Votre facture est émise automatiquement après chaque prélèvement.", "Yes, every amount on this page is exclusive of tax. Applicable VAT is calculated at checkout, based on your country and status: 20% for a practice registered in France. If you have an EU VAT number, you will be asked for it during signup. Your invoice is issued automatically after each payment.")
