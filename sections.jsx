@@ -324,6 +324,224 @@ const Testimonials = () => (
 );
 
 /* ============================================================================
+   « TOUT CE QUE FAIT ALBA » — le catalogue, derrière un bouton
+   ============================================================================
+   POURQUOI IL N'Y A QU'UN SEUL BOUTON
+
+   La demande parlait de le poser « sur la ligne Toutes les fonctionnalités de
+   l'encadré, et sur la même ligne dans chacune des trois cartes ». Cette ligne
+   n'existe plus qu'à UN endroit depuis la refonte : les trois offres sont
+   devenues des tuiles d'une ligne, et ce sont elles-mêmes des <button> — un
+   bouton dans un bouton n'est pas du HTML valide, et aucun lecteur d'écran
+   n'en fait quelque chose d'utilisable.
+
+   L'intention, elle, est respectée à la lettre : un seul bouton, un seul
+   contenu, pas quatre listes à maintenir.
+
+   ────────────────────────────────────────────────────────────────────────────
+   POURQUOI UN PORTAIL VERS <body>
+
+   `.reveal` porte `transform: translateY(0)` même à l'état visible. Un
+   `transform` sur un ancêtre fait de lui le bloc conteneur des descendants en
+   `position: fixed` : la fenêtre se serait centrée sur la CARTE, pas sur
+   l'écran, et le voile n'aurait couvert qu'elle. Le portail sort du sous-arbre
+   et rend le problème impossible plutôt que de le contourner.
+
+   ⚠️ AUCUN PRIX ICI, et aucune mention d'offre — à la seule exception de
+   « offre Agence » sur la ligne Collaborateurs, parce que c'est la seule
+   fonction dont l'accès dépend réellement de l'offre. Ce n'est pas un tableau
+   comparatif : c'est précisément ce qu'on refuse de faire, puisque tout est
+   dans toutes les offres. tests/montants.mjs veille sur les montants.
+   ============================================================================ */
+const CATALOGUE = () => [
+  {
+    icone: "folder",
+    titre: Txt("catalogue.projets", "Vos projets", "Your projects"),
+    items: [
+      Txt("catalogue.projets-decisions", "Décisions — trancher, horodater et signer les choix du chantier", "Decisions — settle, timestamp and sign the choices made on site"),
+      Txt("catalogue.projets-documents", "Documents — plans, pièces écrites, contrats : déposés, versionnés, partagés", "Documents — drawings, written documents, contracts: uploaded, versioned, shared"),
+      Txt("catalogue.projets-suivi", "Suivi du projet — les phases, les jalons et les échéances", "Project tracking — phases, milestones and deadlines"),
+      Txt("catalogue.projets-budget", "Budget — le suivi des montants, des lots et des factures", "Budget — tracking amounts, work packages and invoices"),
+      Txt("catalogue.projets-rentabilite", "Rentabilité — le temps passé et la marge, projet par projet", "Profitability — time spent and margin, project by project"),
+      Txt("catalogue.projets-chantier", "Suivi de chantier — réserves, comptes rendus de visite, PV et photos", "Site tracking — punch-list items, visit reports, minutes and photographs"),
+      Txt("catalogue.projets-calendrier", "Calendrier — toutes les échéances de tous les projets au même endroit", "Calendar — every deadline from every project in one place"),
+    ],
+  },
+  {
+    icone: "sparkle",
+    titre: Txt("catalogue.leo", "Léo, votre assistant", "Léo, your assistant"),
+    items: [
+      Txt("catalogue.leo-lit", "Il lit vos pièces écrites — CCTP, descriptifs, DPGF, notices — et en sort les prescriptions, les matériaux, les prix et les intervenants", "He reads your written documents — specifications, schedules of works, bills of quantities, notices — and extracts requirements, materials, prices and parties"),
+      Txt("catalogue.leo-questions", "Vous lui posez vos questions sur vos projets, en français", "You ask him questions about your projects, in plain English"),
+      Txt("catalogue.leo-voix", "Il répond à voix haute si vous le souhaitez", "He answers out loud if you want him to"),
+      Txt("catalogue.leo-briefing", "Un briefing du matin qui rassemble ce qui vous attend", "A morning briefing that gathers what lies ahead"),
+    ],
+  },
+  {
+    icone: "users",
+    titre: Txt("catalogue.portail", "Le portail de vos clients", "Your clients' portal"),
+    items: [
+      Txt("catalogue.portail-espace", "Un espace par projet pour le maître d'ouvrage, sans qu'il crée de compte", "A space per project for your client, with no account to create"),
+      Txt("catalogue.portail-signature", "Validation des choix et signature électronique des procès-verbaux", "Approval of choices and electronic signature of minutes"),
+      Txt("catalogue.portail-messagerie", "Messagerie avec le maître d'ouvrage et les intervenants", "Messaging with your client and everyone involved"),
+      Txt("catalogue.portail-droits", "Vous décidez, projet par projet et personne par personne, de ce qu'ils voient", "You decide, project by project and person by person, what they see"),
+      Txt("catalogue.portail-gratuits", "Clients, bureaux d'études et entreprises : gratuits et illimités", "Clients, engineers and contractors: free and unlimited"),
+    ],
+  },
+  {
+    icone: "layers",
+    titre: Txt("catalogue.matiere", "La matière", "Your material"),
+    items: [
+      Txt("catalogue.matiere-materiautheque", "Matériauthèque — votre bibliothèque de matériaux, réutilisable d'un projet à l'autre", "Material library — your own library of materials, reusable from one project to the next"),
+      Txt("catalogue.matiere-lots", "Bibliothèque de lots et de modèles CCTP", "Library of work packages and specification templates"),
+      Txt("catalogue.matiere-consultation", "Consultation des entreprises — prescriptions, intervenants et prix", "Tendering — requirements, parties and prices"),
+    ],
+  },
+  {
+    icone: "compass",
+    titre: Txt("catalogue.agence", "Votre agence", "Your practice"),
+    items: [
+      Txt("catalogue.agence-collaborateurs", "Collaborateurs — inviter votre équipe et régler ses droits (offre Agence)", "Team members — invite your team and set their permissions (Practice plan)"),
+      Txt("catalogue.agence-visuels", "Visuels — galeries, diaporama et visites virtuelles pour vos présentations", "Visuals — galleries, slideshows and virtual tours for your presentations"),
+      Txt("catalogue.agence-emails", "E-mails automatiques", "Automatic emails"),
+      Txt("catalogue.agence-honoraires", "Calculateur d'honoraires", "Fee calculator"),
+      Txt("catalogue.agence-archives", "Archives et corbeille", "Archives and bin"),
+    ],
+  },
+  {
+    icone: "globe",
+    titre: Txt("catalogue.aussi", "Et aussi", "And also"),
+    items: [
+      Txt("catalogue.aussi-mobile", "Application mobile iOS et Android", "iOS and Android mobile app"),
+      Txt("catalogue.aussi-notifications", "Notifications par e-mail et sur votre téléphone", "Notifications by email and on your phone"),
+      Txt("catalogue.aussi-2fa", "Double authentification", "Two-factor authentication"),
+      Txt("catalogue.aussi-langues", "Français et anglais", "French and English"),
+      Txt("catalogue.aussi-accessibilite", "Réglages d'accessibilité", "Accessibility settings"),
+      Txt("catalogue.aussi-marque", "Vos couleurs et votre logo sur les documents envoyés", "Your colours and your logo on the documents you send"),
+    ],
+  },
+];
+
+const ToutesFonctionnalites = () => {
+  const [ouvert, setOuvert] = React.useState(false);
+  const bouton = React.useRef(null);
+  const boite = React.useRef(null);
+  const titreId = "catalogue-titre";
+
+  /* ── LE PIÈGE À FOCUS ───────────────────────────────────────────────────
+     Sans lui, la tabulation sort de la fenêtre par le bas et se promène dans
+     une page que le voile rend invisible : on tabule à l'aveugle, sans savoir
+     où l'on est ni comment revenir. Le tabindex={-1} sur la boîte donne un
+     point de départ au focus sans ajouter un arrêt de tabulation. */
+  React.useEffect(() => {
+    if (!ouvert) return;
+    const el = boite.current;
+    if (!el) return;
+
+    const focusables = () => [...el.querySelectorAll(
+      'a[href], button:not([disabled]), input:not([disabled]), select, textarea, [tabindex]:not([tabindex="-1"])'
+    )].filter((n) => n.offsetParent !== null);
+
+    /* On entre par le bouton « Fermer » : c'est la sortie, et savoir en sortir
+       est la première chose dont on a besoin en arrivant. */
+    const premier = el.querySelector(".fen-fermer");
+    if (premier) premier.focus();
+
+    const auClavier = (e) => {
+      if (e.key === "Escape") { e.preventDefault(); setOuvert(false); return; }
+      if (e.key !== "Tab") return;
+      const f = focusables();
+      if (!f.length) return;
+      const [debut, fin] = [f[0], f[f.length - 1]];
+      /* `document.activeElement` et non e.target : le focus peut être sur la
+         boîte elle-même, qui n'est pas dans la liste. */
+      if (e.shiftKey && document.activeElement === debut) { e.preventDefault(); fin.focus(); }
+      else if (!e.shiftKey && document.activeElement === fin) { e.preventDefault(); debut.focus(); }
+    };
+    document.addEventListener("keydown", auClavier);
+
+    /* La page derrière ne défile pas. `overflow: hidden` suffit au défilement
+       natif, mais Lenis pilote le sien et continuerait à déplacer la page sous
+       le voile : on l'arrête aussi, et on le relance en partant. */
+    const avant = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    if (window.__lenis) window.__lenis.stop();
+
+    return () => {
+      document.removeEventListener("keydown", auClavier);
+      document.body.style.overflow = avant;
+      if (window.__lenis) window.__lenis.start();
+      /* Le focus revient au bouton qui a ouvert : sans ça il retombe sur
+         <body>, et la tabulation reprend au tout début de la page. */
+      if (bouton.current) bouton.current.focus();
+    };
+  }, [ouvert]);
+
+  const fenetre = (
+    <div className="fen-fond" onMouseDown={(e) => { if (e.target === e.currentTarget) setOuvert(false); }}>
+      <div className="fen-boite" ref={boite} tabIndex={-1}
+           role="dialog" aria-modal="true" aria-labelledby={titreId}>
+        <div className="fen-tete">
+          <div>
+            <h2 className="fen-titre" id={titreId}>
+              {Txt("catalogue.titre", "Tout ce que fait Alba", "Everything Alba does")}
+            </h2>
+            <p className="fen-chapo">
+              {Txt("catalogue.chapo",
+                "Tout ce qui suit est inclus dans les trois offres, y compris la gratuite. Nous ne bornons que des quantités : le nombre de projets menés de front, le nombre de personnes, et l'usage de Léo.",
+                "Everything below is included in all three plans, including the free one. We cap quantities only: the number of projects you run at once, the number of people, and how much you use Léo.")}
+            </p>
+          </div>
+          {/* Un bouton nommé, pas une croix muette : « Fermer » se lit, et se
+              comprend au lecteur d'écran comme à l'œil. */}
+          <button type="button" className="fen-fermer" onClick={() => setOuvert(false)}>
+            <Icon name="x" size={16}/>
+            <span>{Txt("catalogue.fermer", "Fermer", "Close")}</span>
+          </button>
+        </div>
+
+        <div className="fen-corps">
+          <div className="fen-groupes">
+            {CATALOGUE().map((g, i) => (
+              <section className="fen-groupe" key={i}>
+                <h3 className="fen-groupe-titre"><Icon name={g.icone} size={15}/>{g.titre}</h3>
+                <ul>
+                  {g.items.map((it, j) => (
+                    <li key={j}><Icon name="check" size={13}/><span>{it}</span></li>
+                  ))}
+                </ul>
+              </section>
+            ))}
+          </div>
+          <p className="fen-pied">
+            {Txt("catalogue.pied",
+              "Vous pouvez masquer ce que vous n'utilisez pas, depuis vos réglages — et le rallumer quand vous voulez.",
+              "You can hide what you don't use, from your settings — and switch it back on whenever you like.")}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+
+  return (
+    <>
+      <button type="button" className="fen-plus" ref={bouton}
+              aria-haspopup="dialog" aria-expanded={ouvert ? "true" : "false"}
+              onClick={() => setOuvert(true)}
+              aria-label={Txt("catalogue.voir", "Voir toutes les fonctionnalités", "See every feature")}>
+        <Icon name="plus" size={14}/>
+      </button>
+      {/* Le portail n'existe que dans un navigateur : le prérendu monte une
+          vraie page, donc document.body est là. La garde protège quand même
+          d'un montage hors navigateur. */}
+      {ouvert && typeof document !== "undefined"
+        ? ReactDOM.createPortal(fenetre, document.body)
+        : null}
+    </>
+  );
+};
+
+/* ============================================================================
    PRICING — deux questions, une réponse
    ============================================================================
    CE QU'ON A CESSÉ DE VENDRE
@@ -714,7 +932,7 @@ const Pricing = () => {
               {offre.quantites.map((q, i) => (
                 <li key={i}><Icon name="check" size={13}/><span>{q}</span></li>
               ))}
-              <li className="tarif-tout"><Icon name="check" size={13}/><span>{Txt("tarifs.toutes-fonctionnalites", "Toutes les fonctionnalités", "Every feature")}</span></li>
+              <li className="tarif-tout"><Icon name="check" size={13}/><span>{Txt("tarifs.toutes-fonctionnalites", "Toutes les fonctionnalités", "Every feature")}</span><ToutesFonctionnalites/></li>
             </ul>
 
             {gratuite ? (

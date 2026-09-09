@@ -168,6 +168,40 @@
 /*.html
   Cache-Control: public, max-age=0, must-revalidate
 
+# ⚠️ LES ADRESSES PROPRES NE FINISSENT PAS PAR .html, DONC LA RÈGLE CI-DESSUS
+# NE LES ATTEINT PAS.
+#
+# Cloudflare fait correspondre ces motifs au CHEMIN DEMANDÉ, pas au fichier
+# servi : une requête vers /tarifs ne rencontre jamais `/*.html`, même si c'est
+# bien Tarifs.html qui sort. Sept des dix routes du site étaient dans ce cas —
+# l'accueil comprise — et repartaient donc avec le cache par défaut, ce qui
+# obligeait à vider le cache à la main après chaque mise en ligne.
+#
+# Elles sont nommées une par une, et tests/entetes.mjs vérifie que la liste
+# couvre TOUTES les routes de outils/pages.mjs : ajouter une page sans sa règle
+# fait échouer la suite, au lieu de se découvrir des semaines plus tard sur une
+# page figée chez un visiteur.
+/
+  Cache-Control: public, max-age=0, must-revalidate
+
+/tarifs
+  Cache-Control: public, max-age=0, must-revalidate
+
+/en
+  Cache-Control: public, max-age=0, must-revalidate
+
+/en-tarifs
+  Cache-Control: public, max-age=0, must-revalidate
+
+/en-co-traitants
+  Cache-Control: public, max-age=0, must-revalidate
+
+/en-valeur-probante
+  Cache-Control: public, max-age=0, must-revalidate
+
+/en-mentions-legales
+  Cache-Control: public, max-age=0, must-revalidate
+
 /*.css
   Cache-Control: public, max-age=0, must-revalidate
 

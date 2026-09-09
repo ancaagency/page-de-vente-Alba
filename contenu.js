@@ -1123,4 +1123,176 @@ window.ALBA_CONTENU = {
     fr: "Créer un compte gratuit",
     en: "Create a free account",
   },
+
+  /* ——— Les six groupes ——— */
+  "catalogue.projets": {
+    fr: "Vos projets",
+    en: "Your projects",
+  },
+  "catalogue.projets-decisions": {
+    fr: "Décisions — trancher, horodater et signer les choix du chantier",
+    en: "Decisions — settle, timestamp and sign the choices made on site",
+  },
+  "catalogue.projets-documents": {
+    fr: "Documents — plans, pièces écrites, contrats : déposés, versionnés, partagés",
+    en: "Documents — drawings, written documents, contracts: uploaded, versioned, shared",
+  },
+  "catalogue.projets-suivi": {
+    fr: "Suivi du projet — les phases, les jalons et les échéances",
+    en: "Project tracking — phases, milestones and deadlines",
+  },
+  "catalogue.projets-budget": {
+    fr: "Budget — le suivi des montants, des lots et des factures",
+    en: "Budget — tracking amounts, work packages and invoices",
+  },
+  "catalogue.projets-rentabilite": {
+    fr: "Rentabilité — le temps passé et la marge, projet par projet",
+    en: "Profitability — time spent and margin, project by project",
+  },
+  "catalogue.projets-chantier": {
+    fr: "Suivi de chantier — réserves, comptes rendus de visite, PV et photos",
+    en: "Site tracking — punch-list items, visit reports, minutes and photographs",
+  },
+  "catalogue.projets-calendrier": {
+    fr: "Calendrier — toutes les échéances de tous les projets au même endroit",
+    en: "Calendar — every deadline from every project in one place",
+  },
+  "catalogue.leo": {
+    fr: "Léo, votre assistant",
+    en: "Léo, your assistant",
+  },
+  "catalogue.leo-lit": {
+    fr: "Il lit vos pièces écrites — CCTP, descriptifs, DPGF, notices — et en sort les prescriptions, les matériaux, les prix et les intervenants",
+    en: "He reads your written documents — specifications, schedules of works, bills of quantities, notices — and extracts requirements, materials, prices and parties",
+  },
+  "catalogue.leo-questions": {
+    fr: "Vous lui posez vos questions sur vos projets, en français",
+    en: "You ask him questions about your projects, in plain English",
+  },
+  "catalogue.leo-voix": {
+    fr: "Il répond à voix haute si vous le souhaitez",
+    en: "He answers out loud if you want him to",
+  },
+  "catalogue.leo-briefing": {
+    fr: "Un briefing du matin qui rassemble ce qui vous attend",
+    en: "A morning briefing that gathers what lies ahead",
+  },
+  "catalogue.portail": {
+    fr: "Le portail de vos clients",
+    en: "Your clients' portal",
+  },
+  "catalogue.portail-espace": {
+    fr: "Un espace par projet pour le maître d'ouvrage, sans qu'il crée de compte",
+    en: "A space per project for your client, with no account to create",
+  },
+  "catalogue.portail-signature": {
+    fr: "Validation des choix et signature électronique des procès-verbaux",
+    en: "Approval of choices and electronic signature of minutes",
+  },
+  "catalogue.portail-messagerie": {
+    fr: "Messagerie avec le maître d'ouvrage et les intervenants",
+    en: "Messaging with your client and everyone involved",
+  },
+  "catalogue.portail-droits": {
+    fr: "Vous décidez, projet par projet et personne par personne, de ce qu'ils voient",
+    en: "You decide, project by project and person by person, what they see",
+  },
+  "catalogue.portail-gratuits": {
+    fr: "Clients, bureaux d'études et entreprises : gratuits et illimités",
+    en: "Clients, engineers and contractors: free and unlimited",
+  },
+  "catalogue.matiere": {
+    fr: "La matière",
+    en: "Your material",
+  },
+  "catalogue.matiere-materiautheque": {
+    fr: "Matériauthèque — votre bibliothèque de matériaux, réutilisable d'un projet à l'autre",
+    en: "Material library — your own library of materials, reusable from one project to the next",
+  },
+  "catalogue.matiere-lots": {
+    fr: "Bibliothèque de lots et de modèles CCTP",
+    en: "Library of work packages and specification templates",
+  },
+  "catalogue.matiere-consultation": {
+    fr: "Consultation des entreprises — prescriptions, intervenants et prix",
+    en: "Tendering — requirements, parties and prices",
+  },
+  "catalogue.agence": {
+    fr: "Votre agence",
+    en: "Your practice",
+  },
+  "catalogue.agence-collaborateurs": {
+    fr: "Collaborateurs — inviter votre équipe et régler ses droits (offre Agence)",
+    en: "Team members — invite your team and set their permissions (Practice plan)",
+  },
+  "catalogue.agence-visuels": {
+    fr: "Visuels — galeries, diaporama et visites virtuelles pour vos présentations",
+    en: "Visuals — galleries, slideshows and virtual tours for your presentations",
+  },
+  "catalogue.agence-emails": {
+    fr: "E-mails automatiques",
+    en: "Automatic emails",
+  },
+  "catalogue.agence-honoraires": {
+    fr: "Calculateur d'honoraires",
+    en: "Fee calculator",
+  },
+  "catalogue.agence-archives": {
+    fr: "Archives et corbeille",
+    en: "Archives and bin",
+  },
+  "catalogue.aussi": {
+    fr: "Et aussi",
+    en: "And also",
+  },
+  "catalogue.aussi-mobile": {
+    fr: "Application mobile iOS et Android",
+    en: "iOS and Android mobile app",
+  },
+  "catalogue.aussi-notifications": {
+    fr: "Notifications par e-mail et sur votre téléphone",
+    en: "Notifications by email and on your phone",
+  },
+  "catalogue.aussi-2fa": {
+    fr: "Double authentification",
+    en: "Two-factor authentication",
+  },
+  "catalogue.aussi-langues": {
+    fr: "Français et anglais",
+    en: "French and English",
+  },
+  "catalogue.aussi-accessibilite": {
+    fr: "Réglages d'accessibilité",
+    en: "Accessibility settings",
+  },
+  "catalogue.aussi-marque": {
+    fr: "Vos couleurs et votre logo sur les documents envoyés",
+    en: "Your colours and your logo on the documents you send",
+  },
+
+  /* La fenêtre « Tout ce que fait Alba », ouverte par le « + » de la ligne
+     « Toutes les fonctionnalités ». Chaque libellé correspond à un écran qui
+     existe dans l'application : n'en ajoutez pas sans que l'écran existe.
+     AUCUN PRIX ICI, et aucune mention d'offre — sauf « offre Agence » sur la
+     ligne Collaborateurs, seule fonction dont l'accès en dépend vraiment. */
+  "catalogue.titre": {
+    fr: "Tout ce que fait Alba",
+    en: "Everything Alba does",
+  },
+  "catalogue.chapo": {
+    fr: "Tout ce qui suit est inclus dans les trois offres, y compris la gratuite. Nous ne bornons que des quantités : le nombre de projets menés de front, le nombre de personnes, et l'usage de Léo.",
+    en: "Everything below is included in all three plans, including the free one. We cap quantities only: the number of projects you run at once, the number of people, and how much you use Léo.",
+  },
+  "catalogue.fermer": {
+    fr: "Fermer",
+    en: "Close",
+  },
+  "catalogue.pied": {
+    fr: "Vous pouvez masquer ce que vous n'utilisez pas, depuis vos réglages — et le rallumer quand vous voulez.",
+    en: "You can hide what you don't use, from your settings — and switch it back on whenever you like.",
+  },
+  "catalogue.voir": {
+    fr: "Voir toutes les fonctionnalités",
+    en: "See every feature",
+  },
 };

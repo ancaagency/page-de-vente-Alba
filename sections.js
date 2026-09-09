@@ -514,6 +514,198 @@ var Testimonials = function Testimonials() {
 };
 
 /* ============================================================================
+   « TOUT CE QUE FAIT ALBA » — le catalogue, derrière un bouton
+   ============================================================================
+   POURQUOI IL N'Y A QU'UN SEUL BOUTON
+
+   La demande parlait de le poser « sur la ligne Toutes les fonctionnalités de
+   l'encadré, et sur la même ligne dans chacune des trois cartes ». Cette ligne
+   n'existe plus qu'à UN endroit depuis la refonte : les trois offres sont
+   devenues des tuiles d'une ligne, et ce sont elles-mêmes des <button> — un
+   bouton dans un bouton n'est pas du HTML valide, et aucun lecteur d'écran
+   n'en fait quelque chose d'utilisable.
+
+   L'intention, elle, est respectée à la lettre : un seul bouton, un seul
+   contenu, pas quatre listes à maintenir.
+
+   ────────────────────────────────────────────────────────────────────────────
+   POURQUOI UN PORTAIL VERS <body>
+
+   `.reveal` porte `transform: translateY(0)` même à l'état visible. Un
+   `transform` sur un ancêtre fait de lui le bloc conteneur des descendants en
+   `position: fixed` : la fenêtre se serait centrée sur la CARTE, pas sur
+   l'écran, et le voile n'aurait couvert qu'elle. Le portail sort du sous-arbre
+   et rend le problème impossible plutôt que de le contourner.
+
+   ⚠️ AUCUN PRIX ICI, et aucune mention d'offre — à la seule exception de
+   « offre Agence » sur la ligne Collaborateurs, parce que c'est la seule
+   fonction dont l'accès dépend réellement de l'offre. Ce n'est pas un tableau
+   comparatif : c'est précisément ce qu'on refuse de faire, puisque tout est
+   dans toutes les offres. tests/montants.mjs veille sur les montants.
+   ============================================================================ */
+var CATALOGUE = function CATALOGUE() {
+  return [{
+    icone: "folder",
+    titre: Txt("catalogue.projets", "Vos projets", "Your projects"),
+    items: [Txt("catalogue.projets-decisions", "Décisions — trancher, horodater et signer les choix du chantier", "Decisions — settle, timestamp and sign the choices made on site"), Txt("catalogue.projets-documents", "Documents — plans, pièces écrites, contrats : déposés, versionnés, partagés", "Documents — drawings, written documents, contracts: uploaded, versioned, shared"), Txt("catalogue.projets-suivi", "Suivi du projet — les phases, les jalons et les échéances", "Project tracking — phases, milestones and deadlines"), Txt("catalogue.projets-budget", "Budget — le suivi des montants, des lots et des factures", "Budget — tracking amounts, work packages and invoices"), Txt("catalogue.projets-rentabilite", "Rentabilité — le temps passé et la marge, projet par projet", "Profitability — time spent and margin, project by project"), Txt("catalogue.projets-chantier", "Suivi de chantier — réserves, comptes rendus de visite, PV et photos", "Site tracking — punch-list items, visit reports, minutes and photographs"), Txt("catalogue.projets-calendrier", "Calendrier — toutes les échéances de tous les projets au même endroit", "Calendar — every deadline from every project in one place")]
+  }, {
+    icone: "sparkle",
+    titre: Txt("catalogue.leo", "Léo, votre assistant", "Léo, your assistant"),
+    items: [Txt("catalogue.leo-lit", "Il lit vos pièces écrites — CCTP, descriptifs, DPGF, notices — et en sort les prescriptions, les matériaux, les prix et les intervenants", "He reads your written documents — specifications, schedules of works, bills of quantities, notices — and extracts requirements, materials, prices and parties"), Txt("catalogue.leo-questions", "Vous lui posez vos questions sur vos projets, en français", "You ask him questions about your projects, in plain English"), Txt("catalogue.leo-voix", "Il répond à voix haute si vous le souhaitez", "He answers out loud if you want him to"), Txt("catalogue.leo-briefing", "Un briefing du matin qui rassemble ce qui vous attend", "A morning briefing that gathers what lies ahead")]
+  }, {
+    icone: "users",
+    titre: Txt("catalogue.portail", "Le portail de vos clients", "Your clients' portal"),
+    items: [Txt("catalogue.portail-espace", "Un espace par projet pour le maître d'ouvrage, sans qu'il crée de compte", "A space per project for your client, with no account to create"), Txt("catalogue.portail-signature", "Validation des choix et signature électronique des procès-verbaux", "Approval of choices and electronic signature of minutes"), Txt("catalogue.portail-messagerie", "Messagerie avec le maître d'ouvrage et les intervenants", "Messaging with your client and everyone involved"), Txt("catalogue.portail-droits", "Vous décidez, projet par projet et personne par personne, de ce qu'ils voient", "You decide, project by project and person by person, what they see"), Txt("catalogue.portail-gratuits", "Clients, bureaux d'études et entreprises : gratuits et illimités", "Clients, engineers and contractors: free and unlimited")]
+  }, {
+    icone: "layers",
+    titre: Txt("catalogue.matiere", "La matière", "Your material"),
+    items: [Txt("catalogue.matiere-materiautheque", "Matériauthèque — votre bibliothèque de matériaux, réutilisable d'un projet à l'autre", "Material library — your own library of materials, reusable from one project to the next"), Txt("catalogue.matiere-lots", "Bibliothèque de lots et de modèles CCTP", "Library of work packages and specification templates"), Txt("catalogue.matiere-consultation", "Consultation des entreprises — prescriptions, intervenants et prix", "Tendering — requirements, parties and prices")]
+  }, {
+    icone: "compass",
+    titre: Txt("catalogue.agence", "Votre agence", "Your practice"),
+    items: [Txt("catalogue.agence-collaborateurs", "Collaborateurs — inviter votre équipe et régler ses droits (offre Agence)", "Team members — invite your team and set their permissions (Practice plan)"), Txt("catalogue.agence-visuels", "Visuels — galeries, diaporama et visites virtuelles pour vos présentations", "Visuals — galleries, slideshows and virtual tours for your presentations"), Txt("catalogue.agence-emails", "E-mails automatiques", "Automatic emails"), Txt("catalogue.agence-honoraires", "Calculateur d'honoraires", "Fee calculator"), Txt("catalogue.agence-archives", "Archives et corbeille", "Archives and bin")]
+  }, {
+    icone: "globe",
+    titre: Txt("catalogue.aussi", "Et aussi", "And also"),
+    items: [Txt("catalogue.aussi-mobile", "Application mobile iOS et Android", "iOS and Android mobile app"), Txt("catalogue.aussi-notifications", "Notifications par e-mail et sur votre téléphone", "Notifications by email and on your phone"), Txt("catalogue.aussi-2fa", "Double authentification", "Two-factor authentication"), Txt("catalogue.aussi-langues", "Français et anglais", "French and English"), Txt("catalogue.aussi-accessibilite", "Réglages d'accessibilité", "Accessibility settings"), Txt("catalogue.aussi-marque", "Vos couleurs et votre logo sur les documents envoyés", "Your colours and your logo on the documents you send")]
+  }];
+};
+var ToutesFonctionnalites = function ToutesFonctionnalites() {
+  var _React$useState7 = React.useState(false),
+    _React$useState8 = _slicedToArray(_React$useState7, 2),
+    ouvert = _React$useState8[0],
+    setOuvert = _React$useState8[1];
+  var bouton = React.useRef(null);
+  var boite = React.useRef(null);
+  var titreId = "catalogue-titre";
+
+  /* ── LE PIÈGE À FOCUS ───────────────────────────────────────────────────
+     Sans lui, la tabulation sort de la fenêtre par le bas et se promène dans
+     une page que le voile rend invisible : on tabule à l'aveugle, sans savoir
+     où l'on est ni comment revenir. Le tabindex={-1} sur la boîte donne un
+     point de départ au focus sans ajouter un arrêt de tabulation. */
+  React.useEffect(function () {
+    if (!ouvert) return;
+    var el = boite.current;
+    if (!el) return;
+    var focusables = function focusables() {
+      return _toConsumableArray(el.querySelectorAll('a[href], button:not([disabled]), input:not([disabled]), select, textarea, [tabindex]:not([tabindex="-1"])')).filter(function (n) {
+        return n.offsetParent !== null;
+      });
+    };
+
+    /* On entre par le bouton « Fermer » : c'est la sortie, et savoir en sortir
+       est la première chose dont on a besoin en arrivant. */
+    var premier = el.querySelector(".fen-fermer");
+    if (premier) premier.focus();
+    var auClavier = function auClavier(e) {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        setOuvert(false);
+        return;
+      }
+      if (e.key !== "Tab") return;
+      var f = focusables();
+      if (!f.length) return;
+      var _ref3 = [f[0], f[f.length - 1]],
+        debut = _ref3[0],
+        fin = _ref3[1];
+      /* `document.activeElement` et non e.target : le focus peut être sur la
+         boîte elle-même, qui n'est pas dans la liste. */
+      if (e.shiftKey && document.activeElement === debut) {
+        e.preventDefault();
+        fin.focus();
+      } else if (!e.shiftKey && document.activeElement === fin) {
+        e.preventDefault();
+        debut.focus();
+      }
+    };
+    document.addEventListener("keydown", auClavier);
+
+    /* La page derrière ne défile pas. `overflow: hidden` suffit au défilement
+       natif, mais Lenis pilote le sien et continuerait à déplacer la page sous
+       le voile : on l'arrête aussi, et on le relance en partant. */
+    var avant = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    if (window.__lenis) window.__lenis.stop();
+    return function () {
+      document.removeEventListener("keydown", auClavier);
+      document.body.style.overflow = avant;
+      if (window.__lenis) window.__lenis.start();
+      /* Le focus revient au bouton qui a ouvert : sans ça il retombe sur
+         <body>, et la tabulation reprend au tout début de la page. */
+      if (bouton.current) bouton.current.focus();
+    };
+  }, [ouvert]);
+  var fenetre = /*#__PURE__*/React.createElement("div", {
+    className: "fen-fond",
+    onMouseDown: function onMouseDown(e) {
+      if (e.target === e.currentTarget) setOuvert(false);
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "fen-boite",
+    ref: boite,
+    tabIndex: -1,
+    role: "dialog",
+    "aria-modal": "true",
+    "aria-labelledby": titreId
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "fen-tete"
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h2", {
+    className: "fen-titre",
+    id: titreId
+  }, Txt("catalogue.titre", "Tout ce que fait Alba", "Everything Alba does")), /*#__PURE__*/React.createElement("p", {
+    className: "fen-chapo"
+  }, Txt("catalogue.chapo", "Tout ce qui suit est inclus dans les trois offres, y compris la gratuite. Nous ne bornons que des quantités : le nombre de projets menés de front, le nombre de personnes, et l'usage de Léo.", "Everything below is included in all three plans, including the free one. We cap quantities only: the number of projects you run at once, the number of people, and how much you use Léo."))), /*#__PURE__*/React.createElement("button", {
+    type: "button",
+    className: "fen-fermer",
+    onClick: function onClick() {
+      return setOuvert(false);
+    }
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "x",
+    size: 16
+  }), /*#__PURE__*/React.createElement("span", null, Txt("catalogue.fermer", "Fermer", "Close")))), /*#__PURE__*/React.createElement("div", {
+    className: "fen-corps"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "fen-groupes"
+  }, CATALOGUE().map(function (g, i) {
+    return /*#__PURE__*/React.createElement("section", {
+      className: "fen-groupe",
+      key: i
+    }, /*#__PURE__*/React.createElement("h3", {
+      className: "fen-groupe-titre"
+    }, /*#__PURE__*/React.createElement(Icon, {
+      name: g.icone,
+      size: 15
+    }), g.titre), /*#__PURE__*/React.createElement("ul", null, g.items.map(function (it, j) {
+      return /*#__PURE__*/React.createElement("li", {
+        key: j
+      }, /*#__PURE__*/React.createElement(Icon, {
+        name: "check",
+        size: 13
+      }), /*#__PURE__*/React.createElement("span", null, it));
+    })));
+  })), /*#__PURE__*/React.createElement("p", {
+    className: "fen-pied"
+  }, Txt("catalogue.pied", "Vous pouvez masquer ce que vous n'utilisez pas, depuis vos réglages — et le rallumer quand vous voulez.", "You can hide what you don't use, from your settings — and switch it back on whenever you like.")))));
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("button", {
+    type: "button",
+    className: "fen-plus",
+    ref: bouton,
+    "aria-haspopup": "dialog",
+    "aria-expanded": ouvert ? "true" : "false",
+    onClick: function onClick() {
+      return setOuvert(true);
+    },
+    "aria-label": Txt("catalogue.voir", "Voir toutes les fonctionnalités", "See every feature")
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "plus",
+    size: 14
+  })), ouvert && typeof document !== "undefined" ? ReactDOM.createPortal(fenetre, document.body) : null);
+};
+
+/* ============================================================================
    PRICING — deux questions, une réponse
    ============================================================================
    CE QU'ON A CESSÉ DE VENDRE
@@ -573,33 +765,33 @@ var Pricing = function Pricing() {
      un vrai navigateur : si le fichier n'est pas chargé, ça casse là, à la
      construction, et pas chez un visiteur. */
   var TARIFS = window.ALBA_TARIFS;
-  var _React$useState7 = React.useState(false),
-    _React$useState8 = _slicedToArray(_React$useState7, 2),
-    annuel = _React$useState8[0],
-    setAnnuel = _React$useState8[1];
-  var _React$useState9 = React.useState(1),
+  var _React$useState9 = React.useState(false),
     _React$useState0 = _slicedToArray(_React$useState9, 2),
-    personnes = _React$useState0[0],
-    setPersonnes = _React$useState0[1];
-  var _React$useState1 = React.useState(3),
+    annuel = _React$useState0[0],
+    setAnnuel = _React$useState0[1];
+  var _React$useState1 = React.useState(1),
     _React$useState10 = _slicedToArray(_React$useState1, 2),
-    projets = _React$useState10[0],
-    setProjets = _React$useState10[1];
+    personnes = _React$useState10[0],
+    setPersonnes = _React$useState10[1];
+  var _React$useState11 = React.useState(3),
+    _React$useState12 = _slicedToArray(_React$useState11, 2),
+    projets = _React$useState12[0],
+    setProjets = _React$useState12[1];
   /* Le visiteur peut désigner une offre à la main dans le rail. Ce choix vaut
      jusqu'à ce qu'il change une réponse : une réponse nouvelle rend la main à
      la recommandation. C'est la règle la plus prévisible — on ne se retrouve
      jamais avec une offre choisie il y a trois clics qui contredit ce qu'on
      vient de dire. */
-  var _React$useState11 = React.useState(null),
-    _React$useState12 = _slicedToArray(_React$useState11, 2),
-    choix = _React$useState12[0],
-    setChoix = _React$useState12[1];
+  var _React$useState13 = React.useState(null),
+    _React$useState14 = _slicedToArray(_React$useState13, 2),
+    choix = _React$useState14[0],
+    setChoix = _React$useState14[1];
   /* Les curseurs de l'estimation sont repliés : ils sont pour le sceptique, pas
      pour tout le monde. Le résultat, lui, est toujours visible. */
-  var _React$useState13 = React.useState(false),
-    _React$useState14 = _slicedToArray(_React$useState13, 2),
-    ajuste = _React$useState14[0],
-    setAjuste = _React$useState14[1];
+  var _React$useState15 = React.useState(false),
+    _React$useState16 = _slicedToArray(_React$useState15, 2),
+    ajuste = _React$useState16[0],
+    setAjuste = _React$useState16[1];
 
   /** Total pour l'offre Agence, à `n` personnes, dans la périodicité courante. */
   var totalAgence = function totalAgence(n) {
@@ -679,18 +871,18 @@ var Pricing = function Pricing() {
      tout le reste de la page.
      Quatre documents donnent 300 €, six fois le prix d'Atelier. C'est crédible,
      et ça reste très parlant. */
-  var _React$useState15 = React.useState(75),
-    _React$useState16 = _slicedToArray(_React$useState15, 2),
-    taux = _React$useState16[0],
-    setTaux = _React$useState16[1];
-  var _React$useState17 = React.useState(4),
+  var _React$useState17 = React.useState(75),
     _React$useState18 = _slicedToArray(_React$useState17, 2),
-    docs = _React$useState18[0],
-    setDocs = _React$useState18[1];
-  var _React$useState19 = React.useState(1),
+    taux = _React$useState18[0],
+    setTaux = _React$useState18[1];
+  var _React$useState19 = React.useState(4),
     _React$useState20 = _slicedToArray(_React$useState19, 2),
-    heuresParDoc = _React$useState20[0],
-    setHeuresParDoc = _React$useState20[1];
+    docs = _React$useState20[0],
+    setDocs = _React$useState20[1];
+  var _React$useState21 = React.useState(1),
+    _React$useState22 = _slicedToArray(_React$useState21, 2),
+    heuresParDoc = _React$useState22[0],
+    setHeuresParDoc = _React$useState22[1];
   var heuresGagnees = docs * heuresParDoc;
   var valeurGagnee = Math.round(heuresGagnees * taux);
   var depasseLectures = docs > offre.lectures;
@@ -711,14 +903,14 @@ var Pricing = function Pricing() {
      recueilli dans le tunnel Stripe, deux écrans plus loin. Le demander ici
      serait un second consentement au mauvais endroit. */
   var POINT_PAIEMENT = "https://fhrkkjvbzgkbmlnlnxce.supabase.co/functions/v1/creer-paiement-public";
-  var _React$useState21 = React.useState("repos"),
-    _React$useState22 = _slicedToArray(_React$useState21, 2),
-    paiement = _React$useState22[0],
-    setPaiement = _React$useState22[1];
-  var _React$useState23 = React.useState(null),
+  var _React$useState23 = React.useState("repos"),
     _React$useState24 = _slicedToArray(_React$useState23, 2),
-    erreurPaiement = _React$useState24[0],
-    setErreurPaiement = _React$useState24[1];
+    paiement = _React$useState24[0],
+    setPaiement = _React$useState24[1];
+  var _React$useState25 = React.useState(null),
+    _React$useState26 = _slicedToArray(_React$useState25, 2),
+    erreurPaiement = _React$useState26[0],
+    setErreurPaiement = _React$useState26[1];
   /* Verrou de double-clic. Il ne peut PAS reposer sur `paiement` : React ne
      rafraîchit l'état qu'au rendu suivant, si bien que trois clics rapides
      lisent tous « repos » et partent tous les trois. Une référence, elle,
@@ -744,7 +936,7 @@ var Pricing = function Pricing() {
    */
   var abonner = function abonner(offre, sieges) {
     return /*#__PURE__*/function () {
-      var _ref3 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee(ev) {
+      var _ref4 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee(ev) {
         var reponse, donnees, notre, horsLigne, _t;
         return _regenerator().w(function (_context) {
           while (1) switch (_context.p = _context.n) {
@@ -833,7 +1025,7 @@ var Pricing = function Pricing() {
         }, _callee, null, [[4, 8]]);
       }));
       return function (_x) {
-        return _ref3.apply(this, arguments);
+        return _ref4.apply(this, arguments);
       };
     }();
   };
@@ -973,7 +1165,7 @@ var Pricing = function Pricing() {
   }, /*#__PURE__*/React.createElement(Icon, {
     name: "check",
     size: 13
-  }), /*#__PURE__*/React.createElement("span", null, Txt("tarifs.toutes-fonctionnalites", "Toutes les fonctionnalités", "Every feature")))), gratuite ? /*#__PURE__*/React.createElement("a", {
+  }), /*#__PURE__*/React.createElement("span", null, Txt("tarifs.toutes-fonctionnalites", "Toutes les fonctionnalités", "Every feature")), /*#__PURE__*/React.createElement(ToutesFonctionnalites, null))), gratuite ? /*#__PURE__*/React.createElement("a", {
     href: SIGNUP,
     className: "btn btn-ghost tarif-cta"
   }, Txt("tarifs.commencer-gratuitement", "Commencer gratuitement", "Start for free")) : /*#__PURE__*/React.createElement("a", {
@@ -1179,10 +1371,10 @@ var Faq = function Faq() {
     q: Txt("faq.quel-est-le-delai-pour-demarrer", "Quel est le délai pour démarrer ?", "How long does it take to get started?"),
     a: Txt("faq.si-vous-voulez-vous-demarrez-aujourd", "Si vous voulez, vous démarrez aujourd'hui. La création de compte prend 3 minutes ; importer vos projets en cours prend en moyenne une demi-journée. On vous accompagne sur l'onboarding sans frais.", "You can start today. Account creation takes 3 minutes; importing your active projects takes half a day on average. We help with onboarding at no charge.")
   }];
-  var _React$useState25 = React.useState(0),
-    _React$useState26 = _slicedToArray(_React$useState25, 2),
-    open = _React$useState26[0],
-    setOpen = _React$useState26[1];
+  var _React$useState27 = React.useState(0),
+    _React$useState28 = _slicedToArray(_React$useState27, 2),
+    open = _React$useState28[0],
+    setOpen = _React$useState28[1];
   return /*#__PURE__*/React.createElement("section", {
     className: "section section-cream-2",
     id: "faq"
@@ -1221,7 +1413,7 @@ var Faq = function Faq() {
 
 /* CONTACT */
 var Contact = function Contact() {
-  var _React$useState27 = React.useState({
+  var _React$useState29 = React.useState({
       name: "",
       agency: "",
       email: "",
@@ -1229,29 +1421,29 @@ var Contact = function Contact() {
       projects: "1-3",
       msg: ""
     }),
-    _React$useState28 = _slicedToArray(_React$useState27, 2),
-    data = _React$useState28[0],
-    setData = _React$useState28[1];
-  var _React$useState29 = React.useState({}),
     _React$useState30 = _slicedToArray(_React$useState29, 2),
-    errors = _React$useState30[0],
-    setErrors = _React$useState30[1];
-  var _React$useState31 = React.useState(false),
+    data = _React$useState30[0],
+    setData = _React$useState30[1];
+  var _React$useState31 = React.useState({}),
     _React$useState32 = _slicedToArray(_React$useState31, 2),
-    submitted = _React$useState32[0],
-    setSubmitted = _React$useState32[1];
+    errors = _React$useState32[0],
+    setErrors = _React$useState32[1];
+  var _React$useState33 = React.useState(false),
+    _React$useState34 = _slicedToArray(_React$useState33, 2),
+    submitted = _React$useState34[0],
+    setSubmitted = _React$useState34[1];
   /* "repos" | "envoi" | "erreur" — le succès est porté par `submitted`, qui
      existait déjà et gouverne le bloc de confirmation du design. */
-  var _React$useState33 = React.useState("repos"),
-    _React$useState34 = _slicedToArray(_React$useState33, 2),
-    envoi = _React$useState34[0],
-    setEnvoi = _React$useState34[1];
+  var _React$useState35 = React.useState("repos"),
+    _React$useState36 = _slicedToArray(_React$useState35, 2),
+    envoi = _React$useState36[0],
+    setEnvoi = _React$useState36[1];
   /* Champ-piège : invisible pour un visiteur, rempli par les robots qui
      remplissent tout. Il vit dans l'état comme les autres champs. */
-  var _React$useState35 = React.useState(""),
-    _React$useState36 = _slicedToArray(_React$useState35, 2),
-    piege = _React$useState36[0],
-    setPiege = _React$useState36[1];
+  var _React$useState37 = React.useState(""),
+    _React$useState38 = _slicedToArray(_React$useState37, 2),
+    piege = _React$useState38[0],
+    setPiege = _React$useState38[1];
   /* Instant d'affichage du formulaire. Le serveur refuse un envoi survenu moins
      de deux secondes après : personne ne remplit six champs en deux secondes. */
   var afficheA = React.useRef(Date.now());
@@ -1278,7 +1470,7 @@ var Contact = function Contact() {
      un simple fetch suffit. La CSP autorise cette origine, et elle seule. */
   var POINT_CONTACT = "https://fhrkkjvbzgkbmlnlnxce.supabase.co/functions/v1/contact-vitrine";
   var submit = /*#__PURE__*/function () {
-    var _ref4 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee2(ev) {
+    var _ref5 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee2(ev) {
       var reponse, _t2;
       return _regenerator().w(function (_context2) {
         while (1) switch (_context2.p = _context2.n) {
@@ -1343,7 +1535,7 @@ var Contact = function Contact() {
       }, _callee2, null, [[3, 6]]);
     }));
     return function submit(_x2) {
-      return _ref4.apply(this, arguments);
+      return _ref5.apply(this, arguments);
     };
   }();
   return /*#__PURE__*/React.createElement("section", {

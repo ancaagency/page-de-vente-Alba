@@ -441,6 +441,99 @@ console.log('\n===== aucun stockage visible sur le site =====');
   }
 }
 
+/* ═══════════════════════════════════════════════════════════════════════════
+   6 · « TOUT CE QUE FAIT ALBA » — LA FENÊTRE S'OUVRE, ET SURTOUT SE FERME
+   ═══════════════════════════════════════════════════════════════════════════
+   Une fenêtre modale dont on ne sort pas au clavier est un piège : la
+   tabulation part dans une page que le voile rend invisible, et il n'y a plus
+   aucun moyen de savoir où l'on est. Les quatre sorties — Échap, le bouton
+   « Fermer », le clic en dehors, et le retour du focus — sont éprouvées une
+   par une, parce qu'aucune ne se déduit des autres.
+   ═══════════════════════════════════════════════════════════════════════════ */
+console.log('\n===== la fenêtre « Tout ce que fait Alba » =====');
+{
+  const { ctx, page } = await ouvrirTarifs();
+  const dialogue = () => page.evaluate(() => !!document.querySelector('[role="dialog"][aria-modal="true"]'));
+
+  /* Une icône muette ne se dit pas. Le bouton porte son nom. */
+  const bouton = await page.evaluate(() => {
+    const b = document.querySelector('.fen-plus');
+    return b && { nom: (b.getAttribute('aria-label') || b.textContent).trim(), popup: b.getAttribute('aria-haspopup') };
+  });
+  ok(bouton && /toutes les fonctionnalités|every feature/i.test(bouton.nom),
+     `le « + » porte un nom — « ${bouton ? bouton.nom : 'BOUTON ABSENT'} »`);
+
+  await page.click('.fen-plus');
+  await page.waitForTimeout(400);
+
+  const vue = await page.evaluate(() => {
+    const d = document.querySelector('[role="dialog"]');
+    if (!d) return null;
+    const t = document.getElementById(d.getAttribute('aria-labelledby') || '');
+    return {
+      titre: t ? t.textContent.trim() : '',
+      groupes: [...document.querySelectorAll('.fen-groupe-titre')].length,
+      lignes: document.querySelectorAll('.fen-groupe li').length,
+      focusDedans: d.contains(document.activeElement),
+      /* La page derrière ne défile pas. */
+      figee: getComputedStyle(document.body).overflow === 'hidden',
+      /* AUCUN PRIX ici : ce n'est pas un tableau comparatif entre offres. */
+      montants: (d.innerText.match(/\d[\d\s  ]*\s?€|€\s?\d/g) || []).length,
+    };
+  });
+  ok(vue !== null, `role="dialog" aria-modal="true" à l'ouverture`);
+  ok(vue && vue.titre.length > 0, `aria-labelledby désigne le titre — « ${vue ? vue.titre : ''} »`);
+  /* Six groupes et trente lignes : la liste vient de l'application, et une
+     troncature silencieuse (un groupe qui saute au refactor) ne se verrait
+     pas autrement. */
+  ok(vue && vue.groupes === 6 && vue.lignes === 30,
+     `${vue ? vue.groupes : 0} groupes, ${vue ? vue.lignes : 0} lignes (attendu 6 et 30)`);
+  ok(vue && vue.focusDedans, `le focus entre dans la fenêtre`);
+  ok(vue && vue.figee, `la page derrière ne défile plus`);
+  ok(vue && vue.montants === 0, `aucun montant dans la fenêtre (${vue ? vue.montants : '?'} trouvé(s))`);
+
+  /* Le piège à focus : depuis le premier élément, Maj+Tab doit revenir au
+     DERNIER de la fenêtre, et jamais sortir. */
+  await page.keyboard.down('Shift'); await page.keyboard.press('Tab'); await page.keyboard.up('Shift');
+  const boucle = await page.evaluate(() => {
+    const d = document.querySelector('[role="dialog"]');
+    const f = [...d.querySelectorAll('a[href], button:not([disabled])')];
+    return d.contains(document.activeElement) && document.activeElement === f[f.length - 1];
+  });
+  ok(boucle, `Maj+Tab depuis le premier revient au dernier, sans sortir`);
+
+  await page.keyboard.press('Escape');
+  await page.waitForTimeout(300);
+  const apres = await page.evaluate(() => ({
+    fermee: !document.querySelector('[role="dialog"]'),
+    focusRendu: document.activeElement && document.activeElement.classList.contains('fen-plus'),
+    libre: (document.body.style.overflow || '') !== 'hidden',
+  }));
+  ok(apres.fermee, `Échap ferme`);
+  /* Sans ça le focus retombe sur <body>, et la tabulation reprend au tout
+     début de la page — on a perdu sa place. */
+  ok(apres.focusRendu, `le focus revient au bouton qui a ouvert`);
+  ok(apres.libre, `la page redéfile après fermeture`);
+
+  await page.click('.fen-plus'); await page.waitForTimeout(300);
+  await page.mouse.click(12, 12); await page.waitForTimeout(300);
+  ok(await dialogue() === false, `un clic en dehors ferme`);
+
+  /* Et un clic DEDANS ne ferme pas : le voile ne doit pas avaler les clics de
+     la fenêtre elle-même. */
+  await page.click('.fen-plus'); await page.waitForTimeout(300);
+  await page.click('.fen-titre'); await page.waitForTimeout(250);
+  ok(await dialogue() === true, `un clic dans la fenêtre ne la ferme pas`);
+
+  const nomFermer = await page.evaluate(() => (document.querySelector('.fen-fermer') || {}).textContent);
+  ok(nomFermer && /fermer|close/i.test(nomFermer), `le bouton de fermeture est nommé — « ${(nomFermer || '').trim()} »`);
+  await page.evaluate(() => document.querySelector('.fen-fermer').click());
+  await page.waitForTimeout(300);
+  ok(await dialogue() === false, `le bouton « Fermer » ferme`);
+
+  await ctx.close();
+}
+
 await navigateur.close();
 srv.close();
 console.log(`\n${echecs ? `❌ ${echecs} problème(s)` : '✅ tout est vert'}`);

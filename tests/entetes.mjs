@@ -12,6 +12,7 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
+import { ROUTES } from '../outils/pages.mjs';
 
 const ROOT = path.resolve(new URL('.', import.meta.url).pathname, '..');
 const brut = fs.readFileSync(path.join(ROOT, '_headers'), 'utf8');
@@ -177,6 +178,30 @@ for (const motif of ['/*.html', '/*.css', '/*.js', '/*.jsx']) {
   const i = lignes.findIndex((l) => l.trim() === motif);
   const suite = i >= 0 ? lignes.slice(i + 1, i + 4).join(' ') : '';
   ok(/max-age=0/.test(suite) && /must-revalidate/.test(suite), `${motif} revalidé à chaque visite`);
+}
+
+/* ── ET CHAQUE ROUTE SERVIE, PAS SEULEMENT CHAQUE EXTENSION ────────────────
+   Cloudflare applique ces motifs au CHEMIN DEMANDÉ, pas au fichier servi. Une
+   requête vers /tarifs ne rencontre donc jamais `/*.html`, bien que ce soit
+   Tarifs.html qui sorte. Sept des dix routes — l'accueil comprise — n'avaient
+   aucune règle de cache pour cette seule raison, ce qui obligeait à vider le
+   cache à la main après chaque mise en ligne.
+
+   On éprouve les ROUTES, pas les motifs : c'est ce qu'un visiteur demande. */
+const regles = lignes.reduce((acc, l, i) => {
+  if (/^\//.test(l)) acc.push({ motif: l.trim(), suite: lignes.slice(i + 1, i + 4).join(' ') });
+  return acc;
+}, []);
+/** Un motif Cloudflare couvre-t-il cette route ? `*` vaut pour un segment de nom. */
+const couvre = (motif, route) =>
+  new RegExp('^' + motif.replace(/[.+?^${}()|[\]\\]/g, '\\$&').replace(/\*/g, '.*') + '$').test(route);
+
+for (const route of ROUTES) {
+  const dessus = regles.filter((r) => couvre(r.motif, route) && /Cache-Control/i.test(r.suite));
+  const revalide = dessus.some((r) => /max-age=0/.test(r.suite) && /must-revalidate/.test(r.suite));
+  ok(revalide, `${route.padEnd(24)} ${revalide
+    ? `revalidé (${dessus.map((r) => r.motif).join(', ')})`
+    : 'AUCUNE RÈGLE DE CACHE — la page restera figée chez les visiteurs'}`);
 }
 
 console.log(`\n${echecs ? `❌ ${echecs} problème(s)` : '✅ tout est vert'}`);

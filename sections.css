@@ -1937,6 +1937,172 @@
 }
 .tarif-porte a:hover { color: var(--accent); border-bottom-color: var(--accent); }
 
+/* ── « Tout ce que fait Alba » ────────────────────────────────────────────
+   Le bouton « + » de la ligne « Toutes les fonctionnalités », et la fenêtre
+   qu'il ouvre. La fenêtre est portée dans <body> par un portail : `.reveal`
+   porte un `transform`, qui aurait fait d'elle le bloc conteneur du
+   `position: fixed`. Voir sections.jsx. */
+.fen-plus {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  flex: none;
+  margin-left: 8px;
+  padding: 0;
+  border: 1px solid var(--accent-line);
+  border-radius: 50%;
+  background: var(--accent-soft);
+  color: var(--accent);
+  cursor: pointer;
+  vertical-align: middle;
+  transition: background .2s, border-color .2s, transform .2s cubic-bezier(.2,.8,.2,1);
+}
+.fen-plus:hover { background: var(--accent); border-color: var(--accent); color: var(--accent-contrast); transform: scale(1.08); }
+.fen-plus:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.fen-fond {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 28px 20px;
+  background: rgba(11, 18, 36, 0.55);
+  backdrop-filter: blur(3px);
+  animation: fen-fondu .18s ease-out;
+}
+@keyframes fen-fondu { from { opacity: 0; } to { opacity: 1; } }
+
+.fen-boite {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 980px;
+  /* La fenêtre défile EN ELLE-MÊME : sur un téléphone la liste est longue, et
+     c'est elle qui doit bouger, pas la page derrière. */
+  max-height: min(88vh, 940px);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-xl);
+  background: var(--bg);
+  color: var(--on-bg);
+  box-shadow: 0 40px 100px -30px rgba(0, 0, 0, 0.5);
+  animation: fen-entree .2s cubic-bezier(.2,.8,.2,1);
+}
+@keyframes fen-entree { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+.fen-boite:focus { outline: none; }
+
+/* Rien d'agressif, et rien du tout pour qui a demandé moins de mouvement. */
+@media (prefers-reduced-motion: reduce) {
+  .fen-fond, .fen-boite { animation: none; }
+  .fen-plus { transition: none; }
+}
+
+.fen-tete {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 30px 34px 22px;
+  border-bottom: 1px solid var(--line);
+}
+.fen-titre {
+  margin: 0 0 8px;
+  font-family: var(--font-display);
+  font-size: 27px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  color: var(--on-bg);
+}
+.fen-chapo {
+  margin: 0;
+  max-width: 620px;
+  font-size: 14px;
+  line-height: 1.55;
+  color: rgba(var(--on-bg-rgb), 0.7);
+}
+.fen-fermer {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  flex: none;
+  padding: 8px 14px;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--on-bg);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color .2s, background .2s;
+}
+.fen-fermer:hover { border-color: var(--accent); color: var(--accent); }
+.fen-fermer:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.fen-corps {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 26px 34px 30px;
+}
+/* Deux colonnes sur grand écran, une seule sur téléphone. `masonry` n'existe
+   pas partout : deux colonnes CSS suffisent, et gardent les groupes entiers. */
+.fen-groupes {
+  columns: 2;
+  column-gap: 40px;
+}
+.fen-groupe {
+  break-inside: avoid;
+  margin: 0 0 26px;
+}
+.fen-groupe-titre {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin: 0 0 12px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: var(--accent);
+}
+.fen-groupe-titre svg { flex: none; }
+.fen-groupe ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 9px; }
+.fen-groupe li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: rgba(var(--on-bg-rgb), 0.82);
+}
+.fen-groupe li svg { color: var(--accent); flex: none; margin-top: 4px; }
+
+.fen-pied {
+  margin: 6px 0 0;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+  font-size: 13px;
+  line-height: 1.55;
+  color: rgba(var(--on-bg-rgb), 0.58);
+}
+
+@media (max-width: 760px) {
+  .fen-fond { padding: 0; }
+  .fen-boite { max-width: none; max-height: 100vh; height: 100%; border: 0; border-radius: 0; }
+  .fen-groupes { columns: 1; }
+  .fen-tete { padding: 22px 20px 18px; gap: 14px; }
+  .fen-titre { font-size: 22px; }
+  .fen-corps { padding: 22px 20px 28px; }
+  /* Le mot « Fermer » RESTE, même ici : une croix seule se devine, elle ne se
+     lit pas. Il tient — l'entête passe en colonne si besoin. */
+  .fen-tete { flex-wrap: wrap; }
+}
+
 /* ── Téléphone ──────────────────────────────────────────────────────────
    La réponse passe SOUS les questions — c'est la suite de lecture — et le
    rail devient une liste. */
