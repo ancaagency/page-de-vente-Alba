@@ -350,21 +350,18 @@ const Testimonials = () => (
    ============================================================================ */
 const Pricing = () => {
   /* ── LA GRILLE ────────────────────────────────────────────────────────────
-     Écrite en toutes lettres plutôt que calculée depuis un pourcentage : la
-     remise annuelle n'est pas uniforme (−18 % sur Atelier et sur la personne
-     supplémentaire, −17,4 % sur le premier siège Agence), et un prix déduit
-     d'une formule finirait par diverger de Stripe sans que personne ne le voie.
-     Ces montants sont ceux qui sont configurés là-bas. */
-  const TARIFS = {
-    atelier: {
-      mois: 49,                       // 49 € HT / mois
-      an: 480,                        // 480 € HT / an, soit 40 € HT / mois
-    },
-    agence: {
-      mois: { premiere: 69, suivante: 39 },
-      an: { premiere: 684, suivante: 384 },
-    },
-  };
+     Elle vient de tarifs.js, et n'est PAS recopiée ici. C'est le seul endroit
+     du dépôt où ces montants sont écrits ; les données structurées et le
+     garde-fou tests/montants.mjs lisent le même fichier.
+
+     Pas de valeur de repli, volontairement — à la différence de contenu.js, où
+     un texte manquant retombe sur celui du code. Un prix de repli qui diverge
+     du vrai est exactement le défaut qu'on cherche à rendre impossible : mieux
+     vaut que la construction échoue bruyamment que qu'une page affiche
+     tranquillement un montant d'il y a six mois. Le prérendu monte la page
+     dans un vrai navigateur : si le fichier n'est pas chargé, ça casse là, à
+     la construction, et pas chez un visiteur. */
+  const TARIFS = window.ALBA_TARIFS;
 
   const [annuel, setAnnuel] = React.useState(false);
   const [personnes, setPersonnes] = React.useState(1);
@@ -630,8 +627,8 @@ const Pricing = () => {
                   <p className="tarif-detail">
                     {annuel && L(`facturé ${euros(base)} € HT par an`, `billed €${euros(base)} excl. VAT per year`)}
                     {annuel && o.degressive && <br/>}
-                    {o.degressive && L(`puis ${euros(suivante)} € par personne supplémentaire${annuel ? " et par an" : ""}, jusqu'à 4 personnes`,
-                                       `then €${euros(suivante)} per additional person${annuel ? " per year" : ""}, up to 4 people`)}
+                    {o.degressive && L(`puis ${euros(suivante)} € par personne supplémentaire${annuel ? " et par an" : ""}, jusqu'à ${TARIFS.maxPersonnes} personnes`,
+                                       `then €${euros(suivante)} per additional person${annuel ? " per year" : ""}, up to ${TARIFS.maxPersonnes} people`)}
                   </p>
                 )}
                 <ul className="tarif-quantites">
@@ -681,7 +678,7 @@ const Pricing = () => {
             <div className="calc-champ">
               <label htmlFor="calc-personnes">{Txt("tarifs.calc-personnes", "Combien êtes-vous dans l'agence ?", "How many of you are in the practice?")}</label>
               <div className="calc-boutons" role="group">
-                {[1, 2, 3, 4].map((n) => (
+                {Array.from({ length: TARIFS.maxPersonnes }, (_, i) => i + 1).map((n) => (
                   <button key={n} type="button" id={n === 1 ? "calc-personnes" : undefined}
                           className={`calc-bouton${personnes === n ? " est-actif" : ""}`}
                           aria-pressed={personnes === n ? "true" : "false"}

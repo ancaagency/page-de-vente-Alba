@@ -77,6 +77,7 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
+import { injecter as injecterFaqJsonLd } from './faq-jsonld.mjs';
 
 const ROOT = path.resolve(new URL('.', import.meta.url).pathname, '..');
 const SITE = 'https://www.alba-studio.co';
@@ -312,6 +313,20 @@ export function versAnglais(htmlFr, paire) {
   }
 
   h = avecAlternatives(h, routeFr, routeEn, en);
+
+  /* ── LA FAQ EN ANGLAIS ────────────────────────────────────────────────────
+     Le reste de l'entete est DEDUIT du francais ; les donnees structurees de la
+     FAQ, elles, ne peuvent pas l'etre — ce sont des phrases. Elles ont donc ete
+     recopiees telles quelles pendant des mois : les cinq pages anglaises
+     servaient une FAQPage EN FRANCAIS, et rien ne le signalait parce qu'aucun
+     controle ne lisait les donnees structurees des pages anglaises.
+
+     On l'injecte ICI, et pas seulement dans le prerendu : sinon `--verifier`
+     compare une page qui porte le bloc anglais a une page reconstruite qui
+     porte le bloc francais, et signale un ecart a chaque passage. Un controle
+     qui echoue toujours ne dit plus rien a personne. Le prerendu la reinjecte
+     ensuite a l'identique — l'operation est idempotente. */
+  h = injecterFaqJsonLd(h, 'en');
 
   return (
     h.replace(

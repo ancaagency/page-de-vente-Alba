@@ -62,10 +62,28 @@ export function relever(fichier) {
     ? brut
     : brut.slice(0, i) + brut.slice(brut.indexOf('<!-- PRERENDU:FIN -->'))
   ).replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>/g, '');
-  const date = (sansPrerendu.match(/class="legal-updated">([^<]*)</) || [])[1] || '';
+
+  /* ── ON NE MESURE QUE LE <main>, C'EST-À-DIRE LE TEXTE LÉGAL LUI-MÊME ─────
+     Le calcul portait sur le fichier entier. Ajouter une balise
+     `<script src="tarifs.js">` dans l'entête — une modification qui ne touche
+     pas un mot du texte légal — a suffi à réclamer une nouvelle date de mise à
+     jour.
+
+     C'est le même défaut que celui des données structurées de la FAQ, et il est
+     plus grave qu'il n'en a l'air : la seule façon de faire taire l'alerte
+     aurait été de DATER À NEUF un texte qui n'a pas bougé. Le garde-fou aurait
+     donc produit exactement le mensonge qu'il existe pour empêcher.
+
+     La barre, le pied de page et les scripts sont communs à tout le site ;
+     seule la prose du <main> engage l'éditeur. C'est elle qu'on mesure. */
+  const m = sansPrerendu.match(/<main\b[^>]*>[\s\S]*<\/main>/);
+  if (!m) throw new Error(`${fichier} : <main> introuvable — la page légale a changé de structure`);
+  const corpsLegal = m[0];
+
+  const date = (corpsLegal.match(/class="legal-updated">([^<]*)</) || [])[1] || '';
   /* La date est neutralisée AVANT le calcul : c'est elle qu'on éprouve, elle ne
      peut pas faire partie de ce qu'on mesure. */
-  const corps = sansPrerendu.replace(/class="legal-updated">[^<]*</, 'class="legal-updated">DATE<');
+  const corps = corpsLegal.replace(/class="legal-updated">[^<]*</, 'class="legal-updated">DATE<');
   return {
     empreinte: crypto.createHash('sha256').update(corps).digest('hex').slice(0, 16),
     date,

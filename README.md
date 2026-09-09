@@ -84,9 +84,9 @@ https://alba-studio.co/auth?plan=studio&storage=150&billing=yearly&seats=3
 | Paramètre | Valeurs possibles | Signification |
 |---|---|---|
 | `plan` | `studio` | Seul plan existant |
-| `storage` | `50` \| `150` \| `300` | Go de stockage |
+| `storage` | `50` \| `150` | **Sélecteur d'offre**, pas un stockage : `50` = Atelier, `150` = Agence. Le nom est historique. `300` est une offre retirée de la vente. |
 | `billing` | `monthly` \| `yearly` | `yearly` = −18 % |
-| `seats` | `1` à `4` | Collaborateurs **au total** (1 inclus dans le prix) |
+| `seats` | `1` à `4` | Personnes **au total**, la première comprise. Tarif dégressif à partir de la deuxième. |
 
 ### À implémenter côté `/auth`
 
@@ -98,29 +98,50 @@ https://alba-studio.co/auth?plan=studio&storage=150&billing=yearly&seats=3
 
 ### Point ouvert
 
-Les CTA du **haut de page** (hero, nav, bande CTA) pointent vers `/auth` **sans paramètre** — c'est normal, l'architecte n'a pas encore vu la grille. L'app doit donc gérer le cas « aucun paramètre » avec des valeurs par défaut (50 Go, mensuel, 1 collaborateur).
+Les CTA du **haut de page** (hero, nav, bande CTA) pointent vers `/auth` **sans paramètre** — c'est normal, l'architecte n'a pas encore vu la grille. L'app doit donc gérer le cas « aucun paramètre » avec des valeurs par défaut (offre Atelier, mensuel, 1 personne).
 
 ---
 
 ## TÂCHE 3 — Stripe
 
-### Grille tarifaire à créer (prix pleins, hors promotion)
+### Grille tarifaire
 
-Un produit **« Studio »** avec 6 prix :
+> ⚠️ **La grille ne se lit pas ici. Elle est dans [`tarifs.js`](tarifs.js), et
+> nulle part ailleurs.**
+>
+> Ce tableau a annoncé « 50 / 150 / 300 Go à 49 / 69 / 89 € » longtemps après
+> que le stockage a cessé d'être vendu, et « 15 €/mois » par collaborateur
+> pendant que le prix réel passait à 69 puis à 39 €. Une documentation qui
+> ment sur les prix est pire qu'une documentation absente : on la croit.
+>
+> Les cartes, le calculateur, les données structurées et le garde-fou
+> `tests/montants.mjs` lisent tous `tarifs.js`. Un montant écrit ailleurs fait
+> échouer la suite.
 
-| Stockage | Mensuel | Annuel (−18 %) | Équivalence affichée |
-|---|---|---|---|
-| 50 Go | 49 €/mois | 40 €/mois | ≈ 5 projets |
-| 150 Go | 69 €/mois | 57 €/mois | ≈ 15 projets |
-| 300 Go | 89 €/mois | 73 €/mois | ≈ 30 projets |
+Ce qu'il faut savoir pour créer les prix côté Stripe :
 
-Plus un produit **« Collaborateur supplémentaire »** : 15 €/mois, quantité variable (`quantity = seats - 1`, max 3).
+- **Trois offres.** Découverte (gratuite, aucun prix Stripe), Atelier, Agence.
+- **Agence est dégressive** : un prix pour la première personne, un autre —
+  plus bas — pour chacune des suivantes, jusqu'à 4 au total. Ce n'est pas un
+  prix par personne : la page l'a annoncé ainsi pendant une journée, et
+  affichait 276 € pour quatre au lieu de 186.
+- **Deux périodicités.** La remise annuelle **n'est pas uniforme** : 18 % sur
+  Atelier et sur la personne supplémentaire, 17,4 % sur le premier siège
+  Agence. C'est pour ça que la page annonce « jusqu'à −18 % », et pour ça que
+  les montants annuels sont écrits en toutes lettres dans `tarifs.js` plutôt
+  que calculés depuis un pourcentage — une formule finirait par diverger de
+  Stripe sans que personne ne le voie.
+- Le champ `storage` du contrat de paiement est un **sélecteur d'offre**, resté
+  ainsi pour des raisons historiques : `50` = Atelier, `150` = Agence. La
+  valeur `300` est une offre retirée de la vente et ne doit jamais repartir.
 
-*Le calcul annuel dans le code est `Math.round(prix × 0.82)`. Les `price_id` Stripe doivent correspondre exactement aux montants affichés — à vérifier après création.*
+*Les `price_id` Stripe doivent correspondre exactement aux montants de
+`tarifs.js`. C'est Stripe qui fait autorité : si les deux divergent, c'est
+`tarifs.js` qu'on corrige.*
 
 ### Ce qui est inclus dans l'offre (affiché sur la page)
 
-1 collaborateur inclus (puis 15 €/mois par collaborateur ajouté, 4 max) · clients & co-traitants illimités · stockage selon palier · décisions horodatées & signées · messagerie projet sécurisée · matériauthèque & fournisseurs · CR de chantier, réserves & photos · visionneuse plans navigateur · exports PDF & comptables · marque blanche maître d'ouvrage · support prioritaire 7j/7.
+**Toutes les fonctionnalités sont dans toutes les offres, y compris la gratuite** — on ne borne que des quantités. Projets menés de front et nombre de personnes (4 max) selon l'offre · clients & co-traitants **illimités et gratuits sur toutes les offres** · décisions horodatées & signées · messagerie projet sécurisée · matériauthèque & fournisseurs · CR de chantier, réserves & photos · visionneuse plans navigateur · exports PDF & comptables · marque blanche maître d'ouvrage · support prioritaire 7j/7.
 
 ⚠️ **« Projets illimités » a été explicitement retiré** de la liste (ce n'était pas exact). Ne pas le réintroduire.
 

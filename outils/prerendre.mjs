@@ -38,6 +38,7 @@
  */
 import fs from 'node:fs';
 import { injecter as injecterFaqJsonLd } from './faq-jsonld.mjs';
+import { injecter as injecterOffreJsonLd } from './offre-jsonld.mjs';
 import path from 'node:path';
 import { createRequire } from 'node:module';
 import { pathToFileURL } from 'node:url';
@@ -159,7 +160,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   const rendus = await instantanes();
   let ecarts = 0;
 
-  for (const { fichier, racine } of PAGES) {
+  for (const { fichier, racine, lang } of PAGES) {
     const chemin = path.join(ROOT, fichier);
     const actuel = fs.readFileSync(chemin, 'utf8');
     const attendu = injecter(actuel, racine, rendus.get(fichier));
@@ -169,9 +170,13 @@ if (import.meta.url === `file://${process.argv[1]}`) {
       console.log(`   ${bon ? '✅' : '❌'} ${fichier.padEnd(24)} ${bon ? 'à jour' : 'PÉRIMÉ'}`);
       if (!bon) ecarts++;
     } else {
-      // Les donnees structurees de la FAQ sont derivees de contenu.js a chaque
-      // passage : sans ca, elles restent figees pendant que la page evolue.
-      fs.writeFileSync(chemin, injecterFaqJsonLd(attendu));
+      /* Les donnees structurees sont DERIVEES a chaque passage, sinon elles
+         restent figees pendant que la page evolue — c'est exactement ce qui a
+         laisse « highPrice: 89 » annoncer a Google une offre retiree de la
+         vente, et une FAQPage francaise sur les cinq pages anglaises.
+         La FAQ vient de contenu.js et suit la langue de la page ; les montants
+         viennent de tarifs.js et n'en dependent pas. */
+      fs.writeFileSync(chemin, injecterOffreJsonLd(injecterFaqJsonLd(attendu, lang)));
       const texte = rendus.get(fichier).replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
       console.log(`   ${fichier.padEnd(24)} ${(rendus.get(fichier).length / 1024).toFixed(0)} Ko — ${texte.length} caractères de texte`);
     }

@@ -537,28 +537,17 @@ var Testimonials = function Testimonials() {
    ============================================================================ */
 var Pricing = function Pricing() {
   /* ── LA GRILLE ────────────────────────────────────────────────────────────
-     Écrite en toutes lettres plutôt que calculée depuis un pourcentage : la
-     remise annuelle n'est pas uniforme (−18 % sur Atelier et sur la personne
-     supplémentaire, −17,4 % sur le premier siège Agence), et un prix déduit
-     d'une formule finirait par diverger de Stripe sans que personne ne le voie.
-     Ces montants sont ceux qui sont configurés là-bas. */
-  var TARIFS = {
-    atelier: {
-      mois: 49,
-      // 49 € HT / mois
-      an: 480 // 480 € HT / an, soit 40 € HT / mois
-    },
-    agence: {
-      mois: {
-        premiere: 69,
-        suivante: 39
-      },
-      an: {
-        premiere: 684,
-        suivante: 384
-      }
-    }
-  };
+     Elle vient de tarifs.js, et n'est PAS recopiée ici. C'est le seul endroit
+     du dépôt où ces montants sont écrits ; les données structurées et le
+     garde-fou tests/montants.mjs lisent le même fichier.
+      Pas de valeur de repli, volontairement — à la différence de contenu.js, où
+     un texte manquant retombe sur celui du code. Un prix de repli qui diverge
+     du vrai est exactement le défaut qu'on cherche à rendre impossible : mieux
+     vaut que la construction échoue bruyamment que qu'une page affiche
+     tranquillement un montant d'il y a six mois. Le prérendu monte la page
+     dans un vrai navigateur : si le fichier n'est pas chargé, ça casse là, à
+     la construction, et pas chez un visiteur. */
+  var TARIFS = window.ALBA_TARIFS;
   var _React$useState5 = React.useState(false),
     _React$useState6 = _slicedToArray(_React$useState5, 2),
     annuel = _React$useState6[0],
@@ -865,7 +854,7 @@ var Pricing = function Pricing() {
       className: "tarif-unite"
     }, Txt("tarifs.ht-mois-court", "HT / mois", "excl. VAT / month")))), o.palier && /*#__PURE__*/React.createElement("p", {
       className: "tarif-detail"
-    }, annuel && L("factur\xE9 ".concat(euros(base), " \u20AC HT par an"), "billed \u20AC".concat(euros(base), " excl. VAT per year")), annuel && o.degressive && /*#__PURE__*/React.createElement("br", null), o.degressive && L("puis ".concat(euros(suivante), " \u20AC par personne suppl\xE9mentaire").concat(annuel ? " et par an" : "", ", jusqu'\xE0 4 personnes"), "then \u20AC".concat(euros(suivante), " per additional person").concat(annuel ? " per year" : "", ", up to 4 people"))), /*#__PURE__*/React.createElement("ul", {
+    }, annuel && L("factur\xE9 ".concat(euros(base), " \u20AC HT par an"), "billed \u20AC".concat(euros(base), " excl. VAT per year")), annuel && o.degressive && /*#__PURE__*/React.createElement("br", null), o.degressive && L("puis ".concat(euros(suivante), " \u20AC par personne suppl\xE9mentaire").concat(annuel ? " et par an" : "", ", jusqu'\xE0 ").concat(TARIFS.maxPersonnes, " personnes"), "then \u20AC".concat(euros(suivante), " per additional person").concat(annuel ? " per year" : "", ", up to ").concat(TARIFS.maxPersonnes, " people"))), /*#__PURE__*/React.createElement("ul", {
       className: "tarif-quantites"
     }, o.quantites.map(function (q, i) {
       return /*#__PURE__*/React.createElement("li", {
@@ -904,7 +893,11 @@ var Pricing = function Pricing() {
   }, Txt("tarifs.calc-personnes", "Combien êtes-vous dans l'agence ?", "How many of you are in the practice?")), /*#__PURE__*/React.createElement("div", {
     className: "calc-boutons",
     role: "group"
-  }, [1, 2, 3, 4].map(function (n) {
+  }, Array.from({
+    length: TARIFS.maxPersonnes
+  }, function (_, i) {
+    return i + 1;
+  }).map(function (n) {
     return /*#__PURE__*/React.createElement("button", {
       key: n,
       type: "button",

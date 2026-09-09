@@ -35,16 +35,22 @@
  *   · la balise `<link rel="canonical">` de la page ;
  *   · le lien depuis le pied de page, sans quoi personne n'y arrivera jamais.
  *
+ * `lang` dit dans quelle langue la page est SERVIE. Elle ne sert pas qu'à
+ * l'affichage : les données structurées de la FAQ en dépendent. Les cinq pages
+ * anglaises ont servi une FAQPage en français parce que rien ne portait cette
+ * information — l'entête anglaise est déduite de la française, et le prérendu
+ * réinjectait le bloc français par-dessus.
+ *
  * `racine` est l'identifiant du conteneur que React monte, et c'est lui que le
  * prérendu instantanéise. Une page dont tout le corps est du HTML statique
  * n'expose que son pied de page : c'est `footer-root`.
  */
 export const PAGES = [
-  { fichier: 'index.html', route: '/', racine: 'app' },
-  { fichier: 'Tarifs.html', route: '/tarifs', racine: 'app' },
-  { fichier: 'co-traitants.html', route: '/co-traitants.html', racine: 'footer-root' },
-  { fichier: 'valeur-probante.html', route: '/valeur-probante.html', racine: 'footer-root' },
-  { fichier: 'mentions-legales.html', route: '/mentions-legales.html', racine: 'footer-root' },
+  { fichier: 'index.html', route: '/', racine: 'app', lang: 'fr' },
+  { fichier: 'Tarifs.html', route: '/tarifs', racine: 'app', lang: 'fr' },
+  { fichier: 'co-traitants.html', route: '/co-traitants.html', racine: 'footer-root', lang: 'fr' },
+  { fichier: 'valeur-probante.html', route: '/valeur-probante.html', racine: 'footer-root', lang: 'fr' },
+  { fichier: 'mentions-legales.html', route: '/mentions-legales.html', racine: 'footer-root', lang: 'fr' },
 
   /* Les deux pages anglaises. Elles sont ENGENDRÉES par outils/anglais.mjs à
      partir de leurs jumelles françaises : on ne les modifie jamais à la main.
@@ -61,11 +67,11 @@ export const PAGES = [
      Les trois pages éditoriales ont maintenant leur jumelle, dont le corps est
      une VRAIE traduction (traductions/*.en.html) : leur texte est de la prose,
      qu'aucun outil ne traduit sans la trahir. Seule leur entête est déduite. */
-  { fichier: 'en.html', route: '/en', racine: 'app' },
-  { fichier: 'en-tarifs.html', route: '/en-tarifs', racine: 'app' },
-  { fichier: 'en-co-traitants.html', route: '/en-co-traitants', racine: 'footer-root' },
-  { fichier: 'en-valeur-probante.html', route: '/en-valeur-probante', racine: 'footer-root' },
-  { fichier: 'en-mentions-legales.html', route: '/en-mentions-legales', racine: 'footer-root' },
+  { fichier: 'en.html', route: '/en', racine: 'app', lang: 'en' },
+  { fichier: 'en-tarifs.html', route: '/en-tarifs', racine: 'app', lang: 'en' },
+  { fichier: 'en-co-traitants.html', route: '/en-co-traitants', racine: 'footer-root', lang: 'en' },
+  { fichier: 'en-valeur-probante.html', route: '/en-valeur-probante', racine: 'footer-root', lang: 'en' },
+  { fichier: 'en-mentions-legales.html', route: '/en-mentions-legales', racine: 'footer-root', lang: 'en' },
 ];
 
 /** Les routes servies, dans l'ordre. Pour les contrôles qui parcourent le site. */

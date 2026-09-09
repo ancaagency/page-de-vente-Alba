@@ -651,8 +651,15 @@ window.ALBA_CONTENU = {
     en: "How many team members are included?",
   },
   "faq.le-tarif-studio-inclut-1-collaborateur": {
-    fr: "Les offres Découverte et Atelier couvrent une personne. L'offre Agence se facture 69 € HT par mois et par personne, jusqu'à quatre. Vos clients et vos co-traitants, eux, restent illimités et gratuits : ils ne comptent dans aucune offre.",
-    en: "The Discovery and Studio plans cover one person. The Practice plan is billed at €69 excl. VAT per month per person, up to four. Your clients and consultants remain unlimited and free: they count towards no plan.",
+    /* AUCUN MONTANT ICI. Cette réponse a dit « 69 € HT par mois et par
+       personne » — l'erreur exacte qu'on venait de corriger sur la carte, et
+       qui vaut 276 € pour quatre au lieu de 186. Elle est injectée en JSON-LD
+       sur les DIX pages du site : le prix faux était syndiqué partout, et
+       candidat à l'affichage direct dans les résultats de recherche.
+       Les montants vivent dans tarifs.js et ne s'affichent que sur la page de
+       tarifs. Ici on décrit la RÈGLE, qui elle ne bouge pas. */
+    fr: "Les offres Découverte et Atelier couvrent une personne. L'offre Agence va jusqu'à quatre, avec un tarif dégressif à partir de la deuxième : le détail est sur la page Tarifs. Vos clients et vos co-traitants, eux, restent illimités et gratuits — ils ne comptent dans aucune offre.",
+    en: "The Discovery and Studio plans cover one person. The Practice plan goes up to four, at a decreasing rate from the second person onwards: the detail is on the Pricing page. Your clients and consultants remain unlimited and free — they count towards no plan.",
   },
   "faq.et-pendant-le-chantier": {
     fr: "Et pendant le chantier ?",

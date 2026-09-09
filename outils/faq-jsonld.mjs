@@ -16,6 +16,19 @@
  *
  * Il est désormais dérivé, jamais saisi. Le prérendu l'appelle à chaque
  * exécution, et un test vérifie qu'il correspond.
+ *
+ * ─────────────────────────────────────────────────────────────────────────────
+ * ET IL SUIT LA LANGUE DE LA PAGE
+ *
+ * Il ne l'a pas toujours fait. Les cinq pages anglaises servaient la FAQPage
+ * EN FRANÇAIS : outils/anglais.mjs recopie l'entête de la page française, et le
+ * prérendu réinjectait ensuite la version française par-dessus. Rien ne le
+ * signalait, parce qu'aucun contrôle ne lisait les données structurées des
+ * pages anglaises — on ne trouve que ce qu'on regarde.
+ *
+ * Les questions restent repérées sur le texte FRANÇAIS (c'est la convention de
+ * contenu.js : une entrée qui finit par « ? » est une question, la suivante est
+ * sa réponse), mais elles sont ÉMISES dans la langue demandée.
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -37,24 +50,30 @@ export function lireContenu() {
  * réponse est l'entrée suivante dans l'ordre du fichier. C'est la convention du
  * fichier, et elle est vérifiée : une question sans réponse fait échouer.
  */
-export function questionsReponses(contenu = lireContenu()) {
+export function questionsReponses(contenu = lireContenu(), lang = 'fr') {
   const cles = Object.keys(contenu).filter((k) => k.startsWith('faq.'));
   const paires = [];
   for (let i = 0; i < cles.length; i++) {
-    const q = contenu[cles[i]]?.fr || '';
-    if (!q.trim().endsWith('?')) continue;
-    const r = contenu[cles[i + 1]]?.fr;
-    if (!r) throw new Error(`FAQ : « ${q} » n'a pas de réponse dans contenu.js`);
+    /* Le repérage se fait TOUJOURS sur le français, quelle que soit la langue
+       émise : c'est la convention du fichier, et une traduction anglaise dont
+       la ponctuation dériverait ne doit pas décaler les paires. */
+    const marqueur = contenu[cles[i]]?.fr || '';
+    if (!marqueur.trim().endsWith('?')) continue;
+    const q = contenu[cles[i]]?.[lang];
+    const r = contenu[cles[i + 1]]?.[lang];
+    if (!q) throw new Error(`FAQ : « ${marqueur} » n'a pas de version « ${lang} » dans contenu.js`);
+    if (!r) throw new Error(`FAQ : « ${marqueur} » n'a pas de réponse « ${lang} » dans contenu.js`);
     paires.push([q, r]);
   }
   return paires;
 }
 
-export function blocJsonLd(contenu = lireContenu()) {
+export function blocJsonLd(contenu = lireContenu(), lang = 'fr') {
   const donnees = {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
-    mainEntity: questionsReponses(contenu).map(([q, a]) => ({
+    inLanguage: lang === 'en' ? 'en-GB' : 'fr-FR',
+    mainEntity: questionsReponses(contenu, lang).map(([q, a]) => ({
       '@type': 'Question', name: q,
       acceptedAnswer: { '@type': 'Answer', text: a },
     })),
@@ -63,8 +82,8 @@ export function blocJsonLd(contenu = lireContenu()) {
 }
 
 /** Remplace le bloc dans un HTML. Renvoie le HTML, inchangé si rien à faire. */
-export function injecter(html) {
-  const bloc = blocJsonLd();
+export function injecter(html, lang = 'fr') {
+  const bloc = blocJsonLd(lireContenu(), lang);
   const i = html.indexOf(DEBUT);
   if (i !== -1) {
     const j = html.indexOf(FIN, i);
