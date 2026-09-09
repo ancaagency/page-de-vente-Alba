@@ -35,6 +35,20 @@
  *   · la balise `<link rel="canonical">` de la page ;
  *   · le lien depuis le pied de page, sans quoi personne n'y arrivera jamais.
  *
+ * ⚠️ `route` EST L'ADRESSE QUE LE VISITEUR DEMANDE, PAS LE NOM DU FICHIER.
+ *
+ * Les trois pages éditoriales portaient ici « /co-traitants.html » alors que le
+ * canonique, le hreflang, le plan du site et les liens du pied de page disent
+ * tous « /co-traitants ». Cloudflare Pages sert le fichier à l'adresse SANS
+ * extension et renvoie l'autre en 301 : l'adresse listée ici n'était donc
+ * demandée par personne — ni visiteur, ni robot.
+ *
+ * Ça n'a pas fait que fausser des contrôles. La politique de cache est dérivée
+ * de cette liste : les règles ont été posées sur « /co-traitants.html », et les
+ * trois adresses réellement servies sont restées SANS règle de cache. Le
+ * garde-fou censé empêcher exactement ça était aveugle, parce que sa source de
+ * vérité ne disait pas la vérité.
+ *
  * `lang` dit dans quelle langue la page est SERVIE. Elle ne sert pas qu'à
  * l'affichage : les données structurées de la FAQ en dépendent. Les cinq pages
  * anglaises ont servi une FAQPage en français parce que rien ne portait cette
@@ -48,9 +62,9 @@
 export const PAGES = [
   { fichier: 'index.html', route: '/', racine: 'app', lang: 'fr' },
   { fichier: 'Tarifs.html', route: '/tarifs', racine: 'app', lang: 'fr' },
-  { fichier: 'co-traitants.html', route: '/co-traitants.html', racine: 'footer-root', lang: 'fr' },
-  { fichier: 'valeur-probante.html', route: '/valeur-probante.html', racine: 'footer-root', lang: 'fr' },
-  { fichier: 'mentions-legales.html', route: '/mentions-legales.html', racine: 'footer-root', lang: 'fr' },
+  { fichier: 'co-traitants.html', route: '/co-traitants', racine: 'footer-root', lang: 'fr' },
+  { fichier: 'valeur-probante.html', route: '/valeur-probante', racine: 'footer-root', lang: 'fr' },
+  { fichier: 'mentions-legales.html', route: '/mentions-legales', racine: 'footer-root', lang: 'fr' },
 
   /* Les deux pages anglaises. Elles sont ENGENDRÉES par outils/anglais.mjs à
      partir de leurs jumelles françaises : on ne les modifie jamais à la main.

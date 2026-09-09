@@ -894,7 +894,7 @@ picture { display: contents; }
 .store-badges.dark .store-note { color: rgba(var(--on-bg-rgb), 0.72); }
 .store-badges.light .store-note { color: rgba(11, 18, 36, 0.62); }
 .foot-apps { margin-top: 26px; }
-.foot-apps h5 {
+.foot-apps h2 {
   font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.16em;
   text-transform: uppercase; color: rgba(var(--on-bg-rgb), 0.5); margin: 0;
 }

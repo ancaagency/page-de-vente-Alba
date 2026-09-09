@@ -837,7 +837,7 @@ var CalendarDemo = function CalendarDemo() {
     "aria-label": L("Fermer", "Close")
   }, "\xD7"), /*#__PURE__*/React.createElement("div", {
     className: "mam-head"
-  }, /*#__PURE__*/React.createElement("h4", {
+  }, /*#__PURE__*/React.createElement("div", {
     className: "mam-title",
     style: {
       marginTop: 0

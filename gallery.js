@@ -86,7 +86,7 @@ var Gallery = function Gallery() {
       className: "gtile-overlay"
     }, /*#__PURE__*/React.createElement("div", {
       className: "eyebrow"
-    }, t.eyebrow), /*#__PURE__*/React.createElement("h4", null, t.h), t.gain && /*#__PURE__*/React.createElement("p", {
+    }, t.eyebrow), /*#__PURE__*/React.createElement("h3", null, t.h), t.gain && /*#__PURE__*/React.createElement("p", {
       className: "gtile-gain"
     }, /*#__PURE__*/React.createElement(Icon, {
       name: "check",

@@ -331,7 +331,7 @@ const CalendarDemo = () => {
               <div className="mam-modal cal-ev-modal" onClick={(e) => e.stopPropagation()}>
                 <button className="mam-close" onClick={() => setEvOpen(false)} aria-label={L("Fermer", "Close")}>×</button>
                 <div className="mam-head">
-                  <h4 className="mam-title" style={{marginTop: 0}}>{L("Nouvel événement", "New event")}</h4>
+                  <div className="mam-title" style={{marginTop: 0}}>{L("Nouvel événement", "New event")}</div>
                   <p className="mam-sub" style={{maxWidth: "38ch"}}>{L("Les événements sont créés dans la fiche du projet pour préserver le contexte (signatures, décisions, traçabilité). On vous y emmène.", "Events are created inside the project so context is preserved (signatures, decisions, traceability). We'll take you there.")}</p>
                 </div>
                 <div className="cal-ev-body">

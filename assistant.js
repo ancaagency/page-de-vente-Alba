@@ -432,7 +432,7 @@ var AssistantDemo = function AssistantDemo() {
     className: "leo-kicker"
   }, /*#__PURE__*/React.createElement("span", {
     className: "leo-kdot"
-  }), " L\xC9O \xB7 ", L("ASSISTANT", "ASSISTANT")), /*#__PURE__*/React.createElement("h4", {
+  }), " L\xC9O \xB7 ", L("ASSISTANT", "ASSISTANT")), /*#__PURE__*/React.createElement("div", {
     className: "leo-modal-title"
   }, L("Cherchez, ou ", "Search, or "), /*#__PURE__*/React.createElement("em", null, L("demandez à Léo", "ask Léo"))), /*#__PURE__*/React.createElement("p", {
     className: "leo-modal-sub"

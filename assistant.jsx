@@ -197,7 +197,7 @@ const AssistantDemo = () => {
                 <button className="leo-close" onClick={() => setOpen(false)} aria-label={L("Fermer", "Close")}>×</button>
                 <div className="leo-modal-head">
                   <div className="leo-kicker"><span className="leo-kdot"/> LÉO · {L("ASSISTANT", "ASSISTANT")}</div>
-                  <h4 className="leo-modal-title">{L("Cherchez, ou ", "Search, or ")}<em>{L("demandez à Léo", "ask Léo")}</em></h4>
+                  <div className="leo-modal-title">{L("Cherchez, ou ", "Search, or ")}<em>{L("demandez à Léo", "ask Léo")}</em></div>
                   <p className="leo-modal-sub">{L("Une page, une action, un projet, ou une vraie question à Léo, à l'écrit comme à la voix.", "A page, an action, a project, or a real question for Léo, typed or spoken.")}</p>
                 </div>
 

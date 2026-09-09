@@ -416,7 +416,7 @@ console.log('\n===== aucun stockage visible sur le site =====');
   /* Les mentions légales décrivent l'hébergement des fichiers : « stockage des
      fichiers déposés par les utilisateurs » y est un terme technique exact, pas
      un argument de vente. C'est la seule page exemptée, et elle est nommée. */
-  const EXEMPTES = new Set(['/mentions-legales.html', '/en-mentions-legales']);
+  const EXEMPTES = new Set(['/mentions-legales', '/en-mentions-legales']);
 
   for (const route of ROUTES) {
     if (EXEMPTES.has(route)) continue;

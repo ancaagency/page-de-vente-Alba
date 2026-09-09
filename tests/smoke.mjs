@@ -60,9 +60,9 @@ for (const [route, attendus] of [
   ['/tarifs', [['.conf-tuile', 'tuiles des trois offres'], ['.conf-reponse', 'colonne de réponse du configurateur'], ['#securite', 'bloc Sécurité'], ['footer', 'pied de page']]],
   // Cette page monte son pied de page via React : sans lui, les liens
   // légaux et le contact disparaissent sans que rien ne le signale.
-  ['/co-traitants.html', [['.edito', 'en-tête'], ['#qui-paie', 'tableau qui paie quoi'], ['footer', 'pied de page'], ['.foot-col', 'colonnes du pied']]],
-  ['/valeur-probante.html', [['.edito', 'en-tête'], ['#signature', 'section signature'], ['footer', 'pied de page'], ['.foot-col', 'colonnes du pied']]],
-  ['/mentions-legales.html', [['.legal-wrap', 'corps des mentions'], ['footer', 'pied de page'], ['.foot-col', 'colonnes du pied']]],
+  ['/co-traitants', [['.edito', 'en-tête'], ['#qui-paie', 'tableau qui paie quoi'], ['footer', 'pied de page'], ['.foot-col', 'colonnes du pied']]],
+  ['/valeur-probante', [['.edito', 'en-tête'], ['#signature', 'section signature'], ['footer', 'pied de page'], ['.foot-col', 'colonnes du pied']]],
+  ['/mentions-legales', [['.legal-wrap', 'corps des mentions'], ['footer', 'pied de page'], ['.foot-col', 'colonnes du pied']]],
 ]) {
   const page = await browser.newPage();
   const erreurs = [];
@@ -371,10 +371,19 @@ console.log('\n===== aucun texte de la couleur de son fond =====');
          comme du doré plein, et six libellés parfaitement lisibles étaient
          signalés invisibles. Un contrôle qui crie au loup finit ignoré : il
          faut composer les couches, comme le fait le navigateur. */
+      /* Renvoie null quand le fond n'est PAS jugeable par cette méthode : sous
+         un dégradé ou une photo, la couleur de fond calculée est transparente
+         et la remontée aboutit à un ancêtre qui n'a rien à voir avec ce que
+         l'œil voit. Les légendes de la galerie — texte clair sur un voile
+         sombre posé sur une photographie — étaient accusées à ce titre, alors
+         que le contraste est justement garanti par ce voile.
+         Un garde-fou qui accuse à tort finit contourné, puis retiré. */
       const fondEffectif = (el) => {
         const couches = [];
         for (let n = el; n && n !== document.documentElement; n = n.parentElement) {
-          const [r, g, b, a = 1] = nombres(getComputedStyle(n).backgroundColor);
+          const st = getComputedStyle(n);
+          if (st.backgroundImage && st.backgroundImage !== 'none') return null;
+          const [r, g, b, a = 1] = nombres(st.backgroundColor);
           if (a === 0) continue;
           couches.push([r, g, b, a]);
           if (a === 1) break;
@@ -390,20 +399,33 @@ console.log('\n===== aucun texte de la couleur de son fond =====');
         return fond;
       };
       const trouves = [];
-      for (const el of document.querySelectorAll('a, button, p, h1, h2, h3, li, td, th, span')) {
+      /* h4 à h6 MANQUAIENT. Les légendes de la galerie étaient en <h4> : ce
+         contrôle ne les a jamais regardées, et n'aurait rien vu si elles
+         avaient réellement disparu. On liste tous les niveaux. */
+      for (const el of document.querySelectorAll('a, button, p, h1, h2, h3, h4, h5, h6, li, td, th, span')) {
         const t = (el.textContent || '').trim();
         if (!t || el.children.length) continue;          // que les feuilles de texte
+        /* Un ancêtre à opacity: 0 rend le texte absent, pas illisible — c'est
+           le cas des voiles révélés au survol. Rien à juger ici. */
+        let cache = false;
+        for (let n = el; n && n !== document.documentElement; n = n.parentElement) {
+          const s2 = getComputedStyle(n);
+          if (s2.opacity === '0' || s2.visibility === 'hidden' || s2.display === 'none') { cache = true; break; }
+        }
+        if (cache) continue;
         const st = getComputedStyle(el);
         if (st.display === 'none' || st.visibility === 'hidden' || st.opacity === '0') continue;
         const r = el.getBoundingClientRect();
         if (r.width < 2 || r.height < 2) continue;
         const [tr, tg, tb] = nombres(st.color);
-        const [fr, fg, fb] = fondEffectif(el);
+        const fond = fondEffectif(el);
+        if (!fond) continue;                             // fond non jugeable
+        const [fr, fg, fb] = fond;
         // Écart total sur les trois canaux. En dessous de 24, l'œil ne
         // distingue plus rien : c'est du texte perdu, pas du texte discret.
         const ecart = Math.abs(tr - fr) + Math.abs(tg - fg) + Math.abs(tb - fb);
         if (ecart < 24) {
-          trouves.push(`« ${t.slice(0, 32)} » ${st.color} sur rgb(${fondEffectif(el).join(', ')})`);
+          trouves.push(`« ${t.slice(0, 32)} » ${st.color} sur rgb(${fond.join(', ')})`);
         }
       }
       return [...new Set(trouves)].slice(0, 6);
@@ -617,7 +639,7 @@ console.log('\n===== inventaire des traceurs : rien de nouveau ? =====');
 
   /* Et la page légale doit continuer de dire la vérité : si elle n'affirme plus
      l'absence de cookie, c'est que quelqu'un a modifié l'un sans l'autre. */
-  const legal = await page.goto('http://localhost:8790/mentions-legales.html', { waitUntil: 'load', timeout: 40000 })
+  const legal = await page.goto('http://localhost:8790/mentions-legales', { waitUntil: 'load', timeout: 40000 })
     .then(() => page.evaluate(() => document.body.textContent)).catch(() => '');
   const affirme = /aucun cookie/i.test(legal);
   console.log(`   ${affirme ? '✅' : '❌'} les mentions légales l'affirment toujours`);

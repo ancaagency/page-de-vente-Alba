@@ -1103,7 +1103,7 @@ const TrustBand = () => {
             <Reveal key={i} delay={i*90} className="trust-item">
               <div className="trust-icon"><Icon name={it.icon} size={16}/></div>
               <div>
-                <h4>{it.t}</h4>
+                <h3>{it.t}</h3>
                 <p>{it.d}</p>
               </div>
             </Reveal>
@@ -1374,12 +1374,12 @@ const Footer = () => (
           <div className="foot-tag">{Txt("pied.la-plateforme-tout-en-un-des", "La plateforme tout-en-un des architectes indépendants. Conçue à Lyon, pensée pour vous.", "The all-in-one platform for independent architects. Made in Lyon, designed for you.")}</div>
           <span className="liseret-under"></span>
           <div className="foot-apps">
-            <h5>{Txt("pied.l-app-mobile-tablette", "L'app mobile & tablette", "The mobile & tablet app")}</h5>
+            <h2>{Txt("pied.l-app-mobile-tablette", "L'app mobile & tablette", "The mobile & tablet app")}</h2>
             <StoreBadges theme="dark"/>
           </div>
         </div>
         <div className="foot-col">
-          <h5>{Txt("pied.produit", "Produit", "Product")}</h5>
+          <h2>{Txt("pied.produit", "Produit", "Product")}</h2>
           <ul>
             <li><a href={versAccueil("#fonctionnalites")}>{Txt("pied.fonctionnalites", "Fonctionnalités", "Features")}</a></li>
             <li><a href={versAccueil("#devices")}>{Txt("pied.la-plateforme", "La plateforme", "The platform")}</a></li>
@@ -1388,7 +1388,7 @@ const Footer = () => (
           </ul>
         </div>
         <div className="foot-col">
-          <h5>{Txt("pied.agence", "Agence", "Company")}</h5>
+          <h2>{Txt("pied.agence", "Agence", "Company")}</h2>
           <ul>
             {/* Ces trois entrées portaient href="#" : un fragment vide ne mène nulle
                 part, et le gestionnaire d'ancres l'ignore — on cliquait, rien ne
@@ -1414,7 +1414,7 @@ const Footer = () => (
           </ul>
         </div>
         <div className="foot-col">
-          <h5>{Txt("pied.legal", "Légal", "Legal")}</h5>
+          <h2>{Txt("pied.legal", "Légal", "Legal")}</h2>
           <ul>
             {/* Les CGU et la politique de confidentialité sont servies par
                 l'APPLICATION, pas par la vitrine. Ces adresses-là sont déposées

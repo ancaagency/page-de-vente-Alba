@@ -616,7 +616,7 @@ var MatAddModal = function MatAddModal(_ref) {
     className: "mam-head"
   }, /*#__PURE__*/React.createElement("div", {
     className: "mam-eyebrow"
-  }, L("BIBLIOTHÈQUE · NOUVEAU MATÉRIAU", "LIBRARY · NEW MATERIAL")), /*#__PURE__*/React.createElement("h4", {
+  }, L("BIBLIOTHÈQUE · NOUVEAU MATÉRIAU", "LIBRARY · NEW MATERIAL")), /*#__PURE__*/React.createElement("div", {
     className: "mam-title"
   }, L("Ajouter un ", "Add a "), /*#__PURE__*/React.createElement("em", null, L("matériau", "material"))), /*#__PURE__*/React.createElement("p", {
     className: "mam-sub"

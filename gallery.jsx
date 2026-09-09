@@ -33,7 +33,11 @@ const Gallery = () => {
                 <Photo src={t.img} alt={t.alt} sizes={t.sizes}/>
                 <div className="gtile-overlay">
                   <div className="eyebrow">{t.eyebrow}</div>
-                  <h4>{t.h}</h4>
+                  {/* <h3> et non <h4> : la galerie n'a pas de <h2> à elle, ses
+                      légendes suivent donc directement le <h2> de la section
+                      précédente. Sauter un niveau désoriente la navigation par
+                      titres d'un lecteur d'écran. */}
+                  <h3>{t.h}</h3>
                   {/* Ce que le projet a gagné avec ALBA. Ce sont des capacités
                       du produit, décrites au ras du réel — pas des résultats
                       mesurés chez un client, qu'on ne peut pas inventer. */}

@@ -175,7 +175,9 @@
 # servi : une requête vers /tarifs ne rencontre jamais `/*.html`, même si c'est
 # bien Tarifs.html qui sort. Sept des dix routes du site étaient dans ce cas —
 # l'accueil comprise — et repartaient donc avec le cache par défaut, ce qui
-# obligeait à vider le cache à la main après chaque mise en ligne.
+# obligeait à vider le cache à la main après chaque mise en ligne. Elles sont
+# DIX, et non sept : les trois pages éditoriales aussi sont servies à une
+# adresse sans extension, ce que outils/pages.mjs a longtemps mal déclaré.
 #
 # Elles sont nommées une par une, et tests/entetes.mjs vérifie que la liste
 # couvre TOUTES les routes de outils/pages.mjs : ajouter une page sans sa règle
@@ -200,6 +202,15 @@
   Cache-Control: public, max-age=0, must-revalidate
 
 /en-mentions-legales
+  Cache-Control: public, max-age=0, must-revalidate
+
+/co-traitants
+  Cache-Control: public, max-age=0, must-revalidate
+
+/valeur-probante
+  Cache-Control: public, max-age=0, must-revalidate
+
+/mentions-legales
   Cache-Control: public, max-age=0, must-revalidate
 
 /*.css

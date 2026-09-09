@@ -220,7 +220,7 @@ const MatAddModal = ({ onClose }) => {
         <button className="mam-close" onClick={onClose} aria-label={L("Fermer", "Close")}>×</button>
         <div className="mam-head">
           <div className="mam-eyebrow">{L("BIBLIOTHÈQUE · NOUVEAU MATÉRIAU", "LIBRARY · NEW MATERIAL")}</div>
-          <h4 className="mam-title">{L("Ajouter un ", "Add a ")}<em>{L("matériau", "material")}</em></h4>
+          <div className="mam-title">{L("Ajouter un ", "Add a ")}<em>{L("matériau", "material")}</em></div>
           <p className="mam-sub">{L("Capitalisez un favori, réutilisable en un clic dans tous vos projets.", "Capture a favourite, reusable in one click across all your projects.")}</p>
         </div>
         <div className="mam-body">

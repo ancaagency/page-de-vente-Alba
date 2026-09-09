@@ -1328,7 +1328,7 @@ var TrustBand = function TrustBand() {
     }, /*#__PURE__*/React.createElement(Icon, {
       name: it.icon,
       size: 16
-    })), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h4", null, it.t), /*#__PURE__*/React.createElement("p", null, it.d)));
+    })), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h3", null, it.t), /*#__PURE__*/React.createElement("p", null, it.d)));
   }))));
 };
 
@@ -1740,11 +1740,11 @@ var Footer = function Footer() {
     className: "liseret-under"
   }), /*#__PURE__*/React.createElement("div", {
     className: "foot-apps"
-  }, /*#__PURE__*/React.createElement("h5", null, Txt("pied.l-app-mobile-tablette", "L'app mobile & tablette", "The mobile & tablet app")), /*#__PURE__*/React.createElement(StoreBadges, {
+  }, /*#__PURE__*/React.createElement("h2", null, Txt("pied.l-app-mobile-tablette", "L'app mobile & tablette", "The mobile & tablet app")), /*#__PURE__*/React.createElement(StoreBadges, {
     theme: "dark"
   }))), /*#__PURE__*/React.createElement("div", {
     className: "foot-col"
-  }, /*#__PURE__*/React.createElement("h5", null, Txt("pied.produit", "Produit", "Product")), /*#__PURE__*/React.createElement("ul", null, /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("a", {
+  }, /*#__PURE__*/React.createElement("h2", null, Txt("pied.produit", "Produit", "Product")), /*#__PURE__*/React.createElement("ul", null, /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("a", {
     href: versAccueil("#fonctionnalites")
   }, Txt("pied.fonctionnalites", "Fonctionnalités", "Features"))), /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("a", {
     href: versAccueil("#devices")
@@ -1754,7 +1754,7 @@ var Footer = function Footer() {
     href: versAccueil("#faq")
   }, "FAQ")))), /*#__PURE__*/React.createElement("div", {
     className: "foot-col"
-  }, /*#__PURE__*/React.createElement("h5", null, Txt("pied.agence", "Agence", "Company")), /*#__PURE__*/React.createElement("ul", null, /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("a", {
+  }, /*#__PURE__*/React.createElement("h2", null, Txt("pied.agence", "Agence", "Company")), /*#__PURE__*/React.createElement("ul", null, /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("a", {
     href: "/valeur-probante"
   }, Txt("pied.valeur-probante", "Valeur probante", "Evidential value"))), /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("a", {
     href: "/co-traitants"
@@ -1766,7 +1766,7 @@ var Footer = function Footer() {
     href: versAccueil("#contact")
   }, "Contact")))), /*#__PURE__*/React.createElement("div", {
     className: "foot-col"
-  }, /*#__PURE__*/React.createElement("h5", null, Txt("pied.legal", "Légal", "Legal")), /*#__PURE__*/React.createElement("ul", null, /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("a", {
+  }, /*#__PURE__*/React.createElement("h2", null, Txt("pied.legal", "Légal", "Legal")), /*#__PURE__*/React.createElement("ul", null, /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("a", {
     href: "/mentions-legales"
   }, Txt("pied.mentions-legales", "Mentions légales", "Legal notice"))), /*#__PURE__*/React.createElement("li", null, /*#__PURE__*/React.createElement("a", {
     href: "".concat(APP_ORIGIN, "/terms")
