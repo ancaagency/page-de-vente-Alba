@@ -51,13 +51,13 @@ const ATTENDU_ACCUEIL = [
   ['#securite', 'bloc Sécurité'],
   ['#faq', 'FAQ'],
   ['#contact', 'Contact'],
-  ['.tarif-carte', 'cartes tarifaires'],
+  ['.conf-tuile', 'tuiles des trois offres'],
   ['footer', 'pied de page'],
 ];
 
 for (const [route, attendus] of [
   ['/', ATTENDU_ACCUEIL],
-  ['/tarifs', [['.tarif-carte', 'cartes tarifaires'], ['.calc', 'calculateurs'], ['#securite', 'bloc Sécurité'], ['footer', 'pied de page']]],
+  ['/tarifs', [['.conf-tuile', 'tuiles des trois offres'], ['.conf-reponse', 'colonne de réponse du configurateur'], ['#securite', 'bloc Sécurité'], ['footer', 'pied de page']]],
   // Cette page monte son pied de page via React : sans lui, les liens
   // légaux et le contact disparaissent sans que rien ne le signale.
   ['/co-traitants.html', [['.edito', 'en-tête'], ['#qui-paie', 'tableau qui paie quoi'], ['footer', 'pied de page'], ['.foot-col', 'colonnes du pied']]],
@@ -115,16 +115,16 @@ for (const [route, attendus] of [
        d'inscription. Les trois offres l'envoient désormais dans le CORPS de la
        requête de paiement, et c'est tests/tarifs.mjs qui la compare au champ
        près — y compris le palier, qui ne doit jamais valoir 300.
-       Ce qui reste vrai ici, et qui doit le rester : chaque carte porte un
-       bouton, et ce bouton mène quelque part. Un lien sans href est le défaut
-       silencieux qu'on a déjà connu sur « Tester en 1 clic ». */
-    const boutons = await page.evaluate(() => [...document.querySelectorAll('.tarif-carte')].map((c) => {
-      const a = c.querySelector('.tarif-cta');
-      return { nom: c.querySelector('.tarif-nom')?.textContent.trim() || '?', href: a?.getAttribute('href') || null };
+       Ce qui reste vrai ici, et qui doit le rester : les trois offres sont là,
+       et le bouton de la réponse mène quelque part. Un lien sans href est le
+       défaut silencieux qu'on a déjà connu sur « Tester en 1 clic ». */
+    const offres = await page.evaluate(() => ({
+      tuiles: [...document.querySelectorAll('.conf-tuile .tarif-nom')].map((n) => n.textContent.trim()),
+      href: document.querySelector('.conf-reponse .tarif-cta')?.getAttribute('href') || null,
     }));
-    const tousMenent = boutons.length === 3 && boutons.every((b) => b.href && b.href.length > 1);
-    console.log(`   ${tousMenent ? '✅' : '❌'} ${boutons.length} offres, chacune avec un bouton qui mène quelque part` +
-                (tousMenent ? '' : ` — ${JSON.stringify(boutons)}`));
+    const tousMenent = offres.tuiles.length === 3 && offres.href && offres.href.length > 1;
+    console.log(`   ${tousMenent ? '✅' : '❌'} ${offres.tuiles.length} offres (${offres.tuiles.join(', ')}), et le bouton de la réponse mène quelque part` +
+                (tousMenent ? '' : ` — ${JSON.stringify(offres)}`));
     if (!tousMenent) echecs++;
 
     // Les emplacements photo doivent TOUJOURS montrer quelque chose : la photo

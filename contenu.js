@@ -961,13 +961,15 @@ window.ALBA_CONTENU = {
     fr: "Tarifs",
     en: "Pricing",
   },
+  /* « Deux questions, un prix » : c'est la promesse de la page, et c'est
+     littéralement ce qu'elle fait. */
   "tarifs.titre-1": {
-    fr: "Un prix qui suit",
-    en: "A price that follows",
+    fr: "Deux questions,",
+    en: "Two questions,",
   },
   "tarifs.titre-2": {
-    fr: "votre activité.",
-    en: "your practice.",
+    fr: "un prix.",
+    en: "one price.",
   },
   "tarifs.sous-titre": {
     fr: "On ne facture ni des options ni des modules : seulement le nombre de projets que vous menez de front et le nombre de personnes qui travaillent dans ALBA.",
@@ -980,10 +982,6 @@ window.ALBA_CONTENU = {
   "tarifs.regle-corps": {
     fr: "Dès le premier euro, et y compris dans l'offre gratuite. Aucune fonction n'est réservée à un palier supérieur : nous ne bornons que des quantités.",
     en: "From the first euro, including in the free plan. No feature is reserved for a higher tier: we cap quantities only.",
-  },
-  "tarifs.badge-recommandee": {
-    fr: "Correspond à vos réponses",
-    en: "Matches your answers",
   },
   "tarifs.gratuit": {
     fr: "Gratuit",
@@ -1007,29 +1005,9 @@ window.ALBA_CONTENU = {
     fr: "jusqu'à −18 %",
     en: "up to −18%",
   },
-  "tarifs.a-partir-de": {
-    fr: "À partir de",
-    en: "From",
-  },
   "tarifs.ht-mois-court": {
     fr: "HT / mois",
     en: "excl. VAT / month",
-  },
-  "tarifs.calc-leo": {
-    fr: "Ce que vous confiez à Léo",
-    en: "What you give Léo",
-  },
-  "tarifs.calc-votre-abonnement": {
-    fr: "Votre abonnement",
-    en: "Your subscription",
-  },
-  "tarifs.calc-gain": {
-    fr: "Ce que Léo vous fait gagner",
-    en: "What Léo saves you",
-  },
-  "tarifs.par-mois-simple": {
-    fr: "/ mois",
-    en: "/ month",
   },
   "tarifs.toutes-fonctionnalites": {
     fr: "Toutes les fonctionnalités",
@@ -1047,10 +1025,6 @@ window.ALBA_CONTENU = {
     fr: "Nous écrire",
     en: "Write to us",
   },
-  "tarifs.calc-titre": {
-    fr: "Votre prix, et ce que Léo vous fait gagner",
-    en: "Your price, and what Léo saves you",
-  },
   "tarifs.calc-personnes": {
     fr: "Combien êtes-vous dans l'agence ?",
     en: "How many of you are in the practice?",
@@ -1062,10 +1036,6 @@ window.ALBA_CONTENU = {
   "tarifs.calc-projets-note": {
     fr: "Projets en cours, pas projets archivés : archiver un projet terminé libère une place, et vous gardez l'accès à tout ce que vous avez fait.",
     en: "Live projects, not archived ones: archiving a finished project frees a slot, and you keep access to everything you have done.",
-  },
-  "tarifs.ht-mois": {
-    fr: "HT / mois",
-    en: "excl. VAT / month",
   },
   "tarifs.calc-decouverte": {
     fr: "Un seul projet à la fois vous suffit : l'offre gratuite le couvre entièrement, sans limite de durée et sans carte bancaire.",
@@ -1094,6 +1064,60 @@ window.ALBA_CONTENU = {
   "tarifs.mentions": {
     fr: "Montants HT · Estimation indicative",
     en: "Amounts excl. VAT · Indicative estimate",
+  },
+  "tarifs.votre-offre": {
+    fr: "Votre offre",
+    en: "Your plan",
+  },
+  /* La question qui revient le plus : « et mes clients, mes BET ? ». On y
+     répond sous la première question, avant qu'elle ne soit posée. */
+  "tarifs.invites-note": {
+    fr: "Vos clients, bureaux d'études et entreprises ne sont pas facturés : vous les invitez gratuitement, sans limite, sur toutes les offres.",
+    en: "Your clients, engineers and contractors are not billed: you invite them for free, without limit, on every plan.",
+  },
+  /* L'argument, en une ligne, en face du prix. Le « soit 6 × votre
+     abonnement » est calculé et ajouté par le code quand il est fort. */
+  "tarifs.leo-gagne": {
+    fr: "de temps gagné par mois grâce à Léo",
+    en: "of time saved each month thanks to Léo",
+  },
+  "tarifs.votre-abonnement": {
+    fr: "votre abonnement",
+    en: "your subscription",
+  },
+  "tarifs.ajuster": {
+    fr: "Ajuster l'estimation",
+    en: "Adjust the estimate",
+  },
+  "tarifs.masquer": {
+    fr: "Masquer",
+    en: "Hide",
+  },
+  "tarifs.rail-titre": {
+    fr: "Les trois offres · cliquez pour comparer",
+    en: "The three plans · click to compare",
+  },
+  "tarifs.des": {
+    fr: "dès",
+    en: "from",
+  },
+  "tarifs.mois": {
+    fr: "mois",
+    en: "month",
+  },
+  /* La ligne courte de chaque tuile du rail. Les quantités complètes restent
+     dans « …-q1 » à « …-q3 », affichées dans la réponse. */
+  "tarifs.decouverte-court": {
+    fr: "1 projet · 1 personne",
+    en: "1 project · 1 person",
+  },
+  "tarifs.atelier-court": {
+    fr: "5 projets de front · 1 personne",
+    en: "5 live projects · 1 person",
+  },
+  "tarifs.agence-court": {
+    fr: "Projets illimités · jusqu'à 4 personnes",
+    en: "Unlimited projects · up to 4 people",
   },
   "tarifs.porte": {
     fr: "Créer un compte gratuit",

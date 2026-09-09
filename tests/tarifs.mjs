@@ -50,9 +50,22 @@ async function ouvrirTarifs(largeur = 1280) {
   const ctx = await navigateur.newContext({ viewport: { width: largeur, height: 1000 } });
   const page = await ctx.newPage();
   await page.goto(BASE + '/tarifs', { waitUntil: 'load', timeout: 40000 });
-  await page.waitForSelector('.tarif-carte', { timeout: 20000 });
+  await page.waitForSelector('.conf', { timeout: 20000 });
   await page.waitForTimeout(600);
   return { ctx, page };
+}
+
+/** Désigne une offre à la main, par sa tuile du rail. */
+async function choisir(page, nom) {
+  await page.evaluate((n) => {
+    const t = [...document.querySelectorAll('.conf-tuile')]
+      .find((el) => el.querySelector('.tarif-nom')?.textContent.trim() === n);
+    if (!t) throw new Error(`tuile « ${n} » introuvable`);
+    t.click();
+  }, nom);
+  /* Deux évaluations séparées, jamais une seule : React ne rend qu'après le
+     clic, et cliquer le bouton dans la même passe viserait l'offre d'AVANT. */
+  await page.waitForTimeout(250);
 }
 
 /** Règle le calculateur : nombre de personnes, puis nombre de projets. */
@@ -83,16 +96,19 @@ async function periodicite(page, annuel) {
 }
 
 /** Ce que la sortie du calculateur affiche, tel que le visiteur le lit. */
-const lireSortie = (page) => page.evaluate(() => ({
-  nom: document.querySelector('.calc-nom')?.textContent.trim() || '',
-  /* Il y a DEUX .calc-montant depuis la fusion des deux encarts — le prix et
-     le gain. Prendre le premier venu marcherait aujourd'hui et se tromperait
-     le jour où l'ordre change. On nomme celui qu'on veut. */
-  montant: document.querySelector('.calc-montant:not(.calc-montant-gain)')?.textContent.replace(/\s/g, '') || '',
-  annuel: document.querySelector('.calc-annuel')?.textContent.replace(/\s/g, '') || '',
-  detail: document.querySelector('.calc-detail')?.textContent.replace(/\s/g, '') || '',
-  gain: document.querySelector('.calc-montant-gain')?.textContent.replace(/\s/g, '') || '',
-}));
+const lireSortie = (page) => page.evaluate(() => {
+  /* Une seule ligne de détail sous le prix : « facturé … par an » et/ou
+     l'addition dégressive « 69 € + 3 × 39 € ». On la lit entière, et on ne
+     l'appelle « annuel » que si elle parle de facturation à l'année. */
+  const detail = document.querySelector('.conf-detail')?.textContent.replace(/\s/g, '') || '';
+  return {
+    nom: document.querySelector('.conf-nom')?.textContent.trim() || '',
+    montant: document.querySelector('.conf-montant')?.textContent.replace(/\s/g, '') || '',
+    annuel: /facturé|billed/.test(detail) ? detail : '',
+    detail,
+    gain: document.querySelector('.calc-montant-gain')?.textContent.replace(/\s/g, '') || '',
+  };
+});
 
 /* ═══════════════════════════════════════════════════════════════════════════
    1 · LE CALCULATEUR DÉSIGNE-T-IL LA BONNE OFFRE, AU BON PRIX ?
@@ -137,13 +153,23 @@ console.log('\n===== le calculateur, au mois =====');
      que Reveal avait posée à la main. Deux cartes sur trois à opacity: 0,
      sur exactement le geste qu'on invite le visiteur à faire. On mesure
      l'opacité CALCULÉE, pas la classe : c'est ce que l'œil voit. */
+  /* Le rail est SOUS le configurateur, hors d'un écran de 1 000 px : il n'a
+     pas encore été révélé au défilement, et son opacité de repos est 0. On
+     l'amène à l'écran d'abord — on mesure une disparition, pas un défilement. */
+  await page.evaluate(() => document.querySelector('.conf-rail').scrollIntoView({ block: 'center' }));
+  /* On attend que l'apparition soit FINIE, pas un délai : la transition dure
+     plus que les 500 ms qu'on lui laissait, et les deux premières mesures
+     tombaient en plein fondu — un rouge qui n'accusait rien. */
+  await page.waitForFunction(() => getComputedStyle(document.querySelector('.conf-rail')).opacity === '1', null, { timeout: 5000 });
   for (const n of [1, 2, 3, 4, 1]) {
     await regler(page, n, 3);
-    const cartes = await page.evaluate(() => [...document.querySelectorAll('.tarif-carte')]
-      .map((c) => ({ nom: c.querySelector('.tarif-nom')?.textContent.trim(), op: getComputedStyle(c).opacity })));
-    const invisibles = cartes.filter((c) => Number(c.op) < 1).map((c) => c.nom);
-    ok(cartes.length === 3 && invisibles.length === 0,
-       `${n} personne(s) → les 3 cartes restent affichées${invisibles.length ? ` — DISPARUES : ${invisibles.join(', ')}` : ''}`);
+    const vus = await page.evaluate(() => [
+      ...[...document.querySelectorAll('.conf, .conf-rail')].map((el) => ({ nom: el.className.split(' ')[1] || el.className, op: getComputedStyle(el).opacity })),
+      ...[...document.querySelectorAll('.conf-tuile')].map((t) => ({ nom: t.querySelector('.tarif-nom')?.textContent.trim(), op: getComputedStyle(t).opacity })),
+    ]);
+    const invisibles = vus.filter((c) => Number(c.op) < 1).map((c) => c.nom);
+    ok(vus.length === 5 && invisibles.length === 0,
+       `${n} personne(s) → le configurateur et les 3 tuiles restent affichés${invisibles.length ? ` — DISPARUS : ${invisibles.join(', ')}` : ''}`);
   }
 
   /* Le détail de l'addition est affiché : « 69 € + 3 × 39 € ». Un total
@@ -211,12 +237,11 @@ console.log('\n===== ce qui part au serveur de paiement =====');
       await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ url: 'about:blank#stripe' }) });
     });
     if (c.annuel) await periodicite(page, true);
+    /* Les réponses D'ABORD, la tuile ENSUITE : une réponse nouvelle rend la
+       main à la recommandation, et effacerait un choix fait avant elle. */
     await regler(page, c.personnes, 3);
-    await page.evaluate((nom) => {
-      const carte = [...document.querySelectorAll('.tarif-carte')]
-        .find((el) => el.querySelector('.tarif-nom')?.textContent.trim() === nom);
-      carte.querySelector('.tarif-cta').click();
-    }, c.carte);
+    await choisir(page, c.carte);
+    await page.evaluate(() => document.querySelector('.conf-reponse .tarif-cta').click());
     await page.waitForTimeout(900);
     const juste = envoye && JSON.stringify(envoye) === JSON.stringify(c.attendu);
     ok(juste, `${c.carte}, ${c.personnes} pers., ${c.annuel ? 'annuel ' : 'mensuel'} → ${JSON.stringify(envoye)}${juste ? '' : `  ATTENDU ${JSON.stringify(c.attendu)}`}`);
@@ -235,10 +260,9 @@ console.log('\n===== ce qui part au serveur de paiement =====');
     const { ctx, page } = await ouvrirTarifs();
     let appele = false;
     await page.route('**/creer-paiement-public', async (route) => { appele = true; await route.abort(); });
+    await choisir(page, 'Découverte');
     await page.evaluate(() => {
-      const carte = [...document.querySelectorAll('.tarif-carte')]
-        .find((el) => /Découverte/.test(el.querySelector('.tarif-nom')?.textContent || ''));
-      const lien = carte.querySelector('.tarif-cta');
+      const lien = document.querySelector('.conf-reponse .tarif-cta');
       lien.setAttribute('target', '_blank');   // on ne quitte pas la page de test
       lien.click();
     });
@@ -266,11 +290,8 @@ console.log('\n===== les codes d’erreur du paiement =====');
     await page.route('**/creer-paiement-public', async (route) => {
       await route.fulfill({ status: c.statut, contentType: 'application/json', body: JSON.stringify({ error: c.code }) });
     });
-    await page.evaluate(() => {
-      const carte = [...document.querySelectorAll('.tarif-carte')]
-        .find((el) => /Atelier/.test(el.querySelector('.tarif-nom')?.textContent || ''));
-      carte.querySelector('.tarif-cta').click();
-    });
+    await choisir(page, 'Atelier');
+    await page.evaluate(() => document.querySelector('.conf-reponse .tarif-cta').click());
     await page.waitForTimeout(900);
     const message = await page.evaluate(() => document.querySelector('.pricing-erreur')?.textContent.trim() || '');
     const juste = c.attendu.test(message);
@@ -310,6 +331,19 @@ console.log('\n===== l’estimation de temps =====');
      ne convainc pas, il jette le doute sur tout le reste de la page.
      Quatre documents donnent 300 €, six fois le prix d'Atelier. C'est le
      réglage que 95 % des visiteurs verront : il est éprouvé ici. */
+  /* Les curseurs sont repliés derrière « Ajuster l'estimation » : ils sont
+     pour le sceptique. Le RÉSULTAT, lui, est visible sans rien déplier — c'est
+     vérifié plus bas, avant d'ouvrir quoi que ce soit. */
+  const gainSansDeplier = await page.evaluate(() => document.querySelector('.calc-montant-gain')?.textContent.replace(/\s/g, '') || '');
+  ok(/300/.test(gainSansDeplier), `le gain est visible sans rien déplier — « ${gainSansDeplier} »`);
+  /* Et l'argument est dit en une phrase : « soit 6 × votre abonnement ». Avec
+     les valeurs par défaut sur Atelier, 300 / 49 = 6,1 → « 6 × ». Mesuré ICI,
+     avant de toucher aux curseurs : après, le rapport suit ce qu'on a réglé
+     (20 documents × 1,5 h × 80 € donne « 49 × », ce qui est juste). */
+  const phrase = await page.evaluate(() => document.querySelector('.conf-leo-texte')?.textContent.replace(/\s+/g, ' ') || '');
+  ok(/6 × (votre abonnement|your subscription)/.test(phrase), `le rapport est dit en une phrase — « ${phrase.slice(0, 80)} »`);
+  await page.click('.calc-ajuster');
+  await page.waitForTimeout(250);
   const defauts = await page.evaluate(() => ({
     docs: document.getElementById('calc-docs')?.value,
     taux: document.getElementById('calc-taux')?.value,
@@ -354,11 +388,13 @@ console.log('\n===== l’estimation de temps =====');
      en lisant le second. Les redissocier annulerait la refonte sans qu'aucun
      autre contrôle ne s'en aperçoive. */
   const disposition = await page.evaluate(() => ({
-    blocs: document.querySelectorAll('#pricing .calc').length,
-    ensemble: document.querySelectorAll('#pricing .calc .calc-ligne').length,
+    blocs: document.querySelectorAll('#pricing .conf').length,
+    /* Le prix et le gain vivent dans la MÊME colonne de réponse : c'est là
+       que la comparaison se fait, dans l'œil, sans mémoire. */
+    ensemble: !!document.querySelector('.conf-reponse .conf-montant') && !!document.querySelector('.conf-reponse .calc-montant-gain'),
   }));
-  ok(disposition.blocs === 1 && disposition.ensemble === 2,
-     `prix et gain dans le même encart (${disposition.blocs} bloc, ${disposition.ensemble} lignes)`);
+  ok(disposition.blocs === 1 && disposition.ensemble,
+     `prix et gain dans la même colonne de réponse (${disposition.blocs} configurateur)`);
   await ctx.close();
 }
 

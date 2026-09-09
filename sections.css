@@ -1616,46 +1616,163 @@
   display: flex;
   align-items: flex-start;
   gap: 14px;
-  max-width: 760px;
-  margin: 0 auto 48px;
-  padding: 18px 22px;
+  padding: 16px 18px;
   border: 1px solid var(--accent-line);
   background: var(--accent-soft);
   border-radius: 14px;
 }
 .tarif-regle svg { color: var(--accent); flex: none; margin-top: 2px; }
-.tarif-regle p { margin: 0; font-size: 15px; line-height: 1.6; color: rgba(var(--on-bg-rgb), 0.82); }
+.tarif-regle p { margin: 0; font-size: 14px; line-height: 1.55; color: rgba(var(--on-bg-rgb), 0.82); }
 .tarif-regle b { color: var(--on-bg); font-weight: 600; }
 
-/* ── La bascule mensuel / annuel ──────────────────────────────────────────
-   Deux vrais <button> dans un groupe, et non un interrupteur graphique : la
-   périodicité change un prix, elle doit être annoncée au lecteur d'écran et
-   atteignable au clavier. L'état vit dans aria-pressed, la couleur ne fait
-   que le redire. */
+/* ── Le configurateur : une seule carte, question à gauche, réponse à droite
+   La version précédente posait trois cartes puis un calculateur EN DESSOUS :
+   la réaction au clic se produisait hors du champ de vision. Ici la cause et
+   l'effet sont côte à côte, dans l'ordre de lecture. */
+.conf {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-xl);
+  background: var(--bg);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+.conf-questions {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  padding: 44px 44px 40px;
+}
+.conf-question {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--on-bg);
+}
+.conf-question b {
+  font-family: var(--font-display);
+  font-size: 34px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  color: var(--on-bg);
+}
+
+/* Les champs — repris du calculateur précédent, avec des cibles plus grandes :
+   ce sont les DEUX gestes qu'on demande au visiteur, ils doivent tomber sous
+   la main. */
+.calc-champ { display: flex; flex-direction: column; gap: 12px; }
+.calc-champ label {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+}
+.calc-note { margin: 0; font-size: 12.5px; line-height: 1.55; color: rgba(var(--on-bg-rgb), 0.58); }
+.calc-chapo { margin: 0; font-size: 13.5px; line-height: 1.55; color: rgba(var(--on-bg-rgb), 0.7); }
+
+.calc-boutons { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.calc-bouton {
+  height: 54px;
+  border: 1px solid var(--line-strong);
+  border-radius: 14px;
+  background: transparent;
+  color: var(--on-bg);
+  font: inherit;
+  font-size: 18px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background .2s, border-color .2s, color .2s, transform .2s cubic-bezier(.2,.8,.2,1), box-shadow .2s;
+}
+.calc-bouton:hover { border-color: var(--accent-line); transform: translateY(-1px); }
+.calc-bouton.est-actif {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-contrast);
+  box-shadow: 0 12px 30px -14px rgba(150, 113, 47, 0.7);
+}
+.calc-bouton:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* Le curseur. La piste est remplie jusqu'au pouce (--part, posé par le
+   composant) : un curseur dont on voit la progression se lit sans regarder
+   le chiffre. */
+.calc-champ input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  margin: 6px 0;
+  border-radius: 3px;
+  background: linear-gradient(to right, var(--accent) 0 var(--part, 0%), var(--bg-3) var(--part, 0%) 100%);
+  outline: none;
+  cursor: pointer;
+}
+.calc-champ input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 4px solid var(--bg);
+  box-shadow: 0 2px 8px rgba(11, 18, 36, 0.25);
+  cursor: pointer;
+}
+.calc-champ input[type="range"]::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 4px solid var(--bg);
+  box-shadow: 0 2px 8px rgba(11, 18, 36, 0.25);
+  cursor: pointer;
+}
+.calc-champ input[type="range"]:focus-visible { outline: 2px solid var(--accent); outline-offset: 6px; }
+
+/* ── La réponse ─────────────────────────────────────────────────────────── */
+.conf-reponse {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 44px;
+  background: var(--bg-2);
+  border-left: 1px solid var(--line);
+}
+.conf-entete {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 4px;
+}
+.conf-etiquette {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(var(--on-bg-rgb), 0.5);
+}
+
+/* La bascule mensuel / annuel — deux vrais <button>, l'état dans aria-pressed. */
 .tarif-bascule {
   display: inline-flex;
-  gap: 4px;
-  margin: 0 auto 34px;
-  padding: 4px;
+  gap: 3px;
+  padding: 3px;
   border: 1px solid var(--line);
   border-radius: 999px;
-  background: var(--bg-2);
-  /* le conteneur est en flux dans une colonne : on le centre à la main */
-  position: relative;
-  left: 50%;
-  transform: translateX(-50%);
+  background: var(--bg);
 }
 .tarif-bascule-btn {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 9px 20px;
+  gap: 7px;
+  padding: 7px 14px;
   border: 0;
   border-radius: 999px;
   background: transparent;
   color: rgba(var(--on-bg-rgb), 0.68);
   font: inherit;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
   cursor: pointer;
   white-space: nowrap;
@@ -1663,296 +1780,154 @@
 .tarif-bascule-btn:hover { color: var(--on-bg); }
 .tarif-bascule-btn.est-actif { background: var(--accent); color: var(--accent-contrast); }
 .tarif-bascule-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-/* La remise reste lisible sur les deux fonds : sur le bouton actif elle hérite
-   du contraste de l'accent, sinon elle prend la couleur d'accent elle-même. */
 .tarif-remise {
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 10.5px;
   letter-spacing: 0.04em;
-  padding: 3px 8px;
+  padding: 2px 7px;
   border-radius: 999px;
   background: var(--accent-soft);
   color: var(--accent);
 }
-.tarif-bascule-btn.est-actif .tarif-remise {
-  background: rgba(255, 255, 255, 0.22);
-  color: var(--accent-contrast);
-}
+.tarif-bascule-btn.est-actif .tarif-remise { background: rgba(255, 255, 255, 0.22); color: var(--accent-contrast); }
 
-/* ── Les trois offres ─────────────────────────────────────────────────────
-   `1fr` par colonne et non `auto` : sans cela la carte du milieu, plus haute
-   d'une ligne, imposait sa largeur aux deux autres. */
-.tarif-offres {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
-  align-items: stretch;
-  margin-bottom: 72px;
-}
-.tarif-carte {
-  display: flex;
-  flex-direction: column;
-  background: var(--bg-2);
-  border: 1px solid var(--line);
-  border-radius: 20px;
-  padding: 30px 26px;
-  position: relative;
-}
-/* L'offre que le calculateur désigne. Le liseré doré est le même que celui de
-   l'ancienne carte tarifaire : c'est la marque « ceci vous concerne ». */
-.tarif-carte.est-recommandee {
-  border-color: var(--accent-line);
-  box-shadow: 0 24px 60px -30px rgba(201, 168, 106, 0.45);
-}
-.tarif-carte.est-recommandee::before {
-  content: "";
-  position: absolute;
-  top: 0; left: 50%;
-  transform: translateX(-50%);
-  width: 60%;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--accent), transparent);
-}
-.tarif-badge {
-  position: absolute;
-  top: -11px; left: 50%;
-  transform: translateX(-50%);
-  white-space: nowrap;
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  padding: 4px 12px;
-  border-radius: 999px;
-  background: var(--accent);
-  color: var(--accent-contrast);
-}
-.tarif-nom {
+.conf-nom {
+  margin: 0;
   font-family: var(--font-display);
-  font-size: 21px;
-  font-weight: 600;
-  margin: 0 0 6px;
-  color: var(--on-bg);
-}
-.tarif-resume {
-  margin: 0 0 20px;
-  font-size: 14px;
-  line-height: 1.55;
-  color: rgba(var(--on-bg-rgb), 0.66);
-  min-height: 44px;
-}
-.tarif-prix { display: flex; align-items: baseline; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
-/* « À partir de », sur la seule carte dont le prix dépend du nombre de
-   personnes. Petit, en amont du montant, jamais après : lu après, il corrige
-   une impression déjà formée. */
-.tarif-apartir {
-  width: 100%;
-  font-family: var(--font-mono);
-  font-size: 10.5px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: rgba(var(--on-bg-rgb), 0.5);
-  margin-bottom: -2px;
-}
-/* Ce que le montant affiché ne dit pas : le total annuel, et le prix des
-   personnes suivantes. Réservé sous le prix, pas relégué en note. */
-.tarif-detail {
-  margin: 0 0 20px;
-  min-height: 20px;
-  font-size: 13px;
-  line-height: 1.55;
-  color: rgba(var(--on-bg-rgb), 0.62);
-}
-.tarif-montant {
-  font-family: var(--font-display);
-  font-size: 38px;
+  font-size: 28px;
   font-weight: 600;
   letter-spacing: -0.02em;
-  color: var(--on-bg);
-  line-height: 1;
+  color: var(--accent);
 }
-.tarif-unite { font-size: 13px; color: rgba(var(--on-bg-rgb), 0.6); }
+.conf-resume { margin: -6px 0 0; font-size: 14.5px; line-height: 1.5; color: rgba(var(--on-bg-rgb), 0.68); }
 
-.tarif-quantites { list-style: none; padding: 0; margin: 0 0 26px; display: flex; flex-direction: column; gap: 11px; flex: 1; }
-.tarif-quantites li { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; line-height: 1.5; color: rgba(var(--on-bg-rgb), 0.78); }
-.tarif-quantites svg { color: var(--accent); flex: none; margin-top: 3px; }
-/* « Toutes les fonctionnalités » est mise en avant dans chaque carte : c'est la
-   même ligne partout, et c'est exactement le message. */
+/* Le grand chiffre. 84 px et non 96 : « 186 € » à trois chiffres doit tenir
+   dans une demi-colonne sans pousser l'unité à la ligne. Le `key` posé par le
+   composant remonte l'élément à chaque changement : l'animation rejoue, et on
+   VOIT le prix réagir — c'est ce qui manquait. */
+.conf-prix { display: flex; align-items: baseline; flex-wrap: wrap; gap: 6px 12px; margin-top: 6px; }
+.conf-montant {
+  font-family: var(--font-display);
+  font-size: 84px;
+  font-weight: 600;
+  letter-spacing: -0.035em;
+  line-height: 1;
+  color: var(--on-bg);
+  animation: conf-pop .45s cubic-bezier(.2,.8,.2,1);
+}
+@keyframes conf-pop {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) { .conf-montant { animation: none; } }
+.conf-unite { font-size: 15px; color: rgba(var(--on-bg-rgb), 0.6); }
+.conf-detail { margin: -4px 0 0; font-size: 13.5px; line-height: 1.5; color: rgba(var(--on-bg-rgb), 0.65); }
+
+.conf-quantites { list-style: none; padding: 0; margin: 8px 0 6px; display: flex; flex-direction: column; gap: 9px; }
+.conf-quantites li { display: flex; align-items: flex-start; gap: 10px; font-size: 14.5px; line-height: 1.45; color: rgba(var(--on-bg-rgb), 0.8); }
+.conf-quantites svg { color: var(--accent); flex: none; margin-top: 4px; }
 .tarif-tout { font-weight: 600; color: var(--on-bg) !important; }
 
-.tarif-cta { width: 100%; justify-content: center; }
-.tarif-cta-detail { opacity: 0.85; font-weight: 400; }
+.tarif-cta { width: 100%; justify-content: center; margin-top: 4px; }
+.conf-alerte { color: var(--accent); }
 
-/* ── Le calculateur ─────────────────────────────────────────────────────
-   Un seul bloc désormais : le prix et le gain étaient dans deux encarts que
-   séparait un défilement, et la comparaison entre les deux — qui est tout
-   l'argument — ne se faisait jamais dans l'œil du visiteur. */
-.calc {
-  display: grid;
-  grid-template-columns: 1.35fr 1fr;
-  gap: 0;
-  border: 1px solid var(--line);
-  border-radius: 20px;
-  overflow: hidden;
-  background: var(--bg-2);
-  margin-bottom: 28px;
-}
-.calc-entree { padding: 32px; display: flex; flex-direction: column; gap: 24px; }
-.calc-entree h3 {
-  font-family: var(--font-display);
-  font-size: 20px;
-  font-weight: 600;
-  margin: 0;
-  color: var(--on-bg);
-}
-.calc-chapo { margin: -8px 0 0; font-size: 14px; line-height: 1.6; color: rgba(var(--on-bg-rgb), 0.7); }
-
-.calc-champ { display: flex; flex-direction: column; gap: 10px; }
-.calc-champ label {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 16px;
-  font-size: 14px;
-  color: rgba(var(--on-bg-rgb), 0.8);
-}
-.calc-champ label b {
-  font-family: var(--font-mono);
-  font-size: 15px;
-  color: var(--accent);
-  font-weight: 600;
-}
-.calc-note { margin: 0; font-size: 12.5px; line-height: 1.55; color: rgba(var(--on-bg-rgb), 0.55); }
-.calc-note-libre { margin-top: 14px; max-width: none; }
-
-/* Boutons de choix. `aria-pressed` porte l'état pour un lecteur d'écran ;
-   la classe ne sert qu'à le peindre. */
-.calc-boutons { display: flex; gap: 8px; }
-.calc-bouton {
-  flex: 1;
-  padding: 11px 0;
-  border: 1px solid var(--line-strong);
-  background: transparent;
-  color: inherit;
-  border-radius: 10px;
-  font-family: var(--font-mono);
-  font-size: 15px;
-  cursor: pointer;
-  transition: border-color .2s, background .2s, color .2s;
-}
-.calc-bouton:hover { border-color: var(--accent-line); }
-.calc-bouton.est-actif { background: var(--accent); border-color: var(--accent); color: var(--accent-contrast); }
-.calc-bouton:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-
-/* Curseurs. On habille les deux implémentations : sans le préfixe -webkit-,
-   la poignée reste au style natif du navigateur sur Safari et Chrome. */
-.calc-champ input[type="range"] {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 100%;
-  height: 3px;
-  border-radius: 2px;
-  background: var(--line-strong);
-  outline: none;
-}
-.calc-champ input[type="range"]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 20px; height: 20px;
-  border-radius: 50%;
-  background: var(--accent);
-  cursor: pointer;
-  border: 3px solid var(--bg-2);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.25);
-}
-.calc-champ input[type="range"]::-moz-range-thumb {
-  width: 16px; height: 16px;
-  border-radius: 50%;
-  background: var(--accent);
-  cursor: pointer;
-  border: 3px solid var(--bg-2);
-}
-.calc-champ input[type="range"]:focus-visible { outline: 2px solid var(--accent); outline-offset: 6px; }
-
-.calc-sortie {
-  padding: 32px;
-  background: var(--bg-3, var(--bg));
-  border-left: 1px solid var(--line);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-/* Le second bloc de questions, à l'intérieur du même encart. Un intertitre
-   plutôt qu'un nouvel encadré : les curseurs de Léo produisent une ligne de la
-   même sortie, ils ne méritaient pas une seconde boîte. */
-.calc-separateur {
+/* ── L'argument, en une ligne, en face du prix ──────────────────────────── */
+.conf-leo {
   margin-top: 6px;
-  padding-top: 22px;
-  border-top: 1px solid var(--line);
-  font-family: var(--font-mono);
-  font-size: 10.5px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: rgba(var(--on-bg-rgb), 0.5);
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: var(--bg);
+  border: 1px solid var(--line);
 }
-
-/* Les deux résultats. Ils se lisent l'un sous l'autre, et c'est le point :
-   le prix, puis ce que le prix fait gagner. */
-.calc-ligne + .calc-ligne {
-  margin-top: 26px;
-  padding-top: 24px;
-  border-top: 1px solid var(--line);
-}
-/* Le gain est en accent, le prix ne l'est pas : sur cet écran, celui des deux
-   chiffres qu'on veut voir grand est celui qui parle du bénéfice. */
-.calc-montant-gain { color: var(--accent); }
-.calc-ligne-gain .calc-offre { color: rgba(var(--on-bg-rgb), 0.5); }
-
-.calc-offre {
-  font-family: var(--font-mono);
-  font-size: 10.5px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: rgba(var(--on-bg-rgb), 0.5);
-  margin-bottom: 10px;
-}
-.calc-nom {
+.conf-leo-ligne { display: flex; align-items: center; gap: 14px; }
+.calc-montant-gain {
+  flex: none;
   font-family: var(--font-display);
   font-size: 26px;
   font-weight: 600;
-  color: var(--accent);
-  margin-bottom: 6px;
-}
-.calc-montant {
-  font-family: var(--font-display);
-  font-size: 40px;
-  font-weight: 600;
   letter-spacing: -0.02em;
-  line-height: 1.05;
-  color: var(--on-bg);
+  color: var(--accent);
+  white-space: nowrap;
 }
-.calc-montant span { font-size: 14px; font-weight: 400; color: rgba(var(--on-bg-rgb), 0.6); letter-spacing: 0; }
-.calc-annuel, .calc-detail { margin-top: 8px; font-size: 13.5px; color: rgba(var(--on-bg-rgb), 0.65); }
+.conf-leo-texte { font-size: 13.5px; line-height: 1.45; color: var(--on-bg); }
+.conf-leo-texte b { font-weight: 600; }
+/* Le bouton qui déplie les curseurs : un lien dans la phrase, pas un bouton
+   de plus. Les curseurs sont pour le sceptique, pas pour tout le monde. */
+.calc-ajuster {
+  border: 0;
+  padding: 0;
+  background: none;
+  font: inherit;
+  font-size: 13px;
+  color: var(--accent);
+  cursor: pointer;
+  border-bottom: 1px solid var(--accent-line);
+  white-space: nowrap;
+}
+.calc-ajuster:hover { border-bottom-color: var(--accent); }
+.conf-leo-reglages {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+.conf-leo-reglages .calc-champ label { font-size: 13.5px; color: var(--on-bg); }
+.conf-leo-reglages .calc-champ label b { font-family: var(--font-mono); font-size: 13px; font-weight: 500; color: var(--accent); }
 .calc-operation {
-  margin-top: 14px;
   font-family: var(--font-mono);
-  font-size: 12.5px;
+  font-size: 12px;
   line-height: 1.6;
   color: rgba(var(--on-bg-rgb), 0.62);
 }
 /* La mention n'est pas une formalité : c'est elle qui distingue une estimation
    d'une promesse. Elle reste lisible — jamais en gris pâle sur gris. */
 .calc-mentions {
-  margin-top: 18px;
-  padding-top: 14px;
-  border-top: 1px solid var(--line);
+  margin-top: auto;
+  padding-top: 12px;
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 10.5px;
   letter-spacing: 0.06em;
   color: rgba(var(--on-bg-rgb), 0.6);
 }
 
-.tarif-porte { text-align: center; margin-top: 8px; }
+/* ── Les trois offres, en rail ──────────────────────────────────────────── */
+.conf-rail { display: flex; flex-direction: column; gap: 14px; margin-top: 28px; }
+.conf-rail-titre {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-align: center;
+  color: rgba(var(--on-bg-rgb), 0.5);
+}
+.conf-tuiles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.conf-tuile {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 16px 18px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--bg);
+  color: var(--on-bg);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color .2s, transform .2s cubic-bezier(.2,.8,.2,1), box-shadow .2s;
+}
+.conf-tuile:hover { border-color: var(--accent-line); transform: translateY(-1px); }
+.conf-tuile.est-active { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent) inset; }
+.conf-tuile:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.conf-tuile-tete { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+.conf-tuile .tarif-nom { font-size: 15px; font-weight: 600; }
+.conf-tuile.est-active .tarif-nom { color: var(--accent); }
+.conf-tuile-prix { font-family: var(--font-display); font-size: 19px; font-weight: 600; letter-spacing: -0.02em; white-space: nowrap; }
+.conf-tuile-prix small { font-size: 12px; font-weight: 400; color: rgba(var(--on-bg-rgb), 0.6); }
+.conf-tuile-court { font-size: 12.5px; line-height: 1.45; color: rgba(var(--on-bg-rgb), 0.62); }
+
+.tarif-porte { text-align: center; margin-top: 22px; }
 .tarif-porte a {
   font-size: 14px;
   color: rgba(var(--on-bg-rgb), 0.65);
@@ -1963,21 +1938,23 @@
 .tarif-porte a:hover { color: var(--accent); border-bottom-color: var(--accent); }
 
 /* ── Téléphone ──────────────────────────────────────────────────────────
-   Les cartes passent en colonne et le calculateur aussi : la sortie doit
-   suivre l'entrée, sinon on lit son prix avant d'avoir posé les questions. */
+   La réponse passe SOUS les questions — c'est la suite de lecture — et le
+   rail devient une liste. */
 @media (max-width: 900px) {
-  .tarif-offres { grid-template-columns: 1fr; gap: 26px; }
-  .tarif-resume { min-height: 0; }
-  .calc { grid-template-columns: 1fr; }
-  .calc-sortie { border-left: 0; border-top: 1px solid var(--line); }
+  .conf { grid-template-columns: 1fr; }
+  .conf-reponse { border-left: 0; border-top: 1px solid var(--line); }
+  .conf-tuiles { grid-template-columns: 1fr; }
+  .conf-tuile { flex-direction: row; align-items: center; justify-content: space-between; }
+  .conf-tuile-tete { flex: 1; }
+  .conf-tuile-court { display: none; }
 }
 @media (max-width: 620px) {
-  .tarif-carte { padding: 26px 20px; }
-  .calc-entree, .calc-sortie { padding: 24px 20px; }
-  .calc-montant { font-size: 34px; }
-  .tarif-regle { padding: 16px 18px; margin-bottom: 36px; }
-  /* En pleine largeur : à 320 px, deux libellés plus la pastille de remise ne
-     tiennent pas sur une pilule centrée sans déborder. */
-  .tarif-bascule { display: flex; left: auto; transform: none; margin-bottom: 28px; }
-  .tarif-bascule-btn { flex: 1; justify-content: center; padding: 9px 12px; gap: 6px; }
+  .conf-questions, .conf-reponse { padding: 26px 20px; }
+  .conf-montant { font-size: 64px; }
+  .conf-question { font-size: 16px; }
+  .conf-question b { font-size: 28px; }
+  .calc-bouton { height: 50px; font-size: 17px; }
+  .conf-entete { flex-direction: column; align-items: flex-start; }
+  .conf-leo-ligne { flex-direction: column; align-items: flex-start; gap: 6px; }
+  .tarif-regle { padding: 14px 16px; }
 }

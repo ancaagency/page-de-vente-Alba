@@ -324,7 +324,7 @@ const Testimonials = () => (
 );
 
 /* ============================================================================
-   PRICING — trois offres, une bascule, et un seul bloc de calcul
+   PRICING — deux questions, une réponse
    ============================================================================
    CE QU'ON A CESSÉ DE VENDRE
 
@@ -339,13 +339,31 @@ const Testimonials = () => (
    comprises — c'est par là qu'il s'était échappé la première fois.
 
    ────────────────────────────────────────────────────────────────────────────
+   POURQUOI UNE SEULE CARTE, ET PAS TROIS
+
+   La version précédente posait trois cartes de poids égal, puis un calculateur
+   EN DESSOUS. Le badge « correspond à vos réponses » était sur une carte
+   au-dessus des questions auxquelles il répondait : le visiteur lisait un
+   badge qui parlait de réponses qu'il n'avait pas données, et quand il
+   cliquait enfin « 2 personnes », la réaction se produisait hors de son champ
+   de vision. Le prix était affiché deux fois — dans la carte et dans le
+   calculateur — et l'argument Léo, qui est TOUT l'argument, finissait en bas
+   d'une boîte grise à cinq curseurs.
+
+   Désormais : la question à gauche, la réponse à droite, dans l'ordre de
+   lecture. Un seul grand chiffre, qui change sous les yeux. Et l'argument en
+   une ligne, en face du prix : « ≈ 300 € de temps gagné, soit 6 × votre
+   abonnement ». Les trois offres restent visibles, en rail compact sous la
+   réponse — on voit le paysage sans devoir choisir entre trois égaux.
+
+   ────────────────────────────────────────────────────────────────────────────
    LA RÈGLE D'OR
 
    Toutes les fonctionnalités sont dans toutes les offres, y compris la
    gratuite. On ne borne que des QUANTITÉS. C'est l'argument, il est donc écrit
-   en encart sous le titre : la concurrence réserve des fonctions aux paliers
-   hauts, et un architecte qui s'est déjà heurté à un « disponible à partir de
-   l'offre Pro » lira cette ligne deux fois.
+   en encart sous les questions : la concurrence réserve des fonctions aux
+   paliers hauts, et un architecte qui s'est déjà heurté à un « disponible à
+   partir de l'offre Pro » lira cette ligne deux fois.
 
    ────────────────────────────────────────────────────────────────────────────
    AGENCE N'EST PAS UN PRIX PAR PERSONNE
@@ -353,31 +371,31 @@ const Testimonials = () => (
    Elle l'a été sur cette page pendant une journée, et c'était faux : la carte
    annonçait « 69 € par personne », soit 276 € pour quatre. Le tarif réel est
    dégressif — 69 € pour la première personne, 39 € pour chacune des suivantes,
-   soit 186 € pour quatre. La page nous faisait paraître 48 % plus chers que
-   nous ne sommes, sur exactement le profil de client qu'on vise.
-
-   Les six valeurs de la grille sont éprouvées une par une dans
-   tests/tarifs.mjs. Elles ne se déduisent d'aucune règle générale : ce sont
-   celles de Stripe, et rien d'autre ne fait autorité.
+   soit 186 € pour quatre. Les montants viennent de tarifs.js, seul endroit du
+   dépôt où ils sont écrits ; ce sont ceux de Stripe, et rien d'autre ne fait
+   autorité.
    ============================================================================ */
 const Pricing = () => {
   /* ── LA GRILLE ────────────────────────────────────────────────────────────
-     Elle vient de tarifs.js, et n'est PAS recopiée ici. C'est le seul endroit
-     du dépôt où ces montants sont écrits ; les données structurées et le
-     garde-fou tests/montants.mjs lisent le même fichier.
-
-     Pas de valeur de repli, volontairement — à la différence de contenu.js, où
-     un texte manquant retombe sur celui du code. Un prix de repli qui diverge
-     du vrai est exactement le défaut qu'on cherche à rendre impossible : mieux
-     vaut que la construction échoue bruyamment que qu'une page affiche
-     tranquillement un montant d'il y a six mois. Le prérendu monte la page
-     dans un vrai navigateur : si le fichier n'est pas chargé, ça casse là, à
-     la construction, et pas chez un visiteur. */
+     Elle vient de tarifs.js, et n'est PAS recopiée ici. Pas de valeur de
+     repli, volontairement : un prix de repli qui diverge du vrai est exactement
+     le défaut qu'on cherche à rendre impossible. Le prérendu monte la page dans
+     un vrai navigateur : si le fichier n'est pas chargé, ça casse là, à la
+     construction, et pas chez un visiteur. */
   const TARIFS = window.ALBA_TARIFS;
 
   const [annuel, setAnnuel] = React.useState(false);
   const [personnes, setPersonnes] = React.useState(1);
   const [projets, setProjets] = React.useState(3);
+  /* Le visiteur peut désigner une offre à la main dans le rail. Ce choix vaut
+     jusqu'à ce qu'il change une réponse : une réponse nouvelle rend la main à
+     la recommandation. C'est la règle la plus prévisible — on ne se retrouve
+     jamais avec une offre choisie il y a trois clics qui contredit ce qu'on
+     vient de dire. */
+  const [choix, setChoix] = React.useState(null);
+  /* Les curseurs de l'estimation sont repliés : ils sont pour le sceptique, pas
+     pour tout le monde. Le résultat, lui, est toujours visible. */
+  const [ajuste, setAjuste] = React.useState(false);
 
   /** Total pour l'offre Agence, à `n` personnes, dans la périodicité courante. */
   const totalAgence = (n) => {
@@ -393,6 +411,7 @@ const Pricing = () => {
       palier: null,                   // gratuite : aucun paiement
       nom: Txt("tarifs.offre-decouverte", "Découverte", "Discovery"),
       resume: Txt("tarifs.decouverte-resume", "Pour voir ce que ça donne sur un vrai projet.", "To see what it does on a real project."),
+      court: Txt("tarifs.decouverte-court", "1 projet · 1 personne", "1 project · 1 person"),
       quantites: [
         Txt("tarifs.decouverte-q1", "1 projet, offert à vie", "1 project, free for ever"),
         Txt("tarifs.decouverte-q2", "1 personne", "1 person"),
@@ -405,6 +424,7 @@ const Pricing = () => {
       palier: 50,
       nom: Txt("tarifs.offre-atelier", "Atelier", "Studio"),
       resume: Txt("tarifs.atelier-resume", "Pour un architecte qui mène plusieurs affaires de front.", "For an architect running several jobs at once."),
+      court: Txt("tarifs.atelier-court", "5 projets de front · 1 personne", "5 live projects · 1 person"),
       quantites: [
         Txt("tarifs.atelier-q1", "5 projets menés de front, archives illimitées", "5 live projects, unlimited archives"),
         Txt("tarifs.atelier-q2", "1 personne", "1 person"),
@@ -418,6 +438,7 @@ const Pricing = () => {
       degressive: true,
       nom: Txt("tarifs.offre-agence", "Agence", "Practice"),
       resume: Txt("tarifs.agence-resume", "Pour une équipe, jusqu'à quatre personnes.", "For a team, up to four people."),
+      court: Txt("tarifs.agence-court", "Projets illimités · jusqu'à 4 personnes", "Unlimited projects · up to 4 people"),
       quantites: [
         Txt("tarifs.agence-q1", "Projets illimités", "Unlimited projects"),
         Txt("tarifs.agence-q2", "Jusqu'à 4 personnes", "Up to 4 people"),
@@ -430,21 +451,24 @@ const Pricing = () => {
   /* 1 personne et 1 projet : Découverte, qui est gratuite. On la propose
      d'abord — envoyer quelqu'un payer 49 € pour un usage que l'offre gratuite
      couvre entièrement serait se tirer une balle dans le pied. */
-  const offreRecommandee = (personnes === 1 && projets === 1) ? OFFRES[0]
-                         : (personnes === 1 && projets <= 5) ? OFFRES[1]
-                         : OFFRES[2];
+  const recommandee = (personnes === 1 && projets === 1) ? OFFRES[0]
+                    : (personnes === 1 && projets <= 5) ? OFFRES[1]
+                    : OFFRES[2];
+  const offre = (choix && OFFRES.find((o) => o.cle === choix)) || recommandee;
+  /* Une offre choisie à la main EN DESSOUS de la recommandation ne couvre pas
+     les réponses données : on le dit, sans l'interdire. */
+  const sousDimensionnee = OFFRES.indexOf(offre) < OFFRES.indexOf(recommandee);
+
+  /* Répondre à une question rend la main à la recommandation. */
+  const repondre = (poser) => (v) => { poser(v); setChoix(null); };
 
   /** Ce que coûte une offre donnée, pour le nombre de personnes courant. */
-  const coutDe = (offre) => {
-    if (!offre.palier) return { periode: 0, mois: 0 };
-    if (offre.degressive) {
-      const p = totalAgence(personnes);
-      return { periode: p, mois: parMois(p) };
-    }
-    const p = annuel ? TARIFS.atelier.an : TARIFS.atelier.mois;
+  const coutDe = (o) => {
+    if (!o.palier) return { periode: 0, mois: 0 };
+    const p = o.degressive ? totalAgence(personnes) : (annuel ? TARIFS.atelier.an : TARIFS.atelier.mois);
     return { periode: p, mois: parMois(p) };
   };
-  const coutRecommande = coutDe(offreRecommandee);
+  const cout = coutDe(offre);
 
   /* ── L'ESTIMATION DE TEMPS ────────────────────────────────────────────────
      Quatre documents par mois par défaut, et non vingt. Vingt, c'était un CCTP
@@ -459,7 +483,15 @@ const Pricing = () => {
   const [heuresParDoc, setHeuresParDoc] = React.useState(1);
   const heuresGagnees = docs * heuresParDoc;
   const valeurGagnee = Math.round(heuresGagnees * taux);
-  const depasseLectures = docs > offreRecommandee.lectures;
+  const depasseLectures = docs > offre.lectures;
+  /* « soit 6 × votre abonnement » : c'est LA phrase. Elle n'est dite que quand
+     elle est forte — en dessous de 2, un « 1,6 × » affaiblit plus qu'il
+     n'appuie, et on laisse le montant parler seul. Entier au-delà de 3, une
+     décimale entre 2 et 3 : « 6 × », « 2,4 × ». */
+  const ratio = cout.mois > 0 ? valeurGagnee / cout.mois : null;
+  const ratioTexte = ratio === null || ratio < 2 ? null
+    : ratio >= 3 ? String(Math.round(ratio))
+    : (Math.round(ratio * 10) / 10).toLocaleString(window.__albaLang === "en" ? "en-GB" : "fr-FR");
 
   const SIGNUP = (typeof window !== "undefined" && window.ALBA_APP_ORIGIN
     ? window.ALBA_APP_ORIGIN : "https://app.alba-studio.co") + "/inscription";
@@ -557,14 +589,26 @@ const Pricing = () => {
 
   const euros = (n) => new Intl.NumberFormat(window.__albaLang === "en" ? "en-GB" : "fr-FR").format(n);
 
+  const sieges = offre.degressive ? personnes : 1;
+  const gratuite = !offre.palier;
+  const grille = annuel ? TARIFS.agence.an : TARIFS.agence.mois;
+  const unite = Txt("tarifs.ht-mois-court", "HT / mois", "excl. VAT / month");
+
+  /** Prix d'une tuile du rail, dans la périodicité courante. */
+  const prixTuile = (o) => {
+    if (!o.palier) return Txt("tarifs.gratuit", "Gratuit", "Free");
+    const base = o.degressive ? grille.premiere : (annuel ? TARIFS.atelier.an : TARIFS.atelier.mois);
+    return `${o.degressive ? Txt("tarifs.des", "dès", "from") + " " : ""}${euros(parMois(base))} €`;
+  };
+
   return (
     <section className="section section-dark" id="pricing">
       <div className="container">
         <Reveal className="s-head">
           <span className="eyebrow">{Txt("tarifs.eyebrow", "Tarifs", "Pricing")}</span>
           <h2 className="display">
-            {Txt("tarifs.titre-1", "Un prix qui suit", "A price that follows")}{" "}
-            <em>{Txt("tarifs.titre-2", "votre activité.", "your practice.")}</em>
+            {Txt("tarifs.titre-1", "Deux questions,", "Two questions,")}{" "}
+            <em>{Txt("tarifs.titre-2", "un prix.", "one price.")}</em>
           </h2>
           <p className="s-sub">
             {Txt("tarifs.sous-titre",
@@ -573,99 +617,213 @@ const Pricing = () => {
           </p>
         </Reveal>
 
-        <Reveal className="tarif-regle">
-          <Icon name="check" size={18}/>
-          <p>
-            <b>{Txt("tarifs.regle-titre", "Toutes les fonctionnalités, dans toutes les offres.", "Every feature, in every plan.")}</b>{" "}
-            {Txt("tarifs.regle-corps",
-              "Dès le premier euro, et y compris dans l'offre gratuite. Aucune fonction n'est réservée à un palier supérieur : nous ne bornons que des quantités.",
-              "From the first euro, including in the free plan. No feature is reserved for a higher tier: we cap quantities only.")}
-          </p>
-        </Reveal>
+        {/* ── LE CONFIGURATEUR : la question à gauche, la réponse à droite ── */}
+        <Reveal className="conf">
+          <div className="conf-questions">
+            <div className="calc-champ">
+              <label htmlFor="calc-personnes" className="conf-question">
+                {Txt("tarifs.calc-personnes", "Combien êtes-vous dans l'agence ?", "How many of you are in the practice?")}
+              </label>
+              <div className="calc-boutons" role="group">
+                {Array.from({ length: TARIFS.maxPersonnes }, (_, i) => i + 1).map((n) => (
+                  <button key={n} type="button" id={n === 1 ? "calc-personnes" : undefined}
+                          className={`calc-bouton${personnes === n ? " est-actif" : ""}`}
+                          aria-pressed={personnes === n ? "true" : "false"}
+                          onClick={() => repondre(setPersonnes)(n)}>{n}</button>
+                ))}
+              </div>
+              {/* La question qui revient le plus : « et mes clients, mes BET ? ».
+                  On y répond ici, avant qu'elle ne soit posée. */}
+              <p className="calc-note">
+                {Txt("tarifs.invites-note",
+                  "Vos clients, bureaux d'études et entreprises ne sont pas facturés : vous les invitez gratuitement, sans limite, sur toutes les offres.",
+                  "Your clients, engineers and contractors are not billed: you invite them for free, without limit, on every plan.")}
+              </p>
+            </div>
 
-        {/* ── LA BASCULE MENSUEL / ANNUEL ───────────────────────────────────
-            Les tarifs annuels existaient dans Stripe et étaient inatteignables
-            depuis cette page : personne ne pouvait les acheter, et la remise —
-            qui est un argument de vente — n'apparaissait nulle part. */}
-        <div className="tarif-bascule" role="group" aria-label={Txt("tarifs.periodicite", "Périodicité", "Billing period")}>
-          <button type="button" className={`tarif-bascule-btn${annuel ? "" : " est-actif"}`}
-                  aria-pressed={annuel ? "false" : "true"} onClick={() => setAnnuel(false)}>
-            {Txt("tarifs.mensuel", "Mensuel", "Monthly")}
-          </button>
-          <button type="button" className={`tarif-bascule-btn${annuel ? " est-actif" : ""}`}
-                  aria-pressed={annuel ? "true" : "false"} onClick={() => setAnnuel(true)}>
-            {Txt("tarifs.annuel", "Annuel", "Yearly")}
-            {/* « jusqu'à », et non « −18 % » sec : la remise vaut bien 18 % sur
-                Atelier et sur chaque personne supplémentaire, mais 17,4 % sur le
-                premier siège Agence (684 au lieu de 828). Annoncer 18 % ferme
-                serait faux sur un des trois montants — et c'est celui que tout
-                le monde regarde en premier. */}
-            <span className="tarif-remise">{Txt("tarifs.remise-annuelle", "jusqu'à −18 %", "up to −18%")}</span>
-          </button>
-        </div>
+            <div className="calc-champ">
+              <label htmlFor="calc-projets" className="conf-question">
+                {Txt("tarifs.calc-projets", "Combien de projets menez-vous de front ?", "How many projects do you run at once?")}
+                <b>{projets}</b>
+              </label>
+              <input id="calc-projets" type="range" min="1" max="30" value={projets}
+                     style={{ "--part": `${((projets - 1) / 29) * 100}%` }}
+                     onChange={(e) => repondre(setProjets)(Number(e.target.value))}/>
+              <p className="calc-note">
+                {Txt("tarifs.calc-projets-note",
+                  "Projets en cours, pas projets archivés : archiver un projet terminé libère une place, et vous gardez l'accès à tout ce que vous avez fait.",
+                  "Live projects, not archived ones: archiving a finished project frees a slot, and you keep access to everything you have done.")}
+              </p>
+            </div>
 
-        {/* ── LES TROIS OFFRES ──────────────────────────────────────────── */}
-        <div className="tarif-offres">
-          {OFFRES.map((o) => {
-            const recommandee = o.cle === offreRecommandee.cle;
-            const sieges = o.degressive ? personnes : 1;
-            /* La carte affiche le prix d'UNE personne — le point d'entrée, pas
-               le total du visiteur. Le total, lui, est dans le calculateur, où
-               il correspond à des réponses. */
-            const base = o.degressive
-              ? (annuel ? TARIFS.agence.an.premiere : TARIFS.agence.mois.premiere)
-              : (annuel ? TARIFS.atelier.an : TARIFS.atelier.mois);
-            const baseMois = parMois(base);
-            const suivante = annuel ? TARIFS.agence.an.suivante : TARIFS.agence.mois.suivante;
-            return (
-              <Reveal key={o.cle} className={`tarif-carte${recommandee ? " est-recommandee" : ""}`}>
-                {recommandee && (
-                  <div className="tarif-badge">{Txt("tarifs.badge-recommandee", "Correspond à vos réponses", "Matches your answers")}</div>
-                )}
-                <h3 className="tarif-nom">{o.nom}</h3>
-                <p className="tarif-resume">{o.resume}</p>
-                <div className="tarif-prix">
-                  {!o.palier
-                    ? <span className="tarif-montant">{Txt("tarifs.gratuit", "Gratuit", "Free")}</span>
-                    : <>
-                        {o.degressive && (
-                          <span className="tarif-apartir">{Txt("tarifs.a-partir-de", "À partir de", "From")}</span>
-                        )}
-                        <span className="tarif-montant">{euros(baseMois)} €</span>
-                        <span className="tarif-unite">{Txt("tarifs.ht-mois-court", "HT / mois", "excl. VAT / month")}</span>
-                      </>}
-                </div>
-                {o.palier && (
-                  <p className="tarif-detail">
-                    {annuel && L(`facturé ${euros(base)} € HT par an`, `billed €${euros(base)} excl. VAT per year`)}
-                    {annuel && o.degressive && <br/>}
-                    {o.degressive && L(`puis ${euros(suivante)} € par personne supplémentaire${annuel ? " et par an" : ""}, jusqu'à ${TARIFS.maxPersonnes} personnes`,
-                                       `then €${euros(suivante)} per additional person${annuel ? " per year" : ""}, up to ${TARIFS.maxPersonnes} people`)}
+            <div className="tarif-regle">
+              <Icon name="check" size={18}/>
+              <p>
+                <b>{Txt("tarifs.regle-titre", "Toutes les fonctionnalités, dans toutes les offres.", "Every feature, in every plan.")}</b>{" "}
+                {Txt("tarifs.regle-corps",
+                  "Dès le premier euro, et y compris dans l'offre gratuite. Aucune fonction n'est réservée à un palier supérieur : nous ne bornons que des quantités.",
+                  "From the first euro, including in the free plan. No feature is reserved for a higher tier: we cap quantities only.")}
+              </p>
+            </div>
+          </div>
+
+          <div className="conf-reponse" aria-live="polite">
+            <div className="conf-entete">
+              <span className="conf-etiquette">{Txt("tarifs.votre-offre", "Votre offre", "Your plan")}</span>
+              {/* La bascule est collée au prix, là où elle compte. Isolée au-dessus
+                  des cartes, personne ne la voyait. */}
+              <div className="tarif-bascule" role="group" aria-label={Txt("tarifs.periodicite", "Périodicité", "Billing period")}>
+                <button type="button" className={`tarif-bascule-btn${annuel ? "" : " est-actif"}`}
+                        aria-pressed={annuel ? "false" : "true"} onClick={() => setAnnuel(false)}>
+                  {Txt("tarifs.mensuel", "Mensuel", "Monthly")}
+                </button>
+                <button type="button" className={`tarif-bascule-btn${annuel ? " est-actif" : ""}`}
+                        aria-pressed={annuel ? "true" : "false"} onClick={() => setAnnuel(true)}>
+                  {Txt("tarifs.annuel", "Annuel", "Yearly")}
+                  <span className="tarif-remise">{Txt("tarifs.remise-annuelle", "jusqu'à −18 %", "up to −18%")}</span>
+                </button>
+              </div>
+            </div>
+
+            <h3 className="conf-nom">{offre.nom}</h3>
+            <p className="conf-resume">{offre.resume}</p>
+
+            {/* Le grand chiffre. C'est le TOTAL pour les réponses données — pas
+                un prix d'entrée : « 108 € » pour deux personnes, et l'addition
+                juste dessous. Un total dégressif qu'on ne peut pas refaire de
+                tête ressemble à une erreur. */}
+            <div className="conf-prix" key={`${offre.cle}-${cout.mois}`}>
+              {gratuite
+                ? <span className="conf-montant">{Txt("tarifs.gratuit", "Gratuit", "Free")}</span>
+                : <>
+                    <span className="conf-montant">{euros(cout.mois)} €</span>
+                    <span className="conf-unite">{unite}</span>
+                  </>}
+            </div>
+            {!gratuite && (annuel || (offre.degressive && personnes > 1)) && (
+              <p className="conf-detail">
+                {annuel && L(`facturé ${euros(cout.periode)} € HT par an`, `billed €${euros(cout.periode)} excl. VAT per year`)}
+                {annuel && offre.degressive && personnes > 1 && " · "}
+                {offre.degressive && personnes > 1 && L(
+                  `${euros(grille.premiere)} € + ${personnes - 1} × ${euros(grille.suivante)} €`,
+                  `€${euros(grille.premiere)} + ${personnes - 1} × €${euros(grille.suivante)}`)}
+              </p>
+            )}
+
+            <ul className="conf-quantites">
+              {offre.quantites.map((q, i) => (
+                <li key={i}><Icon name="check" size={13}/><span>{q}</span></li>
+              ))}
+              <li className="tarif-tout"><Icon name="check" size={13}/><span>{Txt("tarifs.toutes-fonctionnalites", "Toutes les fonctionnalités", "Every feature")}</span></li>
+            </ul>
+
+            {gratuite ? (
+              <a href={SIGNUP} className="btn btn-ghost tarif-cta">
+                {Txt("tarifs.commencer-gratuitement", "Commencer gratuitement", "Start for free")}
+              </a>
+            ) : (
+              <a href={SIGNUP} className="btn btn-primary tarif-cta"
+                 onClick={abonner(offre, sieges)}
+                 aria-busy={paiement === "envoi" ? "true" : "false"}>
+                {paiement === "envoi"
+                  ? Txt("tarifs.ouverture", "Ouverture…", "Opening…")
+                  : Txt("tarifs.s-abonner", "S'abonner", "Subscribe")}
+              </a>
+            )}
+
+            {sousDimensionnee && (
+              <p className="calc-note conf-alerte">
+                {L(`Avec vos réponses, l'offre ${recommandee.nom} conviendrait mieux.`,
+                   `Given your answers, the ${recommandee.nom} plan would be a better fit.`)}
+              </p>
+            )}
+            {offre.cle === "decouverte" && !sousDimensionnee && (
+              <p className="calc-note">
+                {Txt("tarifs.calc-decouverte",
+                  "Un seul projet à la fois vous suffit : l'offre gratuite le couvre entièrement, sans limite de durée et sans carte bancaire.",
+                  "One project at a time is enough for you: the free plan covers it entirely, with no time limit and no payment card.")}
+              </p>
+            )}
+
+            {/* ── L'ARGUMENT, EN UNE LIGNE, EN FACE DU PRIX ─────────────────
+                La comparaison entre ce que ça coûte et ce que ça rend est tout
+                l'argument. Elle se fait ici dans l'œil, sans mémoire. */}
+            <div className="conf-leo">
+              <div className="conf-leo-ligne">
+                <span className="calc-montant-gain">≈ {euros(valeurGagnee)} €</span>
+                <span className="conf-leo-texte">
+                  {Txt("tarifs.leo-gagne", "de temps gagné par mois grâce à Léo", "of time saved each month thanks to Léo")}
+                  {ratioTexte && <>, {L("soit", "that is")} <b>{ratioTexte} × {Txt("tarifs.votre-abonnement", "votre abonnement", "your subscription")}</b></>}.{" "}
+                  <button type="button" className="calc-ajuster" aria-expanded={ajuste ? "true" : "false"}
+                          onClick={() => setAjuste(!ajuste)}>
+                    {ajuste ? Txt("tarifs.masquer", "Masquer", "Hide")
+                            : Txt("tarifs.ajuster", "Ajuster l'estimation", "Adjust the estimate")}
+                  </button>
+                </span>
+              </div>
+
+              {ajuste && (
+                <div className="conf-leo-reglages">
+                  <p className="calc-chapo">
+                    {Txt("tarifs.temps-chapo",
+                      "Léo lit vos pièces écrites — CCTP, descriptifs, DPGF — et en sort les prescriptions, les matériaux, les prix et les intervenants.",
+                      "Léo reads your written documents — specifications, schedules of works, bills of quantities — and extracts requirements, materials, prices and parties.")}
                   </p>
-                )}
-                <ul className="tarif-quantites">
-                  {o.quantites.map((q, i) => (
-                    <li key={i}><Icon name="check" size={13}/><span>{q}</span></li>
-                  ))}
-                  <li className="tarif-tout"><Icon name="check" size={13}/><span>{Txt("tarifs.toutes-fonctionnalites", "Toutes les fonctionnalités", "Every feature")}</span></li>
-                </ul>
-                {o.palier ? (
-                  <a href={SIGNUP} className="btn btn-primary tarif-cta"
-                     onClick={abonner(o, sieges)}
-                     aria-busy={paiement === "envoi" ? "true" : "false"}>
-                    {paiement === "envoi"
-                      ? Txt("tarifs.ouverture", "Ouverture…", "Opening…")
-                      : Txt("tarifs.s-abonner", "S'abonner", "Subscribe")}
-                  </a>
-                ) : (
-                  <a href={SIGNUP} className="btn btn-ghost tarif-cta">
-                    {Txt("tarifs.commencer-gratuitement", "Commencer gratuitement", "Start for free")}
-                  </a>
-                )}
-              </Reveal>
-            );
-          })}
-        </div>
+                  <div className="calc-champ">
+                    <label htmlFor="calc-docs">
+                      {Txt("tarifs.temps-docs", "Documents confiés à Léo par mois", "Documents given to Léo each month")}
+                      <b>{docs}</b>
+                    </label>
+                    <input id="calc-docs" type="range" min="1" max="20" value={docs}
+                           style={{ "--part": `${((docs - 1) / 19) * 100}%` }}
+                           onChange={(e) => setDocs(Number(e.target.value))}/>
+                  </div>
+                  <div className="calc-champ">
+                    <label htmlFor="calc-taux">
+                      {Txt("tarifs.temps-taux", "Votre taux horaire", "Your hourly rate")}
+                      <b>{taux} €</b>
+                    </label>
+                    <input id="calc-taux" type="range" min="50" max="140" step="5" value={taux}
+                           style={{ "--part": `${((taux - 50) / 90) * 100}%` }}
+                           onChange={(e) => setTaux(Number(e.target.value))}/>
+                  </div>
+                  <div className="calc-champ">
+                    <label htmlFor="calc-heures">
+                      {Txt("tarifs.temps-heures", "Temps de dépouillement par document", "Time spent going through one document")}
+                      <b>{heuresParDoc} h</b>
+                    </label>
+                    <input id="calc-heures" type="range" min="0.25" max="4" step="0.25" value={heuresParDoc}
+                           style={{ "--part": `${((heuresParDoc - 0.25) / 3.75) * 100}%` }}
+                           onChange={(e) => setHeuresParDoc(Number(e.target.value))}/>
+                    {/* Cette phrase est la raison pour laquelle l'encart est
+                        honnête. Sans elle, un chiffre réglable redevient une
+                        affirmation. */}
+                    <p className="calc-note">
+                      {Txt("tarifs.temps-hypothese",
+                        "C'est une hypothèse, pas une mesure : nous n'avons pas relevé ce chiffre chez nos clients. Réglez-le sur ce que vous constatez.",
+                        "This is an assumption, not a measurement: we have not recorded this figure with our clients. Set it to what you observe.")}
+                    </p>
+                  </div>
+                  <div className="calc-operation">
+                    {L(`${docs} documents × ${heuresParDoc} h × ${taux} € = ${euros(heuresGagnees)} h par mois`,
+                       `${docs} documents × ${heuresParDoc} h × €${taux} = ${euros(heuresGagnees)} h per month`)}
+                  </div>
+                  {depasseLectures && (
+                    <p className="calc-note">
+                      {L(`L'offre ${offre.nom} couvre ${offre.lectures} lectures par mois.`,
+                         `The ${offre.nom} plan covers ${offre.lectures} readings per month.`)}
+                    </p>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* La mention n'est pas une formalité : c'est elle qui distingue une
+                estimation d'une promesse. Toujours visible, pas seulement quand
+                les curseurs sont dépliés. */}
+            <div className="calc-mentions">{Txt("tarifs.mentions", "Montants HT · Estimation indicative", "Amounts excl. VAT · Indicative estimate")}</div>
+          </div>
+        </Reveal>
 
         {erreurPaiement && (
           <div className="pricing-erreur" role="alert">
@@ -676,146 +834,32 @@ const Pricing = () => {
           </div>
         )}
 
-        {/* ── LE CALCULATEUR, EN UN SEUL BLOC ───────────────────────────────
-            Le prix et l'estimation de gain vivaient dans deux encarts séparés
-            par un défilement. La comparaison entre les deux est TOUT l'argument,
-            et elle ne se faisait jamais dans l'œil du visiteur : il fallait se
-            souvenir du premier chiffre en lisant le second. Les deux sont
-            désormais l'un au-dessus de l'autre, en face des curseurs qui les
-            produisent. */}
-        <Reveal className="calc">
-          <div className="calc-entree">
-            <h3>{Txt("tarifs.calc-titre", "Votre prix, et ce que Léo vous fait gagner", "Your price, and what Léo saves you")}</h3>
-
-            <div className="calc-champ">
-              <label htmlFor="calc-personnes">{Txt("tarifs.calc-personnes", "Combien êtes-vous dans l'agence ?", "How many of you are in the practice?")}</label>
-              <div className="calc-boutons" role="group">
-                {Array.from({ length: TARIFS.maxPersonnes }, (_, i) => i + 1).map((n) => (
-                  <button key={n} type="button" id={n === 1 ? "calc-personnes" : undefined}
-                          className={`calc-bouton${personnes === n ? " est-actif" : ""}`}
-                          aria-pressed={personnes === n ? "true" : "false"}
-                          onClick={() => setPersonnes(n)}>{n}</button>
-                ))}
-              </div>
-            </div>
-
-            <div className="calc-champ">
-              <label htmlFor="calc-projets">
-                {Txt("tarifs.calc-projets", "Combien de projets menez-vous de front ?", "How many projects do you run at once?")}
-                <b>{projets}</b>
-              </label>
-              <input id="calc-projets" type="range" min="1" max="30" value={projets}
-                     onChange={(e) => setProjets(Number(e.target.value))}/>
-              {/* « Menés de front » n'est pas un synonyme de « au total ». La
-                  nuance décide de l'offre, donc elle est dite ici, pas dans une
-                  FAQ que personne n'ouvre avant d'acheter. */}
-              <p className="calc-note">
-                {Txt("tarifs.calc-projets-note",
-                  "Projets en cours, pas projets archivés : archiver un projet terminé libère une place, et vous gardez l'accès à tout ce que vous avez fait.",
-                  "Live projects, not archived ones: archiving a finished project frees a slot, and you keep access to everything you have done.")}
-              </p>
-            </div>
-
-            <div className="calc-separateur">
-              {Txt("tarifs.calc-leo", "Ce que vous confiez à Léo", "What you give Léo")}
-            </div>
-            <p className="calc-chapo">
-              {Txt("tarifs.temps-chapo",
-                "Léo lit vos pièces écrites — CCTP, descriptifs, DPGF — et en sort les prescriptions, les matériaux, les prix et les intervenants.",
-                "Léo reads your written documents — specifications, schedules of works, bills of quantities — and extracts requirements, materials, prices and parties.")}
-            </p>
-
-            <div className="calc-champ">
-              <label htmlFor="calc-docs">
-                {Txt("tarifs.temps-docs", "Documents confiés à Léo par mois", "Documents given to Léo each month")}
-                <b>{docs}</b>
-              </label>
-              <input id="calc-docs" type="range" min="1" max="20" value={docs}
-                     onChange={(e) => setDocs(Number(e.target.value))}/>
-            </div>
-
-            <div className="calc-champ">
-              <label htmlFor="calc-taux">
-                {Txt("tarifs.temps-taux", "Votre taux horaire", "Your hourly rate")}
-                <b>{taux} €</b>
-              </label>
-              <input id="calc-taux" type="range" min="50" max="140" step="5" value={taux}
-                     onChange={(e) => setTaux(Number(e.target.value))}/>
-            </div>
-
-            <div className="calc-champ">
-              <label htmlFor="calc-heures">
-                {Txt("tarifs.temps-heures", "Temps de dépouillement par document", "Time spent going through one document")}
-                <b>{heuresParDoc} h</b>
-              </label>
-              <input id="calc-heures" type="range" min="0.25" max="4" step="0.25" value={heuresParDoc}
-                     onChange={(e) => setHeuresParDoc(Number(e.target.value))}/>
-              {/* Cette phrase est la raison pour laquelle l'encart est honnête.
-                  Elle ne doit pas disparaître : sans elle, un chiffre réglable
-                  redevient une affirmation. */}
-              <p className="calc-note">
-                {Txt("tarifs.temps-hypothese",
-                  "C'est une hypothèse, pas une mesure : nous n'avons pas relevé ce chiffre chez nos clients. Réglez-le sur ce que vous constatez.",
-                  "This is an assumption, not a measurement: we have not recorded this figure with our clients. Set it to what you observe.")}
-              </p>
-            </div>
-          </div>
-
-          <div className="calc-sortie">
-            <div className="calc-ligne">
-              <div className="calc-offre">{Txt("tarifs.calc-votre-abonnement", "Votre abonnement", "Your subscription")}</div>
-              <div className="calc-nom">{offreRecommandee.nom}</div>
-              <div className="calc-montant">
-                {coutRecommande.mois === 0
-                  ? Txt("tarifs.gratuit", "Gratuit", "Free")
-                  : <>{euros(coutRecommande.mois)} <span>€ {Txt("tarifs.ht-mois", "HT / mois", "excl. VAT / month")}</span></>}
-              </div>
-              {annuel && coutRecommande.periode > 0 && (
-                <div className="calc-annuel">
-                  {L(`facturé ${euros(coutRecommande.periode)} € HT par an`, `billed €${euros(coutRecommande.periode)} excl. VAT per year`)}
-                </div>
-              )}
-              {!annuel && offreRecommandee.degressive && personnes > 1 && (
-                <div className="calc-detail">
-                  {L(`${euros(TARIFS.agence.mois.premiere)} € + ${personnes - 1} × ${euros(TARIFS.agence.mois.suivante)} €`,
-                     `€${euros(TARIFS.agence.mois.premiere)} + ${personnes - 1} × €${euros(TARIFS.agence.mois.suivante)}`)}
-                </div>
-              )}
-            </div>
-
-            <div className="calc-ligne calc-ligne-gain">
-              <div className="calc-offre">{Txt("tarifs.calc-gain", "Ce que Léo vous fait gagner", "What Léo saves you")}</div>
-              {/* Pas de « HT » ici : hors-taxes n'a aucun sens sur du temps
-                  gagné. Il ne figure que sur les prix. */}
-              <div className="calc-montant calc-montant-gain">
-                ≈ {euros(valeurGagnee)} <span>€ {Txt("tarifs.par-mois-simple", "/ mois", "/ month")}</span>
-              </div>
-              <div className="calc-operation">
-                {L(`${docs} documents × ${heuresParDoc} h × ${taux} € = ${euros(heuresGagnees)} h par mois`,
-                   `${docs} documents × ${heuresParDoc} h × €${taux} = ${euros(heuresGagnees)} h per month`)}
-              </div>
-            </div>
-
-            {depasseLectures && (
-              <p className="calc-note calc-note-libre">
-                {L(`L'offre ${offreRecommandee.nom} couvre ${offreRecommandee.lectures} lectures par mois.`,
-                   `The ${offreRecommandee.nom} plan covers ${offreRecommandee.lectures} readings per month.`)}
-              </p>
-            )}
-            {offreRecommandee.cle === "decouverte" && (
-              <p className="calc-note calc-note-libre">
-                {Txt("tarifs.calc-decouverte",
-                  "Un seul projet à la fois vous suffit : l'offre gratuite le couvre entièrement, sans limite de durée et sans carte bancaire.",
-                  "One project at a time is enough for you: the free plan covers it entirely, with no time limit and no payment card.")}
-              </p>
-            )}
-            <div className="calc-mentions">{Txt("tarifs.mentions", "Montants HT · Estimation indicative", "Amounts excl. VAT · Indicative estimate")}</div>
+        {/* ── LES TROIS OFFRES, EN RAIL ─────────────────────────────────────
+            On voit le paysage sans devoir choisir entre trois égaux. Une tuile
+            se clique : elle devient l'offre affichée, jusqu'à la prochaine
+            réponse. */}
+        <Reveal className="conf-rail">
+          <div className="conf-rail-titre">{Txt("tarifs.rail-titre", "Les trois offres · cliquez pour comparer", "The three plans · click to compare")}</div>
+          <div className="conf-tuiles">
+            {OFFRES.map((o) => (
+              <button key={o.cle} type="button"
+                      className={`conf-tuile${o.cle === offre.cle ? " est-active" : ""}`}
+                      aria-pressed={o.cle === offre.cle ? "true" : "false"}
+                      onClick={() => setChoix(o.cle)}>
+                <span className="conf-tuile-tete">
+                  <span className="tarif-nom">{o.nom}</span>
+                  <span className="conf-tuile-prix">{prixTuile(o)}{o.palier ? <small> / {Txt("tarifs.mois", "mois", "month")}</small> : null}</span>
+                </span>
+                <span className="conf-tuile-court">
+                  {o.court}
+                  {o.degressive && L(` · puis ${euros(grille.suivante)} € par personne${annuel ? " et par an" : ""}`,
+                                     ` · then €${euros(grille.suivante)} per person${annuel ? " per year" : ""}`)}
+                </span>
+              </button>
+            ))}
           </div>
         </Reveal>
 
-        {/* Quelqu'un qui ne veut pas payer aujourd'hui ne doit pas se heurter à
-            un mur : l'offre gratuite existe, elle est complète, et on le redit
-            ici pour ceux qui ont fait défiler sans lire les cartes. */}
         <div className="tarif-porte">
           <a href={SIGNUP}>{Txt("tarifs.porte", "Créer un compte gratuit", "Create a free account")}</a>
         </div>

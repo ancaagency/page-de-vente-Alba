@@ -25,12 +25,12 @@ import { demarrer } from './serveur.mjs';
 
 const POINT = '**/functions/v1/creer-paiement-public';
 
-/* `.tarif-cta` désigne les TROIS boutons, et le premier est celui de l'offre
-   gratuite : il ne déclenche aucun paiement. Un clic dessus ne produisait donc
-   ni appel, ni message d'erreur, et dix-huit contrôles se sont mis à échouer
-   pour la meilleure des raisons — le test cliquait au mauvais endroit.
-   On vise explicitement une offre payante. */
-const CTA_PAYANT = '.tarif-carte:nth-child(2) .tarif-cta';
+/* Il n'y a plus qu'UN bouton, dans la colonne de réponse, et il suit l'offre
+   affichée. À l'ouverture — 1 personne, 3 projets — l'offre est Atelier, qui
+   est payante : le bouton déclenche bien un paiement. (Une version précédente
+   visait le premier `.tarif-cta` venu, qui était celui de l'offre gratuite :
+   dix-huit contrôles échouaient pour la meilleure des raisons.) */
+const CTA_PAYANT = '.conf-reponse .tarif-cta';
 
 let echecs = 0;
 const ok = (bon, texte) => { console.log(`   ${bon ? '✅' : '❌'} ${texte}`); if (!bon) echecs++; };
@@ -83,13 +83,11 @@ console.log(`\n===== ce qui part quand on clique — ${route} =====`);
      n'existe plus. On facture des projets et des personnes, et le palier 300
      est une offre retirée de la vente. Ce test suit la nouvelle page ; ce
      qu'il PROUVE n'a pas changé. */
-  await page.click('.calc-bouton:nth-child(3)');          // 3 personnes
+  await page.click('.calc-bouton:nth-child(3)');          // 3 personnes → Agence recommandée
   await page.waitForTimeout(300);
-  await page.evaluate(() => {
-    const carte = [...document.querySelectorAll('.tarif-carte')]
-      .find((c) => /Agence|Practice/.test(c.querySelector('.tarif-nom')?.textContent || ''));
-    carte.querySelector('.tarif-cta').click();   // littéral : on est DANS le navigateur
-  });
+  const affichee = await page.$eval('.conf-nom', (e) => e.textContent.trim());
+  ok(/Agence|Practice/.test(affichee), `à 3 personnes, la réponse est Agence (« ${affichee} »)`);
+  await page.click(CTA_PAYANT);
   await page.waitForTimeout(1200);
 
   ok(envois.length === 1, `un seul appel émis (${envois.length})`);

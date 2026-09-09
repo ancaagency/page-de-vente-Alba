@@ -155,7 +155,7 @@ for (const route of PAGES_TARIFAIRES) {
     const ctx = await navigateur.newContext({ viewport: { width: 1280, height: 1200 } });
     const page = await ctx.newPage();
     await page.goto(BASE + route, { waitUntil: 'load', timeout: 40000 });
-    await page.waitForSelector('.tarif-carte', { timeout: 20000 });
+    await page.waitForSelector('.conf', { timeout: 20000 });
     await page.waitForTimeout(700);
     if (annuel) {
       await page.evaluate(() => document.querySelectorAll('.tarif-bascule-btn')[1].click());
@@ -177,7 +177,7 @@ for (const route of PAGES_TARIFAIRES) {
            reviendrait a reprocher au site d'afficher ce que son lecteur vient
            lui-meme de saisir. */
         const bloc = document.querySelector('#pricing').cloneNode(true);
-        bloc.querySelectorAll('.calc-entree, .calc-ligne-gain').forEach((n) => n.remove());
+        bloc.querySelectorAll('.conf-questions, .conf-leo').forEach((n) => n.remove());
         /* Le clone ne pose pas ici le probleme rencontre sur le corps entier :
            on ne decoupe pas en lignes, on releve des montants dans tout le
            texte, et `textContent` suffit a ca. */

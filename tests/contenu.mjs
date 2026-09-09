@@ -89,7 +89,7 @@ console.log('\n===== noms globaux =====');
 console.log('\n===== filet de sécurité =====');
 {
   const { page, srv, erreurs } = await accueil(8795, () => CASSE);
-  const sections = await page.locator('#fondateur, #faq, #contact, .tarif-carte').count();
+  const sections = await page.locator('#fondateur, #faq, #contact, .conf').count();
   const titre = (await page.locator('h1.display').first().innerText().catch(() => '')).replace(/\s+/g, ' ').trim();
   console.log(`   titre affiché : « ${titre.slice(0, 60)} »`);
   ok(sections >= 4, 'la page se monte quand même');
