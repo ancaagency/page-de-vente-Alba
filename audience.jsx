@@ -3,7 +3,7 @@
 /* ⚠️ CES LIBELLÉS DOIVENT RESTER D'ACCORD AVEC LA CARTE TARIFAIRE.
    La carte « agences » annonçait « 5 à 20 collaborateurs » et « 5 à 50 projets »
    alors que l'abonnement plafonne à 4 collaborateurs par espace et que le plus
-   gros palier (300 Go) tient environ 30 projets. Une agence de douze personnes
+   l'offre Agence est bornée à quatre personnes. Une agence de douze personnes
    lisait ça, s'abonnait, découvrait le mur. C'est le genre d'écart qui finit en
    remboursement — et qui ne se voit pas, parce que les deux textes vivent dans
    deux fichiers différents.

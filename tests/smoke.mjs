@@ -51,13 +51,13 @@ const ATTENDU_ACCUEIL = [
   ['#securite', 'bloc Sécurité'],
   ['#faq', 'FAQ'],
   ['#contact', 'Contact'],
-  ['.pricing-card', 'carte tarifaire'],
+  ['.tarif-carte', 'cartes tarifaires'],
   ['footer', 'pied de page'],
 ];
 
 for (const [route, attendus] of [
   ['/', ATTENDU_ACCUEIL],
-  ['/tarifs', [['.pricing-card', 'carte tarifaire'], ['#securite', 'bloc Sécurité'], ['footer', 'pied de page']]],
+  ['/tarifs', [['.tarif-carte', 'cartes tarifaires'], ['.calc', 'calculateurs'], ['#securite', 'bloc Sécurité'], ['footer', 'pied de page']]],
   // Cette page monte son pied de page via React : sans lui, les liens
   // légaux et le contact disparaissent sans que rien ne le signale.
   ['/co-traitants.html', [['.edito', 'en-tête'], ['#qui-paie', 'tableau qui paie quoi'], ['footer', 'pied de page'], ['.foot-col', 'colonnes du pied']]],
@@ -109,11 +109,23 @@ for (const [route, attendus] of [
     });
     console.log(`   rideau d'intro : ${intro}`);
 
-    // Le CTA du configurateur doit porter les paramètres d'abonnement.
-    const cta = await page.locator('a.pricing-cta').first().getAttribute('href').catch(() => null);
-    const ok = cta && /[?&]plan=studio&storage=\d+&billing=(monthly|yearly)&seats=\d/.test(cta);
-    console.log(`   ${ok ? '✅' : '❌'} CTA tarifaire paramétré → ${cta || 'introuvable'}`);
-    if (!ok) echecs++;
+    /* LA CONFIGURATION A CHANGÉ DE CHEMIN, PAS DE NATURE.
+       Ce contrôle exigeait que le lien porte « ?plan=studio&storage=…&seats=… » :
+       l'ancienne carte tarifaire passait la configuration dans l'adresse
+       d'inscription. Les trois offres l'envoient désormais dans le CORPS de la
+       requête de paiement, et c'est tests/tarifs.mjs qui la compare au champ
+       près — y compris le palier, qui ne doit jamais valoir 300.
+       Ce qui reste vrai ici, et qui doit le rester : chaque carte porte un
+       bouton, et ce bouton mène quelque part. Un lien sans href est le défaut
+       silencieux qu'on a déjà connu sur « Tester en 1 clic ». */
+    const boutons = await page.evaluate(() => [...document.querySelectorAll('.tarif-carte')].map((c) => {
+      const a = c.querySelector('.tarif-cta');
+      return { nom: c.querySelector('.tarif-nom')?.textContent.trim() || '?', href: a?.getAttribute('href') || null };
+    }));
+    const tousMenent = boutons.length === 3 && boutons.every((b) => b.href && b.href.length > 1);
+    console.log(`   ${tousMenent ? '✅' : '❌'} ${boutons.length} offres, chacune avec un bouton qui mène quelque part` +
+                (tousMenent ? '' : ` — ${JSON.stringify(boutons)}`));
+    if (!tousMenent) echecs++;
 
     // Les emplacements photo doivent TOUJOURS montrer quelque chose : la photo
     // si elle est là, sinon le cartouche neutre. Jamais l'icône d'image cassée

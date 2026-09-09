@@ -251,7 +251,7 @@ window.ALBA_CONTENU = {
     en: "See the solo demo",
   },
   /* ⚠️ D'ACCORD AVEC LA CARTE TARIFAIRE : 4 collaborateurs par espace, et
-     300 Go ≈ 30 projets. Ces quatre libellés annonçaient « 5 à 20 » et
+     quatre personnes au plus. Ces quatre libellés annonçaient « 5 à 20 » et
      « 5 à 50 » — au-delà de ce que l'abonnement autorise. Ils avaient été
      corrigés dans audience.jsx sans l'être ici, et contenu.js REMPLACE le
      code : l'écran continuait d'afficher les anciens chiffres. */
@@ -554,141 +554,9 @@ window.ALBA_CONTENU = {
     en: "Lyon, France",
   },
   /* ——— Carte tarifaire et configurateur ——— */
-  "tarifs.clients-co-traitants-illimites": {
-    fr: "Clients & co-traitants illimités",
-    en: "Unlimited clients & consultants",
-  },
-  "tarifs.1-collaborateur-inclus-15-mois-par": {
-    fr: "1 collaborateur inclus — +15 €/mois HT par collaborateur ajouté (4 max)",
-    en: "1 team member included — +€15/month excl. VAT per added member (4 max)",
-  },
-  "tarifs.decisions-horodatees-signees": {
-    fr: "Décisions horodatées & signées",
-    en: "Timestamped & signed decisions",
-  },
-  "tarifs.messagerie-projet-securisee": {
-    fr: "Messagerie projet sécurisée",
-    en: "Secure project messaging",
-  },
-  "tarifs.materiautheque-fournisseurs": {
-    fr: "Matériauthèque & fournisseurs",
-    en: "Material library & suppliers",
-  },
-  "tarifs.cr-de-chantier-reserves-photos": {
-    fr: "CR de chantier, réserves & photos",
-    en: "Site reports, punch lists & photos",
-  },
-  "tarifs.visionneuse-plans-dans-le-navigateur": {
-    fr: "Visionneuse plans dans le navigateur",
-    en: "In-browser plan viewer",
-  },
-  "tarifs.exports-pdf-comptables": {
-    fr: "Exports PDF & comptables",
-    en: "PDF & accounting exports",
-  },
-  "tarifs.marque-blanche-maitre-d-ouvrage": {
-    fr: "Marque blanche maître d'ouvrage",
-    en: "White-label client portal",
-  },
-  "tarifs.support-prioritaire-7j-7": {
-    fr: "Support prioritaire 7j/7",
-    en: "Priority support 7 days a week",
-  },
-  "tarifs.tarif": {
-    fr: "Tarif",
-    en: "Pricing",
-  },
-  "tarifs.un-prix-simple": {
-    fr: "Un prix simple,",
-    en: "One simple price,",
-  },
-  "tarifs.une-valeur-claire": {
-    fr: "une valeur claire.",
-    en: "clear value.",
-  },
-  "tarifs.tout-est-inclus-pas-de-module": {
-    fr: "Tout est inclus. Pas de module, pas d'option cachée. Seul le stockage fait varier le prix, choisissez, le tarif se met à jour à droite.",
-    en: "Everything included. No add-ons, no hidden extras. Only storage changes the price, pick yours, the price updates on the right.",
-  },
-  "tarifs.1-votre-facturation": {
-    fr: "1 · Votre facturation",
-    en: "1 · Your billing",
-  },
-  "tarifs.mensuel": {
-    fr: "Mensuel",
-    en: "Monthly",
-  },
-  "tarifs.annuel": {
-    fr: "Annuel",
-    en: "Yearly",
-  },
-  "tarifs.2-votre-stockage": {
-    fr: "2 · Votre stockage",
-    en: "2 · Your storage",
-  },
-  "tarifs.go": {
-    fr: "Go",
-    en: "GB",
-  },
-  "tarifs.mois": {
-    fr: "/mois HT",
-    en: "/mo excl. VAT",
-  },
-  "tarifs.3-votre-equipe": {
-    fr: "3 · Votre équipe",
-    en: "3 · Your team",
-  },
-  "tarifs.moins": {
-    fr: "Moins",
-    en: "Fewer",
-  },
-  "tarifs.collaborateurs": {
-    fr: "collaborateurs",
-    en: "team members",
-  },
-  "tarifs.collaborateur": {
-    fr: "collaborateur",
-    en: "team member",
-  },
-  "tarifs.plus": {
-    fr: "Plus",
-    en: "More",
-  },
-  "tarifs.1-inclus-jusqu-a-4-par": {
-    fr: "1 inclus · jusqu'à 4 par espace",
-    en: "1 included · up to 4 per workspace",
-  },
-  "tarifs.un-projet-d-architecture-occupe-en": {
-    fr: "Un projet d'architecture occupe en moyenne 10 Go, plans, photos, documents et échanges inclus. Vous pourrez changer de palier à tout moment, en un clic.",
-    en: "An architecture project takes about 10 GB on average, plans, photos, documents and messages included. You can change tiers anytime, in one click.",
-  },
-  "tarifs.pour-votre-agence": {
-    fr: "Pour votre agence",
-    en: "For your practice",
-  },
-  "tarifs.tout-ce-qu-il-faut-pour": {
-    fr: "Tout ce qu'il faut pour piloter sereinement vos projets, sans option cachée.",
-    en: "Everything you need to run your projects with confidence, no hidden extras.",
-  },
-  "tarifs.mois-2": {
-    fr: "/ mois HT",
-    en: "/ month excl. VAT",
-  },
-  "tarifs.ouverture-du-paiement": {
-    fr: "Ouverture du paiement…",
-    en: "Opening checkout…",
-  },
-  "tarifs.creer-un-compte-gratuit": {
-    fr: "Créer un compte gratuit",
-    en: "Create a free account",
-  },
   "tarifs.s-abonner": {
     fr: "S'abonner",
     en: "Subscribe",
-  },
-  "tarifs.gratuit-a-vie-pour-1-projet": {
-    fr: "SANS ENGAGEMENT · RÉSILIABLE À TOUT MOMENT",
-    en: "NO COMMITMENT · CANCEL ANYTIME",
   },
 
   /* ——— Bloc sécurité et conformité ——— */
@@ -783,8 +651,8 @@ window.ALBA_CONTENU = {
     en: "How many team members are included?",
   },
   "faq.le-tarif-studio-inclut-1-collaborateur": {
-    fr: "Le tarif Studio inclut 1 collaborateur. Vous pouvez en ajouter jusqu'à 3 autres (4 par espace au maximum), à 15 €/mois HT chacun, ajustable à tout moment. Vos clients et co-traitants, eux, sont illimités et gratuits.",
-    en: "The Studio plan includes 1 team member. You can add up to 3 more (4 per workspace maximum), at €15/month excl. VAT each, adjustable anytime. Clients and consultants are unlimited and free.",
+    fr: "Les offres Découverte et Atelier couvrent une personne. L'offre Agence se facture 69 € HT par mois et par personne, jusqu'à quatre. Vos clients et vos co-traitants, eux, restent illimités et gratuits : ils ne comptent dans aucune offre.",
+    en: "The Discovery and Studio plans cover one person. The Practice plan is billed at €69 excl. VAT per month per person, up to four. Your clients and consultants remain unlimited and free: they count towards no plan.",
   },
   "faq.et-pendant-le-chantier": {
     fr: "Et pendant le chantier ?",

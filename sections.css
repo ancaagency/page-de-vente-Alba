@@ -1597,3 +1597,281 @@
      tentation de rétrécir « Tout refuser » est la plus forte. */
   .consentement-choix .btn { flex: 1; justify-content: center; }
 }
+
+/* ============================================================================
+   TARIFS — trois offres et le calculateur
+   ============================================================================
+   Rien n'invente ici de couleur ni de police : tout vient des jetons de
+   styles.css, pour qu'un changement de palette emmène cette page avec le reste.
+
+   La grille précédente tenait dans une carte unique avec un sélecteur de
+   stockage (.pricing-card et .p-tiers, plus haut dans ce fichier). Ces règles
+   servent encore au bandeau du héros ; elles ne sont pas retirées, mais elles
+   ne concernent plus la page tarifs.
+   ============================================================================ */
+
+/* La règle d'or. Écrite en grand parce que c'est l'argument, et pas une note
+   de bas de page : la concurrence réserve des fonctions aux paliers hauts. */
+.tarif-regle {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  max-width: 760px;
+  margin: 0 auto 48px;
+  padding: 18px 22px;
+  border: 1px solid var(--accent-line);
+  background: var(--accent-soft);
+  border-radius: 14px;
+}
+.tarif-regle svg { color: var(--accent); flex: none; margin-top: 2px; }
+.tarif-regle p { margin: 0; font-size: 15px; line-height: 1.6; color: rgba(var(--on-bg-rgb), 0.82); }
+.tarif-regle b { color: var(--on-bg); font-weight: 600; }
+
+/* ── Les trois offres ─────────────────────────────────────────────────────
+   `1fr` par colonne et non `auto` : sans cela la carte du milieu, plus haute
+   d'une ligne, imposait sa largeur aux deux autres. */
+.tarif-offres {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  align-items: stretch;
+  margin-bottom: 72px;
+}
+.tarif-carte {
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 30px 26px;
+  position: relative;
+}
+/* L'offre que le calculateur désigne. Le liseré doré est le même que celui de
+   l'ancienne carte tarifaire : c'est la marque « ceci vous concerne ». */
+.tarif-carte.est-recommandee {
+  border-color: var(--accent-line);
+  box-shadow: 0 24px 60px -30px rgba(201, 168, 106, 0.45);
+}
+.tarif-carte.est-recommandee::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+}
+.tarif-badge {
+  position: absolute;
+  top: -11px; left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--accent-contrast);
+}
+.tarif-nom {
+  font-family: var(--font-display);
+  font-size: 21px;
+  font-weight: 600;
+  margin: 0 0 6px;
+  color: var(--on-bg);
+}
+.tarif-resume {
+  margin: 0 0 20px;
+  font-size: 14px;
+  line-height: 1.55;
+  color: rgba(var(--on-bg-rgb), 0.66);
+  min-height: 44px;
+}
+.tarif-prix { display: flex; align-items: baseline; flex-wrap: wrap; gap: 8px; margin-bottom: 22px; }
+.tarif-montant {
+  font-family: var(--font-display);
+  font-size: 38px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--on-bg);
+  line-height: 1;
+}
+.tarif-unite { font-size: 13px; color: rgba(var(--on-bg-rgb), 0.6); }
+
+.tarif-quantites { list-style: none; padding: 0; margin: 0 0 26px; display: flex; flex-direction: column; gap: 11px; flex: 1; }
+.tarif-quantites li { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; line-height: 1.5; color: rgba(var(--on-bg-rgb), 0.78); }
+.tarif-quantites svg { color: var(--accent); flex: none; margin-top: 3px; }
+/* « Toutes les fonctionnalités » est mise en avant dans chaque carte : c'est la
+   même ligne partout, et c'est exactement le message. */
+.tarif-tout { font-weight: 600; color: var(--on-bg) !important; }
+
+.tarif-cta { width: 100%; justify-content: center; }
+.tarif-cta-detail { opacity: 0.85; font-weight: 400; }
+
+/* ── Les deux calculateurs ────────────────────────────────────────────── */
+.calc {
+  display: grid;
+  grid-template-columns: 1.35fr 1fr;
+  gap: 0;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  overflow: hidden;
+  background: var(--bg-2);
+  margin-bottom: 28px;
+}
+.calc-entree { padding: 32px; display: flex; flex-direction: column; gap: 24px; }
+.calc-entree h3 {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0;
+  color: var(--on-bg);
+}
+.calc-chapo { margin: -8px 0 0; font-size: 14px; line-height: 1.6; color: rgba(var(--on-bg-rgb), 0.7); }
+
+.calc-champ { display: flex; flex-direction: column; gap: 10px; }
+.calc-champ label {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  font-size: 14px;
+  color: rgba(var(--on-bg-rgb), 0.8);
+}
+.calc-champ label b {
+  font-family: var(--font-mono);
+  font-size: 15px;
+  color: var(--accent);
+  font-weight: 600;
+}
+.calc-note { margin: 0; font-size: 12.5px; line-height: 1.55; color: rgba(var(--on-bg-rgb), 0.55); }
+.calc-note-libre { margin-top: 14px; max-width: none; }
+
+/* Boutons de choix. `aria-pressed` porte l'état pour un lecteur d'écran ;
+   la classe ne sert qu'à le peindre. */
+.calc-boutons { display: flex; gap: 8px; }
+.calc-bouton {
+  flex: 1;
+  padding: 11px 0;
+  border: 1px solid var(--line-strong);
+  background: transparent;
+  color: inherit;
+  border-radius: 10px;
+  font-family: var(--font-mono);
+  font-size: 15px;
+  cursor: pointer;
+  transition: border-color .2s, background .2s, color .2s;
+}
+.calc-bouton:hover { border-color: var(--accent-line); }
+.calc-bouton.est-actif { background: var(--accent); border-color: var(--accent); color: var(--accent-contrast); }
+.calc-bouton:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* Curseurs. On habille les deux implémentations : sans le préfixe -webkit-,
+   la poignée reste au style natif du navigateur sur Safari et Chrome. */
+.calc-champ input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--line-strong);
+  outline: none;
+}
+.calc-champ input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+  border: 3px solid var(--bg-2);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+}
+.calc-champ input[type="range"]::-moz-range-thumb {
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+  border: 3px solid var(--bg-2);
+}
+.calc-champ input[type="range"]:focus-visible { outline: 2px solid var(--accent); outline-offset: 6px; }
+
+.calc-sortie {
+  padding: 32px;
+  background: var(--bg-3, var(--bg));
+  border-left: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.calc-offre {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(var(--on-bg-rgb), 0.5);
+  margin-bottom: 10px;
+}
+.calc-nom {
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 600;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+.calc-montant {
+  font-family: var(--font-display);
+  font-size: 40px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  color: var(--on-bg);
+}
+.calc-montant span { font-size: 14px; font-weight: 400; color: rgba(var(--on-bg-rgb), 0.6); letter-spacing: 0; }
+.calc-annuel, .calc-detail { margin-top: 8px; font-size: 13.5px; color: rgba(var(--on-bg-rgb), 0.65); }
+.calc-operation {
+  margin-top: 14px;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: rgba(var(--on-bg-rgb), 0.62);
+}
+/* La mention n'est pas une formalité : c'est elle qui distingue une estimation
+   d'une promesse. Elle reste lisible — jamais en gris pâle sur gris. */
+.calc-mentions {
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: rgba(var(--on-bg-rgb), 0.6);
+}
+
+.tarif-porte { text-align: center; margin-top: 8px; }
+.tarif-porte a {
+  font-size: 14px;
+  color: rgba(var(--on-bg-rgb), 0.65);
+  text-decoration: none;
+  border-bottom: 1px solid var(--line-strong);
+  padding-bottom: 2px;
+}
+.tarif-porte a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+
+/* ── Téléphone ──────────────────────────────────────────────────────────
+   Les cartes passent en colonne et le calculateur aussi : la sortie doit
+   suivre l'entrée, sinon on lit son prix avant d'avoir posé les questions. */
+@media (max-width: 900px) {
+  .tarif-offres { grid-template-columns: 1fr; gap: 26px; }
+  .tarif-resume { min-height: 0; }
+  .calc { grid-template-columns: 1fr; }
+  .calc-sortie { border-left: 0; border-top: 1px solid var(--line); }
+}
+@media (max-width: 620px) {
+  .tarif-carte { padding: 26px 20px; }
+  .calc-entree, .calc-sortie { padding: 24px 20px; }
+  .calc-montant { font-size: 34px; }
+  .tarif-regle { padding: 16px 18px; margin-bottom: 36px; }
+}

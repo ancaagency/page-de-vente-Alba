@@ -311,75 +311,179 @@ const Testimonials = () => (
     </section>
 );
 
-/* PRICING */
-const Pricing = () => {
-  const tiers = [
-    { go: 50, price: 49 },
-    { go: 150, price: 69 },
-    { go: 300, price: 89 },
-  ];
-  const projectsFor = (go) => Math.round(go / 10);
-  const [tier, setTier] = React.useState(0);
-  const [yearly, setYearly] = React.useState(false);
-  const baseFor = (tr) => yearly ? Math.round(tr.price * 0.82) : tr.price;
-  const t = tiers[tier];
-  const base = baseFor(t);
-  const [seats, setSeats] = React.useState(1);
+/* ============================================================================
+   PRICING — trois offres, et un calculateur plutôt qu'un tableau
+   ============================================================================
+   CE QU'ON A CESSÉ DE VENDRE, ET POURQUOI
 
-  /* Paiement public : on envoie un PALIER, jamais un prix.
-     Les price_id sont résolus côté serveur, depuis la base — quelqu'un qui
-     bricole la requête obtient au pire un autre palier, jamais un autre tarif.
+   La grille précédente affichait 49 / 69 / 89 € pour 50, 150 et 300 Go. Les
+   trois offres ne différaient QUE par le stockage. Mesure faite en production
+   le 9 septembre 2026 : l'ensemble des comptes occupait 0,143 Go. L'offre
+   d'entrée en promettait donc trois cent cinquante fois plus que tout ce qui
+   existait. Un plafond que personne n'atteindra jamais n'est pas une offre
+   d'entrée : c'est une échelle que personne ne gravira, et donc un axe de prix
+   mort.
+
+   On facture désormais ce qui varie réellement d'un architecte à l'autre : le
+   nombre de projets menés de front, et le nombre de personnes.
+
+   ⚠️ LE MOT « STOCKAGE » NE DOIT REPARAÎTRE NULLE PART, ni les gigaoctets.
+   tests/tarifs.mjs le vérifie sur toutes les pages rendues.
+
+   ────────────────────────────────────────────────────────────────────────────
+   LA RÈGLE D'OR
+
+   Toutes les fonctionnalités sont dans toutes les offres, dès le premier euro.
+   On ne borne que des QUANTITÉS. Aucune fonctionnalité n'est réservée à un
+   palier supérieur, et c'est écrit en toutes lettres sur la page : la
+   concurrence fait l'inverse, et un architecte qui a déjà été pris au piège
+   d'un « disponible à partir de l'offre Pro » le remarquera.
+
+   ────────────────────────────────────────────────────────────────────────────
+   CE QU'ON N'AFFICHE PAS
+
+   Aucun chiffre de performance. Pas de « 40 % de temps gagné », pas de « ROI
+   moyen ». Alba a trois clients payants et aucune mesure de ce genre : un
+   pourcentage affiché comme un fait serait une pratique commerciale trompeuse
+   au sens de l'article L121-2, pour un gain nul.
+
+   L'estimation de temps de la page est donc CALCULÉE à partir de ce que le
+   visiteur saisit, son hypothèse est réglable et affichée, et le résultat porte
+   la mention « estimation indicative ». C'est la seule forme honnête : on ne
+   lui annonce pas ce qu'il gagnera, on lui montre le calcul qu'il peut refaire.
+   ============================================================================ */
+const Pricing = () => {
+  /* ── LES TROIS OFFRES ─────────────────────────────────────────────────────
+     `palier` est ce qui part au serveur de paiement. Le champ s'appelle encore
+     « storage » dans le contrat de la fonction, pour des raisons historiques :
+     ce N'EST PAS un stockage, c'est un sélecteur d'offre, invisible du
+     visiteur. Il sera renommé plus tard, des deux côtés à la fois.
+     La valeur 300 est une ancienne offre qui n'est plus vendue : elle
+     n'apparaît nulle part ici, et ne doit jamais y revenir. */
+  const OFFRES = [
+    {
+      cle: "decouverte",
+      palier: null,                       // gratuite : aucun paiement
+      prix: 0,
+      nom: Txt("tarifs.offre-decouverte", "Découverte", "Discovery"),
+      resume: Txt("tarifs.decouverte-resume", "Pour voir ce que ça donne sur un vrai projet.", "To see what it does on a real project."),
+      quantites: [
+        Txt("tarifs.decouverte-q1", "1 projet, offert à vie", "1 project, free for ever"),
+        Txt("tarifs.decouverte-q2", "1 personne", "1 person"),
+        Txt("tarifs.decouverte-q3", "Léo : 10 lectures de documents et 300 questions par mois", "Léo: 10 document readings and 300 questions per month"),
+      ],
+      lectures: 10,
+    },
+    {
+      cle: "atelier",
+      palier: 50,
+      prix: 49,
+      nom: Txt("tarifs.offre-atelier", "Atelier", "Studio"),
+      resume: Txt("tarifs.atelier-resume", "Pour un architecte qui mène plusieurs affaires de front.", "For an architect running several jobs at once."),
+      quantites: [
+        Txt("tarifs.atelier-q1", "5 projets menés de front, archives illimitées", "5 live projects, unlimited archives"),
+        Txt("tarifs.atelier-q2", "1 personne", "1 person"),
+        Txt("tarifs.atelier-q3", "Léo : 50 lectures et 1 500 questions par mois", "Léo: 50 readings and 1,500 questions per month"),
+      ],
+      lectures: 50,
+    },
+    {
+      cle: "agence",
+      palier: 150,
+      prix: 69,
+      parPersonne: true,
+      nom: Txt("tarifs.offre-agence", "Agence", "Practice"),
+      resume: Txt("tarifs.agence-resume", "Pour une équipe, jusqu'à quatre personnes.", "For a team, up to four people."),
+      quantites: [
+        Txt("tarifs.agence-q1", "Projets illimités", "Unlimited projects"),
+        Txt("tarifs.agence-q2", "Jusqu'à 4 personnes", "Up to 4 people"),
+        Txt("tarifs.agence-q3", "Léo : 200 lectures et 5 000 questions par mois", "Léo: 200 readings and 5,000 questions per month"),
+      ],
+      lectures: 200,
+    },
+  ];
+
+  /* ── LE CALCULATEUR ───────────────────────────────────────────────────────
+     Deux questions suffisent à désigner l'offre. Un tableau comparatif oblige
+     le visiteur à faire ce travail lui-même, colonne par colonne ; ici il
+     répond à ce qu'il sait de son agence et lit son prix. */
+  const [personnes, setPersonnes] = React.useState(1);
+  const [projets, setProjets] = React.useState(3);
+
+  /* 1 personne et 1 projet : Découverte, qui est gratuite. On la propose
+     d'abord — envoyer quelqu'un payer 49 € pour un usage que l'offre gratuite
+     couvre entièrement serait se tirer une balle dans le pied. */
+  const offreRecommandee = (personnes === 1 && projets === 1) ? OFFRES[0]
+                         : (personnes === 1 && projets <= 5) ? OFFRES[1]
+                         : OFFRES[2];
+  const mensuel = offreRecommandee.parPersonne
+    ? offreRecommandee.prix * personnes
+    : offreRecommandee.prix;
+
+  /* ── L'ESTIMATION DE TEMPS ────────────────────────────────────────────────
+     Trois valeurs saisies, une multiplication affichée. `heuresParDoc` est une
+     HYPOTHÈSE, et elle est réglable : c'est ce qui distingue une estimation
+     d'une affirmation. Un architecte qui trouve 1 h trop généreux la baisse et
+     voit le résultat bouger — il n'a pas à nous croire sur parole. */
+  const [taux, setTaux] = React.useState(75);
+  const [docs, setDocs] = React.useState(20);
+  const [heuresParDoc, setHeuresParDoc] = React.useState(1);
+  const heuresGagnees = docs * heuresParDoc;
+  const valeurGagnee = Math.round(heuresGagnees * taux);
+
+  /* Le nombre de documents saisi dépasse-t-il ce que l'offre recommandée
+     permet ? On le dit, plutôt que de laisser le visiteur le découvrir au
+     premier mois. */
+  const depasseLectures = docs > offreRecommandee.lectures;
+
+  const SIGNUP = (typeof window !== "undefined" && window.ALBA_APP_ORIGIN
+    ? window.ALBA_APP_ORIGIN : "https://app.alba-studio.co") + "/inscription";
+
+  /* ── PAIEMENT ─────────────────────────────────────────────────────────────
+     On envoie un PALIER, jamais un prix : les identifiants de tarif sont
+     résolus côté serveur. Quelqu'un qui bricole la requête obtient au pire une
+     autre offre, jamais un autre montant.
      Aucune authentification : le visiteur n'a pas de compte, c'est le principe
-     même de ce parcours. La CSP autorise déjà cette origine, et elle seule. */
+     même de ce parcours. Aucune case CGU non plus — le consentement est
+     recueilli dans le tunnel Stripe, deux écrans plus loin. Le demander ici
+     serait un second consentement au mauvais endroit. */
   const POINT_PAIEMENT = "https://fhrkkjvbzgkbmlnlnxce.supabase.co/functions/v1/creer-paiement-public";
-  const [paiement, setPaiement] = React.useState("repos");   // repos | envoi | erreur
+  const [paiement, setPaiement] = React.useState("repos");
   const [erreurPaiement, setErreurPaiement] = React.useState(null);
   /* Verrou de double-clic. Il ne peut PAS reposer sur `paiement` : React ne
      rafraîchit l'état qu'au rendu suivant, si bien que trois clics rapides
-     lisent tous « repos » et partent tous les trois. Le plafond du serveur est
-     de cinq ouvertures par heure — un visiteur nerveux en brûlerait trois pour
-     un seul achat. Une référence, elle, change à l'instant même. */
+     lisent tous « repos » et partent tous les trois. Une référence, elle,
+     change à l'instant même. */
   const ouvertureEnCours = React.useRef(false);
 
   const indisponible = L("Le paiement est momentanément indisponible. Réessayez dans quelques minutes.",
                          "Payment is temporarily unavailable. Please try again in a few minutes.");
-  /* Les codes que la fonction peut rendre. La liste vient du contrat, pas de ce
-     qu'on a vu passer : trois d'entre eux — paiement_indisponible,
-     methode_non_autorisee, erreur_interne — tombaient dans le message
-     générique parce que je ne les avais jamais listés. Le visiteur lisait
-     « Réessayez » là où réessayer ne servait à rien.
-
-     Deux familles, et elles ne se disent pas pareil :
-       · ce qui vient du visiteur ou d'un incident passager → on invite à
-         réessayer, c'est vrai et c'est suffisant ;
-       · ce qui vient de NOUS → on n'envoie pas quelqu'un s'acharner sur un
-         bouton cassé : on l'invite à écrire, ce qui marche toujours. */
   const ecrivezNous = L("Le paiement n'a pas pu s'ouvrir. Ce n'est pas de votre fait : écrivez-nous et on vous ouvre l'accès.",
                         "Checkout could not open. It's not your doing: write to us and we'll open access for you.");
+  /* Deux familles de messages, et elles ne se disent pas pareil : ce qui vient
+     du visiteur ou d'un incident passager invite à réessayer ; ce qui vient de
+     NOUS invite à écrire, parce qu'envoyer quelqu'un s'acharner sur un bouton
+     cassé n'a jamais rien réparé. */
   const MESSAGES = {
-    trop_de_tentatives: L("Trop de tentatives. Réessayez dans un moment.", "Too many attempts. Please try again shortly."),
+    trop_de_tentatives: L("Trop de tentatives, réessayez dans un moment.", "Too many attempts, please try again shortly."),
     tarif_indisponible: indisponible,
     cgu_non_configurees: indisponible,
-    // 503 — Stripe injoignable, ou clé absente côté serveur. Passager du point
-    // de vue du visiteur, même s'il ne l'est pas toujours pour nous.
     paiement_indisponible: indisponible,
-    // 500 — filet de sécurité du serveur. Réessayer ne répare rien.
     erreur_interne: ecrivezNous,
-    // 405 — la page a envoyé autre chose qu'un POST. C'est un défaut d'ICI,
-    // jamais du visiteur : il ne doit pas en faire les frais.
     methode_non_autorisee: ecrivezNous,
   };
 
-  const abonner = async (ev) => {
-    /* Interrupteur de config.js. Tant qu'il est à `false`, on ne touche à rien :
-       le clic suit le href du lien, c'est-à-dire le parcours d'inscription
-       classique. AUCUN preventDefault avant ce test, sinon un interrupteur
-       fermé rendrait le bouton inerte au lieu de le faire retomber sur
-       l'ancien chemin. */
+  /**
+   * @param {object} offre  l'offre choisie ; `palier` null = gratuite
+   * @param {number} sieges nombre TOTAL de personnes, première incluse
+   */
+  const abonner = (offre, sieges) => async (ev) => {
+    /* Interrupteur de config.js. Tant qu'il est fermé, on ne touche à rien : le
+       clic suit le href, c'est-à-dire l'inscription classique. AUCUN
+       preventDefault avant ce test, sinon un interrupteur fermé rendrait le
+       bouton inerte au lieu de le faire retomber sur l'ancien chemin. */
     if (typeof window === "undefined" || !window.ALBA_PAIEMENT_DIRECT) return;
-
-    /* Le lien reste un vrai lien : sans JavaScript, il mène à l'inscription
-       classique, qui reste valable. On n'intercepte que si on peut faire mieux. */
+    if (!offre.palier) return;            // Découverte : le lien suit son href
     ev.preventDefault();
     if (ouvertureEnCours.current) return;
     ouvertureEnCours.current = true;
@@ -389,16 +493,20 @@ const Pricing = () => {
       const reponse = await fetch(POINT_PAIEMENT, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ storage: t.go, billing: yearly ? "yearly" : "monthly", seats }),
+        /* `billing` reste « monthly ». La remise annuelle n'est pas confirmée,
+           et le tarif annuel n'est donc pas vérifié dans Stripe : ouvrir un
+           parcours vers un prix qu'on n'a pas vu serait exactement l'interdit
+           « aucun prix qui ne soit pas celui configuré dans Stripe ».
+           L'équivalent annuel affiché sur la page est une multiplication, pas
+           une offre. */
+        body: JSON.stringify({ storage: offre.palier, billing: "monthly", seats: sieges }),
       });
       const donnees = await reponse.json().catch(() => null);
       if (reponse.ok && donnees && donnees.url) { window.location.href = donnees.url; return; }
-      /* Ces deux codes ne sont pas des erreurs du visiteur mais des défauts de
-         CETTE page : le journal doit les nommer, l'écran ne doit pas les
-         étaler. Un architecte n'a pas à lire nos bogues.
-           · palier_inconnu — la page a envoyé un palier que le serveur refuse ;
-           · methode_non_autorisee — elle a envoyé autre chose qu'un POST. */
-      const notre = { palier_inconnu: `palier refusé par le serveur : ${t.go}`,
+      /* Ces deux codes sont des défauts de CETTE page, pas du visiteur : le
+         journal doit les nommer, l'écran ne doit pas les étaler. Un architecte
+         n'a pas à lire nos bogues. */
+      const notre = { palier_inconnu: `palier refusé par le serveur : ${offre.palier}`,
                       methode_non_autorisee: "le serveur a reçu autre chose qu'un POST" };
       if (donnees && notre[donnees.error]) {
         console.error(`[paiement] défaut de la page — ${notre[donnees.error]}`);
@@ -408,136 +516,251 @@ const Pricing = () => {
       setPaiement("erreur");
       ouvertureEnCours.current = false;   // relâché sur échec seulement : un succès quitte la page
     } catch (e) {
-      /* Un `fetch` qui LÈVE, c'est une requête qui n'a jamais abouti : elle a
-         été refusée avant d'atteindre le serveur. Trois causes possibles, et
-         JavaScript ne permet pas de les distinguer — le navigateur renvoie le
-         même « Failed to fetch » pour toutes, par principe, pour ne pas
-         renseigner une page hostile sur ce qui l'a bloquée :
-           · la CSP (connect-src) a refusé la destination ;
-           · le contrôle d'origine du serveur a refusé cette page ;
-           · la connexion est réellement coupée.
-
-         Le message annonçait « Vérifiez votre connexion ». C'était faux dans
-         deux cas sur trois, et ça a envoyé Anthony regarder son wifi pendant
-         qu'une origine manquait dans une liste. On ne prétend donc plus
-         savoir : on ne l'affirme QUE si le navigateur confirme être hors
-         ligne, et sinon on invite à écrire — ce qui, lui, marche toujours.
-
-         Le détail technique va dans la console, là où il sert à quelqu'un qui
-         peut agir, pas dans un encart devant un architecte. */
+      /* Un `fetch` qui LÈVE n'a jamais atteint le serveur : CSP, contrôle
+         d'origine, ou réseau. Le navigateur rend le même « Failed to fetch »
+         pour les trois, par principe. On ne prétend donc pas savoir : on
+         n'accuse la connexion QUE si le navigateur confirme être hors ligne. */
       const horsLigne = typeof navigator !== "undefined" && navigator.onLine === false;
       console.error("[paiement] la requête n'a pas abouti —",
-                    horsLigne ? "navigateur hors ligne" :
-                    "refus avant le serveur : CSP (connect-src), contrôle d'origine, ou réseau", e);
+                    horsLigne ? "navigateur hors ligne"
+                              : "refus avant le serveur : CSP (connect-src), contrôle d'origine, ou réseau", e);
       setErreurPaiement(horsLigne
         ? L("Vous semblez hors ligne. Le paiement s'ouvrira dès que la connexion revient.",
             "You appear to be offline. Checkout will open as soon as you're back online.")
-        : L("Le paiement n'a pas pu s'ouvrir. Ce n'est pas de votre fait : écrivez-nous et on vous ouvre l'accès.",
-            "Checkout could not open. It's not your doing: write to us and we'll open access for you."));
+        : ecrivezNous);
       setPaiement("erreur");
       ouvertureEnCours.current = false;
     }
   };
 
-  const extraSeats = Math.max(0, seats - 1);
-  const extraCost = extraSeats * 15;
-  const total = base + extraCost;
-  const includes = [
-    Txt("tarifs.clients-co-traitants-illimites", "Clients & co-traitants illimités", "Unlimited clients & consultants"),
-    Txt("tarifs.1-collaborateur-inclus-15-mois-par", "1 collaborateur inclus — +15 €/mois HT par collaborateur ajouté (4 max)", "1 team member included — +€15/month excl. VAT per added member (4 max)"),
-    L(`${t.go} Go de stockage — ≈ ${projectsFor(t.go)} projets`, `${t.go} GB of storage — ≈ ${projectsFor(t.go)} projects`),
-    Txt("tarifs.decisions-horodatees-signees", "Décisions horodatées & signées", "Timestamped & signed decisions"),
-    Txt("tarifs.messagerie-projet-securisee", "Messagerie projet sécurisée", "Secure project messaging"),
-    Txt("tarifs.materiautheque-fournisseurs", "Matériauthèque & fournisseurs", "Material library & suppliers"),
-    Txt("tarifs.cr-de-chantier-reserves-photos", "CR de chantier, réserves & photos", "Site reports, punch lists & photos"),
-    Txt("tarifs.visionneuse-plans-dans-le-navigateur", "Visionneuse plans dans le navigateur", "In-browser plan viewer"),
-    Txt("tarifs.exports-pdf-comptables", "Exports PDF & comptables", "PDF & accounting exports"),
-    Txt("tarifs.marque-blanche-maitre-d-ouvrage", "Marque blanche maître d'ouvrage", "White-label client portal"),
-    Txt("tarifs.support-prioritaire-7j-7", "Support prioritaire 7j/7", "Priority support 7 days a week"),
-  ];
+  const euros = (n) => new Intl.NumberFormat(window.__albaLang === "en" ? "en-GB" : "fr-FR").format(n);
+
   return (
     <section className="section section-dark" id="pricing">
       <div className="container">
-        <div className="pricing-layout">
+        <Reveal className="s-head">
+          <span className="eyebrow">{Txt("tarifs.eyebrow", "Tarifs", "Pricing")}</span>
+          <h2 className="display">
+            {Txt("tarifs.titre-1", "Un prix qui suit", "A price that follows")}{" "}
+            <em>{Txt("tarifs.titre-2", "votre activité.", "your practice.")}</em>
+          </h2>
+          <p className="s-sub">
+            {Txt("tarifs.sous-titre",
+              "On ne facture ni des options ni des modules : seulement le nombre de projets que vous menez de front et le nombre de personnes qui travaillent dans ALBA.",
+              "We charge neither for add-ons nor for modules: only for the number of projects you run at once and the number of people working in ALBA.")}
+          </p>
+        </Reveal>
 
-          <Reveal className="pricing-config">
-            <span className="eyebrow">{Txt("tarifs.tarif", "Tarif", "Pricing")}</span>
-            <h2 className="display">{Txt("tarifs.un-prix-simple", "Un prix simple,", "One simple price,")}<br/><em>{Txt("tarifs.une-valeur-claire", "une valeur claire.", "clear value.")}</em></h2>
-            <p className="pricing-intro">{Txt("tarifs.tout-est-inclus-pas-de-module", "Tout est inclus. Pas de module, pas d'option cachée. Seul le stockage fait varier le prix, choisissez, le tarif se met à jour à droite.", "Everything included. No add-ons, no hidden extras. Only storage changes the price, pick yours, the price updates on the right.")}</p>
-            <div className="p-config-label">{Txt("tarifs.1-votre-facturation", "1 · Votre facturation", "1 · Your billing")}</div>
-            <div className="pricing-toggle">
-              <button className={!yearly ? "is-active" : ""} onClick={() => setYearly(false)}>{Txt("tarifs.mensuel", "Mensuel", "Monthly")}</button>
-              <button className={yearly ? "is-active" : ""} onClick={() => setYearly(true)}>{Txt("tarifs.annuel", "Annuel", "Yearly")} <span className="badge">−18%</span></button>
-            </div>
-            <div className="p-config-label">{Txt("tarifs.2-votre-stockage", "2 · Votre stockage", "2 · Your storage")}</div>
-            <div className="p-tiers">
-              {tiers.map((tr, i) => (
-                <button key={tr.go} className={`p-tier ${tier === i ? "is-active" : ""}`} onClick={() => setTier(i)}>
-                  <span className="p-tier-radio"></span>
-                  <span className="p-tier-main">
-                    <b>{tr.go} {Txt("tarifs.go", "Go", "GB")}</b>
-                    <span>{L(`≈ ${projectsFor(tr.go)} projets`, `≈ ${projectsFor(tr.go)} projects`)}</span>
-                  </span>
-                  <span className="p-tier-price">{baseFor(tr)} €<i>{Txt("tarifs.mois", "/mois HT", "/mo excl. VAT")}</i></span>
-                </button>
-              ))}
-            </div>
-            <div className="p-config-label">{Txt("tarifs.3-votre-equipe", "3 · Votre équipe", "3 · Your team")}</div>
-            <div className="p-seats">
-              <button type="button" className="p-seat-btn" onClick={() => setSeats(Math.max(1, seats - 1))} aria-label={Txt("tarifs.moins", "Moins", "Fewer")}><Icon name="minus" size={12}/></button>
-              <div className="p-seat-val"><b>{seats}</b><span>{seats > 1 ? Txt("tarifs.collaborateurs", "collaborateurs", "team members") : Txt("tarifs.collaborateur", "collaborateur", "team member")}</span></div>
-              <button type="button" className="p-seat-btn" onClick={() => setSeats(Math.min(4, seats + 1))} aria-label={Txt("tarifs.plus", "Plus", "More")}><Icon name="plus" size={12}/></button>
-              <div className="p-seat-note">{extraSeats > 0 ? L(`1 inclus + ${extraSeats} × 15 €/mois HT · 4 max`, `1 included + ${extraSeats} × €15/mo excl. VAT · 4 max`) : Txt("tarifs.1-inclus-jusqu-a-4-par", "1 inclus · jusqu'à 4 par espace", "1 included · up to 4 per workspace")}</div>
-            </div>
-            <div className="pricing-go-note">{Txt("tarifs.un-projet-d-architecture-occupe-en", "Un projet d'architecture occupe en moyenne 10 Go, plans, photos, documents et échanges inclus. Vous pourrez changer de palier à tout moment, en un clic.", "An architecture project takes about 10 GB on average, plans, photos, documents and messages included. You can change tiers anytime, in one click.")}</div>
-          </Reveal>
+        {/* ── LA RÈGLE D'OR ─────────────────────────────────────────────────
+            Elle est écrite en grand, et pas reléguée en note de bas de page :
+            c'est l'argument. Presque tous les concurrents réservent des
+            fonctions aux paliers hauts ; un architecte qui s'est déjà heurté à
+            un « disponible à partir de l'offre Pro » lira cette ligne deux
+            fois. */}
+        <Reveal className="tarif-regle">
+          <Icon name="check" size={18}/>
+          <p>
+            <b>{Txt("tarifs.regle-titre", "Toutes les fonctionnalités, dans toutes les offres.", "Every feature, in every plan.")}</b>{" "}
+            {Txt("tarifs.regle-corps",
+              "Dès le premier euro, et y compris dans l'offre gratuite. Aucune fonction n'est réservée à un palier supérieur : nous ne bornons que des quantités.",
+              "From the first euro, including in the free plan. No feature is reserved for a higher tier: we cap quantities only.")}
+          </p>
+        </Reveal>
 
-          <Reveal delay={120} className="pricing-side">
-            <div className="pricing-card">
-              <span className="pricing-tag"><span className="dot"/> Studio</span>
-              <div className="pricing-name">{Txt("tarifs.pour-votre-agence", "Pour votre agence", "For your practice")}</div>
-              <div className="pricing-desc">{Txt("tarifs.tout-ce-qu-il-faut-pour", "Tout ce qu'il faut pour piloter sereinement vos projets, sans option cachée.", "Everything you need to run your projects with confidence, no hidden extras.")}</div>
-              <div className="pricing-amt">
-                <span className="c">€</span>
-                <span className="v" key={`${tier}-${total}`}>{total}</span>
-                <span className="p">{Txt("tarifs.mois-2", "/ mois HT", "/ month excl. VAT")}</span>
-              </div>
-              {yearly && (
-                <div className="pricing-save">
-                  <span className="ps-badge">−18%</span>
-                  <span className="ps-text">
-                    {L(`Vous économisez ${(t.price - base) * 12} € HT par an`, `You save €${(t.price - base) * 12} excl. VAT a year`)}
-                    <i>{L(`Facturé ${total * 12} € HT en une fois, au lieu de ${(t.price + extraCost) * 12} € en mensuel`, `Billed €${total * 12} excl. VAT once a year, instead of €${(t.price + extraCost) * 12} monthly`)}</i>
-                  </span>
+        {/* ── LES TROIS OFFRES ──────────────────────────────────────────── */}
+        <div className="tarif-offres">
+          {OFFRES.map((o) => {
+            const recommandee = o.cle === offreRecommandee.cle;
+            const sieges = o.parPersonne ? personnes : 1;
+            const montant = o.parPersonne ? o.prix * sieges : o.prix;
+            return (
+              <Reveal key={o.cle} className={`tarif-carte${recommandee ? " est-recommandee" : ""}`}>
+                {recommandee && (
+                  <div className="tarif-badge">{Txt("tarifs.badge-recommandee", "Correspond à vos réponses", "Matches your answers")}</div>
+                )}
+                <h3 className="tarif-nom">{o.nom}</h3>
+                <p className="tarif-resume">{o.resume}</p>
+                <div className="tarif-prix">
+                  {o.prix === 0
+                    ? <span className="tarif-montant">{Txt("tarifs.gratuit", "Gratuit", "Free")}</span>
+                    : <>
+                        <span className="tarif-montant">{euros(o.prix)} €</span>
+                        <span className="tarif-unite">
+                          {o.parPersonne
+                            ? Txt("tarifs.par-mois-par-personne", "HT / mois et par personne", "excl. VAT / month per person")
+                            : Txt("tarifs.par-mois", "HT / mois", "excl. VAT / month")}
+                        </span>
+                      </>}
                 </div>
-              )}
-              {extraSeats > 0 && (
-                <div className="pricing-seats-line">{L(`Dont ${extraCost} € / mois HT : ${extraSeats} collaborateur${extraSeats > 1 ? "s" : ""} supplémentaire${extraSeats > 1 ? "s" : ""}`, `Includes €${extraCost} / month for ${extraSeats} extra team member${extraSeats > 1 ? "s" : ""}`)}</div>
-              )}
-              <ul className="pricing-includes">
-                {includes.map((it, i) => (
-                  <li key={i}><Icon name="check" size={12}/> {it}</li>
-                ))}
-              </ul>
-              <a href={`${SIGNUP_URL}?plan=studio&storage=${t.go}&billing=${yearly ? "yearly" : "monthly"}&seats=${seats}`}
-                 className="btn btn-primary pricing-cta" onClick={abonner} aria-busy={paiement === "envoi"}>
-                {paiement === "envoi"
-                  ? Txt("tarifs.ouverture-du-paiement", "Ouverture du paiement…", "Opening checkout…")
-                  : Txt("tarifs.s-abonner", "S'abonner", "Subscribe")}
-                <Icon name="arrow-right" size={14} className="btn-arrow"/>
-              </a>
-              {erreurPaiement && <div className="pricing-erreur" role="alert">{erreurPaiement}</div>}
-              <div className="pricing-foot">{Txt("tarifs.gratuit-a-vie-pour-1-projet", "SANS ENGAGEMENT · RÉSILIABLE À TOUT MOMENT", "NO COMMITMENT · CANCEL ANYTIME")}</div>
-              {/* Seconde porte. Quelqu'un qui ne veut pas payer aujourd'hui ne
-                  doit pas se heurter à un mur : collaborateurs invités, maîtres
-                  d'ouvrage, architectes qui veulent d'abord essayer. Discrète,
-                  parce que ce n'est plus l'argument de la page. */}
-              <a href={`${SIGNUP_URL}?plan=studio&storage=${t.go}&billing=${yearly ? "yearly" : "monthly"}&seats=${seats}`} className="pricing-porte-2">
-                {Txt("tarifs.creer-un-compte-gratuit", "Créer un compte gratuit", "Create a free account")}
-              </a>
-            </div>
-          </Reveal>
+                <ul className="tarif-quantites">
+                  {o.quantites.map((q, i) => (
+                    <li key={i}><Icon name="check" size={13}/><span>{q}</span></li>
+                  ))}
+                  <li className="tarif-tout"><Icon name="check" size={13}/><span>{Txt("tarifs.toutes-fonctionnalites", "Toutes les fonctionnalités", "Every feature")}</span></li>
+                </ul>
+                {o.palier ? (
+                  <a href={SIGNUP} className="btn btn-primary tarif-cta"
+                     onClick={abonner(o, sieges)}
+                     aria-busy={paiement === "envoi" ? "true" : "false"}>
+                    {paiement === "envoi"
+                      ? Txt("tarifs.ouverture", "Ouverture…", "Opening…")
+                      : Txt("tarifs.s-abonner", "S'abonner", "Subscribe")}
+                    {o.parPersonne && sieges > 1 && (
+                      <span className="tarif-cta-detail"> · {euros(montant)} € {Txt("tarifs.par-mois-court", "HT/mois", "excl. VAT/mo")}</span>
+                    )}
+                  </a>
+                ) : (
+                  <a href={SIGNUP} className="btn btn-ghost tarif-cta">
+                    {Txt("tarifs.commencer-gratuitement", "Commencer gratuitement", "Start for free")}
+                  </a>
+                )}
+              </Reveal>
+            );
+          })}
+        </div>
 
+        {erreurPaiement && (
+          <div className="pricing-erreur" role="alert">
+            {erreurPaiement}{" "}
+            <a href={`${(typeof window !== "undefined" && window.location.pathname === "/") ? "" : "index.html"}#contact`}>
+              {Txt("tarifs.nous-ecrire", "Nous écrire", "Write to us")}
+            </a>
+          </div>
+        )}
+
+        {/* ── LE CALCULATEUR ────────────────────────────────────────────── */}
+        <Reveal className="calc">
+          <div className="calc-entree">
+            <h3>{Txt("tarifs.calc-titre", "Votre prix, en deux questions", "Your price, in two questions")}</h3>
+
+            <div className="calc-champ">
+              <label htmlFor="calc-personnes">{Txt("tarifs.calc-personnes", "Combien êtes-vous dans l'agence ?", "How many of you are in the practice?")}</label>
+              <div className="calc-boutons" role="group">
+                {[1, 2, 3, 4].map((n) => (
+                  <button key={n} type="button" id={n === 1 ? "calc-personnes" : undefined}
+                          className={`calc-bouton${personnes === n ? " est-actif" : ""}`}
+                          aria-pressed={personnes === n ? "true" : "false"}
+                          onClick={() => setPersonnes(n)}>{n}</button>
+                ))}
+              </div>
+            </div>
+
+            <div className="calc-champ">
+              <label htmlFor="calc-projets">
+                {Txt("tarifs.calc-projets", "Combien de projets menez-vous de front ?", "How many projects do you run at once?")}
+                <b>{projets}</b>
+              </label>
+              <input id="calc-projets" type="range" min="1" max="30" value={projets}
+                     onChange={(e) => setProjets(Number(e.target.value))}/>
+              {/* « Menés de front » n'est pas un synonyme de « au total ». La
+                  nuance décide de l'offre, donc elle est dite ici, pas dans une
+                  FAQ que personne n'ouvre avant d'acheter. */}
+              <p className="calc-note">
+                {Txt("tarifs.calc-projets-note",
+                  "Projets en cours, pas projets archivés : archiver un projet terminé libère une place, et vous gardez l'accès à tout ce que vous avez fait.",
+                  "Live projects, not archived ones: archiving a finished project frees a slot, and you keep access to everything you have done.")}
+              </p>
+            </div>
+          </div>
+
+          <div className="calc-sortie">
+            <div className="calc-offre">{Txt("tarifs.calc-votre-offre", "Votre offre", "Your plan")}</div>
+            <div className="calc-nom">{offreRecommandee.nom}</div>
+            <div className="calc-montant">
+              {mensuel === 0
+                ? Txt("tarifs.gratuit", "Gratuit", "Free")
+                : <>{euros(mensuel)} <span>€ {Txt("tarifs.ht-mois", "HT / mois", "excl. VAT / month")}</span></>}
+            </div>
+            {mensuel > 0 && (
+              <div className="calc-annuel">
+                {/* Multiplication, pas une offre : tant que la remise annuelle
+                    n'est pas confirmée ET vérifiée dans Stripe, on n'ouvre
+                    aucun parcours annuel. */}
+                {L(`soit ${euros(mensuel * 12)} € HT par an`, `that is ${euros(mensuel * 12)} € excl. VAT per year`)}
+              </div>
+            )}
+            {offreRecommandee.parPersonne && personnes > 1 && (
+              <div className="calc-detail">{L(`${euros(offreRecommandee.prix)} € × ${personnes} personnes`, `€${euros(offreRecommandee.prix)} × ${personnes} people`)}</div>
+            )}
+            {offreRecommandee.cle === "decouverte" && (
+              <p className="calc-note calc-note-libre">
+                {Txt("tarifs.calc-decouverte",
+                  "Un seul projet à la fois vous suffit : l'offre gratuite le couvre entièrement, sans limite de durée et sans carte bancaire.",
+                  "One project at a time is enough for you: the free plan covers it entirely, with no time limit and no payment card.")}
+              </p>
+            )}
+          </div>
+        </Reveal>
+
+        {/* ── L'ESTIMATION DE TEMPS ─────────────────────────────────────────
+            Le calcul est affiché en toutes lettres et l'hypothèse est réglable.
+            C'est la seule forme honnête d'un tel encart : on ne dit pas au
+            visiteur ce qu'il gagnera, on lui montre l'opération qu'il peut
+            refaire — et contredire. */}
+        <Reveal className="calc calc-temps">
+          <div className="calc-entree">
+            <h3>{Txt("tarifs.temps-titre", "Ce que Léo peut vous faire gagner", "What Léo may save you")}</h3>
+            <p className="calc-chapo">
+              {Txt("tarifs.temps-chapo",
+                "Léo lit vos pièces écrites — CCTP, descriptifs, DPGF — et en sort les prescriptions, les matériaux, les prix et les intervenants. Le temps que ça représente, vous le connaissez mieux que nous : ajustez les trois valeurs.",
+                "Léo reads your written documents — specifications, schedules of works, bills of quantities — and extracts requirements, materials, prices and parties. You know better than we do what that represents: adjust the three values.")}
+            </p>
+
+            <div className="calc-champ">
+              <label htmlFor="calc-docs">
+                {Txt("tarifs.temps-docs", "Documents confiés à Léo par mois", "Documents given to Léo each month")}
+                <b>{docs}</b>
+              </label>
+              <input id="calc-docs" type="range" min="1" max="200" value={docs}
+                     onChange={(e) => setDocs(Number(e.target.value))}/>
+            </div>
+
+            <div className="calc-champ">
+              <label htmlFor="calc-taux">
+                {Txt("tarifs.temps-taux", "Votre taux horaire", "Your hourly rate")}
+                <b>{taux} €</b>
+              </label>
+              <input id="calc-taux" type="range" min="50" max="140" step="5" value={taux}
+                     onChange={(e) => setTaux(Number(e.target.value))}/>
+            </div>
+
+            <div className="calc-champ">
+              <label htmlFor="calc-heures">
+                {Txt("tarifs.temps-heures", "Temps de dépouillement par document", "Time spent going through one document")}
+                <b>{heuresParDoc} h</b>
+              </label>
+              <input id="calc-heures" type="range" min="0.25" max="4" step="0.25" value={heuresParDoc}
+                     onChange={(e) => setHeuresParDoc(Number(e.target.value))}/>
+              <p className="calc-note">
+                {Txt("tarifs.temps-hypothese",
+                  "C'est une hypothèse, pas une mesure : nous n'avons pas relevé ce chiffre chez nos clients. Réglez-le sur ce que vous constatez.",
+                  "This is an assumption, not a measurement: we have not recorded this figure with our clients. Set it to what you observe.")}
+              </p>
+            </div>
+          </div>
+
+          <div className="calc-sortie">
+            <div className="calc-offre">{Txt("tarifs.temps-resultat", "Estimation", "Estimate")}</div>
+            <div className="calc-montant">{euros(valeurGagnee)} <span>€ {Txt("tarifs.ht-mois", "HT / mois", "excl. VAT / month")}</span></div>
+            <div className="calc-operation">
+              {L(`${docs} documents × ${heuresParDoc} h × ${taux} € = ${euros(heuresGagnees)} h, soit ${euros(valeurGagnee)} €`,
+                 `${docs} documents × ${heuresParDoc} h × €${taux} = ${euros(heuresGagnees)} h, that is €${euros(valeurGagnee)}`)}
+            </div>
+            {depasseLectures && (
+              <p className="calc-note calc-note-libre">
+                {L(`Attention : l'offre ${offreRecommandee.nom} couvre ${offreRecommandee.lectures} lectures par mois. Au-delà, il faut l'offre supérieure.`,
+                   `Note: the ${offreRecommandee.nom} plan covers ${offreRecommandee.lectures} readings per month. Beyond that, you need the next plan.`)}
+              </p>
+            )}
+            <div className="calc-mentions">{Txt("tarifs.mentions", "Montants HT · Estimation indicative", "Amounts excl. VAT · Indicative estimate")}</div>
+          </div>
+        </Reveal>
+
+        {/* Quelqu'un qui ne veut pas payer aujourd'hui ne doit pas se heurter à
+            un mur : l'offre gratuite existe, elle est complète, et on le redit
+            ici pour ceux qui ont fait défiler sans lire les cartes. */}
+        <div className="tarif-porte">
+          <a href={SIGNUP}>{Txt("tarifs.porte", "Créer un compte gratuit", "Create a free account")}</a>
         </div>
       </div>
     </section>
@@ -581,7 +804,7 @@ const Faq = () => {
     { q: Txt("faq.que-se-passe-t-il-pour", "Que se passe-t-il pour mes données si j'arrête ?", "What happens to my data if I leave?"), a: Txt("faq.elles-sont-a-vous-a-tout", "Elles sont à vous. À tout moment, vous exportez l'intégralité de vos projets (PDF, ZIP, CSV) en un clic. Vos archives papier-numérique restent lisibles 10 ans après.", "It's yours. At any time, export all your projects (PDF, ZIP, CSV) in one click. Your digital archives remain readable 10 years on.") },
     { q: Txt("faq.les-decisions-sont-elles-juridiquement-valab", "Les décisions sont-elles juridiquement valables ?", "Are decisions legally valid?"), a: Txt("faq.chaque-decision-est-horodatee-archivee-et", "Chaque décision est horodatée, archivée et signée électroniquement (eIDAS, niveau simple) : l'auteur, la date et l'horodatage serveur sont conservés à titre de preuve. Pour un acte qui exige une signature avancée ou qualifiée, passez par votre voie habituelle.", "Every decision is timestamped, archived and electronically signed (eIDAS, simple level): the author, date and server timestamp are kept as evidence. For a document requiring an advanced or qualified signature, use your usual channel.") },
     { q: Txt("faq.puis-je-inviter-mon-bet-et", "Puis-je inviter mon BET et mes co-traitants ?", "Can I invite my engineers and consultants?"), a: Txt("faq.bien-sur-les-co-traitants-accedent", "Bien sûr. Les co-traitants accèdent gratuitement aux projets sur lesquels vous les invitez, avec le niveau de droits que vous définissez (lecture, commentaire, dépôt de pièces).", "Of course. Consultants get free access to the projects you invite them to, with the permission level you set (view, comment, upload).") },
-    { q: Txt("faq.combien-de-collaborateurs-de-mon-agence", "Combien de collaborateurs de mon agence sont inclus ?", "How many team members are included?"), a: Txt("faq.le-tarif-studio-inclut-1-collaborateur", "Le tarif Studio inclut 1 collaborateur. Vous pouvez en ajouter jusqu'à 3 autres (4 par espace au maximum), à 15 €/mois HT chacun, ajustable à tout moment. Vos clients et co-traitants, eux, sont illimités et gratuits.", "The Studio plan includes 1 team member. You can add up to 3 more (4 per workspace maximum), at €15/month excl. VAT each, adjustable anytime. Clients and consultants are unlimited and free.") },
+    { q: Txt("faq.combien-de-collaborateurs-de-mon-agence", "Combien de collaborateurs de mon agence sont inclus ?", "How many team members are included?"), a: Txt("faq.le-tarif-studio-inclut-1-collaborateur", "Les offres Découverte et Atelier couvrent une personne. L'offre Agence se facture 69 € HT par mois et par personne, jusqu'à quatre. Vos clients et vos co-traitants, eux, restent illimités et gratuits : ils ne comptent dans aucune offre.", "The Discovery and Studio plans cover one person. The Practice plan is billed at €69 excl. VAT per month per person, up to four. Your clients and consultants remain unlimited and free: they count towards no plan.") },
     { q: Txt("faq.et-pendant-le-chantier", "Et pendant le chantier ?", "What about the construction phase?"), a: Txt("faq.alba-vous-suit-sur-site-comptes", "ALBA vous suit sur site : comptes-rendus de visite, réserves photographiées et assignées par lot, diffusion automatique aux entreprises et au maître d'ouvrage. Chaque CR est signé et archivé, comme une décision.", "ALBA follows you on site: visit reports, photographed punch-list items assigned by trade, automatic distribution to contractors and the client. Every report is signed and archived, like a decision.") },
     { q: Txt("faq.quels-formats-de-fichiers-puis-je", "Quels formats de fichiers puis-je partager ?", "What file formats can I share?"), a: Txt("faq.tous-pdf-dwg-ifc-images-videos", "Tous — PDF, DWG, IFC, images, vidéos, jusqu'à 100 Mo par fichier. Les plans PDF et les images s'ouvrent directement dans le navigateur : vos clients n'ont besoin d'aucun logiciel.", "All of them — PDF, DWG, IFC, images, videos, up to 100 MB per file. PDF plans and images open right in the browser: your clients don't need any software.") },
     { q: Txt("faq.ou-sont-hebergees-mes-donnees", "Où sont hébergées mes données ?", "Where is my data hosted?"), a: Txt("faq.en-france-chez-un-hebergeur-certifie", "En France, chez un hébergeur certifié ISO 27001 : base de données, fichiers et comptes. Chiffrement au repos et en transit. Les sauvegardes chiffrées sont conservées dans l'Union européenne.", "In France, with an ISO 27001-certified host: database, files and accounts. Encrypted at rest and in transit. Encrypted backups are kept within the European Union.") },

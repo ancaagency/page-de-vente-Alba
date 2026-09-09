@@ -113,9 +113,9 @@ export const PAIRES = [
        les deux, et c'est lui qui a relevé l'écart. */
     titre: 'Pricing — ALBA Studio',
     description:
-      'One all-inclusive subscription per practice: storage, unlimited projects, unlimited guests. Seats billed per collaborator. No commitment.',
+      'Three plans, every feature included in all of them. We charge only for the projects you run at once and the number of people. First project free for ever.',
     ogTitre: 'Pricing — ALBA Studio',
-    ogDescription: 'One all-inclusive subscription per practice. No commitment.',
+    ogDescription: 'Every feature in every plan. First project free for ever, no payment card.',
   },
 
   /* ── LES TROIS PAGES ÉDITORIALES ────────────────────────────────────────
