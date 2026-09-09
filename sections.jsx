@@ -1,16 +1,28 @@
 /* Section components for Alba landing, bilingual via window.L(fr, en) */
 
+/* La classe `in` est un ÉTAT REACT, et non un `classList.add` posé à la main.
+
+   Elle l'a été, et ça a fait disparaître deux cartes tarifaires sur trois : le
+   visiteur cliquait « 2 personnes », le badge « correspond à vos réponses »
+   passait d'Atelier à Agence, la prop `className` changeait donc sur ces deux
+   cartes — et React réécrivait l'attribut entier depuis son propre modèle, qui
+   ne connaissait pas `in`. Retour à `opacity: 0`, et l'IntersectionObserver ne
+   se redéclenche pas pour un élément qui n'a pas bougé. Découverte restait
+   affichée parce qu'elle seule n'avait pas changé de classe.
+
+   Un attribut que React possède ne se modifie que par React. */
 const Reveal = ({ as: Tag = "div", delay = 0, children, className = "", ...rest }) => {
   const ref = React.useRef(null);
+  const [visible, setVisible] = React.useState(false);
   React.useEffect(() => {
     const el = ref.current; if (!el) return;
     const io = new IntersectionObserver(
       (entries) => entries.forEach(e => {
         if (e.isIntersecting) {
-          el.classList.add("in");
+          setVisible(true);
         } else if (e.boundingClientRect.top > 0) {
           // element left through the BOTTOM of the viewport (user scrolled up past it)
-          el.classList.remove("in");
+          setVisible(false);
         }
       }),
       { threshold: 0.12, rootMargin: "0px 0px -10% 0px" }
@@ -18,7 +30,7 @@ const Reveal = ({ as: Tag = "div", delay = 0, children, className = "", ...rest 
     io.observe(el);
     return () => io.disconnect();
   }, []);
-  return <Tag ref={ref} className={`reveal ${className}`} style={{"--reveal-delay": `${delay}ms`}} {...rest}>{children}</Tag>;
+  return <Tag ref={ref} className={`reveal ${className}${visible ? " in" : ""}`} style={{"--reveal-delay": `${delay}ms`}} {...rest}>{children}</Tag>;
 };
 
 /* Origine de l'application. Définie dans config.js, seul endroit à modifier le

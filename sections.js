@@ -22,21 +22,32 @@ function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present,
 function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); } r ? i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n : (o("next", 0), o("throw", 1), o("return", 2)); }, _regeneratorDefine2(e, r, n, t); }
 function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
 function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
-function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
-function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
 function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
 function _iterableToArray(r) { if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r); }
 function _arrayWithoutHoles(r) { if (Array.isArray(r)) return _arrayLikeToArray(r); }
-function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
+function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
 function _objectWithoutProperties(e, t) { if (null == e) return {}; var o, r, i = _objectWithoutPropertiesLoose(e, t); if (Object.getOwnPropertySymbols) { var n = Object.getOwnPropertySymbols(e); for (r = 0; r < n.length; r++) o = n[r], -1 === t.indexOf(o) && {}.propertyIsEnumerable.call(e, o) && (i[o] = e[o]); } return i; }
 function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t = {}; for (var n in r) if ({}.hasOwnProperty.call(r, n)) { if (-1 !== e.indexOf(n)) continue; t[n] = r[n]; } return t; }
 /* Section components for Alba landing, bilingual via window.L(fr, en) */
 
+/* La classe `in` est un ÉTAT REACT, et non un `classList.add` posé à la main.
+
+   Elle l'a été, et ça a fait disparaître deux cartes tarifaires sur trois : le
+   visiteur cliquait « 2 personnes », le badge « correspond à vos réponses »
+   passait d'Atelier à Agence, la prop `className` changeait donc sur ces deux
+   cartes — et React réécrivait l'attribut entier depuis son propre modèle, qui
+   ne connaissait pas `in`. Retour à `opacity: 0`, et l'IntersectionObserver ne
+   se redéclenche pas pour un élément qui n'a pas bougé. Découverte restait
+   affichée parce qu'elle seule n'avait pas changé de classe.
+
+   Un attribut que React possède ne se modifie que par React. */
 var Reveal = function Reveal(_ref) {
   var _ref$as = _ref.as,
     Tag = _ref$as === void 0 ? "div" : _ref$as,
@@ -47,16 +58,20 @@ var Reveal = function Reveal(_ref) {
     className = _ref$className === void 0 ? "" : _ref$className,
     rest = _objectWithoutProperties(_ref, _excluded);
   var ref = React.useRef(null);
+  var _React$useState = React.useState(false),
+    _React$useState2 = _slicedToArray(_React$useState, 2),
+    visible = _React$useState2[0],
+    setVisible = _React$useState2[1];
   React.useEffect(function () {
     var el = ref.current;
     if (!el) return;
     var io = new IntersectionObserver(function (entries) {
       return entries.forEach(function (e) {
         if (e.isIntersecting) {
-          el.classList.add("in");
+          setVisible(true);
         } else if (e.boundingClientRect.top > 0) {
           // element left through the BOTTOM of the viewport (user scrolled up past it)
-          el.classList.remove("in");
+          setVisible(false);
         }
       });
     }, {
@@ -70,7 +85,7 @@ var Reveal = function Reveal(_ref) {
   }, []);
   return /*#__PURE__*/React.createElement(Tag, _extends({
     ref: ref,
-    className: "reveal ".concat(className),
+    className: "reveal ".concat(className).concat(visible ? " in" : ""),
     style: {
       "--reveal-delay": "".concat(delay, "ms")
     }
@@ -302,16 +317,16 @@ var Features = function Features() {
     shot: "uploads/app-mobile-chantier.jpg",
     shotAlt: L("ALBA Studio sur mobile — suivi de chantier : visites, comptes-rendus et remarques", "ALBA Studio on mobile — site tracking: visits, reports and punch-list items")
   }];
-  var _React$useState = React.useState(0),
-    _React$useState2 = _slicedToArray(_React$useState, 2),
-    active = _React$useState2[0],
-    setActive = _React$useState2[1];
-  var _React$useState3 = React.useState(function () {
+  var _React$useState3 = React.useState(0),
+    _React$useState4 = _slicedToArray(_React$useState3, 2),
+    active = _React$useState4[0],
+    setActive = _React$useState4[1];
+  var _React$useState5 = React.useState(function () {
       return window.matchMedia("(max-width: 900px)").matches;
     }),
-    _React$useState4 = _slicedToArray(_React$useState3, 2),
-    mobile = _React$useState4[0],
-    setMobile = _React$useState4[1];
+    _React$useState6 = _slicedToArray(_React$useState5, 2),
+    mobile = _React$useState6[0],
+    setMobile = _React$useState6[1];
 
   // La bascule doit suivre la rotation de l'appareil : un iPhone Pro Max passe
   // de 430 à 932 px en tournant, soit d'un côté à l'autre de la limite.
@@ -548,18 +563,18 @@ var Pricing = function Pricing() {
      dans un vrai navigateur : si le fichier n'est pas chargé, ça casse là, à
      la construction, et pas chez un visiteur. */
   var TARIFS = window.ALBA_TARIFS;
-  var _React$useState5 = React.useState(false),
-    _React$useState6 = _slicedToArray(_React$useState5, 2),
-    annuel = _React$useState6[0],
-    setAnnuel = _React$useState6[1];
-  var _React$useState7 = React.useState(1),
+  var _React$useState7 = React.useState(false),
     _React$useState8 = _slicedToArray(_React$useState7, 2),
-    personnes = _React$useState8[0],
-    setPersonnes = _React$useState8[1];
-  var _React$useState9 = React.useState(3),
+    annuel = _React$useState8[0],
+    setAnnuel = _React$useState8[1];
+  var _React$useState9 = React.useState(1),
     _React$useState0 = _slicedToArray(_React$useState9, 2),
-    projets = _React$useState0[0],
-    setProjets = _React$useState0[1];
+    personnes = _React$useState0[0],
+    setPersonnes = _React$useState0[1];
+  var _React$useState1 = React.useState(3),
+    _React$useState10 = _slicedToArray(_React$useState1, 2),
+    projets = _React$useState10[0],
+    setProjets = _React$useState10[1];
 
   /** Total pour l'offre Agence, à `n` personnes, dans la périodicité courante. */
   var totalAgence = function totalAgence(n) {
@@ -629,18 +644,18 @@ var Pricing = function Pricing() {
      tout le reste de la page.
      Quatre documents donnent 300 €, six fois le prix d'Atelier. C'est crédible,
      et ça reste très parlant. */
-  var _React$useState1 = React.useState(75),
-    _React$useState10 = _slicedToArray(_React$useState1, 2),
-    taux = _React$useState10[0],
-    setTaux = _React$useState10[1];
-  var _React$useState11 = React.useState(4),
+  var _React$useState11 = React.useState(75),
     _React$useState12 = _slicedToArray(_React$useState11, 2),
-    docs = _React$useState12[0],
-    setDocs = _React$useState12[1];
-  var _React$useState13 = React.useState(1),
+    taux = _React$useState12[0],
+    setTaux = _React$useState12[1];
+  var _React$useState13 = React.useState(4),
     _React$useState14 = _slicedToArray(_React$useState13, 2),
-    heuresParDoc = _React$useState14[0],
-    setHeuresParDoc = _React$useState14[1];
+    docs = _React$useState14[0],
+    setDocs = _React$useState14[1];
+  var _React$useState15 = React.useState(1),
+    _React$useState16 = _slicedToArray(_React$useState15, 2),
+    heuresParDoc = _React$useState16[0],
+    setHeuresParDoc = _React$useState16[1];
   var heuresGagnees = docs * heuresParDoc;
   var valeurGagnee = Math.round(heuresGagnees * taux);
   var depasseLectures = docs > offreRecommandee.lectures;
@@ -655,14 +670,14 @@ var Pricing = function Pricing() {
      recueilli dans le tunnel Stripe, deux écrans plus loin. Le demander ici
      serait un second consentement au mauvais endroit. */
   var POINT_PAIEMENT = "https://fhrkkjvbzgkbmlnlnxce.supabase.co/functions/v1/creer-paiement-public";
-  var _React$useState15 = React.useState("repos"),
-    _React$useState16 = _slicedToArray(_React$useState15, 2),
-    paiement = _React$useState16[0],
-    setPaiement = _React$useState16[1];
-  var _React$useState17 = React.useState(null),
+  var _React$useState17 = React.useState("repos"),
     _React$useState18 = _slicedToArray(_React$useState17, 2),
-    erreurPaiement = _React$useState18[0],
-    setErreurPaiement = _React$useState18[1];
+    paiement = _React$useState18[0],
+    setPaiement = _React$useState18[1];
+  var _React$useState19 = React.useState(null),
+    _React$useState20 = _slicedToArray(_React$useState19, 2),
+    erreurPaiement = _React$useState20[0],
+    setErreurPaiement = _React$useState20[1];
   /* Verrou de double-clic. Il ne peut PAS reposer sur `paiement` : React ne
      rafraîchit l'état qu'au rendu suivant, si bien que trois clics rapides
      lisent tous « repos » et partent tous les trois. Une référence, elle,
@@ -1086,10 +1101,10 @@ var Faq = function Faq() {
     q: Txt("faq.quel-est-le-delai-pour-demarrer", "Quel est le délai pour démarrer ?", "How long does it take to get started?"),
     a: Txt("faq.si-vous-voulez-vous-demarrez-aujourd", "Si vous voulez, vous démarrez aujourd'hui. La création de compte prend 3 minutes ; importer vos projets en cours prend en moyenne une demi-journée. On vous accompagne sur l'onboarding sans frais.", "You can start today. Account creation takes 3 minutes; importing your active projects takes half a day on average. We help with onboarding at no charge.")
   }];
-  var _React$useState19 = React.useState(0),
-    _React$useState20 = _slicedToArray(_React$useState19, 2),
-    open = _React$useState20[0],
-    setOpen = _React$useState20[1];
+  var _React$useState21 = React.useState(0),
+    _React$useState22 = _slicedToArray(_React$useState21, 2),
+    open = _React$useState22[0],
+    setOpen = _React$useState22[1];
   return /*#__PURE__*/React.createElement("section", {
     className: "section section-cream-2",
     id: "faq"
@@ -1128,7 +1143,7 @@ var Faq = function Faq() {
 
 /* CONTACT */
 var Contact = function Contact() {
-  var _React$useState21 = React.useState({
+  var _React$useState23 = React.useState({
       name: "",
       agency: "",
       email: "",
@@ -1136,29 +1151,29 @@ var Contact = function Contact() {
       projects: "1-3",
       msg: ""
     }),
-    _React$useState22 = _slicedToArray(_React$useState21, 2),
-    data = _React$useState22[0],
-    setData = _React$useState22[1];
-  var _React$useState23 = React.useState({}),
     _React$useState24 = _slicedToArray(_React$useState23, 2),
-    errors = _React$useState24[0],
-    setErrors = _React$useState24[1];
-  var _React$useState25 = React.useState(false),
+    data = _React$useState24[0],
+    setData = _React$useState24[1];
+  var _React$useState25 = React.useState({}),
     _React$useState26 = _slicedToArray(_React$useState25, 2),
-    submitted = _React$useState26[0],
-    setSubmitted = _React$useState26[1];
+    errors = _React$useState26[0],
+    setErrors = _React$useState26[1];
+  var _React$useState27 = React.useState(false),
+    _React$useState28 = _slicedToArray(_React$useState27, 2),
+    submitted = _React$useState28[0],
+    setSubmitted = _React$useState28[1];
   /* "repos" | "envoi" | "erreur" — le succès est porté par `submitted`, qui
      existait déjà et gouverne le bloc de confirmation du design. */
-  var _React$useState27 = React.useState("repos"),
-    _React$useState28 = _slicedToArray(_React$useState27, 2),
-    envoi = _React$useState28[0],
-    setEnvoi = _React$useState28[1];
+  var _React$useState29 = React.useState("repos"),
+    _React$useState30 = _slicedToArray(_React$useState29, 2),
+    envoi = _React$useState30[0],
+    setEnvoi = _React$useState30[1];
   /* Champ-piège : invisible pour un visiteur, rempli par les robots qui
      remplissent tout. Il vit dans l'état comme les autres champs. */
-  var _React$useState29 = React.useState(""),
-    _React$useState30 = _slicedToArray(_React$useState29, 2),
-    piege = _React$useState30[0],
-    setPiege = _React$useState30[1];
+  var _React$useState31 = React.useState(""),
+    _React$useState32 = _slicedToArray(_React$useState31, 2),
+    piege = _React$useState32[0],
+    setPiege = _React$useState32[1];
   /* Instant d'affichage du formulaire. Le serveur refuse un envoi survenu moins
      de deux secondes après : personne ne remplit six champs en deux secondes. */
   var afficheA = React.useRef(Date.now());

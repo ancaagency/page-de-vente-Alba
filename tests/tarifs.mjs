@@ -130,6 +130,22 @@ console.log('\n===== le calculateur, au mois =====');
     ok(bonNom && bonPrix && sansAnnuel,
        `${c.quoi} → ${vu.nom} ${vu.montant}${bonNom && bonPrix && sansAnnuel ? '' : `  ATTENDU ${c.offre} ${c.prix || 'gratuit'}${sansAnnuel ? '' : ', sans ligne annuelle'}`}`);
   }
+  /* ── LES TROIS CARTES RESTENT VISIBLES QUAND LE BADGE CHANGE DE CARTE ───
+     Cliquer « 2 personnes » a fait DISPARAÎTRE Atelier et Agence : le badge
+     « correspond à vos réponses » changeait de carte, donc la prop className
+     changeait, donc React réécrivait l'attribut — en effaçant la classe `in`
+     que Reveal avait posée à la main. Deux cartes sur trois à opacity: 0,
+     sur exactement le geste qu'on invite le visiteur à faire. On mesure
+     l'opacité CALCULÉE, pas la classe : c'est ce que l'œil voit. */
+  for (const n of [1, 2, 3, 4, 1]) {
+    await regler(page, n, 3);
+    const cartes = await page.evaluate(() => [...document.querySelectorAll('.tarif-carte')]
+      .map((c) => ({ nom: c.querySelector('.tarif-nom')?.textContent.trim(), op: getComputedStyle(c).opacity })));
+    const invisibles = cartes.filter((c) => Number(c.op) < 1).map((c) => c.nom);
+    ok(cartes.length === 3 && invisibles.length === 0,
+       `${n} personne(s) → les 3 cartes restent affichées${invisibles.length ? ` — DISPARUES : ${invisibles.join(', ')}` : ''}`);
+  }
+
   /* Le détail de l'addition est affiché : « 69 € + 3 × 39 € ». Un total
      dégressif qu'on ne peut pas refaire de tête ressemble à une erreur. */
   await regler(page, 4, 12);
