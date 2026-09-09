@@ -1627,6 +1627,58 @@
 .tarif-regle p { margin: 0; font-size: 15px; line-height: 1.6; color: rgba(var(--on-bg-rgb), 0.82); }
 .tarif-regle b { color: var(--on-bg); font-weight: 600; }
 
+/* ── La bascule mensuel / annuel ──────────────────────────────────────────
+   Deux vrais <button> dans un groupe, et non un interrupteur graphique : la
+   périodicité change un prix, elle doit être annoncée au lecteur d'écran et
+   atteignable au clavier. L'état vit dans aria-pressed, la couleur ne fait
+   que le redire. */
+.tarif-bascule {
+  display: inline-flex;
+  gap: 4px;
+  margin: 0 auto 34px;
+  padding: 4px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--bg-2);
+  /* le conteneur est en flux dans une colonne : on le centre à la main */
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.tarif-bascule-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 20px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: rgba(var(--on-bg-rgb), 0.68);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.tarif-bascule-btn:hover { color: var(--on-bg); }
+.tarif-bascule-btn.est-actif { background: var(--accent); color: var(--accent-contrast); }
+.tarif-bascule-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+/* La remise reste lisible sur les deux fonds : sur le bouton actif elle hérite
+   du contraste de l'accent, sinon elle prend la couleur d'accent elle-même. */
+.tarif-remise {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.tarif-bascule-btn.est-actif .tarif-remise {
+  background: rgba(255, 255, 255, 0.22);
+  color: var(--accent-contrast);
+}
+
 /* ── Les trois offres ─────────────────────────────────────────────────────
    `1fr` par colonne et non `auto` : sans cela la carte du milieu, plus haute
    d'une ligne, imposait sa largeur aux deux autres. */
@@ -1689,7 +1741,28 @@
   color: rgba(var(--on-bg-rgb), 0.66);
   min-height: 44px;
 }
-.tarif-prix { display: flex; align-items: baseline; flex-wrap: wrap; gap: 8px; margin-bottom: 22px; }
+.tarif-prix { display: flex; align-items: baseline; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+/* « À partir de », sur la seule carte dont le prix dépend du nombre de
+   personnes. Petit, en amont du montant, jamais après : lu après, il corrige
+   une impression déjà formée. */
+.tarif-apartir {
+  width: 100%;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(var(--on-bg-rgb), 0.5);
+  margin-bottom: -2px;
+}
+/* Ce que le montant affiché ne dit pas : le total annuel, et le prix des
+   personnes suivantes. Réservé sous le prix, pas relégué en note. */
+.tarif-detail {
+  margin: 0 0 20px;
+  min-height: 20px;
+  font-size: 13px;
+  line-height: 1.55;
+  color: rgba(var(--on-bg-rgb), 0.62);
+}
 .tarif-montant {
   font-family: var(--font-display);
   font-size: 38px;
@@ -1710,7 +1783,10 @@
 .tarif-cta { width: 100%; justify-content: center; }
 .tarif-cta-detail { opacity: 0.85; font-weight: 400; }
 
-/* ── Les deux calculateurs ────────────────────────────────────────────── */
+/* ── Le calculateur ─────────────────────────────────────────────────────
+   Un seul bloc désormais : le prix et le gain étaient dans deux encarts que
+   séparait un défilement, et la comparaison entre les deux — qui est tout
+   l'argument — ne se faisait jamais dans l'œil du visiteur. */
 .calc {
   display: grid;
   grid-template-columns: 1.35fr 1fr;
@@ -1806,6 +1882,32 @@
   flex-direction: column;
   justify-content: center;
 }
+/* Le second bloc de questions, à l'intérieur du même encart. Un intertitre
+   plutôt qu'un nouvel encadré : les curseurs de Léo produisent une ligne de la
+   même sortie, ils ne méritaient pas une seconde boîte. */
+.calc-separateur {
+  margin-top: 6px;
+  padding-top: 22px;
+  border-top: 1px solid var(--line);
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(var(--on-bg-rgb), 0.5);
+}
+
+/* Les deux résultats. Ils se lisent l'un sous l'autre, et c'est le point :
+   le prix, puis ce que le prix fait gagner. */
+.calc-ligne + .calc-ligne {
+  margin-top: 26px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+}
+/* Le gain est en accent, le prix ne l'est pas : sur cet écran, celui des deux
+   chiffres qu'on veut voir grand est celui qui parle du bénéfice. */
+.calc-montant-gain { color: var(--accent); }
+.calc-ligne-gain .calc-offre { color: rgba(var(--on-bg-rgb), 0.5); }
+
 .calc-offre {
   font-family: var(--font-mono);
   font-size: 10.5px;
@@ -1874,4 +1976,8 @@
   .calc-entree, .calc-sortie { padding: 24px 20px; }
   .calc-montant { font-size: 34px; }
   .tarif-regle { padding: 16px 18px; margin-bottom: 36px; }
+  /* En pleine largeur : à 320 px, deux libellés plus la pastille de remise ne
+     tiennent pas sur une pilule centrée sans déborder. */
+  .tarif-bascule { display: flex; left: auto; transform: none; margin-bottom: 28px; }
+  .tarif-bascule-btn { flex: 1; justify-content: center; padding: 9px 12px; gap: 6px; }
 }

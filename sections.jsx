@@ -312,59 +312,76 @@ const Testimonials = () => (
 );
 
 /* ============================================================================
-   PRICING — trois offres, et un calculateur plutôt qu'un tableau
+   PRICING — trois offres, une bascule, et un seul bloc de calcul
    ============================================================================
-   CE QU'ON A CESSÉ DE VENDRE, ET POURQUOI
+   CE QU'ON A CESSÉ DE VENDRE
 
-   La grille précédente affichait 49 / 69 / 89 € pour 50, 150 et 300 Go. Les
-   trois offres ne différaient QUE par le stockage. Mesure faite en production
-   le 9 septembre 2026 : l'ensemble des comptes occupait 0,143 Go. L'offre
-   d'entrée en promettait donc trois cent cinquante fois plus que tout ce qui
-   existait. Un plafond que personne n'atteindra jamais n'est pas une offre
-   d'entrée : c'est une échelle que personne ne gravira, et donc un axe de prix
-   mort.
-
-   On facture désormais ce qui varie réellement d'un architecte à l'autre : le
-   nombre de projets menés de front, et le nombre de personnes.
+   La grille affichait 49 / 69 / 89 € pour 50, 150 et 300 Go : les trois offres
+   ne différaient QUE par le stockage. Mesure faite en production le 9 septembre
+   2026, l'ensemble des comptes occupait 0,143 Go — l'offre d'ENTRÉE promettait
+   350 fois plus que tout ce qui existait. Un plafond que personne n'atteindra
+   jamais n'est pas une offre d'entrée : c'est un axe de prix mort.
 
    ⚠️ LE MOT « STOCKAGE » NE DOIT REPARAÎTRE NULLE PART, ni les gigaoctets.
-   tests/tarifs.mjs le vérifie sur toutes les pages rendues.
+   tests/tarifs.mjs le vérifie sur toutes les pages rendues, métadonnées
+   comprises — c'est par là qu'il s'était échappé la première fois.
 
    ────────────────────────────────────────────────────────────────────────────
    LA RÈGLE D'OR
 
-   Toutes les fonctionnalités sont dans toutes les offres, dès le premier euro.
-   On ne borne que des QUANTITÉS. Aucune fonctionnalité n'est réservée à un
-   palier supérieur, et c'est écrit en toutes lettres sur la page : la
-   concurrence fait l'inverse, et un architecte qui a déjà été pris au piège
-   d'un « disponible à partir de l'offre Pro » le remarquera.
+   Toutes les fonctionnalités sont dans toutes les offres, y compris la
+   gratuite. On ne borne que des QUANTITÉS. C'est l'argument, il est donc écrit
+   en encart sous le titre : la concurrence réserve des fonctions aux paliers
+   hauts, et un architecte qui s'est déjà heurté à un « disponible à partir de
+   l'offre Pro » lira cette ligne deux fois.
 
    ────────────────────────────────────────────────────────────────────────────
-   CE QU'ON N'AFFICHE PAS
+   AGENCE N'EST PAS UN PRIX PAR PERSONNE
 
-   Aucun chiffre de performance. Pas de « 40 % de temps gagné », pas de « ROI
-   moyen ». Alba a trois clients payants et aucune mesure de ce genre : un
-   pourcentage affiché comme un fait serait une pratique commerciale trompeuse
-   au sens de l'article L121-2, pour un gain nul.
+   Elle l'a été sur cette page pendant une journée, et c'était faux : la carte
+   annonçait « 69 € par personne », soit 276 € pour quatre. Le tarif réel est
+   dégressif — 69 € pour la première personne, 39 € pour chacune des suivantes,
+   soit 186 € pour quatre. La page nous faisait paraître 48 % plus chers que
+   nous ne sommes, sur exactement le profil de client qu'on vise.
 
-   L'estimation de temps de la page est donc CALCULÉE à partir de ce que le
-   visiteur saisit, son hypothèse est réglable et affichée, et le résultat porte
-   la mention « estimation indicative ». C'est la seule forme honnête : on ne
-   lui annonce pas ce qu'il gagnera, on lui montre le calcul qu'il peut refaire.
+   Les six valeurs de la grille sont éprouvées une par une dans
+   tests/tarifs.mjs. Elles ne se déduisent d'aucune règle générale : ce sont
+   celles de Stripe, et rien d'autre ne fait autorité.
    ============================================================================ */
 const Pricing = () => {
-  /* ── LES TROIS OFFRES ─────────────────────────────────────────────────────
-     `palier` est ce qui part au serveur de paiement. Le champ s'appelle encore
-     « storage » dans le contrat de la fonction, pour des raisons historiques :
-     ce N'EST PAS un stockage, c'est un sélecteur d'offre, invisible du
-     visiteur. Il sera renommé plus tard, des deux côtés à la fois.
-     La valeur 300 est une ancienne offre qui n'est plus vendue : elle
-     n'apparaît nulle part ici, et ne doit jamais y revenir. */
+  /* ── LA GRILLE ────────────────────────────────────────────────────────────
+     Écrite en toutes lettres plutôt que calculée depuis un pourcentage : la
+     remise annuelle n'est pas uniforme (−18 % sur Atelier et sur la personne
+     supplémentaire, −17,4 % sur le premier siège Agence), et un prix déduit
+     d'une formule finirait par diverger de Stripe sans que personne ne le voie.
+     Ces montants sont ceux qui sont configurés là-bas. */
+  const TARIFS = {
+    atelier: {
+      mois: 49,                       // 49 € HT / mois
+      an: 480,                        // 480 € HT / an, soit 40 € HT / mois
+    },
+    agence: {
+      mois: { premiere: 69, suivante: 39 },
+      an: { premiere: 684, suivante: 384 },
+    },
+  };
+
+  const [annuel, setAnnuel] = React.useState(false);
+  const [personnes, setPersonnes] = React.useState(1);
+  const [projets, setProjets] = React.useState(3);
+
+  /** Total pour l'offre Agence, à `n` personnes, dans la périodicité courante. */
+  const totalAgence = (n) => {
+    const t = annuel ? TARIFS.agence.an : TARIFS.agence.mois;
+    return t.premiere + t.suivante * Math.max(0, n - 1);
+  };
+  /** Ce que le visiteur paie chaque mois, quelle que soit la périodicité. */
+  const parMois = (totalPeriode) => Math.round(totalPeriode / (annuel ? 12 : 1));
+
   const OFFRES = [
     {
       cle: "decouverte",
-      palier: null,                       // gratuite : aucun paiement
-      prix: 0,
+      palier: null,                   // gratuite : aucun paiement
       nom: Txt("tarifs.offre-decouverte", "Découverte", "Discovery"),
       resume: Txt("tarifs.decouverte-resume", "Pour voir ce que ça donne sur un vrai projet.", "To see what it does on a real project."),
       quantites: [
@@ -377,7 +394,6 @@ const Pricing = () => {
     {
       cle: "atelier",
       palier: 50,
-      prix: 49,
       nom: Txt("tarifs.offre-atelier", "Atelier", "Studio"),
       resume: Txt("tarifs.atelier-resume", "Pour un architecte qui mène plusieurs affaires de front.", "For an architect running several jobs at once."),
       quantites: [
@@ -390,8 +406,7 @@ const Pricing = () => {
     {
       cle: "agence",
       palier: 150,
-      prix: 69,
-      parPersonne: true,
+      degressive: true,
       nom: Txt("tarifs.offre-agence", "Agence", "Practice"),
       resume: Txt("tarifs.agence-resume", "Pour une équipe, jusqu'à quatre personnes.", "For a team, up to four people."),
       quantites: [
@@ -403,37 +418,38 @@ const Pricing = () => {
     },
   ];
 
-  /* ── LE CALCULATEUR ───────────────────────────────────────────────────────
-     Deux questions suffisent à désigner l'offre. Un tableau comparatif oblige
-     le visiteur à faire ce travail lui-même, colonne par colonne ; ici il
-     répond à ce qu'il sait de son agence et lit son prix. */
-  const [personnes, setPersonnes] = React.useState(1);
-  const [projets, setProjets] = React.useState(3);
-
   /* 1 personne et 1 projet : Découverte, qui est gratuite. On la propose
      d'abord — envoyer quelqu'un payer 49 € pour un usage que l'offre gratuite
      couvre entièrement serait se tirer une balle dans le pied. */
   const offreRecommandee = (personnes === 1 && projets === 1) ? OFFRES[0]
                          : (personnes === 1 && projets <= 5) ? OFFRES[1]
                          : OFFRES[2];
-  const mensuel = offreRecommandee.parPersonne
-    ? offreRecommandee.prix * personnes
-    : offreRecommandee.prix;
+
+  /** Ce que coûte une offre donnée, pour le nombre de personnes courant. */
+  const coutDe = (offre) => {
+    if (!offre.palier) return { periode: 0, mois: 0 };
+    if (offre.degressive) {
+      const p = totalAgence(personnes);
+      return { periode: p, mois: parMois(p) };
+    }
+    const p = annuel ? TARIFS.atelier.an : TARIFS.atelier.mois;
+    return { periode: p, mois: parMois(p) };
+  };
+  const coutRecommande = coutDe(offreRecommandee);
 
   /* ── L'ESTIMATION DE TEMPS ────────────────────────────────────────────────
-     Trois valeurs saisies, une multiplication affichée. `heuresParDoc` est une
-     HYPOTHÈSE, et elle est réglable : c'est ce qui distingue une estimation
-     d'une affirmation. Un architecte qui trouve 1 h trop généreux la baisse et
-     voit le résultat bouger — il n'a pas à nous croire sur parole. */
+     Quatre documents par mois par défaut, et non vingt. Vingt, c'était un CCTP
+     par jour ouvré — un usage qu'aucun architecte seul ne reconnaîtra — et le
+     résultat affichait 1 500 € de gain, trente fois le prix de l'offre. Un
+     chiffre auquel personne ne croit ne convainc pas : il jette le doute sur
+     tout le reste de la page.
+     Quatre documents donnent 300 €, six fois le prix d'Atelier. C'est crédible,
+     et ça reste très parlant. */
   const [taux, setTaux] = React.useState(75);
-  const [docs, setDocs] = React.useState(20);
+  const [docs, setDocs] = React.useState(4);
   const [heuresParDoc, setHeuresParDoc] = React.useState(1);
   const heuresGagnees = docs * heuresParDoc;
   const valeurGagnee = Math.round(heuresGagnees * taux);
-
-  /* Le nombre de documents saisi dépasse-t-il ce que l'offre recommandée
-     permet ? On le dit, plutôt que de laisser le visiteur le découvrir au
-     premier mois. */
   const depasseLectures = docs > offreRecommandee.lectures;
 
   const SIGNUP = (typeof window !== "undefined" && window.ALBA_APP_ORIGIN
@@ -460,10 +476,9 @@ const Pricing = () => {
                          "Payment is temporarily unavailable. Please try again in a few minutes.");
   const ecrivezNous = L("Le paiement n'a pas pu s'ouvrir. Ce n'est pas de votre fait : écrivez-nous et on vous ouvre l'accès.",
                         "Checkout could not open. It's not your doing: write to us and we'll open access for you.");
-  /* Deux familles de messages, et elles ne se disent pas pareil : ce qui vient
-     du visiteur ou d'un incident passager invite à réessayer ; ce qui vient de
-     NOUS invite à écrire, parce qu'envoyer quelqu'un s'acharner sur un bouton
-     cassé n'a jamais rien réparé. */
+  /* Deux familles de messages : ce qui vient du visiteur ou d'un incident
+     passager invite à réessayer ; ce qui vient de NOUS invite à écrire, parce
+     qu'envoyer quelqu'un s'acharner sur un bouton cassé n'a rien réparé. */
   const MESSAGES = {
     trop_de_tentatives: L("Trop de tentatives, réessayez dans un moment.", "Too many attempts, please try again shortly."),
     tarif_indisponible: indisponible,
@@ -493,13 +508,11 @@ const Pricing = () => {
       const reponse = await fetch(POINT_PAIEMENT, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        /* `billing` reste « monthly ». La remise annuelle n'est pas confirmée,
-           et le tarif annuel n'est donc pas vérifié dans Stripe : ouvrir un
-           parcours vers un prix qu'on n'a pas vu serait exactement l'interdit
-           « aucun prix qui ne soit pas celui configuré dans Stripe ».
-           L'équivalent annuel affiché sur la page est une multiplication, pas
-           une offre. */
-        body: JSON.stringify({ storage: offre.palier, billing: "monthly", seats: sieges }),
+        body: JSON.stringify({
+          storage: offre.palier,
+          billing: annuel ? "yearly" : "monthly",
+          seats: sieges,
+        }),
       });
       const donnees = await reponse.json().catch(() => null);
       if (reponse.ok && donnees && donnees.url) { window.location.href = donnees.url; return; }
@@ -551,12 +564,6 @@ const Pricing = () => {
           </p>
         </Reveal>
 
-        {/* ── LA RÈGLE D'OR ─────────────────────────────────────────────────
-            Elle est écrite en grand, et pas reléguée en note de bas de page :
-            c'est l'argument. Presque tous les concurrents réservent des
-            fonctions aux paliers hauts ; un architecte qui s'est déjà heurté à
-            un « disponible à partir de l'offre Pro » lira cette ligne deux
-            fois. */}
         <Reveal className="tarif-regle">
           <Icon name="check" size={18}/>
           <p>
@@ -567,12 +574,40 @@ const Pricing = () => {
           </p>
         </Reveal>
 
+        {/* ── LA BASCULE MENSUEL / ANNUEL ───────────────────────────────────
+            Les tarifs annuels existaient dans Stripe et étaient inatteignables
+            depuis cette page : personne ne pouvait les acheter, et la remise —
+            qui est un argument de vente — n'apparaissait nulle part. */}
+        <div className="tarif-bascule" role="group" aria-label={Txt("tarifs.periodicite", "Périodicité", "Billing period")}>
+          <button type="button" className={`tarif-bascule-btn${annuel ? "" : " est-actif"}`}
+                  aria-pressed={annuel ? "false" : "true"} onClick={() => setAnnuel(false)}>
+            {Txt("tarifs.mensuel", "Mensuel", "Monthly")}
+          </button>
+          <button type="button" className={`tarif-bascule-btn${annuel ? " est-actif" : ""}`}
+                  aria-pressed={annuel ? "true" : "false"} onClick={() => setAnnuel(true)}>
+            {Txt("tarifs.annuel", "Annuel", "Yearly")}
+            {/* « jusqu'à », et non « −18 % » sec : la remise vaut bien 18 % sur
+                Atelier et sur chaque personne supplémentaire, mais 17,4 % sur le
+                premier siège Agence (684 au lieu de 828). Annoncer 18 % ferme
+                serait faux sur un des trois montants — et c'est celui que tout
+                le monde regarde en premier. */}
+            <span className="tarif-remise">{Txt("tarifs.remise-annuelle", "jusqu'à −18 %", "up to −18%")}</span>
+          </button>
+        </div>
+
         {/* ── LES TROIS OFFRES ──────────────────────────────────────────── */}
         <div className="tarif-offres">
           {OFFRES.map((o) => {
             const recommandee = o.cle === offreRecommandee.cle;
-            const sieges = o.parPersonne ? personnes : 1;
-            const montant = o.parPersonne ? o.prix * sieges : o.prix;
+            const sieges = o.degressive ? personnes : 1;
+            /* La carte affiche le prix d'UNE personne — le point d'entrée, pas
+               le total du visiteur. Le total, lui, est dans le calculateur, où
+               il correspond à des réponses. */
+            const base = o.degressive
+              ? (annuel ? TARIFS.agence.an.premiere : TARIFS.agence.mois.premiere)
+              : (annuel ? TARIFS.atelier.an : TARIFS.atelier.mois);
+            const baseMois = parMois(base);
+            const suivante = annuel ? TARIFS.agence.an.suivante : TARIFS.agence.mois.suivante;
             return (
               <Reveal key={o.cle} className={`tarif-carte${recommandee ? " est-recommandee" : ""}`}>
                 {recommandee && (
@@ -581,17 +616,24 @@ const Pricing = () => {
                 <h3 className="tarif-nom">{o.nom}</h3>
                 <p className="tarif-resume">{o.resume}</p>
                 <div className="tarif-prix">
-                  {o.prix === 0
+                  {!o.palier
                     ? <span className="tarif-montant">{Txt("tarifs.gratuit", "Gratuit", "Free")}</span>
                     : <>
-                        <span className="tarif-montant">{euros(o.prix)} €</span>
-                        <span className="tarif-unite">
-                          {o.parPersonne
-                            ? Txt("tarifs.par-mois-par-personne", "HT / mois et par personne", "excl. VAT / month per person")
-                            : Txt("tarifs.par-mois", "HT / mois", "excl. VAT / month")}
-                        </span>
+                        {o.degressive && (
+                          <span className="tarif-apartir">{Txt("tarifs.a-partir-de", "À partir de", "From")}</span>
+                        )}
+                        <span className="tarif-montant">{euros(baseMois)} €</span>
+                        <span className="tarif-unite">{Txt("tarifs.ht-mois-court", "HT / mois", "excl. VAT / month")}</span>
                       </>}
                 </div>
+                {o.palier && (
+                  <p className="tarif-detail">
+                    {annuel && L(`facturé ${euros(base)} € HT par an`, `billed €${euros(base)} excl. VAT per year`)}
+                    {annuel && o.degressive && <br/>}
+                    {o.degressive && L(`puis ${euros(suivante)} € par personne supplémentaire${annuel ? " et par an" : ""}, jusqu'à 4 personnes`,
+                                       `then €${euros(suivante)} per additional person${annuel ? " per year" : ""}, up to 4 people`)}
+                  </p>
+                )}
                 <ul className="tarif-quantites">
                   {o.quantites.map((q, i) => (
                     <li key={i}><Icon name="check" size={13}/><span>{q}</span></li>
@@ -605,9 +647,6 @@ const Pricing = () => {
                     {paiement === "envoi"
                       ? Txt("tarifs.ouverture", "Ouverture…", "Opening…")
                       : Txt("tarifs.s-abonner", "S'abonner", "Subscribe")}
-                    {o.parPersonne && sieges > 1 && (
-                      <span className="tarif-cta-detail"> · {euros(montant)} € {Txt("tarifs.par-mois-court", "HT/mois", "excl. VAT/mo")}</span>
-                    )}
                   </a>
                 ) : (
                   <a href={SIGNUP} className="btn btn-ghost tarif-cta">
@@ -628,10 +667,16 @@ const Pricing = () => {
           </div>
         )}
 
-        {/* ── LE CALCULATEUR ────────────────────────────────────────────── */}
+        {/* ── LE CALCULATEUR, EN UN SEUL BLOC ───────────────────────────────
+            Le prix et l'estimation de gain vivaient dans deux encarts séparés
+            par un défilement. La comparaison entre les deux est TOUT l'argument,
+            et elle ne se faisait jamais dans l'œil du visiteur : il fallait se
+            souvenir du premier chiffre en lisant le second. Les deux sont
+            désormais l'un au-dessus de l'autre, en face des curseurs qui les
+            produisent. */}
         <Reveal className="calc">
           <div className="calc-entree">
-            <h3>{Txt("tarifs.calc-titre", "Votre prix, en deux questions", "Your price, in two questions")}</h3>
+            <h3>{Txt("tarifs.calc-titre", "Votre prix, et ce que Léo vous fait gagner", "Your price, and what Léo saves you")}</h3>
 
             <div className="calc-champ">
               <label htmlFor="calc-personnes">{Txt("tarifs.calc-personnes", "Combien êtes-vous dans l'agence ?", "How many of you are in the practice?")}</label>
@@ -661,49 +706,14 @@ const Pricing = () => {
                   "Live projects, not archived ones: archiving a finished project frees a slot, and you keep access to everything you have done.")}
               </p>
             </div>
-          </div>
 
-          <div className="calc-sortie">
-            <div className="calc-offre">{Txt("tarifs.calc-votre-offre", "Votre offre", "Your plan")}</div>
-            <div className="calc-nom">{offreRecommandee.nom}</div>
-            <div className="calc-montant">
-              {mensuel === 0
-                ? Txt("tarifs.gratuit", "Gratuit", "Free")
-                : <>{euros(mensuel)} <span>€ {Txt("tarifs.ht-mois", "HT / mois", "excl. VAT / month")}</span></>}
+            <div className="calc-separateur">
+              {Txt("tarifs.calc-leo", "Ce que vous confiez à Léo", "What you give Léo")}
             </div>
-            {mensuel > 0 && (
-              <div className="calc-annuel">
-                {/* Multiplication, pas une offre : tant que la remise annuelle
-                    n'est pas confirmée ET vérifiée dans Stripe, on n'ouvre
-                    aucun parcours annuel. */}
-                {L(`soit ${euros(mensuel * 12)} € HT par an`, `that is ${euros(mensuel * 12)} € excl. VAT per year`)}
-              </div>
-            )}
-            {offreRecommandee.parPersonne && personnes > 1 && (
-              <div className="calc-detail">{L(`${euros(offreRecommandee.prix)} € × ${personnes} personnes`, `€${euros(offreRecommandee.prix)} × ${personnes} people`)}</div>
-            )}
-            {offreRecommandee.cle === "decouverte" && (
-              <p className="calc-note calc-note-libre">
-                {Txt("tarifs.calc-decouverte",
-                  "Un seul projet à la fois vous suffit : l'offre gratuite le couvre entièrement, sans limite de durée et sans carte bancaire.",
-                  "One project at a time is enough for you: the free plan covers it entirely, with no time limit and no payment card.")}
-              </p>
-            )}
-          </div>
-        </Reveal>
-
-        {/* ── L'ESTIMATION DE TEMPS ─────────────────────────────────────────
-            Le calcul est affiché en toutes lettres et l'hypothèse est réglable.
-            C'est la seule forme honnête d'un tel encart : on ne dit pas au
-            visiteur ce qu'il gagnera, on lui montre l'opération qu'il peut
-            refaire — et contredire. */}
-        <Reveal className="calc calc-temps">
-          <div className="calc-entree">
-            <h3>{Txt("tarifs.temps-titre", "Ce que Léo peut vous faire gagner", "What Léo may save you")}</h3>
             <p className="calc-chapo">
               {Txt("tarifs.temps-chapo",
-                "Léo lit vos pièces écrites — CCTP, descriptifs, DPGF — et en sort les prescriptions, les matériaux, les prix et les intervenants. Le temps que ça représente, vous le connaissez mieux que nous : ajustez les trois valeurs.",
-                "Léo reads your written documents — specifications, schedules of works, bills of quantities — and extracts requirements, materials, prices and parties. You know better than we do what that represents: adjust the three values.")}
+                "Léo lit vos pièces écrites — CCTP, descriptifs, DPGF — et en sort les prescriptions, les matériaux, les prix et les intervenants.",
+                "Léo reads your written documents — specifications, schedules of works, bills of quantities — and extracts requirements, materials, prices and parties.")}
             </p>
 
             <div className="calc-champ">
@@ -711,7 +721,7 @@ const Pricing = () => {
                 {Txt("tarifs.temps-docs", "Documents confiés à Léo par mois", "Documents given to Léo each month")}
                 <b>{docs}</b>
               </label>
-              <input id="calc-docs" type="range" min="1" max="200" value={docs}
+              <input id="calc-docs" type="range" min="1" max="20" value={docs}
                      onChange={(e) => setDocs(Number(e.target.value))}/>
             </div>
 
@@ -731,6 +741,9 @@ const Pricing = () => {
               </label>
               <input id="calc-heures" type="range" min="0.25" max="4" step="0.25" value={heuresParDoc}
                      onChange={(e) => setHeuresParDoc(Number(e.target.value))}/>
+              {/* Cette phrase est la raison pour laquelle l'encart est honnête.
+                  Elle ne doit pas disparaître : sans elle, un chiffre réglable
+                  redevient une affirmation. */}
               <p className="calc-note">
                 {Txt("tarifs.temps-hypothese",
                   "C'est une hypothèse, pas une mesure : nous n'avons pas relevé ce chiffre chez nos clients. Réglez-le sur ce que vous constatez.",
@@ -740,16 +753,51 @@ const Pricing = () => {
           </div>
 
           <div className="calc-sortie">
-            <div className="calc-offre">{Txt("tarifs.temps-resultat", "Estimation", "Estimate")}</div>
-            <div className="calc-montant">{euros(valeurGagnee)} <span>€ {Txt("tarifs.ht-mois", "HT / mois", "excl. VAT / month")}</span></div>
-            <div className="calc-operation">
-              {L(`${docs} documents × ${heuresParDoc} h × ${taux} € = ${euros(heuresGagnees)} h, soit ${euros(valeurGagnee)} €`,
-                 `${docs} documents × ${heuresParDoc} h × €${taux} = ${euros(heuresGagnees)} h, that is €${euros(valeurGagnee)}`)}
+            <div className="calc-ligne">
+              <div className="calc-offre">{Txt("tarifs.calc-votre-abonnement", "Votre abonnement", "Your subscription")}</div>
+              <div className="calc-nom">{offreRecommandee.nom}</div>
+              <div className="calc-montant">
+                {coutRecommande.mois === 0
+                  ? Txt("tarifs.gratuit", "Gratuit", "Free")
+                  : <>{euros(coutRecommande.mois)} <span>€ {Txt("tarifs.ht-mois", "HT / mois", "excl. VAT / month")}</span></>}
+              </div>
+              {annuel && coutRecommande.periode > 0 && (
+                <div className="calc-annuel">
+                  {L(`facturé ${euros(coutRecommande.periode)} € HT par an`, `billed €${euros(coutRecommande.periode)} excl. VAT per year`)}
+                </div>
+              )}
+              {!annuel && offreRecommandee.degressive && personnes > 1 && (
+                <div className="calc-detail">
+                  {L(`${euros(TARIFS.agence.mois.premiere)} € + ${personnes - 1} × ${euros(TARIFS.agence.mois.suivante)} €`,
+                     `€${euros(TARIFS.agence.mois.premiere)} + ${personnes - 1} × €${euros(TARIFS.agence.mois.suivante)}`)}
+                </div>
+              )}
             </div>
+
+            <div className="calc-ligne calc-ligne-gain">
+              <div className="calc-offre">{Txt("tarifs.calc-gain", "Ce que Léo vous fait gagner", "What Léo saves you")}</div>
+              {/* Pas de « HT » ici : hors-taxes n'a aucun sens sur du temps
+                  gagné. Il ne figure que sur les prix. */}
+              <div className="calc-montant calc-montant-gain">
+                ≈ {euros(valeurGagnee)} <span>€ {Txt("tarifs.par-mois-simple", "/ mois", "/ month")}</span>
+              </div>
+              <div className="calc-operation">
+                {L(`${docs} documents × ${heuresParDoc} h × ${taux} € = ${euros(heuresGagnees)} h par mois`,
+                   `${docs} documents × ${heuresParDoc} h × €${taux} = ${euros(heuresGagnees)} h per month`)}
+              </div>
+            </div>
+
             {depasseLectures && (
               <p className="calc-note calc-note-libre">
-                {L(`Attention : l'offre ${offreRecommandee.nom} couvre ${offreRecommandee.lectures} lectures par mois. Au-delà, il faut l'offre supérieure.`,
-                   `Note: the ${offreRecommandee.nom} plan covers ${offreRecommandee.lectures} readings per month. Beyond that, you need the next plan.`)}
+                {L(`L'offre ${offreRecommandee.nom} couvre ${offreRecommandee.lectures} lectures par mois.`,
+                   `The ${offreRecommandee.nom} plan covers ${offreRecommandee.lectures} readings per month.`)}
+              </p>
+            )}
+            {offreRecommandee.cle === "decouverte" && (
+              <p className="calc-note calc-note-libre">
+                {Txt("tarifs.calc-decouverte",
+                  "Un seul projet à la fois vous suffit : l'offre gratuite le couvre entièrement, sans limite de durée et sans carte bancaire.",
+                  "One project at a time is enough for you: the free plan covers it entirely, with no time limit and no payment card.")}
               </p>
             )}
             <div className="calc-mentions">{Txt("tarifs.mentions", "Montants HT · Estimation indicative", "Amounts excl. VAT · Indicative estimate")}</div>

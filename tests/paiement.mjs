@@ -6,14 +6,14 @@
  *
  * Ce bouton était un lien vers l'inscription. Il appelle désormais un point
  * d'entrée public qui ouvre Stripe Checkout, et il transporte le choix du
- * visiteur : palier de stockage, périodicité, nombre de sièges.
+ * visiteur : l'offre, et le nombre de personnes.
  *
  * Trois façons de casser ça sans que rien ne le signale :
  *
  *   · envoyer un MONTANT au lieu d'un palier — le serveur ne le lirait pas,
  *     mais la page se mettrait à croire qu'elle fixe les prix ;
- *   · envoyer le mauvais palier parce que la lecture du bouton de stockage a
- *     dérivé — le visiteur paierait autre chose que ce qu'il a coché ;
+ *   · envoyer le mauvais palier parce que la lecture de l'offre a dérivé — le
+ *     visiteur paierait autre chose que ce qu'il a choisi ;
  *   · avaler une erreur du serveur en silence — le visiteur cliquerait dans le
  *     vide sans jamais savoir pourquoi.
  *
@@ -24,6 +24,13 @@ import { chromium } from 'playwright-core';
 import { demarrer } from './serveur.mjs';
 
 const POINT = '**/functions/v1/creer-paiement-public';
+
+/* `.tarif-cta` désigne les TROIS boutons, et le premier est celui de l'offre
+   gratuite : il ne déclenche aucun paiement. Un clic dessus ne produisait donc
+   ni appel, ni message d'erreur, et dix-huit contrôles se sont mis à échouer
+   pour la meilleure des raisons — le test cliquait au mauvais endroit.
+   On vise explicitement une offre payante. */
+const CTA_PAYANT = '.tarif-carte:nth-child(2) .tarif-cta';
 
 let echecs = 0;
 const ok = (bon, texte) => { console.log(`   ${bon ? '✅' : '❌'} ${texte}`); if (!bon) echecs++; };
@@ -69,22 +76,33 @@ console.log(`\n===== ce qui part quand on clique — ${route} =====`);
 {
   const { page, envois } = await ouvrir({ status: 200, corps: { url: 'https://checkout.stripe.com/c/pay/cs_test' } }, true, route);
 
-  // Choix délibérément différent des valeurs par défaut : 300 Go, annuel,
-  // 3 sièges. Un test qui ne change rien ne prouve rien.
-  await page.click('.p-tier:nth-child(3)');
-  await page.click('.pricing-toggle button:nth-child(2)');
-  const plus = await page.$$('.p-seat-btn');
-  await plus[1].click(); await plus[1].click();
-  await page.waitForTimeout(400);
+  /* Choix délibérément différent des valeurs par défaut : l'offre Agence, à
+     trois personnes. Un test qui ne change rien ne prouve rien.
 
-  await page.click('.pricing-cta');
+     L'ancien configurateur — trois paliers de stockage, un compteur de sièges —
+     n'existe plus. On facture des projets et des personnes, et le palier 300
+     est une offre retirée de la vente. Ce test suit la nouvelle page ; ce
+     qu'il PROUVE n'a pas changé. */
+  await page.click('.calc-bouton:nth-child(3)');          // 3 personnes
+  await page.waitForTimeout(300);
+  await page.evaluate(() => {
+    const carte = [...document.querySelectorAll('.tarif-carte')]
+      .find((c) => /Agence|Practice/.test(c.querySelector('.tarif-nom')?.textContent || ''));
+    carte.querySelector('.tarif-cta').click();   // littéral : on est DANS le navigateur
+  });
   await page.waitForTimeout(1200);
 
   ok(envois.length === 1, `un seul appel émis (${envois.length})`);
   const corps = envois[0] || {};
-  ok(corps.storage === 300, `le palier suit le bouton coché (storage = ${corps.storage})`);
-  ok(corps.billing === 'yearly', `la périodicité suit la bascule (billing = ${corps.billing})`);
-  ok(corps.seats === 3, `les sièges suivent le compteur (seats = ${corps.seats})`);
+  ok(corps.storage === 150, `le palier suit l'offre choisie (storage = ${corps.storage})`);
+  /* La bascule existe désormais, et elle est sur « Mensuel » à l'ouverture :
+     on n'y a pas touché avant de cliquer, donc c'est bien « monthly » qui doit
+     partir. Si la valeur par défaut basculait en douce, l'écran annoncerait
+     49 € et le tunnel encaisserait un engagement d'un an.
+     (Que la bascule change réellement `billing`, c'est tarifs.mjs qui l'éprouve,
+     dans les deux sens et sur les deux offres payantes.) */
+  ok(corps.billing === 'monthly', `sans toucher à la bascule, la périodicité est mensuelle (billing = ${corps.billing})`);
+  ok(corps.seats === 3, `les personnes suivent le calculateur (seats = ${corps.seats})`);
 
   // Le point crucial : aucun montant ne doit sortir d'ici.
   const interdits = ['price', 'amount', 'total', 'montant', 'prix', 'price_id'];
@@ -101,10 +119,12 @@ console.log(`\n===== ce qui part quand on clique — ${route} =====`);
 console.log('\n===== le double-clic ne consomme pas deux tentatives =====');
 {
   const { page, envois } = await ouvrir({ status: 200, corps: { url: 'https://checkout.stripe.com/c/pay/cs_test' } });
-  await page.evaluate(() => {
-    const b = document.querySelector('.pricing-cta');
+  /* Le sélecteur est passé en ARGUMENT : le corps de la fonction s'exécute
+     dans le navigateur, où les constantes de ce fichier n'existent pas. */
+  await page.evaluate((sel) => {
+    const b = document.querySelector(sel);
     b.click(); b.click(); b.click();
-  });
+  }, CTA_PAYANT);
   await page.waitForTimeout(1200);
   // Le plafond est de cinq ouvertures par heure : trois clics nerveux en
   // brûleraient trois si rien ne les retenait.
@@ -130,16 +150,16 @@ const CAS = [
 ];
 for (const [status, code, attendu] of CAS) {
   const { page } = await ouvrir({ status, corps: { error: code } });
-  await page.click('.pricing-cta');
+  await page.click(CTA_PAYANT);
   await page.waitForTimeout(900);
   const texte = await page.$eval('.pricing-erreur', (e) => e.textContent).catch(() => null);
   ok(texte !== null && attendu.test(texte),
      `${code} → « ${texte ? texte.slice(0, 52) : 'AUCUN MESSAGE'} »`);
   // Le bouton doit rester cliquable : une erreur passagère ne condamne pas la page.
-  const rejouable = await page.evaluate(() => {
-    const b = document.querySelector('.pricing-cta');
+  const rejouable = await page.evaluate((sel) => {
+    const b = document.querySelector(sel);
     return b && getComputedStyle(b).pointerEvents !== 'none';
-  });
+  }, CTA_PAYANT);
   ok(rejouable, `   et le bouton reste cliquable après ${code}`);
   await page.close();
 }
@@ -172,7 +192,7 @@ for (const [horsLigne, attendu, interdit] of [
     window.ALBA_PAIEMENT_DIRECT = true;
     Object.defineProperty(window.navigator, 'onLine', { get: () => !h, configurable: true });
   }, horsLigne);
-  await page.click('.pricing-cta');
+  await page.click(CTA_PAYANT);
   await page.waitForTimeout(1200);
   const texte = await page.$eval('.pricing-erreur', (e) => e.textContent).catch(() => null);
   ok(texte !== null && attendu.test(texte) && !interdit.test(texte),
@@ -183,11 +203,15 @@ for (const [horsLigne, attendu, interdit] of [
 console.log('\n===== la seconde porte reste ouverte =====');
 {
   const { page } = await ouvrir({ status: 200, corps: { url: 'https://checkout.stripe.com/c/pay/cs_test' } });
-  const porte = await page.$eval('.pricing-porte-2', (e) => e.getAttribute('href')).catch(() => null);
+  /* La « seconde porte » — le lien discret vers l'inscription, pour qui ne veut
+     pas payer aujourd'hui. Elle s'appelait .pricing-porte-2 dans l'ancienne
+     carte ; c'est .tarif-porte désormais. Ce qu'elle garantit n'a pas changé :
+     personne ne doit se heurter à un mur. */
+  const porte = await page.$eval('.tarif-porte a', (e) => e.getAttribute('href')).catch(() => null);
   ok(porte !== null && porte.includes('/inscription'),
      `un lien vers l'inscription subsiste (${porte || 'ABSENT'})`);
   // Sans JavaScript, le bouton principal doit rester un lien utilisable.
-  const repli = await page.$eval('.pricing-cta', (e) => e.getAttribute('href')).catch(() => null);
+  const repli = await page.$eval(CTA_PAYANT, (e) => e.getAttribute('href')).catch(() => null);
   ok(repli !== null && repli.includes('/inscription'),
      `le bouton garde un href de repli pour les visiteurs sans JavaScript`);
   await page.close();
@@ -213,7 +237,7 @@ console.log('\n===== forcé à false : on retombe sur l\'inscription =====');
   // COMPORTEMENT de repli qu'on éprouve, pas la valeur du jour.
   await page.evaluate(() => { window.ALBA_PAIEMENT_DIRECT = false; });
 
-  await page.click('.pricing-cta').catch(() => {});
+  await page.click(CTA_PAYANT).catch(() => {});
   await page.waitForTimeout(900);
   ok(envois.length === 0, `aucun appel au tunnel de paiement (${envois.length})`);
   // Le point qui compte : le bouton ne doit pas être inerte, il doit MENER

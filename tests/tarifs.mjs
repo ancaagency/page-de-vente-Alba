@@ -73,42 +73,98 @@ async function regler(page, personnes, projets) {
   await page.waitForTimeout(250);
 }
 
+/** Bascule la périodicité. `annuel` vrai = tarif à l'année. */
+async function periodicite(page, annuel) {
+  await page.evaluate((a) => {
+    const b = [...document.querySelectorAll('.tarif-bascule-btn')][a ? 1 : 0];
+    b.click();
+  }, annuel);
+  await page.waitForTimeout(250);
+}
+
+/** Ce que la sortie du calculateur affiche, tel que le visiteur le lit. */
+const lireSortie = (page) => page.evaluate(() => ({
+  nom: document.querySelector('.calc-nom')?.textContent.trim() || '',
+  /* Il y a DEUX .calc-montant depuis la fusion des deux encarts — le prix et
+     le gain. Prendre le premier venu marcherait aujourd'hui et se tromperait
+     le jour où l'ordre change. On nomme celui qu'on veut. */
+  montant: document.querySelector('.calc-montant:not(.calc-montant-gain)')?.textContent.replace(/\s/g, '') || '',
+  annuel: document.querySelector('.calc-annuel')?.textContent.replace(/\s/g, '') || '',
+  detail: document.querySelector('.calc-detail')?.textContent.replace(/\s/g, '') || '',
+  gain: document.querySelector('.calc-montant-gain')?.textContent.replace(/\s/g, '') || '',
+}));
+
 /* ═══════════════════════════════════════════════════════════════════════════
-   1 · LE CALCULATEUR DÉSIGNE-T-IL LA BONNE OFFRE ?
+   1 · LE CALCULATEUR DÉSIGNE-T-IL LA BONNE OFFRE, AU BON PRIX ?
+   ═══════════════════════════════════════════════════════════════════════════
+   AGENCE N'EST PAS UN PRIX PAR PERSONNE. Elle l'a été sur cette page pendant
+   une journée : la carte annonçait « 69 € par personne », soit 276 € pour
+   quatre, quand le tarif réel est dégressif — 69 puis 39 — soit 186 €. La page
+   nous faisait paraître 48 % plus chers que nous ne sommes, sur exactement le
+   profil de client qu'on vise. Ces montants sont ceux de Stripe ; ils sont
+   écrits ici un par un parce que rien d'autre ne fait autorité.
    ═══════════════════════════════════════════════════════════════════════════ */
-console.log('\n===== le calculateur =====');
+console.log('\n===== le calculateur, au mois =====');
 {
   const { ctx, page } = await ouvrirTarifs();
-  /* Les quatre cas de la règle, bornes comprises. La borne à 5 projets est
-     celle qui se déplace le plus facilement d'un refactor : c'est elle qui
-     sépare 49 € de 69 €. */
+  /* Bornes comprises. Celle de 5 projets est la plus fragile d'un refactor :
+     c'est elle qui sépare Atelier d'Agence. */
   const CAS = [
     { personnes: 1, projets: 1,  offre: 'Découverte', prix: 0,   quoi: 'seul, un seul projet → l’offre gratuite d’abord' },
     { personnes: 1, projets: 2,  offre: 'Atelier',    prix: 49,  quoi: 'seul, deux projets' },
     { personnes: 1, projets: 5,  offre: 'Atelier',    prix: 49,  quoi: 'seul, cinq projets — la borne haute' },
     { personnes: 1, projets: 6,  offre: 'Agence',     prix: 69,  quoi: 'seul, six projets — on bascule' },
     { personnes: 1, projets: 30, offre: 'Agence',     prix: 69,  quoi: 'seul, trente projets' },
-    { personnes: 2, projets: 1,  offre: 'Agence',     prix: 138, quoi: 'deux personnes, un projet' },
-    { personnes: 4, projets: 12, offre: 'Agence',     prix: 276, quoi: 'quatre personnes' },
+    { personnes: 2, projets: 1,  offre: 'Agence',     prix: 108, quoi: 'deux personnes → 69 + 39' },
+    { personnes: 3, projets: 12, offre: 'Agence',     prix: 147, quoi: 'trois personnes → 69 + 2 × 39' },
+    { personnes: 4, projets: 12, offre: 'Agence',     prix: 186, quoi: 'quatre personnes → 69 + 3 × 39' },
   ];
   for (const c of CAS) {
     await regler(page, c.personnes, c.projets);
-    const vu = await page.evaluate(() => ({
-      nom: document.querySelector('.calc-nom')?.textContent.trim() || '',
-      montant: document.querySelector('.calc-montant')?.textContent.replace(/\s/g, '') || '',
-      annuel: document.querySelector('.calc-annuel')?.textContent.replace(/\s/g, '') || '',
-    }));
+    const vu = await lireSortie(page);
     const bonNom = vu.nom === c.offre;
-    const bonPrix = c.prix === 0
-      ? /Gratuit/i.test(vu.montant)
-      : vu.montant.startsWith(String(c.prix));
-    /* L'équivalent annuel est une multiplication affichée, pas une offre :
-       tant que la remise n'est pas confirmée ET vérifiée dans Stripe, il ne
-       doit jamais valoir autre chose que douze fois le mensuel. */
-    const bonAnnuel = c.prix === 0 || vu.annuel.includes(String(c.prix * 12));
-    ok(bonNom && bonPrix && bonAnnuel,
-       `${c.quoi} → ${vu.nom} ${vu.montant}${bonNom && bonPrix && bonAnnuel ? '' : `  ATTENDU ${c.offre} ${c.prix || 'gratuit'}`}`);
+    const bonPrix = c.prix === 0 ? /Gratuit/i.test(vu.montant) : vu.montant.startsWith(String(c.prix));
+    /* Au mois, aucune ligne « facturé … par an » : elle n'appartient qu'au
+       tarif annuel, et l'afficher ici ferait croire à un engagement. */
+    const sansAnnuel = vu.annuel === '';
+    ok(bonNom && bonPrix && sansAnnuel,
+       `${c.quoi} → ${vu.nom} ${vu.montant}${bonNom && bonPrix && sansAnnuel ? '' : `  ATTENDU ${c.offre} ${c.prix || 'gratuit'}${sansAnnuel ? '' : ', sans ligne annuelle'}`}`);
   }
+  /* Le détail de l'addition est affiché : « 69 € + 3 × 39 € ». Un total
+     dégressif qu'on ne peut pas refaire de tête ressemble à une erreur. */
+  await regler(page, 4, 12);
+  const { detail } = await lireSortie(page);
+  ok(/69/.test(detail) && /3×39/.test(detail), `l’addition est montrée — « ${detail} »`);
+  await ctx.close();
+}
+
+console.log('\n===== le calculateur, à l’année =====');
+{
+  const { ctx, page } = await ouvrirTarifs();
+  await periodicite(page, true);
+  /* Ce que le visiteur paie CHAQUE MOIS reste le grand chiffre, et le total
+     annuel est dit juste dessous. L'inverse — annoncer 1 836 € en gros —
+     comparerait un montant annuel à un prix mensuel concurrent. */
+  const CAS = [
+    { personnes: 1, projets: 2,  offre: 'Atelier', mois: 40,  an: 480,  quoi: 'Atelier à l’année → 40 €/mois, facturé 480 €' },
+    { personnes: 2, projets: 1,  offre: 'Agence',  mois: 89,  an: 1068, quoi: 'Agence 2 pers. → 684 + 384 = 1 068 €/an' },
+    { personnes: 4, projets: 12, offre: 'Agence',  mois: 153, an: 1836, quoi: 'Agence 4 pers. → 1 836 €/an, soit 153 €/mois' },
+  ];
+  for (const c of CAS) {
+    await regler(page, c.personnes, c.projets);
+    const vu = await lireSortie(page);
+    const bonNom = vu.nom === c.offre;
+    const bonMois = vu.montant.startsWith(String(c.mois));
+    const bonAn = vu.annuel.includes(String(c.an));
+    ok(bonNom && bonMois && bonAn,
+       `${c.quoi} → ${vu.nom} ${vu.montant} / ${vu.annuel}${bonNom && bonMois && bonAn ? '' : `  ATTENDU ${c.offre} ${c.mois} et ${c.an}`}`);
+  }
+  /* La remise est annoncée « jusqu'à » : elle vaut 18 % sur Atelier et sur
+     chaque personne supplémentaire, mais 17,4 % sur le premier siège Agence
+     (684 au lieu de 828). « −18 % » tout court serait faux sur le montant que
+     tout le monde regarde en premier. */
+  const remise = await page.evaluate(() => document.querySelector('.tarif-remise')?.textContent.trim() || '');
+  ok(/jusqu|up to/i.test(remise), `la remise est annoncée comme un maximum — « ${remise} »`);
   await ctx.close();
 }
 
@@ -124,6 +180,12 @@ console.log('\n===== ce qui part au serveur de paiement =====');
     { carte: 'Agence',  personnes: 1, attendu: { storage: 150, billing: 'monthly', seats: 1 } },
     { carte: 'Agence',  personnes: 3, attendu: { storage: 150, billing: 'monthly', seats: 3 } },
     { carte: 'Agence',  personnes: 4, attendu: { storage: 150, billing: 'monthly', seats: 4 } },
+    /* La périodicité voyage dans `billing`. Les tarifs annuels existaient dans
+       Stripe et étaient inatteignables depuis cette page : personne ne pouvait
+       les acheter. Si la bascule cessait d'être lue, l'écran annoncerait 40 €
+       et le tunnel encaisserait 49 € — l'écart le plus difficile à voir. */
+    { carte: 'Atelier', personnes: 1, annuel: true, attendu: { storage: 50,  billing: 'yearly', seats: 1 } },
+    { carte: 'Agence',  personnes: 4, annuel: true, attendu: { storage: 150, billing: 'yearly', seats: 4 } },
   ];
   for (const c of CAS) {
     const { ctx, page } = await ouvrirTarifs();
@@ -132,6 +194,7 @@ console.log('\n===== ce qui part au serveur de paiement =====');
       envoye = route.request().postDataJSON();
       await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ url: 'about:blank#stripe' }) });
     });
+    if (c.annuel) await periodicite(page, true);
     await regler(page, c.personnes, 3);
     await page.evaluate((nom) => {
       const carte = [...document.querySelectorAll('.tarif-carte')]
@@ -140,7 +203,7 @@ console.log('\n===== ce qui part au serveur de paiement =====');
     }, c.carte);
     await page.waitForTimeout(900);
     const juste = envoye && JSON.stringify(envoye) === JSON.stringify(c.attendu);
-    ok(juste, `${c.carte}, ${c.personnes} personne(s) → ${JSON.stringify(envoye)}${juste ? '' : `  ATTENDU ${JSON.stringify(c.attendu)}`}`);
+    ok(juste, `${c.carte}, ${c.personnes} pers., ${c.annuel ? 'annuel ' : 'mensuel'} → ${JSON.stringify(envoye)}${juste ? '' : `  ATTENDU ${JSON.stringify(c.attendu)}`}`);
     await ctx.close();
   }
 
@@ -224,18 +287,38 @@ console.log('\n===== l’estimation de temps =====');
     el.dispatchEvent(new Event('input', { bubbles: true }));
   }, { id, v });
 
+  /* ── LES VALEURS PAR DÉFAUT ──────────────────────────────────────────────
+     Elles étaient de 20 documents par mois : un CCTP par jour ouvré, un usage
+     qu'aucun architecte seul ne reconnaît. Le résultat affichait 1 500 € de
+     gain, trente fois le prix de l'offre — un chiffre auquel personne ne croit
+     ne convainc pas, il jette le doute sur tout le reste de la page.
+     Quatre documents donnent 300 €, six fois le prix d'Atelier. C'est le
+     réglage que 95 % des visiteurs verront : il est éprouvé ici. */
+  const defauts = await page.evaluate(() => ({
+    docs: document.getElementById('calc-docs')?.value,
+    taux: document.getElementById('calc-taux')?.value,
+    heures: document.getElementById('calc-heures')?.value,
+    gain: document.querySelector('.calc-montant-gain')?.textContent.replace(/\s/g, '') || '',
+  }));
+  ok(defauts.docs === '4' && defauts.taux === '75' && defauts.heures === '1',
+     `valeurs par défaut : ${defauts.docs} doc × ${defauts.heures} h × ${defauts.taux} € (attendu 4 × 1 × 75)`);
+  ok(/300/.test(defauts.gain), `par défaut, le gain affiché vaut 300 € — « ${defauts.gain} »`);
+  /* Pas de « HT » sur cette ligne : hors-taxes n'a aucun sens sur du temps
+     gagné, et le mot y transformait une estimation en facture. */
+  ok(!/HT/.test(defauts.gain), `le gain ne porte pas « HT » — « ${defauts.gain} »`);
+
   await regle('calc-docs', 20);
   await regle('calc-taux', 80);
   await regle('calc-heures', 1.5);
   await page.waitForTimeout(300);
   const vu = await page.evaluate(() => ({
-    montant: document.querySelector('.calc-temps .calc-montant')?.textContent.replace(/\s/g, '') || '',
+    montant: document.querySelector('.calc-montant-gain')?.textContent.replace(/\s/g, '') || '',
     operation: document.querySelector('.calc-operation')?.textContent.replace(/\s/g, '') || '',
     mentions: document.querySelector('.calc-mentions')?.textContent || '',
   }));
   /* 20 documents × 1,5 h × 80 € = 2 400 €. Le résultat est une multiplication
      de ce que le visiteur a saisi, et rien d'autre. */
-  ok(vu.montant.startsWith('2400'), `20 doc × 1,5 h × 80 € → ${vu.montant} (attendu 2 400)`);
+  ok(/2400/.test(vu.montant), `20 doc × 1,5 h × 80 € → ${vu.montant} (attendu 2 400)`);
   /* L'opération est AFFICHÉE : c'est ce qui permet au visiteur de la refaire,
      et de la contredire. Un résultat sans son calcul est une affirmation. */
   ok(/20documents/.test(vu.operation) && /1\.5h/.test(vu.operation) && /80/.test(vu.operation),
@@ -247,6 +330,19 @@ console.log('\n===== l’estimation de temps =====');
      d'une promesse. Un chiffre figé serait une affirmation déguisée. */
   const reglable = await page.evaluate(() => !!document.getElementById('calc-heures'));
   ok(reglable, `le temps par document est réglable par le visiteur`);
+
+  /* ── UN SEUL BLOC ────────────────────────────────────────────────────────
+     Le prix et le gain vivaient dans deux encarts que séparait un défilement.
+     La comparaison entre les deux est TOUT l'argument, et elle ne se faisait
+     jamais dans l'œil du visiteur : il fallait se souvenir du premier chiffre
+     en lisant le second. Les redissocier annulerait la refonte sans qu'aucun
+     autre contrôle ne s'en aperçoive. */
+  const disposition = await page.evaluate(() => ({
+    blocs: document.querySelectorAll('#pricing .calc').length,
+    ensemble: document.querySelectorAll('#pricing .calc .calc-ligne').length,
+  }));
+  ok(disposition.blocs === 1 && disposition.ensemble === 2,
+     `prix et gain dans le même encart (${disposition.blocs} bloc, ${disposition.ensemble} lignes)`);
   await ctx.close();
 }
 

@@ -499,59 +499,92 @@ var Testimonials = function Testimonials() {
 };
 
 /* ============================================================================
-   PRICING — trois offres, et un calculateur plutôt qu'un tableau
+   PRICING — trois offres, une bascule, et un seul bloc de calcul
    ============================================================================
-   CE QU'ON A CESSÉ DE VENDRE, ET POURQUOI
+   CE QU'ON A CESSÉ DE VENDRE
 
-   La grille précédente affichait 49 / 69 / 89 € pour 50, 150 et 300 Go. Les
-   trois offres ne différaient QUE par le stockage. Mesure faite en production
-   le 9 septembre 2026 : l'ensemble des comptes occupait 0,143 Go. L'offre
-   d'entrée en promettait donc trois cent cinquante fois plus que tout ce qui
-   existait. Un plafond que personne n'atteindra jamais n'est pas une offre
-   d'entrée : c'est une échelle que personne ne gravira, et donc un axe de prix
-   mort.
-
-   On facture désormais ce qui varie réellement d'un architecte à l'autre : le
-   nombre de projets menés de front, et le nombre de personnes.
+   La grille affichait 49 / 69 / 89 € pour 50, 150 et 300 Go : les trois offres
+   ne différaient QUE par le stockage. Mesure faite en production le 9 septembre
+   2026, l'ensemble des comptes occupait 0,143 Go — l'offre d'ENTRÉE promettait
+   350 fois plus que tout ce qui existait. Un plafond que personne n'atteindra
+   jamais n'est pas une offre d'entrée : c'est un axe de prix mort.
 
    ⚠️ LE MOT « STOCKAGE » NE DOIT REPARAÎTRE NULLE PART, ni les gigaoctets.
-   tests/tarifs.mjs le vérifie sur toutes les pages rendues.
+   tests/tarifs.mjs le vérifie sur toutes les pages rendues, métadonnées
+   comprises — c'est par là qu'il s'était échappé la première fois.
 
    ────────────────────────────────────────────────────────────────────────────
    LA RÈGLE D'OR
 
-   Toutes les fonctionnalités sont dans toutes les offres, dès le premier euro.
-   On ne borne que des QUANTITÉS. Aucune fonctionnalité n'est réservée à un
-   palier supérieur, et c'est écrit en toutes lettres sur la page : la
-   concurrence fait l'inverse, et un architecte qui a déjà été pris au piège
-   d'un « disponible à partir de l'offre Pro » le remarquera.
+   Toutes les fonctionnalités sont dans toutes les offres, y compris la
+   gratuite. On ne borne que des QUANTITÉS. C'est l'argument, il est donc écrit
+   en encart sous le titre : la concurrence réserve des fonctions aux paliers
+   hauts, et un architecte qui s'est déjà heurté à un « disponible à partir de
+   l'offre Pro » lira cette ligne deux fois.
 
    ────────────────────────────────────────────────────────────────────────────
-   CE QU'ON N'AFFICHE PAS
+   AGENCE N'EST PAS UN PRIX PAR PERSONNE
 
-   Aucun chiffre de performance. Pas de « 40 % de temps gagné », pas de « ROI
-   moyen ». Alba a trois clients payants et aucune mesure de ce genre : un
-   pourcentage affiché comme un fait serait une pratique commerciale trompeuse
-   au sens de l'article L121-2, pour un gain nul.
+   Elle l'a été sur cette page pendant une journée, et c'était faux : la carte
+   annonçait « 69 € par personne », soit 276 € pour quatre. Le tarif réel est
+   dégressif — 69 € pour la première personne, 39 € pour chacune des suivantes,
+   soit 186 € pour quatre. La page nous faisait paraître 48 % plus chers que
+   nous ne sommes, sur exactement le profil de client qu'on vise.
 
-   L'estimation de temps de la page est donc CALCULÉE à partir de ce que le
-   visiteur saisit, son hypothèse est réglable et affichée, et le résultat porte
-   la mention « estimation indicative ». C'est la seule forme honnête : on ne
-   lui annonce pas ce qu'il gagnera, on lui montre le calcul qu'il peut refaire.
+   Les six valeurs de la grille sont éprouvées une par une dans
+   tests/tarifs.mjs. Elles ne se déduisent d'aucune règle générale : ce sont
+   celles de Stripe, et rien d'autre ne fait autorité.
    ============================================================================ */
 var Pricing = function Pricing() {
-  /* ── LES TROIS OFFRES ─────────────────────────────────────────────────────
-     `palier` est ce qui part au serveur de paiement. Le champ s'appelle encore
-     « storage » dans le contrat de la fonction, pour des raisons historiques :
-     ce N'EST PAS un stockage, c'est un sélecteur d'offre, invisible du
-     visiteur. Il sera renommé plus tard, des deux côtés à la fois.
-     La valeur 300 est une ancienne offre qui n'est plus vendue : elle
-     n'apparaît nulle part ici, et ne doit jamais y revenir. */
+  /* ── LA GRILLE ────────────────────────────────────────────────────────────
+     Écrite en toutes lettres plutôt que calculée depuis un pourcentage : la
+     remise annuelle n'est pas uniforme (−18 % sur Atelier et sur la personne
+     supplémentaire, −17,4 % sur le premier siège Agence), et un prix déduit
+     d'une formule finirait par diverger de Stripe sans que personne ne le voie.
+     Ces montants sont ceux qui sont configurés là-bas. */
+  var TARIFS = {
+    atelier: {
+      mois: 49,
+      // 49 € HT / mois
+      an: 480 // 480 € HT / an, soit 40 € HT / mois
+    },
+    agence: {
+      mois: {
+        premiere: 69,
+        suivante: 39
+      },
+      an: {
+        premiere: 684,
+        suivante: 384
+      }
+    }
+  };
+  var _React$useState5 = React.useState(false),
+    _React$useState6 = _slicedToArray(_React$useState5, 2),
+    annuel = _React$useState6[0],
+    setAnnuel = _React$useState6[1];
+  var _React$useState7 = React.useState(1),
+    _React$useState8 = _slicedToArray(_React$useState7, 2),
+    personnes = _React$useState8[0],
+    setPersonnes = _React$useState8[1];
+  var _React$useState9 = React.useState(3),
+    _React$useState0 = _slicedToArray(_React$useState9, 2),
+    projets = _React$useState0[0],
+    setProjets = _React$useState0[1];
+
+  /** Total pour l'offre Agence, à `n` personnes, dans la périodicité courante. */
+  var totalAgence = function totalAgence(n) {
+    var t = annuel ? TARIFS.agence.an : TARIFS.agence.mois;
+    return t.premiere + t.suivante * Math.max(0, n - 1);
+  };
+  /** Ce que le visiteur paie chaque mois, quelle que soit la périodicité. */
+  var parMois = function parMois(totalPeriode) {
+    return Math.round(totalPeriode / (annuel ? 12 : 1));
+  };
   var OFFRES = [{
     cle: "decouverte",
     palier: null,
     // gratuite : aucun paiement
-    prix: 0,
     nom: Txt("tarifs.offre-decouverte", "Découverte", "Discovery"),
     resume: Txt("tarifs.decouverte-resume", "Pour voir ce que ça donne sur un vrai projet.", "To see what it does on a real project."),
     quantites: [Txt("tarifs.decouverte-q1", "1 projet, offert à vie", "1 project, free for ever"), Txt("tarifs.decouverte-q2", "1 personne", "1 person"), Txt("tarifs.decouverte-q3", "Léo : 10 lectures de documents et 300 questions par mois", "Léo: 10 document readings and 300 questions per month")],
@@ -559,7 +592,6 @@ var Pricing = function Pricing() {
   }, {
     cle: "atelier",
     palier: 50,
-    prix: 49,
     nom: Txt("tarifs.offre-atelier", "Atelier", "Studio"),
     resume: Txt("tarifs.atelier-resume", "Pour un architecte qui mène plusieurs affaires de front.", "For an architect running several jobs at once."),
     quantites: [Txt("tarifs.atelier-q1", "5 projets menés de front, archives illimitées", "5 live projects, unlimited archives"), Txt("tarifs.atelier-q2", "1 personne", "1 person"), Txt("tarifs.atelier-q3", "Léo : 50 lectures et 1 500 questions par mois", "Léo: 50 readings and 1,500 questions per month")],
@@ -567,56 +599,61 @@ var Pricing = function Pricing() {
   }, {
     cle: "agence",
     palier: 150,
-    prix: 69,
-    parPersonne: true,
+    degressive: true,
     nom: Txt("tarifs.offre-agence", "Agence", "Practice"),
     resume: Txt("tarifs.agence-resume", "Pour une équipe, jusqu'à quatre personnes.", "For a team, up to four people."),
     quantites: [Txt("tarifs.agence-q1", "Projets illimités", "Unlimited projects"), Txt("tarifs.agence-q2", "Jusqu'à 4 personnes", "Up to 4 people"), Txt("tarifs.agence-q3", "Léo : 200 lectures et 5 000 questions par mois", "Léo: 200 readings and 5,000 questions per month")],
     lectures: 200
   }];
 
-  /* ── LE CALCULATEUR ───────────────────────────────────────────────────────
-     Deux questions suffisent à désigner l'offre. Un tableau comparatif oblige
-     le visiteur à faire ce travail lui-même, colonne par colonne ; ici il
-     répond à ce qu'il sait de son agence et lit son prix. */
-  var _React$useState5 = React.useState(1),
-    _React$useState6 = _slicedToArray(_React$useState5, 2),
-    personnes = _React$useState6[0],
-    setPersonnes = _React$useState6[1];
-  var _React$useState7 = React.useState(3),
-    _React$useState8 = _slicedToArray(_React$useState7, 2),
-    projets = _React$useState8[0],
-    setProjets = _React$useState8[1];
-
   /* 1 personne et 1 projet : Découverte, qui est gratuite. On la propose
      d'abord — envoyer quelqu'un payer 49 € pour un usage que l'offre gratuite
      couvre entièrement serait se tirer une balle dans le pied. */
   var offreRecommandee = personnes === 1 && projets === 1 ? OFFRES[0] : personnes === 1 && projets <= 5 ? OFFRES[1] : OFFRES[2];
-  var mensuel = offreRecommandee.parPersonne ? offreRecommandee.prix * personnes : offreRecommandee.prix;
+
+  /** Ce que coûte une offre donnée, pour le nombre de personnes courant. */
+  var coutDe = function coutDe(offre) {
+    if (!offre.palier) return {
+      periode: 0,
+      mois: 0
+    };
+    if (offre.degressive) {
+      var _p = totalAgence(personnes);
+      return {
+        periode: _p,
+        mois: parMois(_p)
+      };
+    }
+    var p = annuel ? TARIFS.atelier.an : TARIFS.atelier.mois;
+    return {
+      periode: p,
+      mois: parMois(p)
+    };
+  };
+  var coutRecommande = coutDe(offreRecommandee);
 
   /* ── L'ESTIMATION DE TEMPS ────────────────────────────────────────────────
-     Trois valeurs saisies, une multiplication affichée. `heuresParDoc` est une
-     HYPOTHÈSE, et elle est réglable : c'est ce qui distingue une estimation
-     d'une affirmation. Un architecte qui trouve 1 h trop généreux la baisse et
-     voit le résultat bouger — il n'a pas à nous croire sur parole. */
-  var _React$useState9 = React.useState(75),
-    _React$useState0 = _slicedToArray(_React$useState9, 2),
-    taux = _React$useState0[0],
-    setTaux = _React$useState0[1];
-  var _React$useState1 = React.useState(20),
+     Quatre documents par mois par défaut, et non vingt. Vingt, c'était un CCTP
+     par jour ouvré — un usage qu'aucun architecte seul ne reconnaîtra — et le
+     résultat affichait 1 500 € de gain, trente fois le prix de l'offre. Un
+     chiffre auquel personne ne croit ne convainc pas : il jette le doute sur
+     tout le reste de la page.
+     Quatre documents donnent 300 €, six fois le prix d'Atelier. C'est crédible,
+     et ça reste très parlant. */
+  var _React$useState1 = React.useState(75),
     _React$useState10 = _slicedToArray(_React$useState1, 2),
-    docs = _React$useState10[0],
-    setDocs = _React$useState10[1];
-  var _React$useState11 = React.useState(1),
+    taux = _React$useState10[0],
+    setTaux = _React$useState10[1];
+  var _React$useState11 = React.useState(4),
     _React$useState12 = _slicedToArray(_React$useState11, 2),
-    heuresParDoc = _React$useState12[0],
-    setHeuresParDoc = _React$useState12[1];
+    docs = _React$useState12[0],
+    setDocs = _React$useState12[1];
+  var _React$useState13 = React.useState(1),
+    _React$useState14 = _slicedToArray(_React$useState13, 2),
+    heuresParDoc = _React$useState14[0],
+    setHeuresParDoc = _React$useState14[1];
   var heuresGagnees = docs * heuresParDoc;
   var valeurGagnee = Math.round(heuresGagnees * taux);
-
-  /* Le nombre de documents saisi dépasse-t-il ce que l'offre recommandée
-     permet ? On le dit, plutôt que de laisser le visiteur le découvrir au
-     premier mois. */
   var depasseLectures = docs > offreRecommandee.lectures;
   var SIGNUP = (typeof window !== "undefined" && window.ALBA_APP_ORIGIN ? window.ALBA_APP_ORIGIN : "https://app.alba-studio.co") + "/inscription";
 
@@ -629,14 +666,14 @@ var Pricing = function Pricing() {
      recueilli dans le tunnel Stripe, deux écrans plus loin. Le demander ici
      serait un second consentement au mauvais endroit. */
   var POINT_PAIEMENT = "https://fhrkkjvbzgkbmlnlnxce.supabase.co/functions/v1/creer-paiement-public";
-  var _React$useState13 = React.useState("repos"),
-    _React$useState14 = _slicedToArray(_React$useState13, 2),
-    paiement = _React$useState14[0],
-    setPaiement = _React$useState14[1];
-  var _React$useState15 = React.useState(null),
+  var _React$useState15 = React.useState("repos"),
     _React$useState16 = _slicedToArray(_React$useState15, 2),
-    erreurPaiement = _React$useState16[0],
-    setErreurPaiement = _React$useState16[1];
+    paiement = _React$useState16[0],
+    setPaiement = _React$useState16[1];
+  var _React$useState17 = React.useState(null),
+    _React$useState18 = _slicedToArray(_React$useState17, 2),
+    erreurPaiement = _React$useState18[0],
+    setErreurPaiement = _React$useState18[1];
   /* Verrou de double-clic. Il ne peut PAS reposer sur `paiement` : React ne
      rafraîchit l'état qu'au rendu suivant, si bien que trois clics rapides
      lisent tous « repos » et partent tous les trois. Une référence, elle,
@@ -644,10 +681,9 @@ var Pricing = function Pricing() {
   var ouvertureEnCours = React.useRef(false);
   var indisponible = L("Le paiement est momentanément indisponible. Réessayez dans quelques minutes.", "Payment is temporarily unavailable. Please try again in a few minutes.");
   var ecrivezNous = L("Le paiement n'a pas pu s'ouvrir. Ce n'est pas de votre fait : écrivez-nous et on vous ouvre l'accès.", "Checkout could not open. It's not your doing: write to us and we'll open access for you.");
-  /* Deux familles de messages, et elles ne se disent pas pareil : ce qui vient
-     du visiteur ou d'un incident passager invite à réessayer ; ce qui vient de
-     NOUS invite à écrire, parce qu'envoyer quelqu'un s'acharner sur un bouton
-     cassé n'a jamais rien réparé. */
+  /* Deux familles de messages : ce qui vient du visiteur ou d'un incident
+     passager invite à réessayer ; ce qui vient de NOUS invite à écrire, parce
+     qu'envoyer quelqu'un s'acharner sur un bouton cassé n'a rien réparé. */
   var MESSAGES = {
     trop_de_tentatives: L("Trop de tentatives, réessayez dans un moment.", "Too many attempts, please try again shortly."),
     tarif_indisponible: indisponible,
@@ -698,15 +734,9 @@ var Pricing = function Pricing() {
                 headers: {
                   "Content-Type": "application/json"
                 },
-                /* `billing` reste « monthly ». La remise annuelle n'est pas confirmée,
-                   et le tarif annuel n'est donc pas vérifié dans Stripe : ouvrir un
-                   parcours vers un prix qu'on n'a pas vu serait exactement l'interdit
-                   « aucun prix qui ne soit pas celui configuré dans Stripe ».
-                   L'équivalent annuel affiché sur la page est une multiplication, pas
-                   une offre. */
                 body: JSON.stringify({
                   storage: offre.palier,
-                  billing: "monthly",
+                  billing: annuel ? "yearly" : "monthly",
                   seats: sieges
                 })
               });
@@ -784,11 +814,36 @@ var Pricing = function Pricing() {
     name: "check",
     size: 18
   }), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("b", null, Txt("tarifs.regle-titre", "Toutes les fonctionnalités, dans toutes les offres.", "Every feature, in every plan.")), " ", Txt("tarifs.regle-corps", "Dès le premier euro, et y compris dans l'offre gratuite. Aucune fonction n'est réservée à un palier supérieur : nous ne bornons que des quantités.", "From the first euro, including in the free plan. No feature is reserved for a higher tier: we cap quantities only."))), /*#__PURE__*/React.createElement("div", {
+    className: "tarif-bascule",
+    role: "group",
+    "aria-label": Txt("tarifs.periodicite", "Périodicité", "Billing period")
+  }, /*#__PURE__*/React.createElement("button", {
+    type: "button",
+    className: "tarif-bascule-btn".concat(annuel ? "" : " est-actif"),
+    "aria-pressed": annuel ? "false" : "true",
+    onClick: function onClick() {
+      return setAnnuel(false);
+    }
+  }, Txt("tarifs.mensuel", "Mensuel", "Monthly")), /*#__PURE__*/React.createElement("button", {
+    type: "button",
+    className: "tarif-bascule-btn".concat(annuel ? " est-actif" : ""),
+    "aria-pressed": annuel ? "true" : "false",
+    onClick: function onClick() {
+      return setAnnuel(true);
+    }
+  }, Txt("tarifs.annuel", "Annuel", "Yearly"), /*#__PURE__*/React.createElement("span", {
+    className: "tarif-remise"
+  }, Txt("tarifs.remise-annuelle", "jusqu'à −18 %", "up to −18%")))), /*#__PURE__*/React.createElement("div", {
     className: "tarif-offres"
   }, OFFRES.map(function (o) {
     var recommandee = o.cle === offreRecommandee.cle;
-    var sieges = o.parPersonne ? personnes : 1;
-    var montant = o.parPersonne ? o.prix * sieges : o.prix;
+    var sieges = o.degressive ? personnes : 1;
+    /* La carte affiche le prix d'UNE personne — le point d'entrée, pas
+       le total du visiteur. Le total, lui, est dans le calculateur, où
+       il correspond à des réponses. */
+    var base = o.degressive ? annuel ? TARIFS.agence.an.premiere : TARIFS.agence.mois.premiere : annuel ? TARIFS.atelier.an : TARIFS.atelier.mois;
+    var baseMois = parMois(base);
+    var suivante = annuel ? TARIFS.agence.an.suivante : TARIFS.agence.mois.suivante;
     return /*#__PURE__*/React.createElement(Reveal, {
       key: o.cle,
       className: "tarif-carte".concat(recommandee ? " est-recommandee" : "")
@@ -800,13 +855,17 @@ var Pricing = function Pricing() {
       className: "tarif-resume"
     }, o.resume), /*#__PURE__*/React.createElement("div", {
       className: "tarif-prix"
-    }, o.prix === 0 ? /*#__PURE__*/React.createElement("span", {
+    }, !o.palier ? /*#__PURE__*/React.createElement("span", {
       className: "tarif-montant"
-    }, Txt("tarifs.gratuit", "Gratuit", "Free")) : /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("span", {
+    }, Txt("tarifs.gratuit", "Gratuit", "Free")) : /*#__PURE__*/React.createElement(React.Fragment, null, o.degressive && /*#__PURE__*/React.createElement("span", {
+      className: "tarif-apartir"
+    }, Txt("tarifs.a-partir-de", "À partir de", "From")), /*#__PURE__*/React.createElement("span", {
       className: "tarif-montant"
-    }, euros(o.prix), " \u20AC"), /*#__PURE__*/React.createElement("span", {
+    }, euros(baseMois), " \u20AC"), /*#__PURE__*/React.createElement("span", {
       className: "tarif-unite"
-    }, o.parPersonne ? Txt("tarifs.par-mois-par-personne", "HT / mois et par personne", "excl. VAT / month per person") : Txt("tarifs.par-mois", "HT / mois", "excl. VAT / month")))), /*#__PURE__*/React.createElement("ul", {
+    }, Txt("tarifs.ht-mois-court", "HT / mois", "excl. VAT / month")))), o.palier && /*#__PURE__*/React.createElement("p", {
+      className: "tarif-detail"
+    }, annuel && L("factur\xE9 ".concat(euros(base), " \u20AC HT par an"), "billed \u20AC".concat(euros(base), " excl. VAT per year")), annuel && o.degressive && /*#__PURE__*/React.createElement("br", null), o.degressive && L("puis ".concat(euros(suivante), " \u20AC par personne suppl\xE9mentaire").concat(annuel ? " et par an" : "", ", jusqu'\xE0 4 personnes"), "then \u20AC".concat(euros(suivante), " per additional person").concat(annuel ? " per year" : "", ", up to 4 people"))), /*#__PURE__*/React.createElement("ul", {
       className: "tarif-quantites"
     }, o.quantites.map(function (q, i) {
       return /*#__PURE__*/React.createElement("li", {
@@ -825,9 +884,7 @@ var Pricing = function Pricing() {
       className: "btn btn-primary tarif-cta",
       onClick: abonner(o, sieges),
       "aria-busy": paiement === "envoi" ? "true" : "false"
-    }, paiement === "envoi" ? Txt("tarifs.ouverture", "Ouverture…", "Opening…") : Txt("tarifs.s-abonner", "S'abonner", "Subscribe"), o.parPersonne && sieges > 1 && /*#__PURE__*/React.createElement("span", {
-      className: "tarif-cta-detail"
-    }, " \xB7 ", euros(montant), " \u20AC ", Txt("tarifs.par-mois-court", "HT/mois", "excl. VAT/mo"))) : /*#__PURE__*/React.createElement("a", {
+    }, paiement === "envoi" ? Txt("tarifs.ouverture", "Ouverture…", "Opening…") : Txt("tarifs.s-abonner", "S'abonner", "Subscribe")) : /*#__PURE__*/React.createElement("a", {
       href: SIGNUP,
       className: "btn btn-ghost tarif-cta"
     }, Txt("tarifs.commencer-gratuitement", "Commencer gratuitement", "Start for free")));
@@ -840,7 +897,7 @@ var Pricing = function Pricing() {
     className: "calc"
   }, /*#__PURE__*/React.createElement("div", {
     className: "calc-entree"
-  }, /*#__PURE__*/React.createElement("h3", null, Txt("tarifs.calc-titre", "Votre prix, en deux questions", "Your price, in two questions")), /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement("h3", null, Txt("tarifs.calc-titre", "Votre prix, et ce que Léo vous fait gagner", "Your price, and what Léo saves you")), /*#__PURE__*/React.createElement("div", {
     className: "calc-champ"
   }, /*#__PURE__*/React.createElement("label", {
     htmlFor: "calc-personnes"
@@ -873,27 +930,11 @@ var Pricing = function Pricing() {
     }
   }), /*#__PURE__*/React.createElement("p", {
     className: "calc-note"
-  }, Txt("tarifs.calc-projets-note", "Projets en cours, pas projets archivés : archiver un projet terminé libère une place, et vous gardez l'accès à tout ce que vous avez fait.", "Live projects, not archived ones: archiving a finished project frees a slot, and you keep access to everything you have done.")))), /*#__PURE__*/React.createElement("div", {
-    className: "calc-sortie"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "calc-offre"
-  }, Txt("tarifs.calc-votre-offre", "Votre offre", "Your plan")), /*#__PURE__*/React.createElement("div", {
-    className: "calc-nom"
-  }, offreRecommandee.nom), /*#__PURE__*/React.createElement("div", {
-    className: "calc-montant"
-  }, mensuel === 0 ? Txt("tarifs.gratuit", "Gratuit", "Free") : /*#__PURE__*/React.createElement(React.Fragment, null, euros(mensuel), " ", /*#__PURE__*/React.createElement("span", null, "\u20AC ", Txt("tarifs.ht-mois", "HT / mois", "excl. VAT / month")))), mensuel > 0 && /*#__PURE__*/React.createElement("div", {
-    className: "calc-annuel"
-  }, L("soit ".concat(euros(mensuel * 12), " \u20AC HT par an"), "that is ".concat(euros(mensuel * 12), " \u20AC excl. VAT per year"))), offreRecommandee.parPersonne && personnes > 1 && /*#__PURE__*/React.createElement("div", {
-    className: "calc-detail"
-  }, L("".concat(euros(offreRecommandee.prix), " \u20AC \xD7 ").concat(personnes, " personnes"), "\u20AC".concat(euros(offreRecommandee.prix), " \xD7 ").concat(personnes, " people"))), offreRecommandee.cle === "decouverte" && /*#__PURE__*/React.createElement("p", {
-    className: "calc-note calc-note-libre"
-  }, Txt("tarifs.calc-decouverte", "Un seul projet à la fois vous suffit : l'offre gratuite le couvre entièrement, sans limite de durée et sans carte bancaire.", "One project at a time is enough for you: the free plan covers it entirely, with no time limit and no payment card.")))), /*#__PURE__*/React.createElement(Reveal, {
-    className: "calc calc-temps"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "calc-entree"
-  }, /*#__PURE__*/React.createElement("h3", null, Txt("tarifs.temps-titre", "Ce que Léo peut vous faire gagner", "What Léo may save you")), /*#__PURE__*/React.createElement("p", {
+  }, Txt("tarifs.calc-projets-note", "Projets en cours, pas projets archivés : archiver un projet terminé libère une place, et vous gardez l'accès à tout ce que vous avez fait.", "Live projects, not archived ones: archiving a finished project frees a slot, and you keep access to everything you have done."))), /*#__PURE__*/React.createElement("div", {
+    className: "calc-separateur"
+  }, Txt("tarifs.calc-leo", "Ce que vous confiez à Léo", "What you give Léo")), /*#__PURE__*/React.createElement("p", {
     className: "calc-chapo"
-  }, Txt("tarifs.temps-chapo", "Léo lit vos pièces écrites — CCTP, descriptifs, DPGF — et en sort les prescriptions, les matériaux, les prix et les intervenants. Le temps que ça représente, vous le connaissez mieux que nous : ajustez les trois valeurs.", "Léo reads your written documents — specifications, schedules of works, bills of quantities — and extracts requirements, materials, prices and parties. You know better than we do what that represents: adjust the three values.")), /*#__PURE__*/React.createElement("div", {
+  }, Txt("tarifs.temps-chapo", "Léo lit vos pièces écrites — CCTP, descriptifs, DPGF — et en sort les prescriptions, les matériaux, les prix et les intervenants.", "Léo reads your written documents — specifications, schedules of works, bills of quantities — and extracts requirements, materials, prices and parties.")), /*#__PURE__*/React.createElement("div", {
     className: "calc-champ"
   }, /*#__PURE__*/React.createElement("label", {
     htmlFor: "calc-docs"
@@ -901,7 +942,7 @@ var Pricing = function Pricing() {
     id: "calc-docs",
     type: "range",
     min: "1",
-    max: "200",
+    max: "20",
     value: docs,
     onChange: function onChange(e) {
       return setDocs(Number(e.target.value));
@@ -939,14 +980,30 @@ var Pricing = function Pricing() {
   }, Txt("tarifs.temps-hypothese", "C'est une hypothèse, pas une mesure : nous n'avons pas relevé ce chiffre chez nos clients. Réglez-le sur ce que vous constatez.", "This is an assumption, not a measurement: we have not recorded this figure with our clients. Set it to what you observe.")))), /*#__PURE__*/React.createElement("div", {
     className: "calc-sortie"
   }, /*#__PURE__*/React.createElement("div", {
+    className: "calc-ligne"
+  }, /*#__PURE__*/React.createElement("div", {
     className: "calc-offre"
-  }, Txt("tarifs.temps-resultat", "Estimation", "Estimate")), /*#__PURE__*/React.createElement("div", {
+  }, Txt("tarifs.calc-votre-abonnement", "Votre abonnement", "Your subscription")), /*#__PURE__*/React.createElement("div", {
+    className: "calc-nom"
+  }, offreRecommandee.nom), /*#__PURE__*/React.createElement("div", {
     className: "calc-montant"
-  }, euros(valeurGagnee), " ", /*#__PURE__*/React.createElement("span", null, "\u20AC ", Txt("tarifs.ht-mois", "HT / mois", "excl. VAT / month"))), /*#__PURE__*/React.createElement("div", {
+  }, coutRecommande.mois === 0 ? Txt("tarifs.gratuit", "Gratuit", "Free") : /*#__PURE__*/React.createElement(React.Fragment, null, euros(coutRecommande.mois), " ", /*#__PURE__*/React.createElement("span", null, "\u20AC ", Txt("tarifs.ht-mois", "HT / mois", "excl. VAT / month")))), annuel && coutRecommande.periode > 0 && /*#__PURE__*/React.createElement("div", {
+    className: "calc-annuel"
+  }, L("factur\xE9 ".concat(euros(coutRecommande.periode), " \u20AC HT par an"), "billed \u20AC".concat(euros(coutRecommande.periode), " excl. VAT per year"))), !annuel && offreRecommandee.degressive && personnes > 1 && /*#__PURE__*/React.createElement("div", {
+    className: "calc-detail"
+  }, L("".concat(euros(TARIFS.agence.mois.premiere), " \u20AC + ").concat(personnes - 1, " \xD7 ").concat(euros(TARIFS.agence.mois.suivante), " \u20AC"), "\u20AC".concat(euros(TARIFS.agence.mois.premiere), " + ").concat(personnes - 1, " \xD7 \u20AC").concat(euros(TARIFS.agence.mois.suivante))))), /*#__PURE__*/React.createElement("div", {
+    className: "calc-ligne calc-ligne-gain"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "calc-offre"
+  }, Txt("tarifs.calc-gain", "Ce que Léo vous fait gagner", "What Léo saves you")), /*#__PURE__*/React.createElement("div", {
+    className: "calc-montant calc-montant-gain"
+  }, "\u2248 ", euros(valeurGagnee), " ", /*#__PURE__*/React.createElement("span", null, "\u20AC ", Txt("tarifs.par-mois-simple", "/ mois", "/ month"))), /*#__PURE__*/React.createElement("div", {
     className: "calc-operation"
-  }, L("".concat(docs, " documents \xD7 ").concat(heuresParDoc, " h \xD7 ").concat(taux, " \u20AC = ").concat(euros(heuresGagnees), " h, soit ").concat(euros(valeurGagnee), " \u20AC"), "".concat(docs, " documents \xD7 ").concat(heuresParDoc, " h \xD7 \u20AC").concat(taux, " = ").concat(euros(heuresGagnees), " h, that is \u20AC").concat(euros(valeurGagnee)))), depasseLectures && /*#__PURE__*/React.createElement("p", {
+  }, L("".concat(docs, " documents \xD7 ").concat(heuresParDoc, " h \xD7 ").concat(taux, " \u20AC = ").concat(euros(heuresGagnees), " h par mois"), "".concat(docs, " documents \xD7 ").concat(heuresParDoc, " h \xD7 \u20AC").concat(taux, " = ").concat(euros(heuresGagnees), " h per month")))), depasseLectures && /*#__PURE__*/React.createElement("p", {
     className: "calc-note calc-note-libre"
-  }, L("Attention : l'offre ".concat(offreRecommandee.nom, " couvre ").concat(offreRecommandee.lectures, " lectures par mois. Au-del\xE0, il faut l'offre sup\xE9rieure."), "Note: the ".concat(offreRecommandee.nom, " plan covers ").concat(offreRecommandee.lectures, " readings per month. Beyond that, you need the next plan."))), /*#__PURE__*/React.createElement("div", {
+  }, L("L'offre ".concat(offreRecommandee.nom, " couvre ").concat(offreRecommandee.lectures, " lectures par mois."), "The ".concat(offreRecommandee.nom, " plan covers ").concat(offreRecommandee.lectures, " readings per month."))), offreRecommandee.cle === "decouverte" && /*#__PURE__*/React.createElement("p", {
+    className: "calc-note calc-note-libre"
+  }, Txt("tarifs.calc-decouverte", "Un seul projet à la fois vous suffit : l'offre gratuite le couvre entièrement, sans limite de durée et sans carte bancaire.", "One project at a time is enough for you: the free plan covers it entirely, with no time limit and no payment card.")), /*#__PURE__*/React.createElement("div", {
     className: "calc-mentions"
   }, Txt("tarifs.mentions", "Montants HT · Estimation indicative", "Amounts excl. VAT · Indicative estimate")))), /*#__PURE__*/React.createElement("div", {
     className: "tarif-porte"
@@ -1036,10 +1093,10 @@ var Faq = function Faq() {
     q: Txt("faq.quel-est-le-delai-pour-demarrer", "Quel est le délai pour démarrer ?", "How long does it take to get started?"),
     a: Txt("faq.si-vous-voulez-vous-demarrez-aujourd", "Si vous voulez, vous démarrez aujourd'hui. La création de compte prend 3 minutes ; importer vos projets en cours prend en moyenne une demi-journée. On vous accompagne sur l'onboarding sans frais.", "You can start today. Account creation takes 3 minutes; importing your active projects takes half a day on average. We help with onboarding at no charge.")
   }];
-  var _React$useState17 = React.useState(0),
-    _React$useState18 = _slicedToArray(_React$useState17, 2),
-    open = _React$useState18[0],
-    setOpen = _React$useState18[1];
+  var _React$useState19 = React.useState(0),
+    _React$useState20 = _slicedToArray(_React$useState19, 2),
+    open = _React$useState20[0],
+    setOpen = _React$useState20[1];
   return /*#__PURE__*/React.createElement("section", {
     className: "section section-cream-2",
     id: "faq"
@@ -1078,7 +1135,7 @@ var Faq = function Faq() {
 
 /* CONTACT */
 var Contact = function Contact() {
-  var _React$useState19 = React.useState({
+  var _React$useState21 = React.useState({
       name: "",
       agency: "",
       email: "",
@@ -1086,29 +1143,29 @@ var Contact = function Contact() {
       projects: "1-3",
       msg: ""
     }),
-    _React$useState20 = _slicedToArray(_React$useState19, 2),
-    data = _React$useState20[0],
-    setData = _React$useState20[1];
-  var _React$useState21 = React.useState({}),
     _React$useState22 = _slicedToArray(_React$useState21, 2),
-    errors = _React$useState22[0],
-    setErrors = _React$useState22[1];
-  var _React$useState23 = React.useState(false),
+    data = _React$useState22[0],
+    setData = _React$useState22[1];
+  var _React$useState23 = React.useState({}),
     _React$useState24 = _slicedToArray(_React$useState23, 2),
-    submitted = _React$useState24[0],
-    setSubmitted = _React$useState24[1];
+    errors = _React$useState24[0],
+    setErrors = _React$useState24[1];
+  var _React$useState25 = React.useState(false),
+    _React$useState26 = _slicedToArray(_React$useState25, 2),
+    submitted = _React$useState26[0],
+    setSubmitted = _React$useState26[1];
   /* "repos" | "envoi" | "erreur" — le succès est porté par `submitted`, qui
      existait déjà et gouverne le bloc de confirmation du design. */
-  var _React$useState25 = React.useState("repos"),
-    _React$useState26 = _slicedToArray(_React$useState25, 2),
-    envoi = _React$useState26[0],
-    setEnvoi = _React$useState26[1];
+  var _React$useState27 = React.useState("repos"),
+    _React$useState28 = _slicedToArray(_React$useState27, 2),
+    envoi = _React$useState28[0],
+    setEnvoi = _React$useState28[1];
   /* Champ-piège : invisible pour un visiteur, rempli par les robots qui
      remplissent tout. Il vit dans l'état comme les autres champs. */
-  var _React$useState27 = React.useState(""),
-    _React$useState28 = _slicedToArray(_React$useState27, 2),
-    piege = _React$useState28[0],
-    setPiege = _React$useState28[1];
+  var _React$useState29 = React.useState(""),
+    _React$useState30 = _slicedToArray(_React$useState29, 2),
+    piege = _React$useState30[0],
+    setPiege = _React$useState30[1];
   /* Instant d'affichage du formulaire. Le serveur refuse un envoi survenu moins
      de deux secondes après : personne ne remplit six champs en deux secondes. */
   var afficheA = React.useRef(Date.now());

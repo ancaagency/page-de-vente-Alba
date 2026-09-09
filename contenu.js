@@ -890,4 +890,206 @@ window.ALBA_CONTENU = {
     fr: "FAIT À LYON · AVEC SOIN",
     en: "MADE IN LYON · WITH CARE",
   },
+  "tarifs.offre-decouverte": {
+    fr: "Découverte",
+    en: "Discovery",
+  },
+  "tarifs.decouverte-resume": {
+    fr: "Pour voir ce que ça donne sur un vrai projet.",
+    en: "To see what it does on a real project.",
+  },
+  "tarifs.decouverte-q1": {
+    fr: "1 projet, offert à vie",
+    en: "1 project, free for ever",
+  },
+  "tarifs.decouverte-q2": {
+    fr: "1 personne",
+    en: "1 person",
+  },
+  "tarifs.decouverte-q3": {
+    fr: "Léo : 10 lectures de documents et 300 questions par mois",
+    en: "Léo: 10 document readings and 300 questions per month",
+  },
+  "tarifs.offre-atelier": {
+    fr: "Atelier",
+    en: "Studio",
+  },
+  "tarifs.atelier-resume": {
+    fr: "Pour un architecte qui mène plusieurs affaires de front.",
+    en: "For an architect running several jobs at once.",
+  },
+  "tarifs.atelier-q1": {
+    fr: "5 projets menés de front, archives illimitées",
+    en: "5 live projects, unlimited archives",
+  },
+  "tarifs.atelier-q2": {
+    fr: "1 personne",
+    en: "1 person",
+  },
+  "tarifs.atelier-q3": {
+    fr: "Léo : 50 lectures et 1 500 questions par mois",
+    en: "Léo: 50 readings and 1,500 questions per month",
+  },
+  "tarifs.offre-agence": {
+    fr: "Agence",
+    en: "Practice",
+  },
+  "tarifs.agence-resume": {
+    fr: "Pour une équipe, jusqu'à quatre personnes.",
+    en: "For a team, up to four people.",
+  },
+  "tarifs.agence-q1": {
+    fr: "Projets illimités",
+    en: "Unlimited projects",
+  },
+  "tarifs.agence-q2": {
+    fr: "Jusqu'à 4 personnes",
+    en: "Up to 4 people",
+  },
+  "tarifs.agence-q3": {
+    fr: "Léo : 200 lectures et 5 000 questions par mois",
+    en: "Léo: 200 readings and 5,000 questions per month",
+  },
+  "tarifs.eyebrow": {
+    fr: "Tarifs",
+    en: "Pricing",
+  },
+  "tarifs.titre-1": {
+    fr: "Un prix qui suit",
+    en: "A price that follows",
+  },
+  "tarifs.titre-2": {
+    fr: "votre activité.",
+    en: "your practice.",
+  },
+  "tarifs.sous-titre": {
+    fr: "On ne facture ni des options ni des modules : seulement le nombre de projets que vous menez de front et le nombre de personnes qui travaillent dans ALBA.",
+    en: "We charge neither for add-ons nor for modules: only for the number of projects you run at once and the number of people working in ALBA.",
+  },
+  "tarifs.regle-titre": {
+    fr: "Toutes les fonctionnalités, dans toutes les offres.",
+    en: "Every feature, in every plan.",
+  },
+  "tarifs.regle-corps": {
+    fr: "Dès le premier euro, et y compris dans l'offre gratuite. Aucune fonction n'est réservée à un palier supérieur : nous ne bornons que des quantités.",
+    en: "From the first euro, including in the free plan. No feature is reserved for a higher tier: we cap quantities only.",
+  },
+  "tarifs.badge-recommandee": {
+    fr: "Correspond à vos réponses",
+    en: "Matches your answers",
+  },
+  "tarifs.gratuit": {
+    fr: "Gratuit",
+    en: "Free",
+  },
+  "tarifs.periodicite": {
+    fr: "Périodicité",
+    en: "Billing period",
+  },
+  "tarifs.mensuel": {
+    fr: "Mensuel",
+    en: "Monthly",
+  },
+  "tarifs.annuel": {
+    fr: "Annuel",
+    en: "Yearly",
+  },
+  /* « jusqu'à » : 18 % sur Atelier et sur chaque personne supplémentaire,
+     17,4 % sur le premier siège Agence. Voir sections.jsx. */
+  "tarifs.remise-annuelle": {
+    fr: "jusqu'à −18 %",
+    en: "up to −18%",
+  },
+  "tarifs.a-partir-de": {
+    fr: "À partir de",
+    en: "From",
+  },
+  "tarifs.ht-mois-court": {
+    fr: "HT / mois",
+    en: "excl. VAT / month",
+  },
+  "tarifs.calc-leo": {
+    fr: "Ce que vous confiez à Léo",
+    en: "What you give Léo",
+  },
+  "tarifs.calc-votre-abonnement": {
+    fr: "Votre abonnement",
+    en: "Your subscription",
+  },
+  "tarifs.calc-gain": {
+    fr: "Ce que Léo vous fait gagner",
+    en: "What Léo saves you",
+  },
+  "tarifs.par-mois-simple": {
+    fr: "/ mois",
+    en: "/ month",
+  },
+  "tarifs.toutes-fonctionnalites": {
+    fr: "Toutes les fonctionnalités",
+    en: "Every feature",
+  },
+  "tarifs.ouverture": {
+    fr: "Ouverture…",
+    en: "Opening…",
+  },
+  "tarifs.commencer-gratuitement": {
+    fr: "Commencer gratuitement",
+    en: "Start for free",
+  },
+  "tarifs.nous-ecrire": {
+    fr: "Nous écrire",
+    en: "Write to us",
+  },
+  "tarifs.calc-titre": {
+    fr: "Votre prix, et ce que Léo vous fait gagner",
+    en: "Your price, and what Léo saves you",
+  },
+  "tarifs.calc-personnes": {
+    fr: "Combien êtes-vous dans l'agence ?",
+    en: "How many of you are in the practice?",
+  },
+  "tarifs.calc-projets": {
+    fr: "Combien de projets menez-vous de front ?",
+    en: "How many projects do you run at once?",
+  },
+  "tarifs.calc-projets-note": {
+    fr: "Projets en cours, pas projets archivés : archiver un projet terminé libère une place, et vous gardez l'accès à tout ce que vous avez fait.",
+    en: "Live projects, not archived ones: archiving a finished project frees a slot, and you keep access to everything you have done.",
+  },
+  "tarifs.ht-mois": {
+    fr: "HT / mois",
+    en: "excl. VAT / month",
+  },
+  "tarifs.calc-decouverte": {
+    fr: "Un seul projet à la fois vous suffit : l'offre gratuite le couvre entièrement, sans limite de durée et sans carte bancaire.",
+    en: "One project at a time is enough for you: the free plan covers it entirely, with no time limit and no payment card.",
+  },
+  "tarifs.temps-chapo": {
+    fr: "Léo lit vos pièces écrites — CCTP, descriptifs, DPGF — et en sort les prescriptions, les matériaux, les prix et les intervenants.",
+    en: "Léo reads your written documents — specifications, schedules of works, bills of quantities — and extracts requirements, materials, prices and parties.",
+  },
+  "tarifs.temps-docs": {
+    fr: "Documents confiés à Léo par mois",
+    en: "Documents given to Léo each month",
+  },
+  "tarifs.temps-taux": {
+    fr: "Votre taux horaire",
+    en: "Your hourly rate",
+  },
+  "tarifs.temps-heures": {
+    fr: "Temps de dépouillement par document",
+    en: "Time spent going through one document",
+  },
+  "tarifs.temps-hypothese": {
+    fr: "C'est une hypothèse, pas une mesure : nous n'avons pas relevé ce chiffre chez nos clients. Réglez-le sur ce que vous constatez.",
+    en: "This is an assumption, not a measurement: we have not recorded this figure with our clients. Set it to what you observe.",
+  },
+  "tarifs.mentions": {
+    fr: "Montants HT · Estimation indicative",
+    en: "Amounts excl. VAT · Indicative estimate",
+  },
+  "tarifs.porte": {
+    fr: "Créer un compte gratuit",
+    en: "Create a free account",
+  },
 };
