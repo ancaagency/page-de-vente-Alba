@@ -1295,4 +1295,53 @@ window.ALBA_CONTENU = {
     fr: "Voir toutes les fonctionnalités",
     en: "See every feature",
   },
+
+  /* ——— Page introuvable (404) ———
+     Une seule page 404.html répond à TOUTES les adresses inconnues, dans les
+     deux langues : son texte bascule sur place, il ne peut pas vivre dans un
+     fichier de traduction séparé comme les pages éditoriales. */
+  "p404.accueil": {
+    fr: "L'accueil",
+    en: "Home",
+  },
+  "p404.accueil-quoi": {
+    fr: "Ce que fait ALBA, en une page.",
+    en: "What ALBA does, on one page.",
+  },
+  "p404.tarifs": {
+    fr: "Les tarifs",
+    en: "Pricing",
+  },
+  "p404.tarifs-quoi": {
+    fr: "Deux questions, et votre prix.",
+    en: "Two questions, and your price.",
+  },
+  "p404.invites": {
+    fr: "Vous avez été invité ?",
+    en: "Been invited?",
+  },
+  "p404.invites-quoi": {
+    fr: "Ce que vous pouvez faire, et ce que ça coûte.",
+    en: "What you can do, and what it costs.",
+  },
+  "p404.contact": {
+    fr: "Nous écrire",
+    en: "Write to us",
+  },
+  "p404.contact-quoi": {
+    fr: "Si vous cherchiez autre chose, dites-le-nous.",
+    en: "If you were after something else, tell us.",
+  },
+  "p404.titre-1": {
+    fr: "Cette page",
+    en: "This page",
+  },
+  "p404.titre-2": {
+    fr: "n'existe pas.",
+    en: "does not exist.",
+  },
+  "p404.chapo": {
+    fr: "L'adresse est peut-être mal recopiée, ou la page a changé de nom depuis que vous avez gardé le lien. Rien n'est perdu : voici par où reprendre.",
+    en: "The address may have been mistyped, or the page may have been renamed since you saved the link. Nothing is lost: here is where to pick up.",
+  },
 };

@@ -2124,3 +2124,74 @@
   .conf-leo-ligne { flex-direction: column; align-items: flex-start; gap: 6px; }
   .tarif-regle { padding: 14px 16px; }
 }
+
+/* ── Page introuvable (404) ───────────────────────────────────────────────
+   Le seul écran du site qu'on atteint sans l'avoir voulu. Il n'y en avait pas :
+   Cloudflare servait la sienne, blanche, sans marque ni chemin de retour.
+   On n'arrive pas sur un 404 par curiosité — on y arrive par une adresse mal
+   recopiée ou un vieux lien. C'est-à-dire par quelqu'un qui voulait venir. */
+.e404 {
+  min-height: 58vh;
+  display: flex;
+  align-items: center;
+  padding: 132px 0 88px;
+  background: var(--bg);
+  color: var(--on-bg);
+}
+.e404-corps { max-width: 760px; }
+/* Le nombre est un repère pour ceux à qui il parle, pas le message : il est
+   discret, et c'est le titre en toutes lettres qui porte l'information. */
+.e404-code {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.28em;
+  color: var(--accent);
+  margin-bottom: 20px;
+}
+.e404-titre {
+  margin: 0 0 18px;
+  font-size: calc(clamp(34px, 5vw, 54px) * var(--echelle-titres));
+  color: var(--on-bg);
+}
+.e404-chapo {
+  margin: 0 0 44px;
+  max-width: 580px;
+  font-size: 17px;
+  line-height: 1.6;
+  color: rgba(var(--on-bg-rgb), 0.72);
+}
+
+.e404-pistes {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+.e404-piste {
+  /* Une rangée en flex, et non une grille : la flèche est le DERNIER élément,
+     elle doit être à la fin. Avec `grid-template-columns: 1fr auto` elle se
+     plaçait automatiquement dans la première colonne libre — c'est-à-dire à
+     gauche du texte, en le poussant dans une colonne qui le centrait. */
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 22px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--bg-2);
+  text-decoration: none;
+  color: inherit;
+  transition: border-color .2s, transform .2s cubic-bezier(.2,.8,.2,1);
+}
+.e404-piste:hover { border-color: var(--accent); transform: translateY(-2px); }
+.e404-piste:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.e404-piste-texte { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 0; }
+.e404-piste svg { color: var(--accent); flex: none; transition: transform .2s cubic-bezier(.2,.8,.2,1); }
+.e404-piste:hover svg { transform: translateX(4px); }
+.e404-piste-titre { font-size: 16px; font-weight: 600; color: var(--on-bg); }
+.e404-piste-quoi { font-size: 13.5px; line-height: 1.5; color: rgba(var(--on-bg-rgb), 0.62); }
+
+@media (max-width: 720px) {
+  .e404 { padding: 110px 0 70px; min-height: 0; }
+  .e404-pistes { grid-template-columns: 1fr; }
+  .e404-chapo { margin-bottom: 32px; }
+}

@@ -213,6 +213,9 @@
 /mentions-legales
   Cache-Control: public, max-age=0, must-revalidate
 
+/404.html
+  Cache-Control: public, max-age=0, must-revalidate
+
 /*.css
   Cache-Control: public, max-age=0, must-revalidate
 

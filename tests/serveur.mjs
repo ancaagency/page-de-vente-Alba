@@ -58,6 +58,17 @@ export async function demarrer(port, remplacements = {}) {
     }
     const f = path.join(ROOT, rel);
     if (!f.startsWith(ROOT) || !fs.existsSync(f) || fs.statSync(f).isDirectory()) {
+      /* LA PAGE D'ERREUR DU SITE, COMME CLOUDFLARE PAGES.
+         Il répondait « not found » en texte brut. Même raison que pour les
+         adresses propres, deux commentaires plus haut : un serveur de test qui
+         se comporte autrement que l'hébergeur invente un hébergeur qui
+         n'existe pas, et ce qu'on croit vérifier ne l'est pas. Le statut reste
+         404 — c'est lui qui dit aux robots de ne pas indexer. */
+      const err = path.join(ROOT, '404.html');
+      if (fs.existsSync(err)) {
+        res.writeHead(404, { 'Content-Type': 'text/html', 'Content-Security-Policy': CSP });
+        return res.end(fs.readFileSync(err));
+      }
       res.writeHead(404); return res.end('not found');
     }
 

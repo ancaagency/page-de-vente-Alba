@@ -86,6 +86,15 @@ export const PAGES = [
   { fichier: 'en-co-traitants.html', route: '/en-co-traitants', racine: 'footer-root', lang: 'en' },
   { fichier: 'en-valeur-probante.html', route: '/en-valeur-probante', racine: 'footer-root', lang: 'en' },
   { fichier: 'en-mentions-legales.html', route: '/en-mentions-legales', racine: 'footer-root', lang: 'en' },
+
+  /* La page d'erreur. Cloudflare la sert pour TOUTE adresse inconnue, donc elle
+     n'a pas d'adresse à elle : `horsPlan` la retire du plan du site et des
+     contrôles de jumelage linguistique, parce qu'elle n'est ni indexable ni
+     jumelable — un seul fichier répond dans les deux langues, en basculant sur
+     place. Elle reste dans cette liste pour tout le reste : prérendu, icônes,
+     traceurs, poids des images, balayage. C'est une page comme les autres du
+     point de vue de ce qui peut y casser. */
+  { fichier: '404.html', route: '/404.html', racine: 'app', lang: 'fr', horsPlan: true },
 ];
 
 /** Les routes servies, dans l'ordre. Pour les contrôles qui parcourent le site. */

@@ -22,7 +22,15 @@ import path from 'node:path';
 import { chromium } from 'playwright-core';
 import { demarrer, ROOT } from './serveur.mjs';
 
-const FICHIERS = ['sections.jsx', 'audience.jsx', 'founder.jsx', 'features-carousel.jsx'];
+/* TOUS les .jsx de la racine, et non une liste écrite à la main.
+   Elle en nommait quatre. En ajoutant page-404.jsx, ses onze clés sont
+   devenues « orphelines » aux yeux de ce contrôle — alors qu'elles sont
+   appelées à chaque affichage de la page d'erreur. Une liste figée qui décide
+   de ce qu'un garde-fou regarde finit toujours par décider qu'il ne regarde
+   plus rien : c'est le même défaut que outils/pages.mjs déclarant des adresses
+   que personne ne demande.
+   Un .jsx qui n'appelle jamais Txt() n'apporte rien et ne coûte rien. */
+const FICHIERS = fs.readdirSync(ROOT).filter((f) => f.endsWith('.jsx')).sort();
 let echecs = 0;
 const ok = (bon, texte) => { console.log(`   ${bon ? '✅' : '❌'} ${texte}`); if (!bon) echecs++; };
 

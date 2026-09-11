@@ -19,7 +19,7 @@
  */
 import { chromium } from 'playwright-core';
 import { demarrer, ROOT } from './serveur.mjs';
-import { ROUTES } from '../outils/pages.mjs';
+import { ROUTES, PAGES } from '../outils/pages.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 
@@ -129,7 +129,12 @@ for (const route of ROUTES) {
 {
   const plan = fs.readFileSync(path.join(ROOT, 'sitemap.xml'), 'utf8');
   const declarees = [...plan.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => new URL(m[1]).pathname);
-  const servies = ROUTES.map((r) => (r === '/' ? '/' : r));
+  /* `horsPlan` écarte la page d'erreur : elle répond à toutes les adresses
+     inconnues et n'en a aucune à elle, donc elle n'a rien à faire dans un plan
+     de site — elle porte d'ailleurs noindex. L'exception est NOMMÉE ici plutôt
+     que devinée : un garde-fou dont on ne sait plus ce qu'il laisse passer ne
+     protège plus de rien. */
+  const servies = PAGES.filter((p) => !p.horsPlan).map((p) => p.route);
   for (const d of declarees) {
     const r = await (await nav.newContext()).request.get(BASE + d).catch(() => null);
     if (!r || r.status() >= 400) noter('SITEMAP', d, `déclarée mais ${r ? r.status() : 'injoignable'}`);
@@ -139,7 +144,60 @@ for (const route of ROUTES) {
   }
 }
 
-/* ── 3 · LA CONTRAINTE QUI NE DOIT JAMAIS CÉDER ─────────────────────────── */
+/* ── 3 · LA PAGE D'ERREUR REND-ELLE UN CHEMIN ? ─────────────────────────── */
+{
+  /* Il n'y en avait pas : Cloudflare servait la sienne, blanche, sans marque ni
+     navigation. On n'atterrit pas sur un 404 par curiosité — on y arrive par
+     une adresse mal recopiée ou un vieux lien, donc par quelqu'un qui voulait
+     déjà venir. Ce qui compte n'est pas qu'elle soit jolie : c'est qu'elle
+     dise où aller, et qu'elle ne se fasse pas indexer. */
+  const ctx = await nav.newContext({ viewport: { width: 1280, height: 900 } });
+  const page = await ctx.newPage();
+  const rep = await page.goto(BASE + '/une-adresse-qui-n-existe-pas', { waitUntil: 'load' });
+  await page.waitForTimeout(2500);
+
+  if (rep.status() !== 404) noter('404', '/adresse-inconnue', `statut ${rep.status()} au lieu de 404`);
+
+  const vu = await page.evaluate(() => ({
+    robots: document.querySelector('meta[name=robots]')?.content || '',
+    titre: document.title,
+    h1: document.querySelector('h1')?.textContent.trim() || '',
+    /* Au moins l'accueil et les tarifs : sans chemin de retour, la page ne
+       sert à rien de plus que celle de l'hébergeur. */
+    retours: [...document.querySelectorAll('main a[href]')].map((a) => new URL(a.href).pathname),
+    pied: !!document.querySelector('footer a[href]'),
+  }));
+  if (!/noindex/.test(vu.robots)) noter('404', '/adresse-inconnue', `robots « ${vu.robots} » — une page d'erreur ne doit pas s'indexer`);
+  if (!vu.h1) noter('404', '/adresse-inconnue', 'aucun <h1>');
+  for (const attendu of ['/', '/tarifs']) {
+    if (!vu.retours.includes(attendu)) noter('404', '/adresse-inconnue', `aucun chemin de retour vers ${attendu}`);
+  }
+  if (!vu.pied) noter('404', '/adresse-inconnue', 'pas de pied de page');
+
+  /* Elle n'a pas d'adresse à elle : elle ne doit pas figurer au plan du site. */
+  const plan = fs.readFileSync(path.join(ROOT, 'sitemap.xml'), 'utf8');
+  if (/404/.test(plan)) noter('404', 'sitemap.xml', 'la page d\'erreur est déclarée au plan du site');
+
+  /* Un seul fichier répond dans les deux langues : le texte doit basculer SUR
+     PLACE, sans changer d'adresse — il n'y a pas de jumelle à rejoindre. */
+  const avant = await page.evaluate(() => document.querySelector('h1').textContent.trim());
+  await page.evaluate(() => document.querySelector('#lang-toggle button[data-lang=en]').click());
+  await page.waitForTimeout(600);
+  const apres = await page.evaluate(() => ({
+    h1: document.querySelector('h1').textContent.trim(),
+    lang: document.documentElement.lang,
+    chemin: location.pathname,
+  }));
+  if (apres.h1 === avant || apres.lang !== 'en') {
+    noter('404', '/adresse-inconnue', `la bascule EN ne traduit pas sur place (« ${apres.h1} », lang=${apres.lang})`);
+  }
+  if (apres.chemin !== '/une-adresse-qui-n-existe-pas') {
+    noter('404', '/adresse-inconnue', `la bascule a quitté l'adresse (${apres.chemin})`);
+  }
+  await ctx.close();
+}
+
+/* ── 4 · LA CONTRAINTE QUI NE DOIT JAMAIS CÉDER ─────────────────────────── */
 {
   /* demo-express CRÉE UN COMPTE : un <a href> serait suivi par les robots et
      les antivirus, qui créeraient des comptes en visitant la page. Ça doit
