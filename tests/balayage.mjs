@@ -197,6 +197,45 @@ for (const route of ROUTES) {
   await ctx.close();
 }
 
+/* ── 3 bis · ELLE TIENT DEBOUT À N'IMPORTE QUELLE PROFONDEUR ────────────── */
+{
+  /* CE QUI S'EST PASSÉ, ET QUI NE DOIT PAS REVENIR.
+     La page d'erreur a été livrée avec toutes ses références en RELATIF —
+     « sections.css », « photos.js », « index.html#contact ». Or Cloudflare la
+     sert à TOUTE adresse inconnue sans changer l'adresse affichée : à
+     /blog/mon-article, le navigateur va chercher /blog/sections.css. Mesuré à
+     la livraison : 20 requêtes mortes, aucune feuille de style, une page nue.
+
+     Le premier contrôle ne l'a pas vu parce qu'il testait /adresse-inconnue,
+     à UN seul niveau — la seule profondeur où le relatif tombe juste. On
+     éprouve donc plusieurs formes, dont une avec barre finale et une à deux
+     niveaux, parce que c'est la profondeur qui décide. */
+  for (const chemin of ['/y/', '/a/b', '/blog/mon-article']) {
+    const ctx = await nav.newContext({ viewport: { width: 1280, height: 900 } });
+    const page = await ctx.newPage();
+    const mortes = [];
+    page.on('response', (r) => {
+      const u = r.url().replace(BASE, '');
+      /* Le document lui-même répond 404, c'est le but : on ne compte que ses
+         ressources. */
+      if (r.status() >= 400 && u !== chemin) mortes.push(u);
+    });
+    await page.goto(BASE + chemin, { waitUntil: 'load', timeout: 40000 });
+    await page.waitForTimeout(2200);
+    if (mortes.length) {
+      noter('404 PROFONDEUR', chemin, `${mortes.length} ressource(s) morte(s) — ${mortes.slice(0, 3).join(' ')}`);
+    }
+    /* Et la preuve que la feuille de style est bien arrivée : sans elle, les
+       pistes ne sont plus des cartes mais du texte au fil de l'eau. */
+    const applique = await page.evaluate(() => {
+      const p = document.querySelector('.e404-piste');
+      return p ? getComputedStyle(p).display : 'ABSENT';
+    });
+    if (applique !== 'flex') noter('404 PROFONDEUR', chemin, `mise en forme absente (.e404-piste display=${applique})`);
+    await ctx.close();
+  }
+}
+
 /* ── 4 · LA CONTRAINTE QUI NE DOIT JAMAIS CÉDER ─────────────────────────── */
 {
   /* demo-express CRÉE UN COMPTE : un <a href> serait suivi par les robots et
