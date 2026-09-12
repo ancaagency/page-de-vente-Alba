@@ -1,6 +1,11 @@
 # Déploiement de la page de vente
 
-Vitrine statique ALBA Studio → **Cloudflare Pages**, servie sur `www.alba-studio.co`.
+Vitrine statique ALBA Studio → **Cloudflare Pages**.
+
+> ⚠️ **Ce document décrit la mise en place INITIALE, sur `www.alba-studio.co`.**
+> Depuis le 12 septembre 2026, l'adresse canonique est l'apex
+> `alba-studio.co` — voir `MIGRATION-APEX.md`. Les procédures ci-dessous
+> restent exactes ; seul le nom d'hôte a changé.
 
 ---
 

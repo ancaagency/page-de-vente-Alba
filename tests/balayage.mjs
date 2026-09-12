@@ -144,6 +144,40 @@ for (const route of ROUTES) {
   }
 }
 
+/* ── 2 bis · UN SEUL HÔTE CANONIQUE, PARTOUT ────────────────────────────── */
+{
+  /* Le site a vécu sur `www.alba-studio.co` puis basculé sur l'apex
+     (MIGRATION-APEX.md, étape 4). Une bascule pareille touche 88 URLs absolues
+     réparties dans les canoniques, les alternatives de langue, les aperçus de
+     partage, les données structurées, le plan du site et robots.txt. En oublier
+     une poignée ne se voit à l'œil NULLE PART — mais Google, lui, reçoit deux
+     adresses canoniques contradictoires pour le même contenu.
+
+     On ne fige pas l'hôte attendu ici : on vérifie qu'il n'y en a QU'UN. Une
+     prochaine bascule n'aura donc rien à changer dans ce contrôle, et une
+     bascule à moitié faite le fera échouer. */
+  const hotes = new Map();
+  const fichiers = [...PAGES.map((p) => p.fichier), 'sitemap.xml', 'robots.txt'];
+  for (const f of fichiers) {
+    const src = fs.readFileSync(path.join(ROOT, f), 'utf8');
+    /* Le PRÉRENDU est exclu : c'est un instantané du rendu, il ne porte aucune
+       URL d'identité. */
+    const i = src.indexOf('<!-- PRERENDU:DEBUT');
+    const utile = i === -1 ? src : src.slice(0, i) + src.slice(src.indexOf('<!-- PRERENDU:FIN -->'));
+    for (const m of utile.matchAll(/https?:\/\/([a-z0-9.-]*alba-studio\.co)/g)) {
+      /* app.alba-studio.co est un AUTRE service, pas un hôte de la vitrine. */
+      if (m[1].startsWith('app.')) continue;
+      if (!hotes.has(m[1])) hotes.set(m[1], []);
+      if (!hotes.get(m[1]).includes(f)) hotes.get(m[1]).push(f);
+    }
+  }
+  if (hotes.size > 1) {
+    for (const [h, ou] of hotes) {
+      noter('DEUX HÔTES', h, `déclaré dans ${ou.slice(0, 4).join(', ')}${ou.length > 4 ? ` (+${ou.length - 4})` : ''}`);
+    }
+  }
+}
+
 /* ── 3 · LA PAGE D'ERREUR REND-ELLE UN CHEMIN ? ─────────────────────────── */
 {
   /* Il n'y en avait pas : Cloudflare servait la sienne, blanche, sans marque ni

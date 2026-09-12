@@ -80,7 +80,7 @@ import path from 'node:path';
 import { injecter as injecterFaqJsonLd } from './faq-jsonld.mjs';
 
 const ROOT = path.resolve(new URL('.', import.meta.url).pathname, '..');
-const SITE = 'https://www.alba-studio.co';
+const SITE = 'https://alba-studio.co';
 
 const DEBUT = '<!-- ANGLAIS:DEBUT — produit par outils/anglais.mjs, ne pas modifier -->';
 const FIN = '<!-- ANGLAIS:FIN -->';

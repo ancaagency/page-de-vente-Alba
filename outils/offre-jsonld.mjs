@@ -38,7 +38,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const ROOT = path.resolve(new URL('.', import.meta.url).pathname, '..');
-const SITE = 'https://www.alba-studio.co';
+const SITE = 'https://alba-studio.co';
 const DEBUT = '<!-- OFFRE-JSONLD:DEBUT — dérivé de tarifs.js, ne pas modifier à la main -->';
 const FIN = '<!-- OFFRE-JSONLD:FIN -->';
 

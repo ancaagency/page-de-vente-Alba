@@ -196,7 +196,7 @@ console.log('\n===== réciprocité des alternatives =====');
 {
   const sitemap = fs.readFileSync(path.join(ROOT, 'sitemap.xml'), 'utf8');
   for (const paire of PAIRES) {
-    ok(sitemap.includes(`>https://www.alba-studio.co${paire.routeEn}<`), `sitemap.xml annonce ${paire.routeEn}`);
+    ok(sitemap.includes(`>https://alba-studio.co${paire.routeEn}<`), `sitemap.xml annonce ${paire.routeEn}`);
   }
 }
 

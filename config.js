@@ -226,7 +226,7 @@ window.ALBA_GA4 = null;
  * propre script.
  *
  * La vérification tient en trente secondes, une fois en ligne :
- *   ouvrir www.alba-studio.co en navigation privée → F12 → Application →
+ *   ouvrir alba-studio.co en navigation privée → F12 → Application →
  *   Cookies et Local Storage. Il ne doit RIEN y avoir.
  * Si un cookie apparaît, repassez ce fichier à `null` : la page redevient
  * instantanément exempte de bandeau, et rien d'autre n'est à défaire.

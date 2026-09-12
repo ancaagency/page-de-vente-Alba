@@ -31,7 +31,14 @@ l'ouvre sur la connexion (`Auth.tsx`, dépôt de l'application).
 
 | À faire | Gardé en attente parce que |
 |---|---|
-| `canonical`, `og:url`, `sitemap.xml`, `robots.txt` : `www` → apex | Tant que l'apex sert l'application, un `canonical` vers l'apex dirait à Google que la page de vente canonique **est l'application**. À faire quand l'apex est rattaché au projet Pages, pas avant. |
+| ~~`canonical`, `og:url`, `sitemap.xml`, `robots.txt` : `www` → apex~~ | ✅ **FAIT le 12 septembre 2026.** L'apex est rattaché au projet Pages et sert la vitrine (constaté en production). Les 88 URLs absolues du dépôt visent désormais `https://alba-studio.co`. `tests/balayage.mjs` vérifie qu'il ne reste qu'un seul hôte canonique sur tout le site. |
+
+**Ce qui reste, et qui ne se fait pas depuis ce dépôt :** poser une règle de
+redirection Cloudflare `www.alba-studio.co/*` → `https://alba-studio.co/$1`
+en 301. Les deux hôtes servent maintenant la MÊME chose, donc l'avertissement
+plus bas — « ne pas rediriger tant que les deux servent des choses
+différentes » — ne s'applique plus. Sans cette règle, rien ne casse : les
+canoniques disent déjà quelle adresse fait foi.
 
 `bascule.mjs` (dossier `tests/`) vérifie que tous les liens suivent quand
 `config.js` change : à lancer le jour de la bascule.

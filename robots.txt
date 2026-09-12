@@ -14,4 +14,4 @@ Disallow: /docs/
 Disallow: /tests/
 Disallow: /outils/
 
-Sitemap: https://www.alba-studio.co/sitemap.xml
+Sitemap: https://alba-studio.co/sitemap.xml

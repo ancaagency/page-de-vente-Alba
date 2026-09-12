@@ -54,13 +54,18 @@ Les apps mobiles iOS/Android sont (ou seront) un habillage de la web app — mê
 
 **Recommandation retenue : Cloudflare Pages** — connecté au repo GitHub, gratuit, HTTPS, CDN, et supporte le format `_redirects` déjà présent dans le projet. Aucun compte supplémentaire à créer puisque le DNS est déjà chez Cloudflare.
 
-Découpage de domaine recommandé :
+Découpage de domaine **en place** depuis le 12 septembre 2026 :
 
 ```
-alba-studio.co        → page de vente (Cloudflare Pages)
-www.alba-studio.co    → idem (redirection 301 vers l'apex, ou l'inverse)
+alba-studio.co        → page de vente (Cloudflare Pages) — ADRESSE CANONIQUE
+www.alba-studio.co    → idem (redirection 301 vers l'apex : à poser côté Cloudflare)
 app.alba-studio.co    → application web
 ```
+
+Toutes les URLs absolues du dépôt — canoniques, alternatives de langue,
+aperçus de partage, données structurées, `sitemap.xml`, `robots.txt` — visent
+l'apex. `tests/balayage.mjs` échoue s'il en reste une sur un autre hôte.
+Le détail de la bascule est dans `MIGRATION-APEX.md`.
 
 **À déterminer avant de configurer le DNS : où l'application est-elle déployée ?** Supabase ne sert que la base et l'auth, pas l'interface. Cette information manque et conditionne les enregistrements DNS.
 
