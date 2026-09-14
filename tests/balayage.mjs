@@ -125,6 +125,61 @@ for (const route of ROUTES) {
   await ctx.close();
 }
 
+/* ── 1 bis · UNE IMAGE NE DOIT PAS RECOUVRIR DU TEXTE ───────────────────── */
+{
+  /* UN DÉBORDEMENT HORIZONTAL SE VOIT ; UN RECOUVREMENT, NON.
+     La section « Partout où vous travaillez » posait sa tablette en absolu,
+     ancrée en bas, avec une HAUTEUR FIXE sur sa boîte et une LARGEUR EN
+     POURCENTAGE sur l'image. L'image étant en portrait, sa hauteur suivait le
+     viewport : 1 022 px dans une boîte de 440 à 800 px de large. Elle grandissait
+     donc vers le HAUT et recouvrait le paragraphe sur 486×446 px — illisible sur
+     toute tablette, et invisible pour tous les autres contrôles.
+
+     ⚠️ IL FAUT FAIRE DÉFILER JUSQU'AU BLOC AVANT DE MESURER. Les images de
+     cette section arrivent par une animation : tant qu'elles ne sont pas
+     entrées dans le champ, leur position n'est pas la bonne. Une première
+     version de ce contrôle mesurait au chargement et ne trouvait RIEN, sur une
+     page pourtant cassée. */
+  for (const largeur of [390, 560, 700, 768, 800, 900, 1024, 1280]) {
+    const ctx = await nav.newContext({ viewport: { width: largeur, height: 1100 } });
+    const page = await ctx.newPage();
+    await page.goto(BASE + '/', { waitUntil: 'load', timeout: 40000 });
+    await page.waitForTimeout(2200);
+    const recouvrements = await page.evaluate(async () => {
+      const dodo = (ms) => new Promise((r) => setTimeout(r, ms));
+      const trouves = [];
+      /* Les blocs de la version empilée ET les volets de la version épinglée. */
+      const blocs = [...document.querySelectorAll('#devices .pm-block, #devices .pinned-inner')];
+      for (const bloc of blocs) {
+        bloc.scrollIntoView({ block: 'center' });
+        await dodo(1200);
+        const textes = [...bloc.querySelectorAll('.pm-text, .pinned-pane-text.is-active')];
+        const images = [...bloc.querySelectorAll('.dev-shot')];
+        for (const t of textes) {
+          const a = t.getBoundingClientRect();
+          if (a.width < 4 || a.height < 4) continue;
+          for (const im of images) {
+            const b = im.getBoundingClientRect();
+            if (b.width < 4 || b.height < 4) continue;
+            const ox = Math.min(a.right, b.right) - Math.max(a.left, b.left);
+            const oy = Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top);
+            /* 8 px de tolérance : une ombre portée ou un arrondi peuvent
+               mordre de quelques pixels sans rien rendre illisible. */
+            if (ox > 8 && oy > 8) {
+              trouves.push(`${im.className.split(' ').pop()} sur ${Math.round(ox)}×${Math.round(oy)}px`);
+            }
+          }
+        }
+      }
+      return [...new Set(trouves)];
+    });
+    if (recouvrements.length) {
+      noter('TEXTE RECOUVERT', `/ @${largeur}px`, recouvrements.slice(0, 3).join(' · '));
+    }
+    await ctx.close();
+  }
+}
+
 /* ── 2 · LE PLAN DU SITE DIT-IL LA VÉRITÉ ? ─────────────────────────────── */
 {
   const plan = fs.readFileSync(path.join(ROOT, 'sitemap.xml'), 'utf8');

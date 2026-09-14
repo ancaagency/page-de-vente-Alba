@@ -592,7 +592,29 @@
 
 @media (max-width: 900px) {
   .laptop-shot { width: 106%; }
-  .dev-duo { height: 440px; }
+  /* ⚠️ PAS DE HAUTEUR FIXE ICI. C'EST LA CAUSE, ET ELLE A DÉJÀ FRAPPÉ UNE FOIS.
+     `.dev-duo` portait `height: 440px` pendant que la tablette est dimensionnée
+     en POURCENTAGE DE LARGEUR (86 %). L'image est en portrait — 530×837, soit
+     un rapport de 1,58 — donc sa hauteur suit la largeur du viewport, pas la
+     boîte. Mesuré : 1 022 px de haut pour une boîte de 440 à 800 px de large.
+     Ancrée en bas, elle grandissait vers le HAUT et recouvrait le paragraphe
+     sur 486×446 px.
+
+     Le bloc ≤ 560 px plus bas décrit ce défaut mot pour mot et l'avait corrigé
+     — en recalculant un autre nombre, pour une colonne de 340 px. C'est
+     précisément pour ça qu'il a survécu entre 561 et 900 px : un nombre juste à
+     une largeur est faux à toutes les autres.
+
+     La boîte suit donc la largeur, et la composition cesse de grandir au-delà
+     d'une taille raisonnable — à 900 px de large, la tablette faisait 733 px.
+     Le rapport 1/1,35 laisse la place à la tablette (1,358 × largeur) plus son
+     débordement volontaire en bas. tests/balayage.mjs mesure le recouvrement. */
+  .dev-duo {
+    height: auto;
+    max-width: 520px;
+    margin-inline: auto;
+    aspect-ratio: 1 / 1.35;
+  }
   .dev-duo .tablet-shot { width: 86%; bottom: -14%; }
   .dev-duo .phone-shot { width: 32%; }
 }
@@ -608,7 +630,9 @@
      dessous. On descend la maquette entiere plutot que la seule tablette, pour
      que le telephone garde sa position relative et que la composition ne se
      deforme pas. La marge est prise sur le vide deja present sous l'image. */
-  .dev-duo { height: 460px; margin-top: 44px; }
+  /* La hauteur vient du bloc ≤ 900 px (aspect-ratio) : on ne remet pas de
+     nombre, seulement la marge d'aération. */
+  .dev-duo { margin-top: 44px; }
   .dev-duo .tablet-shot { width: 82%; left: -8%; bottom: 0; }
   .dev-duo .phone-shot { width: 32%; right: -4%; bottom: 18%; }
   .laptop-shot { width: 108%; }
