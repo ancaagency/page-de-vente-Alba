@@ -49,9 +49,29 @@ window.ALBA_TARIFS = {
   /* Découverte : gratuite, un projet, une personne. Elle n'a pas de montant —
      c'est son argument. `palier: null` veut dire « aucun paiement ». */
 
+  /* ── LES QUANTITÉS, AU MÊME ENDROIT QUE LES PRIX ──────────────────────────
+     Elles vivaient dans neuf chaînes de contenu.js, recopiées à la main. Trois
+     d'entre elles annonçaient des plafonds qui n'ont jamais existé — « 1 500 »
+     et « 5 000 questions par mois » — et aucune ne mentionnait l'espace de
+     fichiers. Un chiffre de quantité se périme exactement comme un prix ; il
+     mérite la même source unique. */
+
+  /* Découverte n'a pas de prix : c'est son argument. Elle a des quantités. */
+  decouverte: {
+    projets: 1,        // 1 projet AU TOTAL, et non « à la fois » — voir ci-dessous
+    personnes: 1,
+    go: 2,
+    analyses: 10,      // analyses de documents par mois
+    questionsParMois: 300,   // plafond mensuel, propre à l'offre gratuite
+  },
+
   atelier: {
     mois: 49,          // 49 € HT par mois
     an: 480,           // 480 € HT par an, soit 40 € HT par mois
+    projets: 5,        // menés de front : archiver un projet terminé libère une place
+    personnes: 1,
+    go: 100,
+    analyses: 50,
   },
 
   /* Agence est DÉGRESSIVE, et ce n'est pas un détail de présentation : la page
@@ -61,6 +81,19 @@ window.ALBA_TARIFS = {
   agence: {
     mois: { premiere: 69, suivante: 39 },
     an:   { premiere: 684, suivante: 384 },
+    projets: null,     // illimités
+    go: 250,
+    analyses: 200,
+  },
+
+  /* ⚠️ LÉO RÉPOND AU MÊME RYTHME DANS TOUTES LES OFFRES.
+     Les cartes annonçaient « 1 500 » puis « 5 000 questions par mois » selon
+     l'offre : ces plafonds n'existent pas. La seule règle est un rythme
+     quotidien, identique partout — c'est d'ailleurs cohérent avec la règle d'or
+     de la page, qui ne borne que des quantités et ne réserve aucune fonction.
+     Seule l'offre gratuite porte en plus un plafond mensuel. */
+  leo: {
+    questionsParJourParPersonne: 20,
   },
 
   /* Le nombre maximum de personnes dans un espace. C'est une quantité, pas un

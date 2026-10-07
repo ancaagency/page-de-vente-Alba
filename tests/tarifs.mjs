@@ -33,6 +33,7 @@
 import { chromium } from 'playwright-core';
 import { demarrer, ROOT } from './serveur.mjs';
 import { ROUTES } from '../outils/pages.mjs';
+import { lireTarifs } from '../outils/offre-jsonld.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 
@@ -399,19 +400,33 @@ console.log('\n===== l’estimation de temps =====');
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   5 · PLUS UN SEUL GIGAOCTET, NULLE PART
+   5 · CHAQUE GIGAOCTET AFFICHÉ VIENT DE LA GRILLE
+   ═══════════════════════════════════════════════════════════════════════════
+   CE CONTRÔLE INTERDISAIT TOUT GIGAOCTET. Il avait raison à l'époque : les
+   trois offres ne différaient QUE par le stockage — 49/69/89 € pour 50/150/300
+   Go — alors que l'ensemble des comptes occupait 0,143 Go en production. Vendre
+   un plafond que personne n'atteindra jamais n'est pas une offre.
+
+   L'espace de fichiers est revenu, mais à une autre place : il est désormais UNE
+   quantité parmi quatre (projets, personnes, gigaoctets, analyses), et non plus
+   l'axe de prix. L'interdiction n'a donc plus de sens — et la remplacer par rien
+   serait pire : c'est exactement ainsi qu'on se retrouve avec « 50 Go » sur une
+   page et « 100 Go » sur une autre.
+
+   La règle devient celle des prix : tout nombre de gigaoctets affiché doit se
+   retrouver dans tarifs.js. On ne fige aucune valeur ici — changer la grille
+   n'oblige donc à rien toucher dans ce fichier, et une page oubliée échoue.
    ═══════════════════════════════════════════════════════════════════════════ */
-console.log('\n===== aucun stockage visible sur le site =====');
+console.log('\n===== les gigaoctets affichés viennent de la grille =====');
 {
-  /* On lit le TEXTE RENDU, pas les fichiers : un mot peut vivre dans un
-     commentaire de code sans que personne ne le voie, et c'est le cas du champ
-     historique du contrat de paiement. Ce qui est interdit, c'est ce que le
-     visiteur lit. */
+  const GRILLE = lireTarifs();
+  const AUTORISES = new Set([GRILLE.decouverte.go, GRILLE.atelier.go, GRILLE.agence.go]);
+  /* « storage » reste proscrit dans le texte visible : c'est le nom du champ
+     HISTORIQUE du contrat de paiement, qui est un sélecteur d'offre et non un
+     volume. Le voir à l'écran voudrait dire qu'un détail d'implémentation a
+     fui dans la copie. */
   const INTERDITS = [
-    { motif: /\b\d+\s*Go\b/i, quoi: 'un nombre de gigaoctets' },
-    { motif: /\b\d+\s*GB\b/i, quoi: 'un nombre de gigaoctets (anglais)' },
-    { motif: /stockage/i,     quoi: 'le mot « stockage »' },
-    { motif: /\bstorage\b/i,  quoi: 'le mot « storage »' },
+    { motif: /\bstorage\b/i, quoi: 'le mot « storage », qui est un nom de champ, pas une quantité' },
   ];
   /* Les mentions légales décrivent l'hébergement des fichiers : « stockage des
      fichiers déposés par les utilisateurs » y est un terme technique exact, pas
@@ -434,9 +449,15 @@ console.log('\n===== aucun stockage visible sur le site =====');
       document.querySelector('meta[property="og:description"]')?.content || '',
       document.title,
     ].join('\n'));
-    const trouves = INTERDITS.filter((i) => i.motif.test(texte));
+    const trouves = INTERDITS.filter((i) => i.motif.test(texte)).map((t) => t.quoi);
+    /* Tout nombre suivi de Go ou GB, et il doit être dans la grille. */
+    const vus = [...texte.matchAll(/\b(\d+)\s*G[oB]\b/g)].map((m) => Number(m[1]));
+    const intrus = [...new Set(vus)].filter((n) => !AUTORISES.has(n));
+    if (intrus.length) trouves.push(`des gigaoctets hors grille : ${intrus.join(', ')}`);
     ok(trouves.length === 0,
-       `${route.padEnd(24)} ${trouves.length === 0 ? 'rien à signaler' : 'CONTIENT ' + trouves.map((t) => t.quoi).join(', ')}`);
+       `${route.padEnd(24)} ${trouves.length === 0
+          ? (vus.length ? `${[...new Set(vus)].join(', ')} Go — tous dans la grille` : 'aucun gigaoctet')
+          : 'CONTIENT ' + trouves.join(', ')}`);
     await ctx.close();
   }
 }

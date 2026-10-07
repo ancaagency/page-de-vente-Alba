@@ -809,16 +809,33 @@ var Pricing = function Pricing() {
     nom: Txt("tarifs.offre-decouverte", "Découverte", "Discovery"),
     resume: Txt("tarifs.decouverte-resume", "Pour voir ce que ça donne sur un vrai projet.", "To see what it does on a real project."),
     court: Txt("tarifs.decouverte-court", "1 projet · 1 personne", "1 project · 1 person"),
-    quantites: [Txt("tarifs.decouverte-q1", "1 projet, offert à vie", "1 project, free for ever"), Txt("tarifs.decouverte-q2", "1 personne", "1 person"), Txt("tarifs.decouverte-q3", "Léo : 10 lectures de documents et 300 questions par mois", "Léo: 10 document readings and 300 questions per month")],
-    lectures: 10
+    /* ── LES QUANTITÉS VIENNENT DE tarifs.js, ELLES NE SONT PLUS RECOPIÉES ──
+       Elles étaient neuf chaînes de contenu.js. Trois annonçaient des
+       plafonds qui n'existent pas (« 1 500 », « 5 000 questions par mois »)
+       et aucune ne disait l'espace de fichiers. Un chiffre de quantité se
+       périme comme un prix : même source, même garde-fou.
+       « AU TOTAL » et non « à la fois » : sur l'offre gratuite, archiver le
+       projet ne libère pas la place — c'est le seul palier où c'est vrai, et
+       le taire ferait découvrir la limite une fois installé. */
+    quantites: [L("".concat(TARIFS.decouverte.projets, " projet au total"), "".concat(TARIFS.decouverte.projets, " project in total")), L("".concat(TARIFS.decouverte.personnes, " personne"), "".concat(TARIFS.decouverte.personnes, " person")), L("".concat(TARIFS.decouverte.go, " Go de documents"), "".concat(TARIFS.decouverte.go, " GB of documents")),
+    /* Pas `euros()` ici : il est défini PLUS BAS dans ce composant, et une
+       `const` lue avant son initialisation lève une ReferenceError — la
+       section entière deviendrait blanche. En dessous de mille, il n'y a
+       de toute façon aucun séparateur à poser. */
+    L("L\xE9o : ".concat(TARIFS.decouverte.analyses, " analyses de documents et ").concat(TARIFS.decouverte.questionsParMois, " questions par mois"), "L\xE9o: ".concat(TARIFS.decouverte.analyses, " document analyses and ").concat(TARIFS.decouverte.questionsParMois, " questions per month"))],
+    lectures: TARIFS.decouverte.analyses
   }, {
     cle: "atelier",
     palier: 50,
     nom: Txt("tarifs.offre-atelier", "Atelier", "Studio"),
     resume: Txt("tarifs.atelier-resume", "Pour un architecte qui mène plusieurs affaires de front.", "For an architect running several jobs at once."),
     court: Txt("tarifs.atelier-court", "5 projets de front · 1 personne", "5 live projects · 1 person"),
-    quantites: [Txt("tarifs.atelier-q1", "5 projets menés de front, archives illimitées", "5 live projects, unlimited archives"), Txt("tarifs.atelier-q2", "1 personne", "1 person"), Txt("tarifs.atelier-q3", "Léo : 50 lectures et 1 500 questions par mois", "Léo: 50 readings and 1,500 questions per month")],
-    lectures: 50
+    /* « archives illimitées » est tombé : la ligne cohabitait mal avec un
+       plafond de 100 Go, et la nouvelle grille ne la porte pas. Le mécanisme
+       — archiver libère une place — reste dit sous le curseur des projets,
+       où il sert à décider. */
+    quantites: [L("".concat(TARIFS.atelier.projets, " projets men\xE9s de front"), "".concat(TARIFS.atelier.projets, " live projects")), L("".concat(TARIFS.atelier.personnes, " personne"), "".concat(TARIFS.atelier.personnes, " person")), L("".concat(TARIFS.atelier.go, " Go de documents"), "".concat(TARIFS.atelier.go, " GB of documents")), L("L\xE9o : ".concat(TARIFS.atelier.analyses, " analyses de documents par mois"), "L\xE9o: ".concat(TARIFS.atelier.analyses, " document analyses per month"))],
+    lectures: TARIFS.atelier.analyses
   }, {
     cle: "agence",
     palier: 150,
@@ -826,8 +843,8 @@ var Pricing = function Pricing() {
     nom: Txt("tarifs.offre-agence", "Agence", "Practice"),
     resume: Txt("tarifs.agence-resume", "Pour une équipe, jusqu'à quatre personnes.", "For a team, up to four people."),
     court: Txt("tarifs.agence-court", "Projets illimités · jusqu'à 4 personnes", "Unlimited projects · up to 4 people"),
-    quantites: [Txt("tarifs.agence-q1", "Projets illimités", "Unlimited projects"), Txt("tarifs.agence-q2", "Jusqu'à 4 personnes", "Up to 4 people"), Txt("tarifs.agence-q3", "Léo : 200 lectures et 5 000 questions par mois", "Léo: 200 readings and 5,000 questions per month")],
-    lectures: 200
+    quantites: [Txt("tarifs.agence-q1", "Projets illimités", "Unlimited projects"), L("Jusqu'\xE0 ".concat(TARIFS.maxPersonnes, " personnes"), "Up to ".concat(TARIFS.maxPersonnes, " people")), L("".concat(TARIFS.agence.go, " Go de documents"), "".concat(TARIFS.agence.go, " GB of documents")), L("L\xE9o : ".concat(TARIFS.agence.analyses, " analyses de documents par mois"), "L\xE9o: ".concat(TARIFS.agence.analyses, " document analyses per month"))],
+    lectures: TARIFS.agence.analyses
   }];
 
   /* 1 personne et 1 projet : Découverte, qui est gratuite. On la propose
@@ -1109,7 +1126,7 @@ var Pricing = function Pricing() {
   }, /*#__PURE__*/React.createElement(Icon, {
     name: "check",
     size: 18
-  }), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("b", null, Txt("tarifs.regle-titre", "Toutes les fonctionnalités, dans toutes les offres.", "Every feature, in every plan.")), " ", Txt("tarifs.regle-corps", "Dès le premier euro, et y compris dans l'offre gratuite. Aucune fonction n'est réservée à un palier supérieur : nous ne bornons que des quantités.", "From the first euro, including in the free plan. No feature is reserved for a higher tier: we cap quantities only.")))), /*#__PURE__*/React.createElement("div", {
+  }), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("b", null, Txt("tarifs.regle-titre", "Toutes les fonctionnalités, dans toutes les offres.", "Every feature, in every plan.")), " ", Txt("tarifs.regle-corps", "Dès le premier euro, et y compris dans l'offre gratuite. Aucune fonction n'est réservée à un palier supérieur : nous ne bornons que des quantités.", "From the first euro, including in the free plan. No feature is reserved for a higher tier: we cap quantities only."), " ", L("L\xE9o r\xE9pond \xE0 ".concat(TARIFS.leo.questionsParJourParPersonne, " questions par jour et par personne, quelle que soit l'offre."), "L\xE9o answers ".concat(TARIFS.leo.questionsParJourParPersonne, " questions per day per person, whichever plan you are on."))))), /*#__PURE__*/React.createElement("div", {
     className: "conf-reponse",
     "aria-live": "polite"
   }, /*#__PURE__*/React.createElement("div", {

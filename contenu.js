@@ -603,7 +603,7 @@ window.ALBA_CONTENU = {
     en: "What does the free project include?",
   },
   "faq.un-projet-complet-sans-limite-de": {
-    fr: "Un projet complet pour commencer : cockpit, décisions signées, messagerie, documents, matériauthèque, accès maître d'ouvrage et co-traitants. Aucune carte bleue demandée. Vous passez au tarif Studio quand vous créez votre deuxième projet, et tout ce que vous avez construit reste en place.",
+    fr: "Un projet complet pour commencer : cockpit, décisions signées, messagerie, documents, matériauthèque, accès maître d'ouvrage et co-traitants. Aucune carte bleue demandée. Vous passez à l'offre Atelier quand vous créez votre deuxième projet, et tout ce que vous avez construit reste en place.",
     en: "One complete project to get started: cockpit, signed decisions, messaging, documents, material library, client and consultant access. No credit card required. You move to the Studio plan when you create your second project, and everything you've built stays in place.",
   },
   "faq.comment-alba-s-integre-a-ma": {
@@ -905,18 +905,6 @@ window.ALBA_CONTENU = {
     fr: "Pour voir ce que ça donne sur un vrai projet.",
     en: "To see what it does on a real project.",
   },
-  "tarifs.decouverte-q1": {
-    fr: "1 projet, offert à vie",
-    en: "1 project, free for ever",
-  },
-  "tarifs.decouverte-q2": {
-    fr: "1 personne",
-    en: "1 person",
-  },
-  "tarifs.decouverte-q3": {
-    fr: "Léo : 10 lectures de documents et 300 questions par mois",
-    en: "Léo: 10 document readings and 300 questions per month",
-  },
   "tarifs.offre-atelier": {
     fr: "Atelier",
     en: "Studio",
@@ -924,18 +912,6 @@ window.ALBA_CONTENU = {
   "tarifs.atelier-resume": {
     fr: "Pour un architecte qui mène plusieurs affaires de front.",
     en: "For an architect running several jobs at once.",
-  },
-  "tarifs.atelier-q1": {
-    fr: "5 projets menés de front, archives illimitées",
-    en: "5 live projects, unlimited archives",
-  },
-  "tarifs.atelier-q2": {
-    fr: "1 personne",
-    en: "1 person",
-  },
-  "tarifs.atelier-q3": {
-    fr: "Léo : 50 lectures et 1 500 questions par mois",
-    en: "Léo: 50 readings and 1,500 questions per month",
   },
   "tarifs.offre-agence": {
     fr: "Agence",
@@ -945,17 +921,14 @@ window.ALBA_CONTENU = {
     fr: "Pour une équipe, jusqu'à quatre personnes.",
     en: "For a team, up to four people.",
   },
+  /* Les autres quantités des trois offres (projets, personnes, Go, analyses)
+     ne sont plus de la copie : elles viennent de tarifs.js et sont composées
+     dans sections.jsx. Trois d'entre elles annonçaient ici des plafonds qui
+     n'existaient pas — « 1 500 » et « 5 000 questions par mois ». Seul
+     « Projets illimités » reste un texte, parce qu'il n'y a pas de nombre. */
   "tarifs.agence-q1": {
     fr: "Projets illimités",
     en: "Unlimited projects",
-  },
-  "tarifs.agence-q2": {
-    fr: "Jusqu'à 4 personnes",
-    en: "Up to 4 people",
-  },
-  "tarifs.agence-q3": {
-    fr: "Léo : 200 lectures et 5 000 questions par mois",
-    en: "Léo: 200 readings and 5,000 questions per month",
   },
   "tarifs.eyebrow": {
     fr: "Tarifs",
@@ -1062,8 +1035,8 @@ window.ALBA_CONTENU = {
     en: "This is an assumption, not a measurement: we have not recorded this figure with our clients. Set it to what you observe.",
   },
   "tarifs.mentions": {
-    fr: "Montants HT · Estimation indicative",
-    en: "Amounts excl. VAT · Indicative estimate",
+    fr: "Montants HT, réservés aux professionnels · Estimation indicative",
+    en: "Amounts excl. VAT, for professionals only · Indicative estimate",
   },
   "tarifs.votre-offre": {
     fr: "Votre offre",
