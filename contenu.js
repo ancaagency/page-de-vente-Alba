@@ -917,10 +917,6 @@ window.ALBA_CONTENU = {
     fr: "Agence",
     en: "Practice",
   },
-  "tarifs.agence-resume": {
-    fr: "Pour une équipe, jusqu'à quatre personnes.",
-    en: "For a team, up to four people.",
-  },
   /* Les autres quantités des trois offres (projets, personnes, Go, analyses)
      ne sont plus de la copie : elles viennent de tarifs.js et sont composées
      dans sections.jsx. Trois d'entre elles annonçaient ici des plafonds qui

@@ -173,6 +173,30 @@ console.log('\n===== le calculateur, au mois =====');
        `${n} personne(s) → le configurateur et les 3 tuiles restent affichés${invisibles.length ? ` — DISPARUS : ${invisibles.join(', ')}` : ''}`);
   }
 
+  /* ── TOUT LE PANNEAU SUIT LA RÉPONSE, PAS SEULEMENT LE PRIX ─────────────
+     Le résumé de l'offre Agence disait « Pour une équipe, jusqu'à quatre
+     personnes » quel que soit le nombre choisi, et la ligne de quantité
+     répétait « Jusqu'à 4 personnes ». Le prix changeait bien, l'addition
+     aussi — mais deux lignes sur cinq restaient figées juste au-dessus, et on
+     continuait d'annoncer un plafond à quelqu'un qui venait de donner son
+     chiffre. Un panneau à moitié vivant se lit comme un panneau cassé.
+     On éprouve que les valeurs DIFFÈRENT entre deux réponses : figer n'importe
+     laquelle des deux fera échouer ce contrôle. */
+  {
+    const vus = [];
+    for (const n of [2, 3, 4]) {
+      await regler(page, n, 12);
+      vus.push(await page.evaluate(() => ({
+        resume: document.querySelector('.conf-resume')?.textContent.trim() || '',
+        personnes: [...document.querySelectorAll('.conf-quantites li')][1]?.textContent.trim() || '',
+      })));
+    }
+    const resumesDistincts = new Set(vus.map((v) => v.resume)).size === 3;
+    const quantitesDistinctes = new Set(vus.map((v) => v.personnes)).size === 3;
+    ok(resumesDistincts, `le résumé suit le nombre choisi — ${vus.map((v) => `« ${v.resume} »`).join(' ')}`);
+    ok(quantitesDistinctes, `la ligne « personnes » suit le nombre choisi — ${vus.map((v) => v.personnes).join(' · ')}`);
+  }
+
   /* Le détail de l'addition est affiché : « 69 € + 3 × 39 € ». Un total
      dégressif qu'on ne peut pas refaire de tête ressemble à une erreur. */
   await regler(page, 4, 12);

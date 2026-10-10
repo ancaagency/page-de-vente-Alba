@@ -841,9 +841,23 @@ var Pricing = function Pricing() {
     palier: 150,
     degressive: true,
     nom: Txt("tarifs.offre-agence", "Agence", "Practice"),
-    resume: Txt("tarifs.agence-resume", "Pour une équipe, jusqu'à quatre personnes.", "For a team, up to four people."),
+    /* ── CETTE PHRASE DOIT SUIVRE LA RÉPONSE DONNÉE ──────────────────────
+       Elle disait « Pour une équipe, jusqu'à quatre personnes » quel que
+       soit le nombre choisi. Le visiteur venait pourtant de répondre « 2 » :
+       le prix changeait, l'addition changeait, et la phrase juste au-dessus
+       restait identique — le panneau avait l'air à moitié mort, et on
+       continuait de lui parler d'un plafond alors qu'il avait dit son
+       chiffre. Les deux autres offres n'ont pas ce problème : elles ne
+       couvrent qu'une personne, leur résumé ne peut pas varier. */
+    resume: personnes > 1 ? L("Pour une \xE9quipe de ".concat(personnes, " personnes."), "For a team of ".concat(personnes, ".")) : L("Pour travailler seul, avec la place pour grandir.", "To work on your own, with room to grow."),
     court: Txt("tarifs.agence-court", "Projets illimités · jusqu'à 4 personnes", "Unlimited projects · up to 4 people"),
-    quantites: [Txt("tarifs.agence-q1", "Projets illimités", "Unlimited projects"), L("Jusqu'\xE0 ".concat(TARIFS.maxPersonnes, " personnes"), "Up to ".concat(TARIFS.maxPersonnes, " people")), L("".concat(TARIFS.agence.go, " Go de documents"), "".concat(TARIFS.agence.go, " GB of documents")), L("L\xE9o : ".concat(TARIFS.agence.analyses, " analyses de documents par mois"), "L\xE9o: ".concat(TARIFS.agence.analyses, " document analyses per month"))],
+    quantites: [Txt("tarifs.agence-q1", "Projets illimités", "Unlimited projects"),
+    /* Le nombre choisi, pas le plafond. Le plafond reste dit deux fois
+       ailleurs — sous le prix (« puis 39 € par personne supplémentaire,
+       jusqu'à 4 personnes ») et sur la tuile du rail, qui décrit l'offre
+       et non la réponse. Le répéter une troisième fois ici, à la place du
+       chiffre demandé, c'était du bruit qui remplaçait l'information. */
+    L("".concat(personnes, " personne").concat(personnes > 1 ? "s" : ""), "".concat(personnes, " ").concat(personnes > 1 ? "people" : "person")), L("".concat(TARIFS.agence.go, " Go de documents"), "".concat(TARIFS.agence.go, " GB of documents")), L("L\xE9o : ".concat(TARIFS.agence.analyses, " analyses de documents par mois"), "L\xE9o: ".concat(TARIFS.agence.analyses, " document analyses per month"))],
     lectures: TARIFS.agence.analyses
   }];
 
