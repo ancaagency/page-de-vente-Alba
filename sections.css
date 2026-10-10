@@ -1599,7 +1599,7 @@
 }
 
 /* ============================================================================
-   TARIFS — trois offres et le calculateur
+   TARIFS — les offres et le calculateur
    ============================================================================
    Rien n'invente ici de couleur ni de police : tout vient des jetons de
    styles.css, pour qu'un changement de palette emmène cette page avec le reste.
@@ -1821,6 +1821,25 @@
 }
 @media (prefers-reduced-motion: reduce) { .conf-montant { animation: none; } }
 .conf-unite { font-size: 15px; color: rgba(var(--on-bg-rgb), 0.6); }
+/* ── LE TTC, À CÔTÉ DU HT ──────────────────────────────────────────────────
+   13 px et non 15 : il accompagne le prix, il ne le concurrence pas. C'est le
+   HT qui est le prix — la page s'adresse à des professionnels, qui récupèrent
+   la TVA. `flex-basis: 100%` le met sur sa propre ligne sous le montant plutôt
+   que de le laisser serpenter derrière « HT / mois » : à quatre chiffres
+   (« 186 € ») la ligne devenait un chapelet illisible. `nowrap` tient
+   « 58,80 € TTC en France » d'un seul tenant — un montant coupé en deux se
+   relit deux fois. */
+.conf-ttc {
+  flex-basis: 100%;
+  margin-top: -2px;
+  font-size: 13px;
+  line-height: 1.4;
+  color: rgba(var(--on-bg-rgb), 0.52);
+  white-space: nowrap;
+}
+/* En dessous de 380 px, « soit 58,80 € TTC en France » dépasse la colonne :
+   là, et là seulement, on autorise la coupure plutôt que le débordement. */
+@media (max-width: 400px) { .conf-ttc { white-space: normal; } }
 .conf-detail { margin: -4px 0 0; font-size: 13.5px; line-height: 1.5; color: rgba(var(--on-bg-rgb), 0.65); }
 
 .conf-quantites { list-style: none; padding: 0; margin: 8px 0 6px; display: flex; flex-direction: column; gap: 9px; }
@@ -1892,7 +1911,7 @@
   color: rgba(var(--on-bg-rgb), 0.6);
 }
 
-/* ── Les trois offres, en rail ──────────────────────────────────────────── */
+/* ── Les offres, en rail ──────────────────────────────────────────── */
 .conf-rail { display: flex; flex-direction: column; gap: 14px; margin-top: 28px; }
 .conf-rail-titre {
   font-family: var(--font-mono);
@@ -1902,7 +1921,13 @@
   text-align: center;
   color: rgba(var(--on-bg-rgb), 0.5);
 }
-.conf-tuiles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+/* `auto-fit` et non `repeat(3, …)` : le rail portait le nombre d'offres dans
+   sa grille. En ajoutant Atelier+, la quatrième tuile se retrouvait seule sur
+   une deuxième ligne, à pleine largeur — elle avait l'air d'être autre chose
+   que ses voisines, alors qu'elle est leur suite. La grille se dimensionne
+   maintenant sur ce qu'on lui donne, et un cinquième palier ne demandera pas
+   de retoucher cette ligne. */
+.conf-tuiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(176px, 1fr)); gap: 14px; }
 .conf-tuile {
   display: flex;
   flex-direction: column;
@@ -1920,7 +1945,10 @@
 .conf-tuile:hover { border-color: var(--accent-line); transform: translateY(-1px); }
 .conf-tuile.est-active { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent) inset; }
 .conf-tuile:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-.conf-tuile-tete { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+/* `wrap` : à quatre tuiles, une colonne peut descendre à 176 px. « Atelier+ »
+   et « dès 69 € / mois » n'y tiennent pas toujours côte à côte, et le prix est
+   en `nowrap` — sans ce repli, il déborderait de la tuile. */
+.conf-tuile-tete { display: flex; align-items: baseline; justify-content: space-between; gap: 2px 10px; flex-wrap: wrap; }
 .conf-tuile .tarif-nom { font-size: 15px; font-weight: 600; }
 .conf-tuile.est-active .tarif-nom { color: var(--accent); }
 .conf-tuile-prix { font-family: var(--font-display); font-size: 19px; font-weight: 600; letter-spacing: -0.02em; white-space: nowrap; }

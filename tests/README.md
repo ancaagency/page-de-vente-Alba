@@ -81,6 +81,17 @@ Quatre contrôles :
   (l'édition n'aurait aucun effet), pas d'entrée sans appel (on éditerait un
   texte invisible).
 
+Et un **relevé**, qui n'échoue jamais : les textes où le repli du code dit
+autre chose que `contenu.js`. Chaque texte existe en deux exemplaires —
+l'entrée de `contenu.js`, qui gagne, et le littéral du `.jsx`, qui ne s'affiche
+que si `contenu.js` ne se charge pas. L'écart est permis par construction, mais
+il n'est pas anodin : trois ont été trouvés le 10 octobre 2026, dont une réponse
+de FAQ dont le repli annonçait encore « 69 € HT par mois et par personne »,
+corrigée dans `contenu.js` un mois plus tôt. Un filet qui rattrape la panne en
+remettant l'erreur d'origine n'est pas un filet. On affiche donc l'écart ; le
+garde-fou dur — **aucun montant en euros dans un texte éditable ni dans son
+repli** — est dans `montants.mjs`.
+
 ### `transpile.mjs` — les `.js` publiés correspondent-ils aux `.jsx` ?
 
 C'est le prix de la transpilation préalable, et il faut le payer explicitement :

@@ -156,7 +156,7 @@ window.ALBA_CONTENU = {
   },
   "fonctionnalites.fini-le-j-ai-oublie-ce": {
     fr: "Fini le « j'ai oublié ce qu'on avait dit ». Chaque arbitrage est horodaté, signé et archivé. Plus de SAV un an plus tard.",
-    en: "No more \\\"I forgot what we agreed on\\\". Every decision is timestamped, signed and archived. No disputes a year later.",
+    en: "No more \"I forgot what we agreed on\". Every decision is timestamped, signed and archived. No disputes a year later.",
   },
   "fonctionnalites.03-chantier": {
     fr: "03 — Chantier",
@@ -657,9 +657,17 @@ window.ALBA_CONTENU = {
        sur les DIX pages du site : le prix faux était syndiqué partout, et
        candidat à l'affichage direct dans les résultats de recherche.
        Les montants vivent dans tarifs.js et ne s'affichent que sur la page de
-       tarifs. Ici on décrit la RÈGLE, qui elle ne bouge pas. */
-    fr: "Les offres Découverte et Atelier couvrent une personne. L'offre Agence va jusqu'à quatre, avec un tarif dégressif à partir de la deuxième : le détail est sur la page Tarifs. Vos clients et vos co-traitants, eux, restent illimités et gratuits — ils ne comptent dans aucune offre.",
-    en: "The Discovery and Studio plans cover one person. The Practice plan goes up to four, at a decreasing rate from the second person onwards: the detail is on the Pricing page. Your clients and consultants remain unlimited and free — they count towards no plan.",
+       tarifs. Ici on décrit la RÈGLE, qui elle ne bouge pas.
+
+       ⚠️ ET LE TEXTE DE REPLI DU CODE DISAIT ENCORE LE PRIX FAUX. Cette
+       entrée-ci était corrigée, mais le littéral de sections.jsx — celui qui
+       s'affiche si contenu.js ne se charge pas — portait toujours « 69 € HT
+       par mois et par personne ». Un filet de sécurité qui rattrape la panne
+       en remettant l'erreur d'origine n'est pas un filet. Les deux doivent
+       dire la même chose, et tests/contenu.mjs ne le vérifie pas : il ne
+       compare que les CLÉS. */
+    fr: "Les offres Découverte, Atelier et Atelier+ couvrent une personne. L'offre Agence va jusqu'à quatre, avec un tarif dégressif à partir de la deuxième : le détail est sur la page Tarifs. Vos clients et vos co-traitants, eux, restent illimités et gratuits — ils ne comptent dans aucune offre.",
+    en: "The Discovery, Studio and Studio+ plans cover one person. The Practice plan goes up to four, at a decreasing rate from the second person onwards: the detail is on the Pricing page. Your clients and consultants remain unlimited and free — they count towards no plan.",
   },
   "faq.et-pendant-le-chantier": {
     fr: "Et pendant le chantier ?",
@@ -913,11 +921,25 @@ window.ALBA_CONTENU = {
     fr: "Pour un architecte qui mène plusieurs affaires de front.",
     en: "For an architect running several jobs at once.",
   },
+  /* ── LE PALIER INTERMÉDIAIRE ────────────────────────────────────────────
+     « Atelier+ » et non « Studio » : le nom doit dire « le même métier, en
+     plus grand », pas « autre chose ». Un indépendant qui passe du 5e au 6e
+     projet ne change pas de métier, il grandit. Le « + » le dit en un
+     caractère, dans les deux langues, et garde l'ordre de lecture du rail
+     (Découverte → Atelier → Atelier+ → Agence) lisible d'un coup d'œil. */
+  "tarifs.offre-atelier-plus": {
+    fr: "Atelier+",
+    en: "Studio+",
+  },
+  "tarifs.atelier-plus-resume": {
+    fr: "Pour un indépendant qui enchaîne les affaires.",
+    en: "For an independent architect with a steady flow of jobs.",
+  },
   "tarifs.offre-agence": {
     fr: "Agence",
     en: "Practice",
   },
-  /* Les autres quantités des trois offres (projets, personnes, Go, analyses)
+  /* Les autres quantités des offres (projets, personnes, Go, analyses)
      ne sont plus de la copie : elles viennent de tarifs.js et sont composées
      dans sections.jsx. Trois d'entre elles annonçaient ici des plafonds qui
      n'existaient pas — « 1 500 » et « 5 000 questions par mois ». Seul
@@ -1062,9 +1084,13 @@ window.ALBA_CONTENU = {
     fr: "Masquer",
     en: "Hide",
   },
+  /* « Toutes les offres » et non « les trois offres » : il y en a quatre
+     depuis l'ajout d'Atelier+, et il y en aura peut-être cinq. Un compte
+     écrit à la main dans une phrase est un chiffre de plus à maintenir, pour
+     une information que le visiteur a sous les yeux. */
   "tarifs.rail-titre": {
-    fr: "Les trois offres · cliquez pour comparer",
-    en: "The three plans · click to compare",
+    fr: "Toutes les offres · cliquez pour comparer",
+    en: "Every plan · click to compare",
   },
   "tarifs.des": {
     fr: "dès",
@@ -1074,20 +1100,14 @@ window.ALBA_CONTENU = {
     fr: "mois",
     en: "month",
   },
-  /* La ligne courte de chaque tuile du rail. Les quantités complètes restent
-     dans « …-q1 » à « …-q3 », affichées dans la réponse. */
-  "tarifs.decouverte-court": {
-    fr: "1 projet · 1 personne",
-    en: "1 project · 1 person",
-  },
-  "tarifs.atelier-court": {
-    fr: "5 projets de front · 1 personne",
-    en: "5 live projects · 1 person",
-  },
-  "tarifs.agence-court": {
-    fr: "Projets illimités · jusqu'à 4 personnes",
-    en: "Unlimited projects · up to 4 people",
-  },
+  /* ── LES LIGNES COURTES DU RAIL NE SONT PLUS ICI ─────────────────────────
+     Elles y ont été, et elles y recopiaient trois chiffres de la grille :
+     « 5 projets de front », « 1 projet · 1 personne », « jusqu'à 4
+     personnes ». En ajoutant Atelier+, trois tuiles sur quatre portaient donc
+     un nombre écrit à la main et la quatrième le composait depuis tarifs.js —
+     si bien que passer Atelier de 5 à 6 projets aurait corrigé la carte et
+     laissé la tuile mentir. Elles sont désormais composées dans sections.jsx
+     à partir de tarifs.js, comme les quantités de la réponse. */
   "tarifs.porte": {
     fr: "Créer un compte gratuit",
     en: "Create a free account",
@@ -1249,8 +1269,8 @@ window.ALBA_CONTENU = {
     en: "Everything Alba does",
   },
   "catalogue.chapo": {
-    fr: "Tout ce qui suit est inclus dans les trois offres, y compris la gratuite. Nous ne bornons que des quantités : le nombre de projets menés de front, le nombre de personnes, et l'usage de Léo.",
-    en: "Everything below is included in all three plans, including the free one. We cap quantities only: the number of projects you run at once, the number of people, and how much you use Léo.",
+    fr: "Tout ce qui suit est inclus dans toutes les offres, y compris la gratuite. Nous ne bornons que des quantités : le nombre de projets menés de front, le nombre de personnes, et l'usage de Léo.",
+    en: "Everything below is included in every plan, including the free one. We cap quantities only: the number of projects you run at once, the number of people, and how much you use Léo.",
   },
   "catalogue.fermer": {
     fr: "Fermer",

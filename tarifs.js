@@ -36,10 +36,11 @@
    ⚠️ CES MONTANTS SONT CEUX DE STRIPE
 
    Ils ne se déduisent d'aucune règle générale, et surtout pas d'un
-   pourcentage : la remise annuelle vaut 18 % sur Atelier et sur la personne
-   supplémentaire, mais 17,4 % sur le premier siège Agence (684 au lieu de
-   828). Un prix calculé depuis une formule finirait par diverger de Stripe
-   sans que personne ne le voie. On les écrit, et on les vérifie là-bas.
+   pourcentage : la remise annuelle vaut 18,6 % sur Atelier+, 18,4 % sur
+   Atelier et sur la personne supplémentaire, mais 17,4 % sur le premier siège
+   Agence (684 au lieu de 828). Quatre paliers, trois remises différentes. Un
+   prix calculé depuis une formule finirait par diverger de Stripe sans que
+   personne ne le voie. On les écrit, et on les vérifie là-bas.
 
    Modifier un montant ici, c'est le modifier partout. Ensuite :
        node outils/prerendre.mjs && node outils/anglais.mjs && node outils/prerendre.mjs
@@ -74,6 +75,29 @@ window.ALBA_TARIFS = {
     analyses: 50,
   },
 
+  /* ── LE PALIER INTERMÉDIAIRE ──────────────────────────────────────────────
+     Passer du 5e au 6e projet coûtait +41 % : 49 € puis 69 €. C'était la marche
+     la plus haute de toute la grille, et elle tombait sur le moment où un
+     architecte indépendant commence à bien tourner — c'est-à-dire sur le cœur
+     de cible, au moment où il a le plus de raisons de rester.
+
+     Elle avait aussi un défaut de fond : l'offre Agence vend DEUX choses à la
+     fois — les projets illimités ET l'équipe. Un indépendant seul avec six
+     projets se faisait donc vendre une offre dont l'argument principal ne le
+     concernait pas.
+
+     Les trois premiers paliers sont désormais « vous, qui grandissez » ; Agence
+     est « vous n'êtes plus seul ». Deux marches de +20 % et +17 % au lieu
+     d'une de +41 %. */
+  atelierPlus: {
+    mois: 59,
+    an: 576,           // 576 € HT par an, soit 48 € HT par mois (−18,6 %)
+    projets: 10,
+    personnes: 1,
+    go: 150,
+    analyses: 100,
+  },
+
   /* Agence est DÉGRESSIVE, et ce n'est pas un détail de présentation : la page
      a annoncé « 69 € par personne » pendant une journée, soit 276 € pour
      quatre au lieu de 186. Elle nous faisait paraître 48 % plus chers que nous
@@ -95,6 +119,16 @@ window.ALBA_TARIFS = {
   leo: {
     questionsParJourParPersonne: 20,
   },
+
+  /* ── LA TVA, POUR L'AFFICHAGE TTC ────────────────────────────────────────
+     ⚠️ CE TAUX N'EST VRAI QUE POUR UNE AGENCE ASSUJETTIE EN FRANCE.
+     Un client de l'Union européenne qui donne son numéro de TVA
+     intracommunautaire est en autoliquidation : il paie le montant HT, et le
+     TTC affiché ne le concerne pas. Hors Union, idem. C'est pourquoi le TTC
+     est annoncé « en France » partout où il apparaît, et jamais comme le prix
+     que tout le monde paiera. La TVA réelle est calculée par Stripe au
+     paiement, selon le pays et le statut. */
+  tva: 0.20,
 
   /* Le nombre maximum de personnes dans un espace. C'est une quantité, pas un
      prix, mais elle est écrite ici pour la même raison : elle apparaît sur la

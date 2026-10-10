@@ -22,8 +22,8 @@
  * ─────────────────────────────────────────────────────────────────────────────
  * CE QUE lowPrice ET highPrice DÉSIGNENT ICI
  *
- * Le prix d'ENTRÉE de chacune des trois offres, c'est-à-dire exactement ce que
- * les trois cartes affichent : 0 €, 49 €, « à partir de 69 € ».
+ * Le prix d'ENTRÉE de chaque offre, c'est-à-dire exactement ce que les cartes
+ * affichent : 0 €, 49 €, 59 €, « à partir de 69 € ».
  *
  * Ce n'est pas le total qu'un cabinet de quatre personnes paiera (186 €). Un
  * siège supplémentaire est une quantité qu'on ajoute à une offre, pas une
@@ -72,18 +72,23 @@ export function offres(tarifs = lireTarifs()) {
   const url = `${SITE}/tarifs`;
   const bas = 0;                                   // Découverte est gratuite
   const haut = tarifs.agence.mois.premiere;        // le prix d'entrée le plus élevé
+  const liste = [
+    { '@type': 'Offer', name: 'Découverte', price: '0', priceCurrency: 'EUR', url },
+    abonnement('Atelier', tarifs.atelier.mois, url),
+    abonnement('Atelier+', tarifs.atelierPlus.mois, url),
+    abonnement('Agence', tarifs.agence.mois.premiere, url),
+  ];
   return {
     '@type': 'AggregateOffer',
     priceCurrency: 'EUR',
     lowPrice: String(bas),
     highPrice: String(haut),
-    offerCount: '3',
+    /* `liste.length`, et non « 3 » : ce compte a été écrit à la main une fois,
+       et il annonçait encore trois offres le jour où la quatrième est née. Un
+       nombre d'offres se déduit des offres. */
+    offerCount: String(liste.length),
     url,
-    offers: [
-      { '@type': 'Offer', name: 'Découverte', price: '0', priceCurrency: 'EUR', url },
-      abonnement('Atelier', tarifs.atelier.mois, url),
-      abonnement('Agence', tarifs.agence.mois.premiere, url),
-    ],
+    offers: liste,
   };
 }
 

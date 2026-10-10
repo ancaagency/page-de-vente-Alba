@@ -19,7 +19,9 @@
  *
  *   2. LE CONTRAT DE PAIEMENT, AU CHAMP PRÈS. Le champ s'appelle encore
  *      « storage » côté serveur pour des raisons historiques, mais c'est un
- *      SÉLECTEUR D'OFFRE : Atelier vaut 50, Agence vaut 150. La valeur 300 est
+ *      SÉLECTEUR D'OFFRE : Atelier vaut 50, Atelier+ 100, Agence 150. Ces
+ *      valeurs ne désignent plus un volume depuis que la grille a cessé de
+ *      vendre du stockage — elles ne sont qu'un identifiant. La valeur 300 est
  *      une offre retirée de la vente et ne doit JAMAIS repartir. `seats` est le
  *      nombre total de personnes, première incluse. Une erreur ici ne se voit
  *      pas à l'écran : le visiteur paie, et découvre l'autre offre.
@@ -45,6 +47,14 @@ const navigateur = await chromium.launch({
   executablePath: process.env.CHROMIUM_PATH || '/opt/pw-browsers/chromium-1194/chrome-linux/chrome',
 });
 const BASE = 'http://localhost:8953';
+
+/* COMBIEN D'OFFRES ? On le DEMANDE au code, on ne l'écrit pas. Le contrôle de
+   visibilité du rail attendait « 5 éléments » — 1 configurateur + 1 rail +
+   3 tuiles. Le jour où Atelier+ est née, il a échoué en annonçant une
+   disparition qui n'existait pas : un garde-fou qui compte faux use la
+   confiance qu'on lui porte, et c'est tout ce qu'il a. */
+const NB_OFFRES = [...fs.readFileSync(path.join(ROOT, 'sections.jsx'), 'utf8')
+  .matchAll(/palier:\s*(?:\d+|null)/g)].length;
 
 /** Ouvre /tarifs et rend la page, prête à être pilotée. */
 async function ouvrirTarifs(largeur = 1280) {
@@ -124,13 +134,19 @@ const lireSortie = (page) => page.evaluate(() => {
 console.log('\n===== le calculateur, au mois =====');
 {
   const { ctx, page } = await ouvrirTarifs();
-  /* Bornes comprises. Celle de 5 projets est la plus fragile d'un refactor :
-     c'est elle qui sépare Atelier d'Agence. */
+  /* Bornes comprises, et les DEUX côtés de chacune : 5/6 sépare Atelier
+     d'Atelier+, 10/11 sépare Atelier+ d'Agence. Ce sont les deux lignes qui
+     cassent le plus volontiers, parce qu'un refactor qui se trompe d'un
+     projet reste vert sur tout le reste. */
   const CAS = [
     { personnes: 1, projets: 1,  offre: 'Découverte', prix: 0,   quoi: 'seul, un seul projet → l’offre gratuite d’abord' },
     { personnes: 1, projets: 2,  offre: 'Atelier',    prix: 49,  quoi: 'seul, deux projets' },
     { personnes: 1, projets: 5,  offre: 'Atelier',    prix: 49,  quoi: 'seul, cinq projets — la borne haute' },
-    { personnes: 1, projets: 6,  offre: 'Agence',     prix: 69,  quoi: 'seul, six projets — on bascule' },
+    /* La marche de 49 à 69 € — +41 % entre le 5e et le 6e projet — tombait
+       sur le cœur de cible. Atelier+ la coupe en deux. */
+    { personnes: 1, projets: 6,  offre: 'Atelier+',   prix: 59,  quoi: 'seul, six projets — on passe à Atelier+' },
+    { personnes: 1, projets: 10, offre: 'Atelier+',   prix: 59,  quoi: 'seul, dix projets — la borne haute d’Atelier+' },
+    { personnes: 1, projets: 11, offre: 'Agence',     prix: 69,  quoi: 'seul, onze projets — on bascule sur Agence' },
     { personnes: 1, projets: 30, offre: 'Agence',     prix: 69,  quoi: 'seul, trente projets' },
     { personnes: 2, projets: 1,  offre: 'Agence',     prix: 108, quoi: 'deux personnes → 69 + 39' },
     { personnes: 3, projets: 12, offre: 'Agence',     prix: 147, quoi: 'trois personnes → 69 + 2 × 39' },
@@ -169,8 +185,11 @@ console.log('\n===== le calculateur, au mois =====');
       ...[...document.querySelectorAll('.conf-tuile')].map((t) => ({ nom: t.querySelector('.tarif-nom')?.textContent.trim(), op: getComputedStyle(t).opacity })),
     ]);
     const invisibles = vus.filter((c) => Number(c.op) < 1).map((c) => c.nom);
-    ok(vus.length === 5 && invisibles.length === 0,
-       `${n} personne(s) → le configurateur et les 3 tuiles restent affichés${invisibles.length ? ` — DISPARUS : ${invisibles.join(', ')}` : ''}`);
+    /* 2 + NB_OFFRES : le configurateur, le rail, et une tuile par offre. */
+    ok(vus.length === 2 + NB_OFFRES && invisibles.length === 0,
+       `${n} personne(s) → le configurateur et les ${NB_OFFRES} tuiles restent affichés${
+         vus.length !== 2 + NB_OFFRES ? ` — ${vus.length - 2} tuile(s) mesurée(s) au lieu de ${NB_OFFRES}` : ''
+       }${invisibles.length ? ` — DISPARUS : ${invisibles.join(', ')}` : ''}`);
   }
 
   /* ── TOUT LE PANNEAU SUIT LA RÉPONSE, PAS SEULEMENT LE PRIX ─────────────
@@ -213,7 +232,8 @@ console.log('\n===== le calculateur, à l’année =====');
      annuel est dit juste dessous. L'inverse — annoncer 1 836 € en gros —
      comparerait un montant annuel à un prix mensuel concurrent. */
   const CAS = [
-    { personnes: 1, projets: 2,  offre: 'Atelier', mois: 40,  an: 480,  quoi: 'Atelier à l’année → 40 €/mois, facturé 480 €' },
+    { personnes: 1, projets: 2,  offre: 'Atelier',  mois: 40, an: 480,  quoi: 'Atelier à l’année → 40 €/mois, facturé 480 €' },
+    { personnes: 1, projets: 8,  offre: 'Atelier+', mois: 48, an: 576,  quoi: 'Atelier+ à l’année → 48 €/mois, facturé 576 €' },
     { personnes: 2, projets: 1,  offre: 'Agence',  mois: 89,  an: 1068, quoi: 'Agence 2 pers. → 684 + 384 = 1 068 €/an' },
     { personnes: 4, projets: 12, offre: 'Agence',  mois: 153, an: 1836, quoi: 'Agence 4 pers. → 1 836 €/an, soit 153 €/mois' },
   ];
@@ -226,10 +246,10 @@ console.log('\n===== le calculateur, à l’année =====');
     ok(bonNom && bonMois && bonAn,
        `${c.quoi} → ${vu.nom} ${vu.montant} / ${vu.annuel}${bonNom && bonMois && bonAn ? '' : `  ATTENDU ${c.offre} ${c.mois} et ${c.an}`}`);
   }
-  /* La remise est annoncée « jusqu'à » : elle vaut 18 % sur Atelier et sur
-     chaque personne supplémentaire, mais 17,4 % sur le premier siège Agence
-     (684 au lieu de 828). « −18 % » tout court serait faux sur le montant que
-     tout le monde regarde en premier. */
+  /* La remise est annoncée « jusqu'à » : elle vaut 18,6 % sur Atelier+, 18,4 %
+     sur Atelier et sur chaque personne supplémentaire, mais 17,4 % sur le
+     premier siège Agence (684 au lieu de 828). « −18 % » tout court serait
+     faux sur le montant que tout le monde regarde en premier. */
   const remise = await page.evaluate(() => document.querySelector('.tarif-remise')?.textContent.trim() || '');
   ok(/jusqu|up to/i.test(remise), `la remise est annoncée comme un maximum — « ${remise} »`);
   await ctx.close();
@@ -243,7 +263,11 @@ console.log('\n===== ce qui part au serveur de paiement =====');
   /* On intercepte la requête plutôt que de la laisser sortir : le test ne doit
      ni toucher Stripe, ni consommer le plafond horaire du serveur. */
   const CAS = [
-    { carte: 'Atelier', personnes: 1, attendu: { storage: 50,  billing: 'monthly', seats: 1 } },
+    { carte: 'Atelier',  personnes: 1, attendu: { storage: 50,  billing: 'monthly', seats: 1 } },
+    /* Atelier+ est le palier 100. Rien à l'écran ne distingue une offre qui
+       part avec le mauvais sélecteur : le visiteur paie 59 € et reçoit
+       Atelier, ou l'inverse. C'est l'erreur la plus silencieuse de la page. */
+    { carte: 'Atelier+', personnes: 1, attendu: { storage: 100, billing: 'monthly', seats: 1 } },
     { carte: 'Agence',  personnes: 1, attendu: { storage: 150, billing: 'monthly', seats: 1 } },
     { carte: 'Agence',  personnes: 3, attendu: { storage: 150, billing: 'monthly', seats: 3 } },
     { carte: 'Agence',  personnes: 4, attendu: { storage: 150, billing: 'monthly', seats: 4 } },
@@ -251,7 +275,8 @@ console.log('\n===== ce qui part au serveur de paiement =====');
        Stripe et étaient inatteignables depuis cette page : personne ne pouvait
        les acheter. Si la bascule cessait d'être lue, l'écran annoncerait 40 €
        et le tunnel encaisserait 49 € — l'écart le plus difficile à voir. */
-    { carte: 'Atelier', personnes: 1, annuel: true, attendu: { storage: 50,  billing: 'yearly', seats: 1 } },
+    { carte: 'Atelier',  personnes: 1, annuel: true, attendu: { storage: 50,  billing: 'yearly', seats: 1 } },
+    { carte: 'Atelier+', personnes: 1, annuel: true, attendu: { storage: 100, billing: 'yearly', seats: 1 } },
     { carte: 'Agence',  personnes: 4, annuel: true, attendu: { storage: 150, billing: 'yearly', seats: 4 } },
   ];
   for (const c of CAS) {
@@ -444,7 +469,13 @@ console.log('\n===== l’estimation de temps =====');
 console.log('\n===== les gigaoctets affichés viennent de la grille =====');
 {
   const GRILLE = lireTarifs();
-  const AUTORISES = new Set([GRILLE.decouverte.go, GRILLE.atelier.go, GRILLE.agence.go]);
+  /* Les offres se parcourent, elles ne se nomment pas : cette liste en citait
+     trois, et Atelier+ en a fait une quatrième. Un garde-fou qui énumère ce
+     qu'il surveille cesse de surveiller ce qu'on ajoute — c'est le défaut
+     qu'on a déjà payé avec outils/pages.mjs et avec la liste de .jsx. */
+  const AUTORISES = new Set(Object.values(GRILLE)
+    .filter((o) => o && typeof o === 'object' && typeof o.go === 'number')
+    .map((o) => o.go));
   /* « storage » reste proscrit dans le texte visible : c'est le nom du champ
      HISTORIQUE du contrat de paiement, qui est un sélecteur d'offre et non un
      volume. Le voir à l'écran voudrait dire qu'un détail d'implémentation a

@@ -656,7 +656,7 @@ var ToutesFonctionnalites = function ToutesFonctionnalites() {
     id: titreId
   }, Txt("catalogue.titre", "Tout ce que fait Alba", "Everything Alba does")), /*#__PURE__*/React.createElement("p", {
     className: "fen-chapo"
-  }, Txt("catalogue.chapo", "Tout ce qui suit est inclus dans les trois offres, y compris la gratuite. Nous ne bornons que des quantités : le nombre de projets menés de front, le nombre de personnes, et l'usage de Léo.", "Everything below is included in all three plans, including the free one. We cap quantities only: the number of projects you run at once, the number of people, and how much you use Léo."))), /*#__PURE__*/React.createElement("button", {
+  }, Txt("catalogue.chapo", "Tout ce qui suit est inclus dans toutes les offres, y compris la gratuite. Nous ne bornons que des quantités : le nombre de projets menés de front, le nombre de personnes, et l'usage de Léo.", "Everything below is included in every plan, including the free one. We cap quantities only: the number of projects you run at once, the number of people, and how much you use Léo."))), /*#__PURE__*/React.createElement("button", {
     type: "button",
     className: "fen-fermer",
     onClick: function onClick() {
@@ -808,7 +808,9 @@ var Pricing = function Pricing() {
     // gratuite : aucun paiement
     nom: Txt("tarifs.offre-decouverte", "Découverte", "Discovery"),
     resume: Txt("tarifs.decouverte-resume", "Pour voir ce que ça donne sur un vrai projet.", "To see what it does on a real project."),
-    court: Txt("tarifs.decouverte-court", "1 projet · 1 personne", "1 project · 1 person"),
+    /* La ligne courte de la tuile se compose, elle ne se recopie pas : voir
+       le commentaire de contenu.js là où ces trois chaînes vivaient. */
+    court: L("".concat(TARIFS.decouverte.projets, " projet \xB7 ").concat(TARIFS.decouverte.personnes, " personne"), "".concat(TARIFS.decouverte.projets, " project \xB7 ").concat(TARIFS.decouverte.personnes, " person")),
     /* ── LES QUANTITÉS VIENNENT DE tarifs.js, ELLES NE SONT PLUS RECOPIÉES ──
        Elles étaient neuf chaînes de contenu.js. Trois annonçaient des
        plafonds qui n'existent pas (« 1 500 », « 5 000 questions par mois »)
@@ -827,15 +829,28 @@ var Pricing = function Pricing() {
   }, {
     cle: "atelier",
     palier: 50,
+    tarif: TARIFS.atelier,
     nom: Txt("tarifs.offre-atelier", "Atelier", "Studio"),
     resume: Txt("tarifs.atelier-resume", "Pour un architecte qui mène plusieurs affaires de front.", "For an architect running several jobs at once."),
-    court: Txt("tarifs.atelier-court", "5 projets de front · 1 personne", "5 live projects · 1 person"),
+    court: L("".concat(TARIFS.atelier.projets, " projets de front \xB7 ").concat(TARIFS.atelier.personnes, " personne"), "".concat(TARIFS.atelier.projets, " live projects \xB7 ").concat(TARIFS.atelier.personnes, " person")),
     /* « archives illimitées » est tombé : la ligne cohabitait mal avec un
        plafond de 100 Go, et la nouvelle grille ne la porte pas. Le mécanisme
        — archiver libère une place — reste dit sous le curseur des projets,
        où il sert à décider. */
     quantites: [L("".concat(TARIFS.atelier.projets, " projets men\xE9s de front"), "".concat(TARIFS.atelier.projets, " live projects")), L("".concat(TARIFS.atelier.personnes, " personne"), "".concat(TARIFS.atelier.personnes, " person")), L("".concat(TARIFS.atelier.go, " Go de documents"), "".concat(TARIFS.atelier.go, " GB of documents")), L("L\xE9o : ".concat(TARIFS.atelier.analyses, " analyses de documents par mois"), "L\xE9o: ".concat(TARIFS.atelier.analyses, " document analyses per month"))],
     lectures: TARIFS.atelier.analyses
+  }, {
+    cle: "atelier-plus",
+    /* 100 : troisième valeur du sélecteur d'offre, à créer côté Stripe. Le
+       champ s'appelle `storage` pour des raisons historiques et ne désigne
+       pas un volume — 50 vaut Atelier, 100 Atelier+, 150 Agence. */
+    palier: 100,
+    tarif: TARIFS.atelierPlus,
+    nom: Txt("tarifs.offre-atelier-plus", "Atelier+", "Studio+"),
+    resume: Txt("tarifs.atelier-plus-resume", "Pour un indépendant qui enchaîne les affaires.", "For an independent architect with a steady flow of jobs."),
+    court: L("".concat(TARIFS.atelierPlus.projets, " projets de front \xB7 ").concat(TARIFS.atelierPlus.personnes, " personne"), "".concat(TARIFS.atelierPlus.projets, " live projects \xB7 ").concat(TARIFS.atelierPlus.personnes, " person")),
+    quantites: [L("".concat(TARIFS.atelierPlus.projets, " projets men\xE9s de front"), "".concat(TARIFS.atelierPlus.projets, " live projects")), L("".concat(TARIFS.atelierPlus.personnes, " personne"), "".concat(TARIFS.atelierPlus.personnes, " person")), L("".concat(TARIFS.atelierPlus.go, " Go de documents"), "".concat(TARIFS.atelierPlus.go, " GB of documents")), L("L\xE9o : ".concat(TARIFS.atelierPlus.analyses, " analyses de documents par mois"), "L\xE9o: ".concat(TARIFS.atelierPlus.analyses, " document analyses per month"))],
+    lectures: TARIFS.atelierPlus.analyses
   }, {
     cle: "agence",
     palier: 150,
@@ -849,8 +864,13 @@ var Pricing = function Pricing() {
        continuait de lui parler d'un plafond alors qu'il avait dit son
        chiffre. Les deux autres offres n'ont pas ce problème : elles ne
        couvrent qu'une personne, leur résumé ne peut pas varier. */
-    resume: personnes > 1 ? L("Pour une \xE9quipe de ".concat(personnes, " personnes."), "For a team of ".concat(personnes, ".")) : L("Pour travailler seul, avec la place pour grandir.", "To work on your own, with room to grow."),
-    court: Txt("tarifs.agence-court", "Projets illimités · jusqu'à 4 personnes", "Unlimited projects · up to 4 people"),
+    resume: personnes > 1
+    /* « of 2 people » et non « of 2. » : un nombre suivi d'un point final
+       se lit mal, et surtout il touchait le prix juste en dessous — « For
+       a team of 2. » + « 108 € » se lisent « 2.108 € » dès qu'on relève le
+       texte sans la mise en page. Un humain ne le voyait pas ; un
+       garde-fou si, et il avait raison de s'en plaindre. */ ? L("Pour une \xE9quipe de ".concat(personnes, " personnes."), "For a team of ".concat(personnes, " people.")) : L("Pour travailler seul, avec la place pour grandir.", "To work on your own, with room to grow."),
+    court: L("".concat(Txt("tarifs.agence-q1", "Projets illimités", "Unlimited projects"), " \xB7 jusqu'\xE0 ").concat(TARIFS.maxPersonnes, " personnes"), "".concat(Txt("tarifs.agence-q1", "Projets illimités", "Unlimited projects"), " \xB7 up to ").concat(TARIFS.maxPersonnes, " people")),
     quantites: [Txt("tarifs.agence-q1", "Projets illimités", "Unlimited projects"),
     /* Le nombre choisi, pas le plafond. Le plafond reste dit deux fois
        ailleurs — sous le prix (« puis 39 € par personne supplémentaire,
@@ -864,7 +884,11 @@ var Pricing = function Pricing() {
   /* 1 personne et 1 projet : Découverte, qui est gratuite. On la propose
      d'abord — envoyer quelqu'un payer 49 € pour un usage que l'offre gratuite
      couvre entièrement serait se tirer une balle dans le pied. */
-  var recommandee = personnes === 1 && projets === 1 ? OFFRES[0] : personnes === 1 && projets <= 5 ? OFFRES[1] : OFFRES[2];
+  /* Les bornes viennent de la grille, elles ne sont pas réécrites ici : c'est
+     `projets` qui définit chaque palier, et un seuil recopié finirait par ne
+     plus correspondre à ce que la carte annonce. Dès qu'on est plusieurs,
+     Agence est la seule offre possible — c'est la seule qui couvre une équipe. */
+  var recommandee = personnes > 1 ? OFFRES[3] : projets <= TARIFS.decouverte.projets ? OFFRES[0] : projets <= TARIFS.atelier.projets ? OFFRES[1] : projets <= TARIFS.atelierPlus.projets ? OFFRES[2] : OFFRES[3];
   var offre = choix && OFFRES.find(function (o) {
     return o.cle === choix;
   }) || recommandee;
@@ -886,7 +910,10 @@ var Pricing = function Pricing() {
       periode: 0,
       mois: 0
     };
-    var p = o.degressive ? totalAgence(personnes) : annuel ? TARIFS.atelier.an : TARIFS.atelier.mois;
+    /* `o.tarif` et non TARIFS.atelier : la grille d'Atelier était prise pour
+       TOUTE offre non dégressive. Avec un seul palier fixe ça marchait par
+       accident ; avec deux, Atelier+ aurait été facturé 49 € au lieu de 59. */
+    var p = o.degressive ? totalAgence(personnes) : annuel ? o.tarif.an : o.tarif.mois;
     return {
       periode: p,
       mois: parMois(p)
@@ -1060,6 +1087,16 @@ var Pricing = function Pricing() {
       };
     }();
   };
+
+  /* Le TTC garde ses centimes — 58,80 € et non 59 € : arrondir un montant
+     toutes taxes le rend faux, et c'est le genre de chiffre qu'un comptable
+     recalcule. */
+  var ttc = function ttc(n) {
+    return new Intl.NumberFormat(window.__albaLang === "en" ? "en-GB" : "fr-FR", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }).format(n * (1 + TARIFS.tva));
+  };
   var euros = function euros(n) {
     return new Intl.NumberFormat(window.__albaLang === "en" ? "en-GB" : "fr-FR").format(n);
   };
@@ -1071,7 +1108,11 @@ var Pricing = function Pricing() {
   /** Prix d'une tuile du rail, dans la périodicité courante. */
   var prixTuile = function prixTuile(o) {
     if (!o.palier) return Txt("tarifs.gratuit", "Gratuit", "Free");
-    var base = o.degressive ? grille.premiere : annuel ? TARIFS.atelier.an : TARIFS.atelier.mois;
+    /* `o.tarif`, comme dans coutDe() : la grille d'Atelier servait pour toute
+       offre non dégressive. Atelier+ se serait affiché à 49 € sur sa tuile et
+       facturé 59 € dans le panneau — le genre d'écart qui se découvre au
+       relevé bancaire. */
+    var base = o.degressive ? grille.premiere : annuel ? o.tarif.an : o.tarif.mois;
     return "".concat(o.degressive ? Txt("tarifs.des", "dès", "from") + " " : "").concat(euros(parMois(base)), " \u20AC");
   };
   return /*#__PURE__*/React.createElement("section", {
@@ -1180,7 +1221,9 @@ var Pricing = function Pricing() {
     className: "conf-montant"
   }, euros(cout.mois), " \u20AC"), /*#__PURE__*/React.createElement("span", {
     className: "conf-unite"
-  }, unite))), !gratuite && (annuel || offre.degressive && personnes > 1) && /*#__PURE__*/React.createElement("p", {
+  }, unite), /*#__PURE__*/React.createElement("span", {
+    className: "conf-ttc"
+  }, L("soit ".concat(ttc(cout.mois), " \u20AC TTC en France"), "i.e. \u20AC".concat(ttc(cout.mois), " incl. French VAT"))))), !gratuite && (annuel || offre.degressive && personnes > 1) && /*#__PURE__*/React.createElement("p", {
     className: "conf-detail"
   }, annuel && L("factur\xE9 ".concat(euros(cout.periode), " \u20AC HT par an"), "billed \u20AC".concat(euros(cout.periode), " excl. VAT per year")), annuel && offre.degressive && personnes > 1 && " · ", offre.degressive && personnes > 1 && L("".concat(euros(grille.premiere), " \u20AC + ").concat(personnes - 1, " \xD7 ").concat(euros(grille.suivante), " \u20AC"), "\u20AC".concat(euros(grille.premiere), " + ").concat(personnes - 1, " \xD7 \u20AC").concat(euros(grille.suivante)))), /*#__PURE__*/React.createElement("ul", {
     className: "conf-quantites"
@@ -1285,7 +1328,7 @@ var Pricing = function Pricing() {
     className: "calc-note"
   }, L("L'offre ".concat(offre.nom, " couvre ").concat(offre.lectures, " lectures par mois."), "The ".concat(offre.nom, " plan covers ").concat(offre.lectures, " readings per month."))))), /*#__PURE__*/React.createElement("div", {
     className: "calc-mentions"
-  }, Txt("tarifs.mentions", "Montants HT · Estimation indicative", "Amounts excl. VAT · Indicative estimate")))), erreurPaiement && /*#__PURE__*/React.createElement("div", {
+  }, Txt("tarifs.mentions", "Montants HT, réservés aux professionnels · Estimation indicative", "Amounts excl. VAT, for professionals only · Indicative estimate")))), erreurPaiement && /*#__PURE__*/React.createElement("div", {
     className: "pricing-erreur",
     role: "alert"
   }, erreurPaiement, " ", /*#__PURE__*/React.createElement("a", {
@@ -1294,7 +1337,7 @@ var Pricing = function Pricing() {
     className: "conf-rail"
   }, /*#__PURE__*/React.createElement("div", {
     className: "conf-rail-titre"
-  }, Txt("tarifs.rail-titre", "Les trois offres · cliquez pour comparer", "The three plans · click to compare")), /*#__PURE__*/React.createElement("div", {
+  }, Txt("tarifs.rail-titre", "Toutes les offres · cliquez pour comparer", "Every plan · click to compare")), /*#__PURE__*/React.createElement("div", {
     className: "conf-tuiles"
   }, OFFRES.map(function (o) {
     return /*#__PURE__*/React.createElement("button", {
@@ -1367,7 +1410,7 @@ var TrustBand = function TrustBand() {
 var Faq = function Faq() {
   var items = [{
     q: Txt("faq.que-comprend-le-projet-gratuit", "Que comprend le projet gratuit ?", "What does the free project include?"),
-    a: Txt("faq.un-projet-complet-sans-limite-de", "Un projet complet pour commencer : cockpit, décisions signées, messagerie, documents, matériauthèque, accès maître d'ouvrage et co-traitants. Aucune carte bleue demandée. Vous passez au tarif Studio quand vous créez votre deuxième projet, et tout ce que vous avez construit reste en place.", "One complete project to get started: cockpit, signed decisions, messaging, documents, material library, client and consultant access. No credit card required. You move to the Studio plan when you create your second project, and everything you've built stays in place.")
+    a: Txt("faq.un-projet-complet-sans-limite-de", "Un projet complet pour commencer : cockpit, décisions signées, messagerie, documents, matériauthèque, accès maître d'ouvrage et co-traitants. Aucune carte bleue demandée. Vous passez à l'offre Atelier quand vous créez votre deuxième projet, et tout ce que vous avez construit reste en place.", "One complete project to get started: cockpit, signed decisions, messaging, documents, material library, client and consultant access. No credit card required. You move to the Studio plan when you create your second project, and everything you've built stays in place.")
   }, {
     q: Txt("faq.comment-alba-s-integre-a-ma", "Comment ALBA s'intègre à ma méthode actuelle ?", "How does ALBA fit my current workflow?"),
     a: Txt("faq.alba-s-adapte-a-votre-process", "ALBA s'adapte à votre process, pas l'inverse. Vous configurez les phases (esquisse, APS, APD, permis, DCE, chantier), nous gérons les rappels, les jalons et la mémoire du projet. Aucune formation longue : la plupart des architectes sont opérationnels en moins d'une heure.", "ALBA adapts to your process, not the other way round. You configure the phases (concept, design, permits, tender, construction); we handle reminders, milestones and the project's memory. No lengthy training: most architects are up and running in under an hour.")
@@ -1385,7 +1428,7 @@ var Faq = function Faq() {
     a: Txt("faq.bien-sur-les-co-traitants-accedent", "Bien sûr. Les co-traitants accèdent gratuitement aux projets sur lesquels vous les invitez, avec le niveau de droits que vous définissez (lecture, commentaire, dépôt de pièces).", "Of course. Consultants get free access to the projects you invite them to, with the permission level you set (view, comment, upload).")
   }, {
     q: Txt("faq.combien-de-collaborateurs-de-mon-agence", "Combien de collaborateurs de mon agence sont inclus ?", "How many team members are included?"),
-    a: Txt("faq.le-tarif-studio-inclut-1-collaborateur", "Les offres Découverte et Atelier couvrent une personne. L'offre Agence se facture 69 € HT par mois et par personne, jusqu'à quatre. Vos clients et vos co-traitants, eux, restent illimités et gratuits : ils ne comptent dans aucune offre.", "The Discovery and Studio plans cover one person. The Practice plan is billed at €69 excl. VAT per month per person, up to four. Your clients and consultants remain unlimited and free: they count towards no plan.")
+    a: Txt("faq.le-tarif-studio-inclut-1-collaborateur", "Les offres Découverte, Atelier et Atelier+ couvrent une personne. L'offre Agence va jusqu'à quatre, avec un tarif dégressif à partir de la deuxième : le détail est sur la page Tarifs. Vos clients et vos co-traitants, eux, restent illimités et gratuits — ils ne comptent dans aucune offre.", "The Discovery, Studio and Studio+ plans cover one person. The Practice plan goes up to four, at a decreasing rate from the second person onwards: the detail is on the Pricing page. Your clients and consultants remain unlimited and free — they count towards no plan.")
   }, {
     q: Txt("faq.et-pendant-le-chantier", "Et pendant le chantier ?", "What about the construction phase?"),
     a: Txt("faq.alba-vous-suit-sur-site-comptes", "ALBA vous suit sur site : comptes-rendus de visite, réserves photographiées et assignées par lot, diffusion automatique aux entreprises et au maître d'ouvrage. Chaque CR est signé et archivé, comme une décision.", "ALBA follows you on site: visit reports, photographed punch-list items assigned by trade, automatic distribution to contractors and the client. Every report is signed and archived, like a decision.")

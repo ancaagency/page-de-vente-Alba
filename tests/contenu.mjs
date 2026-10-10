@@ -38,9 +38,15 @@ const ok = (bon, texte) => { console.log(`   ${bon ? '✅' : '❌'} ${texte}`); 
 console.log('\n===== clés =====');
 
 const utilisees = new Set();
+/* On retient aussi les DEUX littéraux de repli, pour le relevé d'écarts
+   ci-dessous. */
+const replis = new Map();
 for (const f of FICHIERS) {
   const src = fs.readFileSync(path.join(ROOT, f), 'utf8');
   for (const m of src.matchAll(/(?<![A-Za-z0-9_$.])Txt\(\s*"((?:\\.|[^"\\])*)"/g)) utilisees.add(m[1]);
+  for (const m of src.matchAll(/(?<![A-Za-z0-9_$.])Txt\(\s*"((?:\\.|[^"\\])*)"\s*,\s*"((?:\\.|[^"\\])*)"\s*,\s*"((?:\\.|[^"\\])*)"\s*\)/g)) {
+    replis.set(m[1], { fichier: f, fr: m[2], en: m[3] });
+  }
 }
 
 const contenuSrc = fs.readFileSync(path.join(ROOT, 'contenu.js'), 'utf8');
@@ -54,6 +60,39 @@ const sansUsage = [...declarees].filter((c) => !utilisees.has(c));
 console.log(`   ${utilisees.size} clés appelées dans le code, ${declarees.size} déclarées dans contenu.js`);
 ok(sansEntree.length === 0, `toute clé appelée a son entrée${sansEntree.length ? ` — manquantes : ${sansEntree.slice(0, 6).join(', ')}` : ''}`);
 ok(sansUsage.length === 0, `aucune entrée orpheline${sansUsage.length ? ` — inutilisées : ${sansUsage.slice(0, 6).join(', ')}` : ''}`);
+
+/* ── LE RELEVÉ D'ÉCARTS ENTRE LES DEUX COUCHES ────────────────────────────
+   Chaque texte existe deux fois : l'entrée de contenu.js, qui gagne, et le
+   littéral du .jsx, qui ne s'affiche que si contenu.js ne se charge pas.
+
+   CE N'EST PAS UN ÉCHEC, et c'est voulu : contenu.js est la couche éditable,
+   l'écart est le prix de pouvoir corriger un texte sans toucher au code. Mais
+   il n'est pas gratuit non plus. Trois écarts mesurés le 10 octobre 2026 :
+     · une réponse de FAQ dont le repli annonçait encore « 69 € HT par mois et
+       par personne », corrigé dans contenu.js un mois plus tôt ;
+     · une autre qui disait « le tarif Studio », nom retiré de la vente ;
+     · la mention « Montants HT » sans « réservés aux professionnels ».
+   Les trois se seraient affichés le jour d'une panne de contenu.js, c'est-à-dire
+   le jour où personne ne les aurait relus.
+
+   On ne tranche donc pas : on AFFICHE. Un écart vu est un écart qu'on décide
+   de garder ou d'aligner ; un écart invisible ne se décide pas.
+   Le garde-fou dur, lui, est dans tests/montants.mjs : aucun MONTANT dans un
+   texte éditable, ni dans son repli. */
+{
+  const dec = (x) => x.replace(/\\"/g, '"').replace(/\\n/g, '\n').replace(/\\'/g, "'");
+  const ecarts = [...replis.entries()].filter(([cle, r]) => {
+    const e = (bac.ALBA_CONTENU || {})[cle];
+    return e && (dec(r.fr) !== e.fr || dec(r.en) !== e.en);
+  });
+  if (ecarts.length === 0) {
+    console.log('   ℹ️  aucun écart entre contenu.js et les replis du code');
+  } else {
+    console.log(`   ℹ️  ${ecarts.length} texte(s) où le repli du code dit autre chose que contenu.js :`);
+    for (const [cle, r] of ecarts.slice(0, 12)) console.log(`      · ${r.fichier} — ${cle}`);
+    console.log('      (ce n’est pas une panne : c’est ce qui s’affichera si contenu.js ne se charge pas)');
+  }
+}
 
 // ——— Contrôles en navigateur ———
 const CASSE = '/* volontairement invalide */ window.ALBA_CONTENU = { "accueil.centralisez-vos-projets": { fr: "x"';
