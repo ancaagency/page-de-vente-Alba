@@ -89,7 +89,7 @@ https://alba-studio.co/auth?plan=studio&storage=150&billing=yearly&seats=3
 | Paramètre | Valeurs possibles | Signification |
 |---|---|---|
 | `plan` | `studio` | Seul plan existant |
-| `storage` | `50` \| `150` | **Sélecteur d'offre**, pas un stockage : `50` = Atelier, `150` = Agence. Le nom est historique. `300` est une offre retirée de la vente. |
+| `storage` | `50` \| `100` \| `150` | **Sélecteur d'offre**, pas un stockage : `50` = Atelier, `100` = Atelier+, `150` = Agence. Le nom est historique. `300` est une offre retirée de la vente. |
 | `billing` | `monthly` \| `yearly` | `yearly` = −18 % |
 | `seats` | `1` à `4` | Personnes **au total**, la première comprise. Tarif dégressif à partir de la deuxième. |
 
@@ -125,20 +125,27 @@ Les CTA du **haut de page** (hero, nav, bande CTA) pointent vers `/auth` **sans 
 
 Ce qu'il faut savoir pour créer les prix côté Stripe :
 
-- **Trois offres.** Découverte (gratuite, aucun prix Stripe), Atelier, Agence.
+- **Quatre offres.** Découverte (gratuite, aucun prix Stripe), Atelier,
+  Atelier+, Agence. Atelier+ est née de la marche la plus raide de la grille :
+  du 5e au 6e projet, le prix passait de 49 à 69 €, soit +41 %, et tombait
+  exactement sur l'indépendant au moment où il commence à bien tourner.
 - **Agence est dégressive** : un prix pour la première personne, un autre —
   plus bas — pour chacune des suivantes, jusqu'à 4 au total. Ce n'est pas un
   prix par personne : la page l'a annoncé ainsi pendant une journée, et
   affichait 276 € pour quatre au lieu de 186.
-- **Deux périodicités.** La remise annuelle **n'est pas uniforme** : 18 % sur
-  Atelier et sur la personne supplémentaire, 17,4 % sur le premier siège
-  Agence. C'est pour ça que la page annonce « jusqu'à −18 % », et pour ça que
+- **Deux périodicités.** La remise annuelle **n'est pas uniforme** : 18,6 % sur
+  Atelier+, 18,4 % sur Atelier et sur la personne supplémentaire, 17,4 % sur le
+  premier siège Agence. Quatre paliers, trois remises différentes. C'est pour ça que la page annonce « jusqu'à −18 % », et pour ça que
   les montants annuels sont écrits en toutes lettres dans `tarifs.js` plutôt
   que calculés depuis un pourcentage — une formule finirait par diverger de
   Stripe sans que personne ne le voie.
 - Le champ `storage` du contrat de paiement est un **sélecteur d'offre**, resté
-  ainsi pour des raisons historiques : `50` = Atelier, `150` = Agence. La
-  valeur `300` est une offre retirée de la vente et ne doit jamais repartir.
+  ainsi pour des raisons historiques : `50` = Atelier, `100` = Atelier+,
+  `150` = Agence. La valeur `300` est une offre retirée de la vente et ne doit
+  jamais repartir.
+- **Chaque offre payante a DEUX prix**, un mensuel et un annuel. Créer le
+  mensuel seul laisse la bascule « Annuel » de la page ouvrir un tunnel qui
+  échoue : l'écran annonce un prix, le serveur ne trouve pas le tarif.
 
 *Les `price_id` Stripe doivent correspondre exactement aux montants de
 `tarifs.js`. C'est Stripe qui fait autorité : si les deux divergent, c'est
