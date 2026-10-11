@@ -98,7 +98,7 @@ console.log(`\n===== ce qui part quand on clique — ${route} =====`);
      partir. Si la valeur par défaut basculait en douce, l'écran annoncerait
      49 € et le tunnel encaisserait un engagement d'un an.
      (Que la bascule change réellement `billing`, c'est tarifs.mjs qui l'éprouve,
-     dans les deux sens et sur les deux offres payantes.) */
+     dans les deux sens et sur les offres payantes.) */
   ok(corps.billing === 'monthly', `sans toucher à la bascule, la périodicité est mensuelle (billing = ${corps.billing})`);
   ok(corps.seats === 3, `les personnes suivent le calculateur (seats = ${corps.seats})`);
 

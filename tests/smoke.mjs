@@ -51,13 +51,13 @@ const ATTENDU_ACCUEIL = [
   ['#securite', 'bloc Sécurité'],
   ['#faq', 'FAQ'],
   ['#contact', 'Contact'],
-  ['.conf-tuile', 'tuiles des trois offres'],
+  ['.conf-tuile', 'tuiles des offres'],
   ['footer', 'pied de page'],
 ];
 
 for (const [route, attendus] of [
   ['/', ATTENDU_ACCUEIL],
-  ['/tarifs', [['.conf-tuile', 'tuiles des trois offres'], ['.conf-reponse', 'colonne de réponse du configurateur'], ['#securite', 'bloc Sécurité'], ['footer', 'pied de page']]],
+  ['/tarifs', [['.conf-tuile', 'tuiles des offres'], ['.conf-reponse', 'colonne de réponse du configurateur'], ['#securite', 'bloc Sécurité'], ['footer', 'pied de page']]],
   // Cette page monte son pied de page via React : sans lui, les liens
   // légaux et le contact disparaissent sans que rien ne le signale.
   ['/co-traitants', [['.edito', 'en-tête'], ['#qui-paie', 'tableau qui paie quoi'], ['footer', 'pied de page'], ['.foot-col', 'colonnes du pied']]],
@@ -112,19 +112,28 @@ for (const [route, attendus] of [
     /* LA CONFIGURATION A CHANGÉ DE CHEMIN, PAS DE NATURE.
        Ce contrôle exigeait que le lien porte « ?plan=studio&storage=…&seats=… » :
        l'ancienne carte tarifaire passait la configuration dans l'adresse
-       d'inscription. Les trois offres l'envoient désormais dans le CORPS de la
+       d'inscription. Les offres l'envoient désormais dans le CORPS de la
        requête de paiement, et c'est tests/tarifs.mjs qui la compare au champ
        près — y compris le palier, qui ne doit jamais valoir 300.
-       Ce qui reste vrai ici, et qui doit le rester : les trois offres sont là,
-       et le bouton de la réponse mène quelque part. Un lien sans href est le
-       défaut silencieux qu'on a déjà connu sur « Tester en 1 clic ». */
+       Ce qui reste vrai ici, et qui doit le rester : TOUTES les offres sont
+       là, et le bouton de la réponse mène quelque part. Un lien sans href est
+       le défaut silencieux qu'on a déjà connu sur « Tester en 1 clic ».
+
+       COMBIEN D'OFFRES ? On le demande au code. Ce contrôle exigeait « 3 », et
+       il est devenu rouge le jour où Atelier+ est née — en accusant la page
+       d'un défaut qui était le sien. C'est la quatrième fois que le nombre
+       d'offres, recopié dans un garde-fou, finit par accuser ce qu'il
+       surveille : un compte écrit à la main vaut la même chose qu'un prix
+       recopié. */
+    const nbOffres = [...fs.readFileSync(path.join(ROOT, 'sections.jsx'), 'utf8')
+      .matchAll(/palier:\s*(?:\d+|null)/g)].length;
     const offres = await page.evaluate(() => ({
       tuiles: [...document.querySelectorAll('.conf-tuile .tarif-nom')].map((n) => n.textContent.trim()),
       href: document.querySelector('.conf-reponse .tarif-cta')?.getAttribute('href') || null,
     }));
-    const tousMenent = offres.tuiles.length === 3 && offres.href && offres.href.length > 1;
+    const tousMenent = offres.tuiles.length === nbOffres && offres.href && offres.href.length > 1;
     console.log(`   ${tousMenent ? '✅' : '❌'} ${offres.tuiles.length} offres (${offres.tuiles.join(', ')}), et le bouton de la réponse mène quelque part` +
-                (tousMenent ? '' : ` — ${JSON.stringify(offres)}`));
+                (tousMenent ? '' : ` — ATTENDU ${nbOffres} tuile(s) et un href — ${JSON.stringify(offres)}`));
     if (!tousMenent) echecs++;
 
     // Les emplacements photo doivent TOUJOURS montrer quelque chose : la photo
